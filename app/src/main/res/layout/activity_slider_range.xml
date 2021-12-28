@@ -22,7 +22,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.material.components.widget.RangeSeekBar
+        <com.ekcapaper.racingar.widget.RangeSeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/spacing_large"
@@ -34,7 +34,7 @@
             app:min_value="20"
             app:right_thumb_color="@color/colorAccent" />
 
-        <com.material.components.widget.RangeSeekBar
+        <com.ekcapaper.racingar.widget.RangeSeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/spacing_large"
