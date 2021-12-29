@@ -15,8 +15,8 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 public class ThisApplication extends Application {
-    Client client;
-    Optional<Session> session;
+    private Client client;
+    private Optional<Session> session;
 
     @Override
     protected void attachBaseContext(Context base) {
