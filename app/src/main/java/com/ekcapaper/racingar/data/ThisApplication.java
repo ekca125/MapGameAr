@@ -10,9 +10,12 @@ import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
 
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+
 public class ThisApplication extends Application {
     Client client;
-    Session session;
+    Optional<Session> session;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -29,7 +32,18 @@ public class ThisApplication extends Application {
                 KeyStorageNakama.getGrpcPort(),
                 true
         );
+        session = Optional.empty();
     }
-    
 
+    public void login(String email, String password){
+        try {
+            session = Optional.ofNullable(client.authenticateEmail(email, password).get());
+        } catch (ExecutionException | InterruptedException e) {
+            session = Optional.empty();
+        }
+    }
+
+    public Optional<Session> getSession() {
+        return session;
+    }
 }
