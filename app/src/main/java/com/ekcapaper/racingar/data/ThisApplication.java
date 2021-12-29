@@ -40,7 +40,6 @@ public class ThisApplication extends Application {
         try {
             session = Optional.ofNullable(client.authenticateEmail(email, password).get());
         } catch (ExecutionException | InterruptedException e) {
-            Log.d("abcd",e.toString());
             session = Optional.empty();
         }
     }
