@@ -5,7 +5,9 @@ import android.content.Context;
 
 import androidx.multidex.MultiDex;
 
+import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.heroiclabs.nakama.Client;
+import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
 
 public class ThisApplication extends Application {
@@ -21,7 +23,13 @@ public class ThisApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        client = new DefaultClient(
+                KeyStorageNakama.getServerKey(),
+                KeyStorageNakama.getGrpcAddress(),
+                KeyStorageNakama.getGrpcPort(),
+                true
+        );
     }
+    
 
 }
