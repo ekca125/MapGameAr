@@ -5,8 +5,12 @@ import android.content.Context;
 
 import androidx.multidex.MultiDex;
 
-public class ThisApplication extends Application {
+import com.heroiclabs.nakama.Client;
+import com.heroiclabs.nakama.Session;
 
+public class ThisApplication extends Application {
+    Client client;
+    Session session;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -17,6 +21,7 @@ public class ThisApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
     }
 
 }
