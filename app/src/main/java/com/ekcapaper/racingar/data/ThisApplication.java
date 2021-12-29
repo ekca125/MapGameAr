@@ -2,6 +2,7 @@ package com.ekcapaper.racingar.data;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.multidex.MultiDex;
 
@@ -39,6 +40,7 @@ public class ThisApplication extends Application {
         try {
             session = Optional.ofNullable(client.authenticateEmail(email, password).get());
         } catch (ExecutionException | InterruptedException e) {
+            Log.d("abcd",e.toString());
             session = Optional.empty();
         }
     }

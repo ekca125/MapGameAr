@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import com.ekcapaper.racingar.AccountStub;
+
 import org.junit.Test;
 
 import java.util.function.Supplier;
@@ -17,9 +19,7 @@ public class ThisApplicationTest {
     @Test
     public void login() throws Exception {
         ThisApplication thisApplication = (ThisApplication) ApplicationProvider.getApplicationContext();
-        String email = "abcd@example.com";
-        String password = "abcdefg";
-        thisApplication.login(email, password);
+        thisApplication.login(AccountStub.ID, AccountStub.PASSWORD);
         thisApplication.getSession().orElseThrow(() -> new Exception("Login Error"));
     }
 }
