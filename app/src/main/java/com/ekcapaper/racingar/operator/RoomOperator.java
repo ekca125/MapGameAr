@@ -35,14 +35,14 @@ import lombok.Setter;
 
 public abstract class RoomOperator extends AbstractSocketListener {
     // 서버에서의 유저들과 현재 방에서의 플레이어를 의미한다.
-    List<UserPresence> userPresenceList;
-    List<Player> playerList;
+    private final List<UserPresence> userPresenceList;
+    private final List<Player> playerList;
     // 서버와의 연동
-    Session session;
-    SocketClient socketClient;
-    Match match;
+    private final Session session;
+    private final SocketClient socketClient;
+    private final Match match;
     // 채팅 데이터
-    List<String> chattingLog;
+    private final List<String> chattingLog;
     // 액티비티나 다른 함수에서 이 클래스에서 작업을 마치고 이후에 처리할 내용을 정의한다.
     @Setter
     Runnable victoryEndExecute;
@@ -56,6 +56,7 @@ public abstract class RoomOperator extends AbstractSocketListener {
     public RoomOperator(Session session, SocketClient socketClient, Match match) {
         this.userPresenceList = new ArrayList<>();
         this.playerList = new ArrayList<>();
+        this.chattingLog = new ArrayList<>();
 
         this.session = session;
         this.socketClient = socketClient;
