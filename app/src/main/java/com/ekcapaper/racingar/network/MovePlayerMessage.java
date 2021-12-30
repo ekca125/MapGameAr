@@ -3,7 +3,9 @@ package com.ekcapaper.racingar.network;
 import com.google.gson.Gson;
 
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class MovePlayerMessage extends Message {
     private final String userId;
     private final double latitude;
@@ -22,4 +24,6 @@ public class MovePlayerMessage extends Message {
         Gson gson = new Gson();
         return gson.toJson(this);
     }
+
+
 }

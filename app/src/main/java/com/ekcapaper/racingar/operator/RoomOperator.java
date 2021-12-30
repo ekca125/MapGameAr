@@ -1,8 +1,12 @@
 package com.ekcapaper.racingar.operator;
 
+import android.graphics.Path;
 import android.location.Location;
 
 import com.ekcapaper.racingar.game.Player;
+import com.ekcapaper.racingar.network.MovePlayerMessage;
+import com.ekcapaper.racingar.network.OpCode;
+import com.google.gson.Gson;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Error;
@@ -20,11 +24,14 @@ import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
 import com.heroiclabs.nakama.api.User;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import lombok.Setter;
 
 public abstract class RoomOperator extends AbstractSocketListener {
     // 서버에서의 유저들과 현재 방에서의 플레이어를 의미한다.
@@ -36,6 +43,15 @@ public abstract class RoomOperator extends AbstractSocketListener {
     Match match;
     // 채팅 데이터
     List<String> chattingLog;
+    // 액티비티나 다른 함수에서 이 클래스에서 작업을 마치고 이후에 처리할 내용을 정의한다.
+    @Setter
+    Runnable victoryEndExecute;
+    @Setter
+    Runnable defeatEndExecute;
+    @Setter
+    Runnable basicEndExecute;
+    // 유틸리티
+    Gson gson = new Gson();
 
     public RoomOperator(Session session, SocketClient socketClient, Match match) {
         this.userPresenceList = new ArrayList<>();
@@ -45,41 +61,55 @@ public abstract class RoomOperator extends AbstractSocketListener {
         this.socketClient = socketClient;
         this.match = match;
 
+        this.victoryEndExecute = () -> {
+        };
+        this.defeatEndExecute = () -> {
+        };
+        this.basicEndExecute = () -> {
+        };
+
         socketClient.connect(session, this);
     }
 
-    // 액티비티나 다른 함수에서 이 클래스에서 작업을 마치고 이후에 처리할 내용을 정의한다.
-    Consumer<Void> victoryExecute;
-    Consumer<Void> defeatExecute;
-
-    public void setVictoryExecute(Consumer<Void> victoryExecute) {
-        this.victoryExecute = victoryExecute;
-    }
-
-    public void setDefeatExecute(Consumer<Void> defeatExecute) {
-        this.defeatExecute = defeatExecute;
-    }
-
-    protected void endCheck(){
+    final protected void endCheck() {
         // 종료 처리 확인 후에 패배 승리 확인
-
-
+        if (isEnd()) {
+            if (isVictory()) {
+                victoryEndExecute.run();
+            } else if (isDefeat()) {
+                defeatEndExecute.run();
+            } else {
+                basicEndExecute.run();
+            }
+        }
     }
+
+    protected abstract boolean isEnd();
 
     protected abstract boolean isVictory();
+
     protected abstract boolean isDefeat();
 
-/*
-    승리조건등도 콜백에서 이 클래스의 함수를 호출하는 것으로 한다.
-    이걸로 콜백에서 처리하는 코드가 된다. 메시지는 단순히 보내는 것만 하도록 한다. final로
     public void moveCurrentPlayer(Location location) {
-        Optional<Player> currentPlayer = Optional.ofNullable(playerList
+        //send message
+        MovePlayerMessage movePlayerMessage = MovePlayerMessage.builder().build();
+        socketClient.sendMatchData(
+                match.getMatchId(),
+                movePlayerMessage.getOpCode().ordinal(),
+                movePlayerMessage.getPayload().getBytes(StandardCharsets.UTF_8));
+    }
+
+    public Optional<Player> getCurrentPlayer() {
+        return getPlayer(session.getUserId());
+    }
+
+    public Optional<Player> getPlayer(String userId){
+        Optional.ofNullable(playerList
                 .stream()
                 .filter(player -> player.getUserId().equals(session.getUserId()))
                 .collect(Collectors.toList()).get(0));
-        currentPlayer.ifPresent(player->player.updateLocation(location));
     }
-*/
+
     @Override
     public void onDisconnect(Throwable t) {
         super.onDisconnect(t);
@@ -110,6 +140,25 @@ public abstract class RoomOperator extends AbstractSocketListener {
     @Override
     public void onMatchData(MatchData matchData) {
         super.onMatchData(matchData);
+        long networkOpCode = matchData.getOpCode();
+        byte[] networkBytes = matchData.getData();
+
+        OpCode opCode = OpCode.values()[(int) networkOpCode];
+        String data = new String(networkBytes,StandardCharsets.UTF_8);
+        switch (opCode){
+            case MOVE_PLAYER:
+                MovePlayerMessage movePlayerMessage = gson.fromJson(data,MovePlayerMessage.class);
+                Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
+                optionalPlayer.ifPresent((player -> {
+                    Location location = new Location("");
+                    location.setLatitude(movePlayerMessage.getLatitude());
+                    location.setLongitude(movePlayerMessage.getLongitude());
+                    player.updateLocation(location);
+                }));
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -135,7 +184,9 @@ public abstract class RoomOperator extends AbstractSocketListener {
             }
         }
         // 새로 들어온 사람이 위치를 갱신할 수 있도록 이동메시지를 보낸다.
-
+        getCurrentPlayer().ifPresent((player -> {
+            player.getLocation().ifPresent(this::moveCurrentPlayer);
+        }));
     }
 
     @Override
