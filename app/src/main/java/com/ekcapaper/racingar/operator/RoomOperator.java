@@ -28,6 +28,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -43,6 +46,8 @@ public abstract class RoomOperator extends AbstractSocketListener {
     private final Session session;
     private final SocketClient socketClient;
     private final Match match;
+    // 종료조건을 확인하는 쓰레드
+    private ScheduledExecutorService scheduledExecutorServiceEndCheck;
     // 액티비티나 다른 함수에서 이 클래스에서 작업을 마치고 이후에 처리할 내용을 정의한다.
     @Setter
     private Runnable victoryEndExecute;
@@ -52,7 +57,6 @@ public abstract class RoomOperator extends AbstractSocketListener {
     private Runnable basicEndExecute;
     // 유틸리티
     private final Gson gson = new Gson();
-    // 쓰레드
     
     public RoomOperator(Session session, SocketClient socketClient, Match match) {
         // 정보
@@ -63,17 +67,18 @@ public abstract class RoomOperator extends AbstractSocketListener {
         this.session = session;
         this.socketClient = socketClient;
         this.match = match;
-        // 종료조건 확인
-
-        // 콜백
+        // 종료조건 콜백
         this.victoryEndExecute = () -> {
         };
         this.defeatEndExecute = () -> {
         };
         this.basicEndExecute = () -> {
         };
-
+        // 서버와 연동
         socketClient.connect(session, this);
+        // 종료조건 확인 시작
+        scheduledExecutorServiceEndCheck = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorServiceEndCheck.scheduleWithFixedDelay(this::endCheck,1,1, TimeUnit.SECONDS);
     }
 
     final protected void endCheck() {
