@@ -1,16 +1,18 @@
 package com.ekcapaper.racingar.network.message;
 
-import com.ekcapaper.racingar.model.Message;
-import com.ekcapaper.racingar.network.RacingArOpCode;
+import com.ekcapaper.racingar.network.RrNetworkCode;
 import com.google.gson.Gson;
 
-public class RacingArMessageFactory {
+public class RrMessageFactory {
     static private Gson gson;
-    static{
+    static {
         gson = new Gson();
     }
 
-    public static RacingArMessage createMessage(RacingArOpCode command, String payload){
+    public static RrMessage createMessage(RrNetworkCode command, String payload){
+        
+
+        NetworkCode
         switch (command){
             case OP_CHAT:
                 return new RacingArTestMessage(payload);

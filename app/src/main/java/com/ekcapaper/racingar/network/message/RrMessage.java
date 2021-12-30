@@ -1,17 +1,17 @@
 package com.ekcapaper.racingar.network.message;
 
-import com.ekcapaper.racingar.network.RacingArOpCode;
+import com.ekcapaper.racingar.network.RrNetworkCode;
 
-public abstract class RacingArMessage {
-    private final RacingArOpCode command;
+public class RrMessage {
+    private final RrNetworkCode command;
     private final String payload;
 
-    public RacingArMessage(RacingArOpCode command, String payload){
+    public RrMessage(RrNetworkCode command, String payload) {
         this.command = command;
         this.payload = payload;
     }
 
-    public RacingArOpCode getCommand() {
+    public RrNetworkCode getCommand() {
         return command;
     }
 
