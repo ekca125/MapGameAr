@@ -104,7 +104,7 @@ public abstract class RoomOperator extends AbstractSocketListener {
     }
 
     public Optional<Player> getPlayer(String userId){
-        Optional.ofNullable(playerList
+        return Optional.ofNullable(playerList
                 .stream()
                 .filter(player -> player.getUserId().equals(session.getUserId()))
                 .collect(Collectors.toList()).get(0));
