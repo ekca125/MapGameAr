@@ -1,12 +1,10 @@
-package com.ekcapaper.racingar.network.message;
+package com.ekcapaper.racingar.network;
 
-import com.ekcapaper.racingar.network.OpCode;
-
-public class RacingArMessage {
+public class Message {
     OpCode opCode;
     String payload;
 
-    public RacingArMessage(OpCode opCode, String payload) {
+    public Message(OpCode opCode, String payload) {
         this.opCode = opCode;
         this.payload = payload;
     }
