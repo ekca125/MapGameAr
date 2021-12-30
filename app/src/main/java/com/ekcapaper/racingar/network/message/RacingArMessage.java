@@ -2,7 +2,7 @@ package com.ekcapaper.racingar.network.message;
 
 import com.ekcapaper.racingar.network.RacingArOpCode;
 
-public class RacingArMessage {
+public abstract class RacingArMessage {
     private final RacingArOpCode command;
     private final String payload;
 
