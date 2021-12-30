@@ -1,6 +1,5 @@
 package com.ekcapaper.racingar.network.message;
 
-import com.ekcapaper.racingar.network.RrNetworkCode;
 import com.google.gson.Gson;
 
 public class RrMessageFactory {
@@ -9,8 +8,8 @@ public class RrMessageFactory {
         gson = new Gson();
     }
 
-    public static RrMessage createMessage(RrNetworkCode command, String payload){
-        
+    public static RrMessage createMessage(RnCode command, String payload){
+
 
         NetworkCode
         switch (command){
@@ -24,5 +23,8 @@ public class RrMessageFactory {
     public static RacingArMessage parseMessage(String message){
         RacingArMessage racingArMessage = gson.fromJson(message,RacingArMessage.class);
         return createMessage(racingArMessage.getCommand(), racingArMessage.getPayload());
+
+        NetworkOpCode
+                NetworkOpCode
     }
 }
