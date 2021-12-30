@@ -45,13 +45,13 @@ public abstract class RoomOperator extends AbstractSocketListener {
     private final List<String> chattingLog;
     // 액티비티나 다른 함수에서 이 클래스에서 작업을 마치고 이후에 처리할 내용을 정의한다.
     @Setter
-    Runnable victoryEndExecute;
+    private Runnable victoryEndExecute;
     @Setter
-    Runnable defeatEndExecute;
+    private Runnable defeatEndExecute;
     @Setter
-    Runnable basicEndExecute;
+    private Runnable basicEndExecute;
     // 유틸리티
-    Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     public RoomOperator(Session session, SocketClient socketClient, Match match) {
         this.userPresenceList = new ArrayList<>();
