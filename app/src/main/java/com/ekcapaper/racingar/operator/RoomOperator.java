@@ -47,12 +47,27 @@ public abstract class RoomOperator extends AbstractSocketListener {
 
         socketClient.connect(session, this);
     }
-    
-    // 이런 꼴로 만든다.
-    Consumer victory
-    abstract protected void victoryCheck(){
-        victory.accept();
+
+    // 액티비티나 다른 함수에서 이 클래스에서 작업을 마치고 이후에 처리할 내용을 정의한다.
+    Consumer<Void> victoryExecute;
+    Consumer<Void> defeatExecute;
+
+    public void setVictoryExecute(Consumer<Void> victoryExecute) {
+        this.victoryExecute = victoryExecute;
     }
+
+    public void setDefeatExecute(Consumer<Void> defeatExecute) {
+        this.defeatExecute = defeatExecute;
+    }
+
+    protected void endCheck(){
+        // 종료 처리 확인 후에 패배 승리 확인
+
+
+    }
+
+    protected abstract boolean isVictory();
+    protected abstract boolean isDefeat();
 
 /*
     승리조건등도 콜백에서 이 클래스의 함수를 호출하는 것으로 한다.
