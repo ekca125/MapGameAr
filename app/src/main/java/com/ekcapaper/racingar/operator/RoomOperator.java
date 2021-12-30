@@ -37,12 +37,12 @@ public abstract class RoomOperator extends AbstractSocketListener {
     // 서버에서의 유저들과 현재 방에서의 플레이어를 의미한다.
     private final List<UserPresence> userPresenceList;
     private final List<Player> playerList;
+    // 채팅 데이터
+    private final List<String> chattingLog;
     // 서버와의 연동
     private final Session session;
     private final SocketClient socketClient;
     private final Match match;
-    // 채팅 데이터
-    private final List<String> chattingLog;
     // 액티비티나 다른 함수에서 이 클래스에서 작업을 마치고 이후에 처리할 내용을 정의한다.
     @Setter
     private Runnable victoryEndExecute;
@@ -52,16 +52,20 @@ public abstract class RoomOperator extends AbstractSocketListener {
     private Runnable basicEndExecute;
     // 유틸리티
     private final Gson gson = new Gson();
-
+    // 쓰레드
+    
     public RoomOperator(Session session, SocketClient socketClient, Match match) {
+        // 정보
         this.userPresenceList = new ArrayList<>();
         this.playerList = new ArrayList<>();
         this.chattingLog = new ArrayList<>();
-
+        // 서버
         this.session = session;
         this.socketClient = socketClient;
         this.match = match;
+        // 종료조건 확인
 
+        // 콜백
         this.victoryEndExecute = () -> {
         };
         this.defeatEndExecute = () -> {
