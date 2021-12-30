@@ -89,4 +89,5 @@ public class AddressMapServiceTest {
         Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom100(mapRange);
         boolean result = requester.execute().isSuccessful();
         assertTrue(result);
+    }
 }
