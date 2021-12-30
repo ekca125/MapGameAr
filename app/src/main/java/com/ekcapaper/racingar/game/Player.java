@@ -2,12 +2,15 @@ package com.ekcapaper.racingar.game;
 
 import android.location.Location;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import lombok.Getter;
 
 public class Player {
+    @Getter
     String userId;
+    @Getter
     Optional<Location> location;
 
     public Player(String userId) {
@@ -18,11 +21,16 @@ public class Player {
         this.location = Optional.ofNullable(location);
     }
 
-    public String getUserId() {
-        return userId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return Objects.equals(userId, player.userId);
     }
 
-    public Optional<Location> getLocation() {
-        return location;
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
     }
 }

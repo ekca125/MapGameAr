@@ -164,25 +164,22 @@ public abstract class RoomOperator extends AbstractSocketListener {
     @Override
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
         super.onMatchPresence(matchPresence);
-        // 등록 처리
-        List<UserPresence> joins = matchPresence.getJoins();
-        for (UserPresence userPresence : joins) {
-            userPresenceList.add(userPresence);
-            playerList.add(new Player(userPresence.getUserId()));
-        }
-        // 퇴장 처리
-        for (UserPresence leave : matchPresence.getLeaves()) {
-            for (int i = 0; i < userPresenceList.size(); i++) {
-                if (userPresenceList.get(i).getUserId().equals(leave.getUserId())) {
-                    userPresenceList.remove(i);
-                }
-            }
-            for (int i = 0; i < playerList.size(); i++) {
-                if (playerList.get(i).getUserId().equals(leave.getUserId())) {
-                    playerList.remove(i);
-                }
-            }
-        }
+        // join 처리
+        List<UserPresence> joinList = matchPresence.getJoins();
+        List<Player> joinPlayerList = joinList.stream()
+                .map((userPresence) -> new Player(userPresence.getUserId()))
+                .collect(Collectors.toList());
+        this.userPresenceList.addAll(joinList);
+        this.playerList.addAll(joinPlayerList);
+
+        // leave 처리
+        List<UserPresence> leaveList = matchPresence.getLeaves();
+        List<Player> leavePlayerList = leaveList.stream()
+                .map((userPresence -> new Player(userPresence.getUserId())))
+                .collect(Collectors.toList());
+        this.userPresenceList.removeAll(leaveList);
+        this.playerList.removeAll(leavePlayerList);
+
         // 새로 들어온 사람이 위치를 갱신할 수 있도록 이동메시지를 보낸다.
         getCurrentPlayer().ifPresent((player -> {
             player.getLocation().ifPresent(this::moveCurrentPlayer);

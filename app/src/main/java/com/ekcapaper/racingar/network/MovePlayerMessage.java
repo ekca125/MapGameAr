@@ -24,6 +24,4 @@ public class MovePlayerMessage extends Message {
         Gson gson = new Gson();
         return gson.toJson(this);
     }
-
-
 }
