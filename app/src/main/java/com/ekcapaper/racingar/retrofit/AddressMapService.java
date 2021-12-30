@@ -1,6 +1,9 @@
 package com.ekcapaper.racingar.retrofit;
 
+import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -10,20 +13,20 @@ import retrofit2.http.Path;
 
 public interface AddressMapService {
     @GET("/api/v1/address/id={id}")
-    Call<String> findAddress(@Path("id") long id);
+    Call<AddressDto> findAddress(@Path("id") long id);
 
     @GET("/api/v1/address/draw/random")
-    Call<String> drawRandom();
+    Call<AddressDto> drawRandom();
 
     @POST("/api/v1/address/draw/range")
-    Call<String> drawMapRangeRandom(@Body MapRange mapRange);
+    Call<List<AddressDto>> drawMapRangeRandom(@Body MapRange mapRange);
 
     @POST("/api/v1/address/draw/range-limit-10")
-    Call<String> drawMapRangeRandom10(@Body MapRange mapRange);
+    Call<List<AddressDto>> drawMapRangeRandom10(@Body MapRange mapRange);
 
     @POST("/api/v1/address/draw/range-limit-50")
-    Call<String> drawMapRangeRandom50(@Body MapRange mapRange);
+    Call<List<AddressDto>> drawMapRangeRandom50(@Body MapRange mapRange);
 
     @POST("/api/v1/address/draw/range-limit-100")
-    Call<String> drawMapRangeRandom100(@Body MapRange mapRange);
+    Call<List<AddressDto>> drawMapRangeRandom100(@Body MapRange mapRange);
 }

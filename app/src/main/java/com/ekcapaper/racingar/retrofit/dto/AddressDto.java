@@ -1,12 +1,17 @@
 package com.ekcapaper.racingar.retrofit.dto;
 
+import com.google.gson.annotations.SerializedName;
+
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class AddressDto {
+    @SerializedName("id")
     long id;
+    @SerializedName("latitude")
     double latitude;
+    @SerializedName("longitude")
     double longitude;
 
     @Builder
