@@ -28,6 +28,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -37,39 +40,45 @@ public abstract class RoomOperator extends AbstractSocketListener {
     // 서버에서의 유저들과 현재 방에서의 플레이어를 의미한다.
     private final List<UserPresence> userPresenceList;
     private final List<Player> playerList;
+    // 채팅 데이터
+    private final List<String> chattingLog;
     // 서버와의 연동
     private final Session session;
     private final SocketClient socketClient;
     private final Match match;
-    // 채팅 데이터
-    private final List<String> chattingLog;
+    // 종료조건을 확인하는 쓰레드
+    private ScheduledExecutorService scheduledExecutorServiceEndCheck;
     // 액티비티나 다른 함수에서 이 클래스에서 작업을 마치고 이후에 처리할 내용을 정의한다.
     @Setter
-    Runnable victoryEndExecute;
+    private Runnable victoryEndExecute;
     @Setter
-    Runnable defeatEndExecute;
+    private Runnable defeatEndExecute;
     @Setter
-    Runnable basicEndExecute;
+    private Runnable basicEndExecute;
     // 유틸리티
-    Gson gson = new Gson();
-
+    private final Gson gson = new Gson();
+    
     public RoomOperator(Session session, SocketClient socketClient, Match match) {
+        // 정보
         this.userPresenceList = new ArrayList<>();
         this.playerList = new ArrayList<>();
         this.chattingLog = new ArrayList<>();
-
+        // 서버
         this.session = session;
         this.socketClient = socketClient;
         this.match = match;
-
+        // 종료조건 콜백
         this.victoryEndExecute = () -> {
         };
         this.defeatEndExecute = () -> {
         };
         this.basicEndExecute = () -> {
         };
-
+        // 서버와 연동
         socketClient.connect(session, this);
+        // 종료조건 확인 시작
+        scheduledExecutorServiceEndCheck = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorServiceEndCheck.scheduleWithFixedDelay(this::endCheck,1,1, TimeUnit.SECONDS);
     }
 
     final protected void endCheck() {
