@@ -33,6 +33,8 @@ public class RoomOperator extends AbstractSocketListener {
     Session session;
     SocketClient socketClient;
     Match match;
+    // 채팅 데이터
+    List<String> chattingLog;
 
     public RoomOperator(Session session, SocketClient socketClient, Match match) {
         this.userPresenceList = new ArrayList<>();
@@ -66,6 +68,8 @@ public class RoomOperator extends AbstractSocketListener {
     @Override
     public void onChannelMessage(ChannelMessage message) {
         super.onChannelMessage(message);
+        String chatMessage = message.getUsername() + message.getContent();
+        chattingLog.add(chatMessage);
     }
 
     @Override
