@@ -16,7 +16,9 @@ import com.heroiclabs.nakama.StreamPresenceEvent;
 import com.heroiclabs.nakama.UserPresence;
 import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
+import com.heroiclabs.nakama.api.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoomOperator extends AbstractSocketListener{
@@ -29,6 +31,9 @@ public class RoomOperator extends AbstractSocketListener{
     Match match;
 
     public RoomOperator(Session session, SocketClient socketClient, Match match) {
+        this.userPresenceList = new ArrayList<>();
+        this.playerList = new ArrayList<>();
+
         this.session = session;
         this.socketClient = socketClient;
         this.match = match;
@@ -69,6 +74,14 @@ public class RoomOperator extends AbstractSocketListener{
     @Override
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
         super.onMatchPresence(matchPresence);
+        userPresenceList.addAll(matchPresence.getJoins());
+        for (UserPresence leave : matchPresence.getLeaves()) {
+            for (int i = 0; i < userPresenceList.size(); i++) {
+                if (userPresenceList.get(i).getUserId().equals(leave.getUserId())) {
+                    userPresenceList.remove(i);
+                }
+            }
+        };
     }
 
     @Override
