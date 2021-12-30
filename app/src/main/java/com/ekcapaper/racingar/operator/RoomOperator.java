@@ -23,9 +23,10 @@ import com.heroiclabs.nakama.api.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class RoomOperator extends AbstractSocketListener {
+public abstract class RoomOperator extends AbstractSocketListener {
     // 서버에서의 유저들과 현재 방에서의 플레이어를 의미한다.
     List<UserPresence> userPresenceList;
     List<Player> playerList;
@@ -46,7 +47,16 @@ public class RoomOperator extends AbstractSocketListener {
 
         socketClient.connect(session, this);
     }
+    
+    // 이런 꼴로 만든다.
+    Consumer victory
+    abstract protected void victoryCheck(){
+        victory.accept();
+    }
 
+/*
+    승리조건등도 콜백에서 이 클래스의 함수를 호출하는 것으로 한다.
+    이걸로 콜백에서 처리하는 코드가 된다. 메시지는 단순히 보내는 것만 하도록 한다. final로
     public void moveCurrentPlayer(Location location) {
         Optional<Player> currentPlayer = Optional.ofNullable(playerList
                 .stream()
@@ -54,7 +64,7 @@ public class RoomOperator extends AbstractSocketListener {
                 .collect(Collectors.toList()).get(0));
         currentPlayer.ifPresent(player->player.updateLocation(location));
     }
-
+*/
     @Override
     public void onDisconnect(Throwable t) {
         super.onDisconnect(t);
@@ -68,7 +78,7 @@ public class RoomOperator extends AbstractSocketListener {
     @Override
     public void onChannelMessage(ChannelMessage message) {
         super.onChannelMessage(message);
-        String chatMessage = message.getUsername() + message.getContent();
+        String chatMessage = message.getUsername() + " : " + message.getContent();
         chattingLog.add(chatMessage);
     }
 
