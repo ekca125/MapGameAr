@@ -18,6 +18,10 @@ public class Player {
         this.location = Optional.ofNullable(location);
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
     public Optional<Location> getLocation() {
         return location;
     }

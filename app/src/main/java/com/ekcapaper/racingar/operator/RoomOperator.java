@@ -1,5 +1,7 @@
 package com.ekcapaper.racingar.operator;
 
+import android.location.Location;
+
 import com.ekcapaper.racingar.game.Player;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
@@ -20,8 +22,10 @@ import com.heroiclabs.nakama.api.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class RoomOperator extends AbstractSocketListener{
+public class RoomOperator extends AbstractSocketListener {
     // 서버에서의 유저들과 현재 방에서의 플레이어를 의미한다.
     List<UserPresence> userPresenceList;
     List<Player> playerList;
@@ -38,7 +42,15 @@ public class RoomOperator extends AbstractSocketListener{
         this.socketClient = socketClient;
         this.match = match;
 
-        socketClient.connect(session,this);
+        socketClient.connect(session, this);
+    }
+
+    public void moveCurrentPlayer(Location location) {
+        Optional<Player> currentPlayer = Optional.ofNullable(playerList
+                .stream()
+                .filter(player -> player.getUserId().equals(session.getUserId()))
+                .collect(Collectors.toList()).get(0));
+        currentPlayer.ifPresent(player->player.updateLocation(location));
     }
 
     @Override
@@ -74,15 +86,27 @@ public class RoomOperator extends AbstractSocketListener{
     @Override
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
         super.onMatchPresence(matchPresence);
-        userPresenceList.addAll(matchPresence.getJoins());
+        // 등록 처리
+        List<UserPresence> joins = matchPresence.getJoins();
+        for (UserPresence userPresence : joins) {
+            userPresenceList.add(userPresence);
+            playerList.add(new Player(userPresence.getUserId()));
+        }
+        // 퇴장 처리
         for (UserPresence leave : matchPresence.getLeaves()) {
             for (int i = 0; i < userPresenceList.size(); i++) {
                 if (userPresenceList.get(i).getUserId().equals(leave.getUserId())) {
                     userPresenceList.remove(i);
                 }
             }
-        };
+            for (int i = 0; i < playerList.size(); i++) {
+                if (playerList.get(i).getUserId().equals(leave.getUserId())) {
+                    playerList.remove(i);
+                }
+            }
+        }
         // 새로 들어온 사람이 위치를 갱신할 수 있도록 이동메시지를 보낸다.
+
     }
 
     @Override
