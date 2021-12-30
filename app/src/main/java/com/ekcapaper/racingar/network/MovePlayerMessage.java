@@ -3,9 +3,9 @@ package com.ekcapaper.racingar.network;
 import lombok.Builder;
 
 public class MovePlayerMessage extends Message {
-    String userId;
-    String latitude;
-    String longitude;
+    private final String userId;
+    private final String latitude;
+    private final String longitude;
 
     @Builder
     public MovePlayerMessage(String userId, String latitude, String longitude) {
@@ -17,7 +17,7 @@ public class MovePlayerMessage extends Message {
 
     @Override
     public String getPayload() {
-        
+
 
         return null;
     }
