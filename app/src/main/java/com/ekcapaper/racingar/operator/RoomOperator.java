@@ -82,6 +82,7 @@ public class RoomOperator extends AbstractSocketListener{
                 }
             }
         };
+        // 새로 들어온 사람이 위치를 갱신할 수 있도록 이동메시지를 보낸다.
     }
 
     @Override
