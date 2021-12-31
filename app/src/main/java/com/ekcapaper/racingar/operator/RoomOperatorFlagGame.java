@@ -1,7 +1,5 @@
 package com.ekcapaper.racingar.operator;
 
-import android.location.Location;
-
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
@@ -15,12 +13,14 @@ import java.util.Optional;
 import lombok.Builder;
 
 public class RoomOperatorFlagGame extends RoomOperator{
-    List<GameFlag> gameFlagList;
+    private final List<GameFlag> gameFlagList;
+    private final int timeLimit;
 
     @Builder
-    public RoomOperatorFlagGame(Session session, SocketClient socketClient, Match match, List<GameFlag> gameFlagList) {
+    public RoomOperatorFlagGame(Session session, SocketClient socketClient, Match match, List<GameFlag> gameFlagList, int timeLimit) {
         super(session, socketClient, match);
         this.gameFlagList = gameFlagList;
+        this.timeLimit = timeLimit;
     }
 
     @Override
