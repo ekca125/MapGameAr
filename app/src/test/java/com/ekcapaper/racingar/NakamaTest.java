@@ -1,34 +1,29 @@
-package com.ekcapaper.racingar.operator;
+package com.ekcapaper.racingar;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import android.location.Location;
 
-import com.ekcapaper.racingar.AccountStub;
-import com.ekcapaper.racingar.LocationStub;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.utils.MeterToLatitudeConverter;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketClient;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
-public class RoomOperatorFlagGameFactoryTest {
+public class NakamaTest {
     @Test
-    public void createRoomOperator() throws ExecutionException, InterruptedException {
+    public void functionTest() throws ExecutionException, InterruptedException {
         Client client;
-        Location location;
         Session session;
         SocketClient socketClient;
         Match match;
-        double mapLengthKilometer;
-        int timeLimitSecond;
 
         client = new DefaultClient(
                 KeyStorageNakama.getServerKey(),
@@ -48,22 +43,6 @@ public class RoomOperatorFlagGameFactoryTest {
 
         match = socketClient.createMatch().get();
         assertNotNull(match);
-
-        location = LocationStub.location;
-        mapLengthKilometer = 1.0;
-        timeLimitSecond = 60;
-
-        RoomOperatorFlagGameFactory roomOperatorFlagGameFactory = RoomOperatorFlagGameFactory
-                .builder()
-                .location(location)
-                .mapLengthKilometer(mapLengthKilometer)
-                .match(match)
-                .session(session)
-                .socketClient(socketClient)
-                .timeLimitSecond(timeLimitSecond)
-                .build();
-        RoomOperator roomOperator = roomOperatorFlagGameFactory.createRoomOperator();
-        roomOperator.startGame();
-        Assert.assertFalse(roomOperator.isEnd());
     }
+
 }
