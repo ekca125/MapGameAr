@@ -9,6 +9,7 @@ import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketClient;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -18,8 +19,8 @@ import lombok.Builder;
 public class RoomOperatorFlagGame extends RoomOperator{
     private final List<GameFlag> gameFlagList;
     private final int timeLimitSecond;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
 
     @Builder
     public RoomOperatorFlagGame(Session session, SocketClient socketClient, Match match, List<GameFlag> gameFlagList, int timeLimitSecond) {
@@ -30,7 +31,8 @@ public class RoomOperatorFlagGame extends RoomOperator{
 
     @Override
     public void startGame() {
-        startTime = LocalTime.now();
+        startDateTime = LocalDateTime.now();
+        endDateTime = startDateTime.plusSeconds(timeLimitSecond);
     }
 
     @Override
@@ -39,7 +41,8 @@ public class RoomOperatorFlagGame extends RoomOperator{
             // 끝나지 않음
             return false;
         }
-        return false;
+        LocalDateTime currentLocalDateTime = LocalDateTime.now();
+        return currentLocalDateTime.isAfter(endDateTime);
     }
 
     @Override

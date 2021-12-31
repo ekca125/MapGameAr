@@ -57,7 +57,9 @@ public abstract class RoomOperator extends AbstractSocketListener {
     private Runnable basicEndExecute;
     // 유틸리티
     private final Gson gson = new Gson();
-    
+    // 상태
+    private boolean started;
+
     public RoomOperator(Session session, SocketClient socketClient, Match match) {
         // 정보
         this.userPresenceList = new ArrayList<>();
@@ -79,6 +81,8 @@ public abstract class RoomOperator extends AbstractSocketListener {
         // 종료조건 확인 시작
         scheduledExecutorServiceEndCheck = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorServiceEndCheck.scheduleWithFixedDelay(this::endCheck,1,1, TimeUnit.SECONDS);
+        //
+        started = false;
     }
 
     final protected void endCheck() {
@@ -94,7 +98,9 @@ public abstract class RoomOperator extends AbstractSocketListener {
         }
     }
 
-    public abstract void startGame();
+    public void startGame(){
+        started = true;
+    }
 
     protected abstract boolean isEnd();
 
