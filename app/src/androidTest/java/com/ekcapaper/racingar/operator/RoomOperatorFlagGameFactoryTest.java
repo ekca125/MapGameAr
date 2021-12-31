@@ -64,6 +64,5 @@ public class RoomOperatorFlagGameFactoryTest {
                 .build();
         RoomOperator roomOperator = roomOperatorFlagGameFactory.createRoomOperator();
         roomOperator.startGame();
-        Assert.assertFalse(roomOperator.isEnd());
     }
 }
