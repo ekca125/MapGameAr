@@ -5,8 +5,11 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 
 public class RoomOperatorFlagGameTest {
-    @Test
-    
+    @Before
+    public void connectServer(){
+
+
+    }
 
 
 }

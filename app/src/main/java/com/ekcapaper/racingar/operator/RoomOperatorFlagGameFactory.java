@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.Builder;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -27,6 +28,7 @@ public class RoomOperatorFlagGameFactory implements RoomOperatorAbstractFactory{
     private final double mapLengthKilometer;
     private final int timeLimitSecond;
 
+    @Builder
     public RoomOperatorFlagGameFactory(Location location,
                                        Session session,
                                        SocketClient socketClient,
