@@ -1,5 +1,7 @@
 package com.ekcapaper.racingar.operator;
 
+import android.location.Location;
+
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
@@ -7,6 +9,7 @@ import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketClient;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,17 +17,28 @@ import lombok.Builder;
 
 public class RoomOperatorFlagGame extends RoomOperator{
     private final List<GameFlag> gameFlagList;
-    private final int timeLimit;
+    private final int timeLimitSecond;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
     @Builder
-    public RoomOperatorFlagGame(Session session, SocketClient socketClient, Match match, List<GameFlag> gameFlagList, int timeLimit) {
+    public RoomOperatorFlagGame(Session session, SocketClient socketClient, Match match, List<GameFlag> gameFlagList, int timeLimitSecond) {
         super(session, socketClient, match);
         this.gameFlagList = gameFlagList;
-        this.timeLimit = timeLimit;
+        this.timeLimitSecond = timeLimitSecond;
+    }
+
+    @Override
+    public void startGame() {
+        startTime = LocalTime.now();
     }
 
     @Override
     protected boolean isEnd() {
+        if(timeLimitSecond == 0){
+            // 끝나지 않음
+            return false;
+        }
         return false;
     }
 

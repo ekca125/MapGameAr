@@ -94,6 +94,8 @@ public abstract class RoomOperator extends AbstractSocketListener {
         }
     }
 
+    public abstract void startGame();
+
     protected abstract boolean isEnd();
 
     protected abstract boolean isVictory();

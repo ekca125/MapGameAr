@@ -25,20 +25,20 @@ public class RoomOperatorFlagGameFactory implements RoomOperatorAbstractFactory{
     private final Match match;
 
     private final double mapLengthKilometer;
-    private final int timeLimit;
+    private final int timeLimitSecond;
 
     public RoomOperatorFlagGameFactory(Location location,
                                        Session session,
                                        SocketClient socketClient,
                                        Match match,
                                        double mapLengthKilometer,
-                                       int timeLimit) {
+                                       int timeLimitSecond) {
         this.location = location;
         this.session = session;
         this.socketClient = socketClient;
         this.match = match;
         this.mapLengthKilometer = mapLengthKilometer;
-        this.timeLimit = timeLimit;
+        this.timeLimitSecond = timeLimitSecond;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class RoomOperatorFlagGameFactory implements RoomOperatorAbstractFactory{
                         .match(match)
                         .session(session)
                         .socketClient(socketClient)
-                        .timeLimit(timeLimit)
+                        .timeLimitSecond(timeLimitSecond)
                         .build();
             }
         } catch (IOException e) {
