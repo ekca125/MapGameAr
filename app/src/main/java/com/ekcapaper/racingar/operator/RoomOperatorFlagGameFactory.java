@@ -55,13 +55,12 @@ public class RoomOperatorFlagGameFactory implements RoomOperatorAbstractFactory{
                             return new GameFlag(location);
                         }))
                         .collect(Collectors.toList());
-                RoomOperatorFlagGame roomOperatorFlagGame = RoomOperatorFlagGame.builder()
+                return RoomOperatorFlagGame.builder()
                         .gameFlagList(gameFlagList)
                         .match(match)
                         .session(session)
                         .socketClient(socketClient)
                         .build();
-                return roomOperatorFlagGame;
             }
         } catch (IOException e) {
             e.printStackTrace();
