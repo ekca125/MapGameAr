@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
-public class NakamaTest {
+public class ServerEngineTest {
     @Test
     public void functionTest() throws ExecutionException, InterruptedException {
         Client client;
