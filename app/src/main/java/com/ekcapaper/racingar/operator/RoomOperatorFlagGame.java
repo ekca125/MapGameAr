@@ -32,12 +32,18 @@ public class RoomOperatorFlagGame extends RoomOperator {
 
     @Override
     public void startGame() {
+        super.startGame();
         startDateTime = LocalDateTime.now();
         endDateTime = startDateTime.plusSeconds(timeLimitSecond);
     }
 
     @Override
     protected boolean isEnd() {
+        if(!isStarted()){
+            // 시작하지 않았으므로 끝나지도 않음
+            return false;
+        }
+
         if (timeLimitSecond == 0) {
             // 끝나지 않음
             return false;

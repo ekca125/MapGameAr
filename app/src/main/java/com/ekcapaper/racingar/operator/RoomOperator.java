@@ -78,9 +78,6 @@ public abstract class RoomOperator extends AbstractSocketListener {
         };
         // 서버와 연동
         socketClient.connect(session, this);
-        // 종료조건 확인 시작
-        scheduledExecutorServiceEndCheck = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorServiceEndCheck.scheduleWithFixedDelay(this::endCheck,1,1, TimeUnit.SECONDS);
         //
         started = false;
     }
@@ -100,9 +97,18 @@ public abstract class RoomOperator extends AbstractSocketListener {
 
     public void startGame(){
         started = true;
+        // 종료조건 확인 시작
+        scheduledExecutorServiceEndCheck = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorServiceEndCheck.scheduleWithFixedDelay(this::endCheck,1,1, TimeUnit.SECONDS);
     }
 
-    protected abstract boolean isEnd();
+    protected boolean isStarted(){
+        return started;
+    }
+
+    protected boolean isEnd(){
+        return false;
+    }
 
     protected abstract boolean isVictory();
 
