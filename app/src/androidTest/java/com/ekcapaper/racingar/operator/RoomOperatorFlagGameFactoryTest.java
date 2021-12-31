@@ -25,6 +25,7 @@ public class RoomOperatorFlagGameFactoryTest {
           double mapLengthKilometer,
           int timeLimitSecond
      */
+    /*
     @Test
     public void createRoomOperator() {
         Location location = LocationStub.location;
@@ -39,4 +40,6 @@ public class RoomOperatorFlagGameFactoryTest {
         RoomOperatorFlagGameFactory roomOperatorFlagGameFactory = new RoomOperatorFlagGameFactory();
 
     }
+
+     */
 }
