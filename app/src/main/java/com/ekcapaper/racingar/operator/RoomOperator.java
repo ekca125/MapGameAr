@@ -158,17 +158,21 @@ public abstract class RoomOperator extends AbstractSocketListener {
         switch (opCode){
             case MOVE_PLAYER:
                 MovePlayerMessage movePlayerMessage = gson.fromJson(data,MovePlayerMessage.class);
-                Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
-                optionalPlayer.ifPresent((player -> {
-                    Location location = new Location("");
-                    location.setLatitude(movePlayerMessage.getLatitude());
-                    location.setLongitude(movePlayerMessage.getLongitude());
-                    player.updateLocation(location);
-                }));
+                onMovePlayer(movePlayerMessage);
                 break;
             default:
                 break;
         }
+    }
+
+    protected void onMovePlayer(MovePlayerMessage movePlayerMessage){
+        Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
+        optionalPlayer.ifPresent((player -> {
+            Location location = new Location("");
+            location.setLatitude(movePlayerMessage.getLatitude());
+            location.setLongitude(movePlayerMessage.getLongitude());
+            player.updateLocation(location);
+        }));
     }
 
     @Override
