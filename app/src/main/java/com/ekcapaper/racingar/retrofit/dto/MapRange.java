@@ -1,5 +1,10 @@
 package com.ekcapaper.racingar.retrofit.dto;
 
+import android.location.Location;
+
+import com.ekcapaper.racingar.utils.MeterToLatitudeConverter;
+import com.ekcapaper.racingar.utils.MeterToLongitudeConverter;
+
 import lombok.Builder;
 
 public class MapRange {
@@ -40,5 +45,25 @@ public class MapRange {
                 ", endLatitude=" + endLatitude +
                 ", endLongitude=" + endLongitude +
                 '}';
+    }
+
+    static public MapRange calculateMapRange(Location mapCenter, double mapLengthKilometer){
+        double currentLatitude = mapCenter.getLatitude();
+        double currentLongitude = mapCenter.getLongitude();
+
+        MeterToLatitudeConverter meterToLatitudeConverter = new MeterToLatitudeConverter();
+        MeterToLongitudeConverter meterToLongitudeConverter = new MeterToLongitudeConverter(currentLatitude);
+
+        double distanceKilometer = mapLengthKilometer / 2;
+
+        double halfHeightLatitude = meterToLatitudeConverter.convertKiloMeterToLatitude(distanceKilometer);
+        double halfWidthLongitude = meterToLongitudeConverter.convertKilometerToLongitude(distanceKilometer);
+
+        double startLatitude = currentLatitude - halfHeightLatitude;
+        double startLongitude = currentLongitude - halfWidthLongitude;
+        double endLatitude = currentLatitude + halfHeightLatitude;
+        double endLongitude = currentLongitude + halfWidthLongitude;
+
+        return new MapRange(startLatitude, startLongitude, endLatitude, endLongitude);
     }
 }
