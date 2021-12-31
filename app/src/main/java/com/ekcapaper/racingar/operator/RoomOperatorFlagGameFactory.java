@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.Builder;
+import lombok.NonNull;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -25,16 +26,16 @@ public class RoomOperatorFlagGameFactory implements RoomOperatorAbstractFactory{
     private final SocketClient socketClient;
     private final Match match;
 
-    private final double mapLengthKilometer;
-    private final int timeLimitSecond;
+    private final Double mapLengthKilometer;
+    private final Integer timeLimitSecond;
 
     @Builder
-    public RoomOperatorFlagGameFactory(Location location,
-                                       Session session,
-                                       SocketClient socketClient,
-                                       Match match,
-                                       double mapLengthKilometer,
-                                       int timeLimitSecond) {
+    public RoomOperatorFlagGameFactory(@NonNull Location location,
+                                       @NonNull Session session,
+                                       @NonNull SocketClient socketClient,
+                                       @NonNull Match match,
+                                       @NonNull Double mapLengthKilometer,
+                                       @NonNull Integer timeLimitSecond) {
         this.location = location;
         this.session = session;
         this.socketClient = socketClient;
