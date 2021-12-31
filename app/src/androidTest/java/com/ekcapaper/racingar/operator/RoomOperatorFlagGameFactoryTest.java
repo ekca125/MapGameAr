@@ -29,7 +29,7 @@ public class RoomOperatorFlagGameFactoryTest {
     private static int timeLimitSecond;
 
     @BeforeClass
-    void onlyOnce() throws ExecutionException, InterruptedException {
+    public static void onlyOnce() throws ExecutionException, InterruptedException {
         client = new DefaultClient(
                 KeyStorageNakama.getServerKey(),
                 KeyStorageNakama.getGrpcAddress(),
