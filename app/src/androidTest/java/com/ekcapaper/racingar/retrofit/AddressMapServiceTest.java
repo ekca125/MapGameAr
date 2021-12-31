@@ -2,6 +2,7 @@ package com.ekcapaper.racingar.retrofit;
 
 import static org.junit.Assert.*;
 
+import com.ekcapaper.racingar.LocationStub;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 
@@ -29,10 +30,10 @@ public class AddressMapServiceTest {
 
     @Test
     public void drawMapRange() throws IOException {
-        double startLatitude = 35.0979529784;
-        double startLongitude = 129.0219886069;
-        double endLatitude = 35.1066801454;
-        double endLongitude = 129.0290353612;
+        double startLatitude = LocationStub.startLatitude;
+        double startLongitude = LocationStub.startLongitude;
+        double endLatitude = LocationStub.endLatitude;
+        double endLongitude = LocationStub.endLongitude;
 
         MapRange mapRange = new MapRange(startLatitude, startLongitude, endLatitude, endLongitude);
         Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom(mapRange);
@@ -42,10 +43,10 @@ public class AddressMapServiceTest {
 
     @Test
     public void drawMapRangePrint() throws IOException {
-        double startLatitude = 35.0979529784;
-        double startLongitude = 129.0219886069;
-        double endLatitude = 35.1066801454;
-        double endLongitude = 129.0290353612;
+        double startLatitude = LocationStub.startLatitude;
+        double startLongitude = LocationStub.startLongitude;
+        double endLatitude = LocationStub.endLatitude;
+        double endLongitude = LocationStub.endLongitude;
 
         MapRange mapRange = new MapRange(startLatitude, startLongitude, endLatitude, endLongitude);
         Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom(mapRange);
@@ -54,10 +55,10 @@ public class AddressMapServiceTest {
 
     @Test
     public void drawMapRangeRandom10() throws IOException {
-        double startLatitude = 35.0979529784;
-        double startLongitude = 129.0219886069;
-        double endLatitude = 35.1066801454;
-        double endLongitude = 129.0290353612;
+        double startLatitude = LocationStub.startLatitude;
+        double startLongitude = LocationStub.startLongitude;
+        double endLatitude = LocationStub.endLatitude;
+        double endLongitude = LocationStub.endLongitude;
 
         MapRange mapRange = new MapRange(startLatitude, startLongitude, endLatitude, endLongitude);
         Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom10(mapRange);
@@ -67,10 +68,10 @@ public class AddressMapServiceTest {
 
     @Test
     public void drawMapRangeRandom50() throws IOException {
-        double startLatitude = 35.0979529784;
-        double startLongitude = 129.0219886069;
-        double endLatitude = 35.1066801454;
-        double endLongitude = 129.0290353612;
+        double startLatitude = LocationStub.startLatitude;
+        double startLongitude = LocationStub.startLongitude;
+        double endLatitude = LocationStub.endLatitude;
+        double endLongitude = LocationStub.endLongitude;
 
         MapRange mapRange = new MapRange(startLatitude, startLongitude, endLatitude, endLongitude);
         Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom50(mapRange);
@@ -80,10 +81,10 @@ public class AddressMapServiceTest {
 
     @Test
     public void drawMapRangeRandom100() throws IOException {
-        double startLatitude = 35.0979529784;
-        double startLongitude = 129.0219886069;
-        double endLatitude = 35.1066801454;
-        double endLongitude = 129.0290353612;
+        double startLatitude = LocationStub.startLatitude;
+        double startLongitude = LocationStub.startLongitude;
+        double endLatitude = LocationStub.endLatitude;
+        double endLongitude = LocationStub.endLongitude;
 
         MapRange mapRange = new MapRange(startLatitude, startLongitude, endLatitude, endLongitude);
         Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom100(mapRange);

@@ -57,7 +57,9 @@ public abstract class RoomOperator extends AbstractSocketListener {
     private Runnable basicEndExecute;
     // 유틸리티
     private final Gson gson = new Gson();
-    
+    // 상태
+    private boolean started;
+
     public RoomOperator(Session session, SocketClient socketClient, Match match) {
         // 정보
         this.userPresenceList = new ArrayList<>();
@@ -76,9 +78,8 @@ public abstract class RoomOperator extends AbstractSocketListener {
         };
         // 서버와 연동
         socketClient.connect(session, this);
-        // 종료조건 확인 시작
-        scheduledExecutorServiceEndCheck = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorServiceEndCheck.scheduleWithFixedDelay(this::endCheck,1,1, TimeUnit.SECONDS);
+        //
+        started = false;
     }
 
     final protected void endCheck() {
@@ -91,10 +92,28 @@ public abstract class RoomOperator extends AbstractSocketListener {
             } else {
                 basicEndExecute.run();
             }
+            endSequence();
         }
     }
 
-    protected abstract boolean isEnd();
+    private void endSequence(){
+        socketClient.leaveMatch(match.getMatchId());
+    }
+
+    public void startGame(){
+        started = true;
+        // 종료조건 확인 시작
+        scheduledExecutorServiceEndCheck = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorServiceEndCheck.scheduleWithFixedDelay(this::endCheck,1,1, TimeUnit.SECONDS);
+    }
+
+    protected boolean isStarted(){
+        return started;
+    }
+
+    protected boolean isEnd(){
+        return false;
+    }
 
     protected abstract boolean isVictory();
 
@@ -158,17 +177,21 @@ public abstract class RoomOperator extends AbstractSocketListener {
         switch (opCode){
             case MOVE_PLAYER:
                 MovePlayerMessage movePlayerMessage = gson.fromJson(data,MovePlayerMessage.class);
-                Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
-                optionalPlayer.ifPresent((player -> {
-                    Location location = new Location("");
-                    location.setLatitude(movePlayerMessage.getLatitude());
-                    location.setLongitude(movePlayerMessage.getLongitude());
-                    player.updateLocation(location);
-                }));
+                onMovePlayer(movePlayerMessage);
                 break;
             default:
                 break;
         }
+    }
+
+    protected void onMovePlayer(MovePlayerMessage movePlayerMessage){
+        Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
+        optionalPlayer.ifPresent((player -> {
+            Location location = new Location("");
+            location.setLatitude(movePlayerMessage.getLatitude());
+            location.setLongitude(movePlayerMessage.getLongitude());
+            player.updateLocation(location);
+        }));
     }
 
     @Override
