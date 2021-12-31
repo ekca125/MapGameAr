@@ -13,10 +13,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import lombok.Builder;
 
-public class RoomOperatorFlagGame extends RoomOperator{
+public class RoomOperatorFlagGame extends RoomOperator {
     private final List<GameFlag> gameFlagList;
     private final int timeLimitSecond;
     private LocalDateTime startDateTime;
@@ -37,7 +38,7 @@ public class RoomOperatorFlagGame extends RoomOperator{
 
     @Override
     protected boolean isEnd() {
-        if(timeLimitSecond == 0){
+        if (timeLimitSecond == 0) {
             // 끝나지 않음
             return false;
         }
@@ -68,5 +69,17 @@ public class RoomOperatorFlagGame extends RoomOperator{
                 }));
             });
         }));
+    }
+
+    public int getPoint(String userId) {
+        return (int) gameFlagList.stream()
+                .filter(gameFlag -> gameFlag.getUserId().equals(userId))
+                .count();
+    }
+
+    public List<GameFlag> getUnownedFlagList(){
+        return gameFlagList.stream()
+                .filter(gameFlag -> !gameFlag.isOwned())
+                .collect(Collectors.toList());
     }
 }
