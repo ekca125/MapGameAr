@@ -92,7 +92,12 @@ public abstract class RoomOperator extends AbstractSocketListener {
             } else {
                 basicEndExecute.run();
             }
+            endSequence();
         }
+    }
+
+    private void endSequence(){
+        socketClient.leaveMatch(match.getMatchId());
     }
 
     public void startGame(){
