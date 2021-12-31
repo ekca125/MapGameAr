@@ -17,6 +17,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.security.Key;
 import java.util.concurrent.ExecutionException;
 
 public class RoomOperatorFlagGameFactoryTest {
@@ -34,7 +35,7 @@ public class RoomOperatorFlagGameFactoryTest {
                 KeyStorageNakama.getServerKey(),
                 KeyStorageNakama.getGrpcAddress(),
                 KeyStorageNakama.getGrpcPort(),
-                true
+                KeyStorageNakama.getGrpcSSL()
         );
         session = client.authenticateEmail(AccountStub.ID,AccountStub.PASSWORD).get();
         assertNotNull(session);
@@ -42,7 +43,7 @@ public class RoomOperatorFlagGameFactoryTest {
         socketClient = client.createSocket(
                 KeyStorageNakama.getWebSocketAddress(),
                 KeyStorageNakama.getWebSocketPort(),
-                true
+                KeyStorageNakama.getWebSocketSSL()
         );
         assertNotNull(socketClient);
 

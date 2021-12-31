@@ -2,7 +2,6 @@ package com.ekcapaper.racingar.data;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import androidx.multidex.MultiDex;
 
@@ -31,7 +30,7 @@ public class ThisApplication extends Application {
                 KeyStorageNakama.getServerKey(),
                 KeyStorageNakama.getGrpcAddress(),
                 KeyStorageNakama.getGrpcPort(),
-                true
+                KeyStorageNakama.getGrpcSSL()
         );
         session = Optional.empty();
     }

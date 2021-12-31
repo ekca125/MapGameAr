@@ -34,14 +34,14 @@ public class RoomOperatorFlagGameTest {
                 KeyStorageNakama.getServerKey(),
                 KeyStorageNakama.getGrpcAddress(),
                 KeyStorageNakama.getGrpcPort(),
-                true
+                KeyStorageNakama.getGrpcSSL()
         );
         session = client.authenticateEmail(AccountStub.ID,AccountStub.PASSWORD).get();
         location = LocationStub.location;
         socketClient = client.createSocket(
                 KeyStorageNakama.getWebSocketAddress(),
                 KeyStorageNakama.getWebSocketPort(),
-                true
+                KeyStorageNakama.getWebSocketSSL()
         );
         match = socketClient.createMatch().get();
         mapLengthKilometer = 1.0;

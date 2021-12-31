@@ -3,10 +3,7 @@ package com.ekcapaper.racingar;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import android.location.Location;
-
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
-import com.ekcapaper.racingar.utils.MeterToLatitudeConverter;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Match;
@@ -29,7 +26,7 @@ public class ServerEngineTest {
                 KeyStorageNakama.getServerKey(),
                 KeyStorageNakama.getGrpcAddress(),
                 KeyStorageNakama.getGrpcPort(),
-                true
+                KeyStorageNakama.getGrpcSSL()
         );
         session = client.authenticateEmail(AccountStub.ID,AccountStub.PASSWORD).get();
         assertNotNull(session);
@@ -37,7 +34,7 @@ public class ServerEngineTest {
         socketClient = client.createSocket(
                 KeyStorageNakama.getWebSocketAddress(),
                 KeyStorageNakama.getWebSocketPort(),
-                true
+                KeyStorageNakama.getWebSocketSSL()
         );
         assertNotNull(socketClient);
 
