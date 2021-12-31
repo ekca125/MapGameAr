@@ -20,16 +20,16 @@ import org.junit.Test;
 import java.util.concurrent.ExecutionException;
 
 public class RoomOperatorFlagGameFactoryTest {
-    private static Client client;
-    private static Location location;
-    private static Session session;
-    private static SocketClient socketClient;
-    private static Match match;
-    private static double mapLengthKilometer;
-    private static int timeLimitSecond;
+    @Test
+    public void createRoomOperator() throws ExecutionException, InterruptedException {
+        Client client;
+        Location location;
+        Session session;
+        SocketClient socketClient;
+        Match match;
+        double mapLengthKilometer;
+        int timeLimitSecond;
 
-    @BeforeClass
-    public static void onlyOnce() throws ExecutionException, InterruptedException {
         client = new DefaultClient(
                 KeyStorageNakama.getServerKey(),
                 KeyStorageNakama.getGrpcAddress(),
@@ -46,11 +46,7 @@ public class RoomOperatorFlagGameFactoryTest {
         match = socketClient.createMatch().get();
         mapLengthKilometer = 1.0;
         timeLimitSecond = 60;
-    }
 
-
-    @Test
-    public void createRoomOperator() {
         RoomOperatorFlagGameFactory roomOperatorFlagGameFactory = RoomOperatorFlagGameFactory
                 .builder()
                 .location(location)
