@@ -44,20 +44,9 @@ public abstract class RoomOperator extends AbstractSocketListener {
     private final List<Player> playerList;
     // 채팅 데이터
     private final List<String> chattingLog;
-    // 서버와의 연동
-    private final Client client;
-    private final Session session;
-    private final SocketClient socketClient;
 
-    // 종료조건을 확인하는 쓰레드
-    private ScheduledExecutorService scheduledExecutorServiceEndCheck;
-    // 액티비티나 다른 함수에서 이 클래스에서 작업을 마치고 이후에 처리할 내용을 정의한다.
-    @Setter
-    private Runnable victoryEndExecute;
-    @Setter
-    private Runnable defeatEndExecute;
-    @Setter
-    private Runnable basicEndExecute;
+
+
     // 유틸리티
     private final Gson gson = new Gson();
     // 상태
