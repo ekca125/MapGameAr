@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 import retrofit2.Call;
 
 public class RoomClientTest {
+
     @Test
     public void createRoom() throws ExecutionException, InterruptedException {
         Client client;
