@@ -1,5 +1,6 @@
 package com.ekcapaper.racingar.operator;
 
+import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.AbstractSocketListener;
@@ -14,6 +15,7 @@ import com.heroiclabs.nakama.SocketClient;
 import com.heroiclabs.nakama.StatusPresenceEvent;
 import com.heroiclabs.nakama.StreamData;
 import com.heroiclabs.nakama.StreamPresenceEvent;
+import com.heroiclabs.nakama.UserPresence;
 import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
 
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.stream.Collectors;
 
 import lombok.Setter;
 
@@ -31,6 +34,9 @@ public class BaseRoomOperator extends AbstractSocketListener {
     private final SocketClient socketClient;
     // 유틸리티 클래스
     private Gson gson;
+    // 정보
+    // 서버에서의 유저들과 현재 방에서의 플레이어를 의미한다.
+    private final List<UserPresence> userPresenceList;
     // 채팅 데이터
     private final List<String> chattingLog;
 
@@ -47,6 +53,7 @@ public class BaseRoomOperator extends AbstractSocketListener {
         this.gson = new Gson();
         // 채팅 데이터
         this.chattingLog = new ArrayList<>();
+        this.userPresenceList = new ArrayList<>();
     }
 
     @Override
@@ -62,6 +69,8 @@ public class BaseRoomOperator extends AbstractSocketListener {
     @Override
     public void onChannelMessage(ChannelMessage message) {
         super.onChannelMessage(message);
+        String chatMessage = message.getUsername() + " : " + message.getContent();
+        chattingLog.add(chatMessage);
     }
 
     @Override
@@ -82,6 +91,13 @@ public class BaseRoomOperator extends AbstractSocketListener {
     @Override
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
         super.onMatchPresence(matchPresence);
+        // join 처리
+        List<UserPresence> joinList = matchPresence.getJoins();
+        this.userPresenceList.addAll(joinList);
+
+        // leave 처리
+        List<UserPresence> leaveList = matchPresence.getLeaves();
+        this.userPresenceList.removeAll(leaveList);
     }
 
     @Override

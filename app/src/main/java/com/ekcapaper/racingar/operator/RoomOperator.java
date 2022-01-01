@@ -121,32 +121,7 @@ public abstract class RoomOperator extends AbstractSocketListener {
         }
     }
 
-    @Override
-    public void onDisconnect(Throwable t) {
-        super.onDisconnect(t);
-    }
 
-    @Override
-    public void onError(Error error) {
-        super.onError(error);
-    }
-
-    @Override
-    public void onChannelMessage(ChannelMessage message) {
-        super.onChannelMessage(message);
-        String chatMessage = message.getUsername() + " : " + message.getContent();
-        chattingLog.add(chatMessage);
-    }
-
-    @Override
-    public void onChannelPresence(ChannelPresenceEvent presence) {
-        super.onChannelPresence(presence);
-    }
-
-    @Override
-    public void onMatchmakerMatched(MatchmakerMatched matched) {
-        super.onMatchmakerMatched(matched);
-    }
 
     @Override
     public void onMatchData(MatchData matchData) {
