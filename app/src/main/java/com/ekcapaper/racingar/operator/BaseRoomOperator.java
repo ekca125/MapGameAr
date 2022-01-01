@@ -95,7 +95,9 @@ public abstract class BaseRoomOperator extends AbstractSocketListener {
         });
     }
 
-    public abstract void startSequence();
+    public void startSequence(){
+        matchOptional.orElseThrow(IllegalStateException::new);
+    }
     public abstract void victorySequence();
     public abstract void defeatSequence();
 

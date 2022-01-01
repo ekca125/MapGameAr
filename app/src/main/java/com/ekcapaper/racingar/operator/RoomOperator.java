@@ -118,6 +118,7 @@ public abstract class RoomOperator extends BaseRoomOperator {
 
     @Override
     public void startSequence() {
+        super.startSequence();
         scheduledExecutorServiceEndCheck = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorServiceEndCheck.scheduleWithFixedDelay(this::endCheck,1,1, TimeUnit.SECONDS);
     }
