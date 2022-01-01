@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -96,68 +97,30 @@ public abstract class RoomOperator extends BaseRoomOperator {
         return getPlayer(getCurrentUserId());
     }
 
+    // 주기적으로 확인하는 형태를 취함
+    private ScheduledExecutorService scheduledExecutorServiceEndCheck;
 
+    protected abstract boolean isEnd();
+    protected abstract boolean isVictory();
+    protected abstract boolean isDefeat();
 
-
-
-
-
-
-
-
-
-
-
-    // 유틸리티
-    private final Gson gson = new Gson();
-    // 상태
-    private boolean started;
-
-
-    final protected void endCheck() {
-        // 종료 처리 확인 후에 패배 승리 확인
-        if (isEnd()) {
-            if (isVictory()) {
-                victoryEndExecute.run();
-            } else if (isDefeat()) {
-                defeatEndExecute.run();
-            } else {
-                basicEndExecute.run();
+    protected void endCheck(){
+        if(isEnd()){
+            finishSequence();
+            if(isVictory()){
+                victorySequence();
             }
-            endSequence();
+            else if(isDefeat()){
+                defeatSequence();
+            }
         }
     }
 
-    private void endSequence(){
-        socketClient.leaveMatch(match.getMatchId());
-    }
-
-    public void startGame(){
-        started = true;
-        // 종료조건 확인 시작
+    @Override
+    public void startSequence() {
         scheduledExecutorServiceEndCheck = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutorServiceEndCheck.scheduleWithFixedDelay(this::endCheck,1,1, TimeUnit.SECONDS);
     }
-
-    protected boolean isStarted(){
-        return started;
-    }
-
-    protected boolean isEnd(){
-        return false;
-    }
-
-    protected abstract boolean isVictory();
-
-    protected abstract boolean isDefeat();
-
-
-
-
-
-
-
-
 
 
 }

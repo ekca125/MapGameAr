@@ -95,10 +95,15 @@ public abstract class BaseRoomOperator extends AbstractSocketListener {
         });
     }
 
+    public abstract void startSequence();
+    public abstract void victorySequence();
+    public abstract void defeatSequence();
+
     // 나가기
-    public void leaveRoom(){
+    public void finishSequence(){
         matchOptional.ifPresent(match -> {
             socketClient.leaveMatch(match.getMatchId());
+            socketClient.disconnect();
         });
     }
 
