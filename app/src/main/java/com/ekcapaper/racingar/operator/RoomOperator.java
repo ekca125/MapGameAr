@@ -42,8 +42,7 @@ public abstract class RoomOperator extends AbstractSocketListener {
     // 서버에서의 유저들과 현재 방에서의 플레이어를 의미한다.
     private final List<UserPresence> userPresenceList;
     private final List<Player> playerList;
-    // 채팅 데이터
-    private final List<String> chattingLog;
+
 
     // 유틸리티
     private final Gson gson = new Gson();

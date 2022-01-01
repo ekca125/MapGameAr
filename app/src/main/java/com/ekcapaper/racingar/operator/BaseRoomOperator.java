@@ -17,6 +17,8 @@ import com.heroiclabs.nakama.StreamPresenceEvent;
 import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -29,6 +31,8 @@ public class BaseRoomOperator extends AbstractSocketListener {
     private final SocketClient socketClient;
     // 유틸리티 클래스
     private Gson gson;
+    // 채팅 데이터
+    private final List<String> chattingLog;
 
     public BaseRoomOperator(Client client, Session session) {
         this.client = client;
@@ -41,6 +45,8 @@ public class BaseRoomOperator extends AbstractSocketListener {
         this.socketClient.connect(session,this);
         // 유틸리티 클래스
         this.gson = new Gson();
+        // 채팅 데이터
+        this.chattingLog = new ArrayList<>();
     }
 
     @Override
