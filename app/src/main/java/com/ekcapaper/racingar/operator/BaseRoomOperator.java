@@ -2,6 +2,8 @@ package com.ekcapaper.racingar.operator;
 
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.network.MovePlayerMessage;
+import com.ekcapaper.racingar.network.OpCode;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
@@ -19,6 +21,7 @@ import com.heroiclabs.nakama.UserPresence;
 import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -27,7 +30,7 @@ import java.util.stream.Collectors;
 
 import lombok.Setter;
 
-public class BaseRoomOperator extends AbstractSocketListener {
+public abstract class BaseRoomOperator extends AbstractSocketListener {
     // 서버와의 연동
     private final Client client;
     private final Session session;
@@ -74,7 +77,7 @@ public class BaseRoomOperator extends AbstractSocketListener {
     }
 
     @Override
-    public void onChannelPresence(ChannelPresenceEvent presence) {
+    public final void onChannelPresence(ChannelPresenceEvent presence) {
         super.onChannelPresence(presence);
     }
 
@@ -84,9 +87,24 @@ public class BaseRoomOperator extends AbstractSocketListener {
     }
 
     @Override
-    public void onMatchData(MatchData matchData) {
+    public final void onMatchData(MatchData matchData) {
         super.onMatchData(matchData);
+        long networkOpCode = matchData.getOpCode();
+        byte[] networkBytes = matchData.getData();
+
+        OpCode opCode = OpCode.values()[(int) networkOpCode];
+        String data = new String(networkBytes, StandardCharsets.UTF_8);
+        switch (opCode){
+            case MOVE_PLAYER:
+                MovePlayerMessage movePlayerMessage = gson.fromJson(data,MovePlayerMessage.class);
+                onMovePlayer(movePlayerMessage);
+                break;
+            default:
+                break;
+        }
     }
+
+    protected abstract void onMovePlayer(MovePlayerMessage movePlayerMessage);
 
     @Override
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
