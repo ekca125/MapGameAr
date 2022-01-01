@@ -16,13 +16,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class RoomClient extends RoomLinker{
-    private final List<Player> playerList;
+    private List<Player> playerList;
     private final String currentUserId;
 
     public RoomClient(Client client, Session session) throws ExecutionException, InterruptedException {
         super(client, session);
         playerList = new ArrayList<>();
         currentUserId = session.getUserId();
+        playerList.add(new Player(currentUserId));
     }
 
     public Optional<Player> getPlayer(String userId){
@@ -48,6 +49,7 @@ public class RoomClient extends RoomLinker{
                     .collect(Collectors.toList());
             this.playerList.addAll(joinPlayerList);
         });
+        playerList = playerList.stream().distinct().collect(Collectors.toList());
 
         // leave 처리
         Optional<List<UserPresence>> leaveListOptional = Optional.ofNullable(matchPresence.getLeaves());
@@ -57,18 +59,6 @@ public class RoomClient extends RoomLinker{
                     .collect(Collectors.toList());
             this.playerList.removeAll(leavePlayerList);
         });
-
-        // 새로 들어온 사람이 위치를 갱신할 수 있도록 이동메시지를 보낸다.
-        getPlayer(currentUserId).ifPresent((player -> {
-            player.getLocation().ifPresent(location -> {
-                MovePlayerMessage movePlayerMessage = MovePlayerMessage.builder()
-                        .userId(player.getUserId())
-                        .latitude(location.getLatitude())
-                        .longitude(location.getLongitude())
-                        .build();
-                sendMatchData(movePlayerMessage);
-            });
-        }));
     }
 
     @Override

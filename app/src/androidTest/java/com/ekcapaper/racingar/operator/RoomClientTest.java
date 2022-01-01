@@ -91,7 +91,8 @@ public class RoomClientTest {
                 .longitude(LocationStub.longitude)
                 .build();
         roomClient.onMovePlayer(movePlayerMessage);
-        roomClient.getPlayer(session.getUserId()).orElseThrow(NullPointerException::new);
+
+        roomClient.getPlayer(session.getUserId()).orElseThrow(()->new IllegalStateException("not found : " + session.getUserId()));
         roomClient.getPlayer(session.getUserId()).ifPresent(player -> {
             player.getLocation().orElseThrow(NullPointerException::new);
             player.getLocation().ifPresent(location -> {
