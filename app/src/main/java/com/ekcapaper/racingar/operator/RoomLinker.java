@@ -2,6 +2,9 @@ package com.ekcapaper.racingar.operator;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.Message;
+import com.ekcapaper.racingar.network.MovePlayerMessage;
+import com.ekcapaper.racingar.network.OpCode;
+import com.google.gson.Gson;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Client;
@@ -84,58 +87,82 @@ public abstract class RoomLinker extends AbstractSocketListener {
 
     // receive
     @Override
-    final public void onDisconnect(Throwable t) {
+    public void onDisconnect(Throwable t) {
         super.onDisconnect(t);
     }
 
     @Override
-    final public void onError(Error error) {
+    public void onError(Error error) {
         super.onError(error);
     }
 
     @Override
-    final public void onChannelMessage(ChannelMessage message) {
+    public void onChannelMessage(ChannelMessage message) {
         super.onChannelMessage(message);
         chattingLog.add(message.getUsername() + " : " + message.getContent());
     }
 
     @Override
-    final public void onChannelPresence(ChannelPresenceEvent presence) {
+    public void onChannelPresence(ChannelPresenceEvent presence) {
         super.onChannelPresence(presence);
     }
 
     @Override
-    final public void onMatchmakerMatched(MatchmakerMatched matched) {
+    public void onMatchmakerMatched(MatchmakerMatched matched) {
         super.onMatchmakerMatched(matched);
     }
 
     @Override
-    final public void onMatchData(MatchData matchData) {
+    public void onMatchData(MatchData matchData) {
         super.onMatchData(matchData);
+        Gson gson = new Gson();
+        long networkOpCode = matchData.getOpCode();
+        byte[] networkBytes = matchData.getData();
+
+        OpCode opCode = OpCode.values()[(int) networkOpCode];
+        String data = new String(networkBytes, StandardCharsets.UTF_8);
+        switch (opCode){
+            case MOVE_PLAYER:
+                MovePlayerMessage movePlayerMessage = gson.fromJson(data,MovePlayerMessage.class);
+                onMovePlayer(movePlayerMessage);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
-    final public void onMatchPresence(MatchPresenceEvent matchPresence) {
+    public void onMatchPresence(MatchPresenceEvent matchPresence) {
         super.onMatchPresence(matchPresence);
+        // join 처리
+        List<UserPresence> joinList = matchPresence.getJoins();
+        this.userPresenceList.addAll(joinList);
+
+        // leave 처리
+        List<UserPresence> leaveList = matchPresence.getLeaves();
+        this.userPresenceList.removeAll(leaveList);
     }
 
     @Override
-    final public void onNotifications(NotificationList notifications) {
+    public void onNotifications(NotificationList notifications) {
         super.onNotifications(notifications);
     }
 
     @Override
-    final public void onStatusPresence(StatusPresenceEvent presence) {
+    public void onStatusPresence(StatusPresenceEvent presence) {
         super.onStatusPresence(presence);
     }
 
     @Override
-    final public void onStreamPresence(StreamPresenceEvent presence) {
+    public void onStreamPresence(StreamPresenceEvent presence) {
         super.onStreamPresence(presence);
     }
 
     @Override
-    final public void onStreamData(StreamData data) {
+    public void onStreamData(StreamData data) {
         super.onStreamData(data);
     }
+
+    // abstract receive
+    protected abstract void onMovePlayer(MovePlayerMessage movePlayerMessage);
 }
