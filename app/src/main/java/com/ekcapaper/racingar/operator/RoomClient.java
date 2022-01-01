@@ -41,18 +41,22 @@ public class RoomClient extends RoomLinker{
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
         super.onMatchPresence(matchPresence);
         // join 처리
-        List<UserPresence> joinList = matchPresence.getJoins();
-        List<Player> joinPlayerList = joinList.stream()
-                .map((userPresence) -> new Player(userPresence.getUserId()))
-                .collect(Collectors.toList());
-        this.playerList.addAll(joinPlayerList);
+        Optional<List<UserPresence>> joinListOptional = Optional.ofNullable(matchPresence.getJoins());
+        joinListOptional.ifPresent((joinList)->{
+            List<Player> joinPlayerList = joinList.stream()
+                    .map((userPresence) -> new Player(userPresence.getUserId()))
+                    .collect(Collectors.toList());
+            this.playerList.addAll(joinPlayerList);
+        });
 
         // leave 처리
-        List<UserPresence> leaveList = matchPresence.getLeaves();
-        List<Player> leavePlayerList = leaveList.stream()
-                .map((userPresence -> new Player(userPresence.getUserId())))
-                .collect(Collectors.toList());
-        this.playerList.removeAll(leavePlayerList);
+        Optional<List<UserPresence>> leaveListOptional = Optional.ofNullable(matchPresence.getLeaves());
+        leaveListOptional.ifPresent((leaveList)->{
+            List<Player> leavePlayerList = leaveList.stream()
+                    .map((userPresence -> new Player(userPresence.getUserId())))
+                    .collect(Collectors.toList());
+            this.playerList.removeAll(leavePlayerList);
+        });
 
         // 새로 들어온 사람이 위치를 갱신할 수 있도록 이동메시지를 보낸다.
         getPlayer(currentUserId).ifPresent((player -> {

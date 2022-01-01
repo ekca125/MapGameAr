@@ -135,12 +135,12 @@ public abstract class RoomLinker extends AbstractSocketListener {
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
         super.onMatchPresence(matchPresence);
         // join 처리
-        List<UserPresence> joinList = matchPresence.getJoins();
-        this.userPresenceList.addAll(joinList);
+        Optional<List<UserPresence>> joinListOptional = Optional.ofNullable(matchPresence.getJoins());
+        joinListOptional.ifPresent(this.userPresenceList::addAll);
 
         // leave 처리
-        List<UserPresence> leaveList = matchPresence.getLeaves();
-        this.userPresenceList.removeAll(leaveList);
+        Optional<List<UserPresence>> leaveListOptional = Optional.ofNullable(matchPresence.getLeaves());
+        leaveListOptional.ifPresent(this.userPresenceList::removeAll);
     }
 
     @Override
