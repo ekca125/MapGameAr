@@ -1,6 +1,7 @@
 package com.ekcapaper.racingar.operator;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.network.Message;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Client;
@@ -18,6 +19,7 @@ import com.heroiclabs.nakama.UserPresence;
 import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,12 +32,12 @@ public abstract class RoomLinker extends AbstractSocketListener {
     private final Client client;
     private final Session session;
     private final SocketClient socketClient;
-    // 방에 해당하는 객체
-    @Getter
-    private Optional<Match> currentMatch;
     // 정보
     private final List<UserPresence> userPresenceList;
     private final List<String> chattingLog;
+    // 방에 해당하는 객체
+    @Getter
+    private Optional<Match> currentMatch;
 
     public RoomLinker(Client client, Session session) throws ExecutionException, InterruptedException {
         this.client = client;
@@ -45,14 +47,15 @@ public abstract class RoomLinker extends AbstractSocketListener {
                 KeyStorageNakama.getWebSocketPort(),
                 KeyStorageNakama.getWebSocketSSL()
         );
-        this.socketClient.connect(session,this).get();
+        this.socketClient.connect(session, this).get();
         this.currentMatch = Optional.empty();
         // 채팅 데이터
         this.chattingLog = new ArrayList<>();
         this.userPresenceList = new ArrayList<>();
     }
 
-    public final void createMatch(){
+    // 방 생성 또는 입장
+    public final void createMatch() {
         try {
             currentMatch = Optional.ofNullable(this.socketClient.createMatch().get());
         } catch (ExecutionException | InterruptedException e) {
@@ -60,7 +63,7 @@ public abstract class RoomLinker extends AbstractSocketListener {
         }
     }
 
-    public final void joinMatch(String matchId){
+    public final void joinMatch(String matchId) {
         try {
             currentMatch = Optional.ofNullable(this.socketClient.joinMatch(matchId).get());
         } catch (ExecutionException | InterruptedException e) {
@@ -68,58 +71,71 @@ public abstract class RoomLinker extends AbstractSocketListener {
         }
     }
 
+    // send Message
+    public final void sendMatchData(Message message) {
+        currentMatch.ifPresent(match -> {
+            socketClient.sendMatchData(
+                    match.getMatchId(),
+                    message.getOpCode().ordinal(),
+                    message.getPayload().getBytes(StandardCharsets.UTF_8)
+            );
+        });
+    }
+
+    // receive
     @Override
-    public void onDisconnect(Throwable t) {
+    final public void onDisconnect(Throwable t) {
         super.onDisconnect(t);
     }
 
     @Override
-    public void onError(Error error) {
+    final public void onError(Error error) {
         super.onError(error);
     }
 
     @Override
-    public void onChannelMessage(ChannelMessage message) {
+    final public void onChannelMessage(ChannelMessage message) {
         super.onChannelMessage(message);
+        chattingLog.add(message.getUsername() + " : " + message.getContent());
     }
 
     @Override
-    public void onChannelPresence(ChannelPresenceEvent presence) {
+    final public void onChannelPresence(ChannelPresenceEvent presence) {
         super.onChannelPresence(presence);
     }
 
     @Override
-    public void onMatchmakerMatched(MatchmakerMatched matched) {
+    final public void onMatchmakerMatched(MatchmakerMatched matched) {
         super.onMatchmakerMatched(matched);
     }
 
     @Override
-    public void onMatchData(MatchData matchData) {
+    final public void onMatchData(MatchData matchData) {
         super.onMatchData(matchData);
     }
 
     @Override
-    public void onMatchPresence(MatchPresenceEvent matchPresence) {
+    final public void onMatchPresence(MatchPresenceEvent matchPresence) {
         super.onMatchPresence(matchPresence);
     }
 
     @Override
-    public void onNotifications(NotificationList notifications) {
+    final public void onNotifications(NotificationList notifications) {
         super.onNotifications(notifications);
     }
 
     @Override
-    public void onStatusPresence(StatusPresenceEvent presence) {
+    final public void onStatusPresence(StatusPresenceEvent presence) {
         super.onStatusPresence(presence);
     }
 
     @Override
-    public void onStreamPresence(StreamPresenceEvent presence) {
+    final public void onStreamPresence(StreamPresenceEvent presence) {
         super.onStreamPresence(presence);
     }
 
     @Override
-    public void onStreamData(StreamData data) {
+    final public void onStreamData(StreamData data) {
         super.onStreamData(data);
     }
 }
