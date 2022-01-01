@@ -80,10 +80,6 @@ public abstract class RoomOperator extends BaseRoomOperator {
         }));
     }
 
-    public Optional<Player> getCurrentPlayer() {
-        return getPlayer(session.getUserId());
-    }
-
     public Optional<Player> getPlayer(String userId){
         try {
             return Optional.ofNullable(playerList
@@ -95,6 +91,19 @@ public abstract class RoomOperator extends BaseRoomOperator {
             return Optional.empty();
         }
     }
+
+    public Optional<Player> getCurrentPlayer() {
+        return getPlayer(getCurrentUserId());
+    }
+
+
+
+
+
+
+
+
+
 
 
 

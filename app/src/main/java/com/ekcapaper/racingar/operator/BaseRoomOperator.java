@@ -37,20 +37,18 @@ import java.util.stream.Collectors;
 import lombok.Setter;
 
 public abstract class BaseRoomOperator extends AbstractSocketListener {
-    // 서버와의 연동
-    protected final Client client;
-    protected final Session session;
+    private final Client client;
+    private final Session session;
     private final SocketClient socketClient;
-    private Optional<Match> match;
-    // 유틸리티 클래스
-    private Gson gson;
-    // 정보
+    // 방
+    private Optional<Match> matchOptional;
     // 서버에서의 유저들과 현재 방에서의 플레이어를 의미한다.
     private final List<UserPresence> userPresenceList;
     // 채팅 데이터
     private final List<String> chattingLog;
 
     public BaseRoomOperator(Client client, Session session) throws ExecutionException, InterruptedException {
+        // 서버와의 연동
         this.client = client;
         this.session = session;
         this.socketClient = client.createSocket(
@@ -59,47 +57,56 @@ public abstract class BaseRoomOperator extends AbstractSocketListener {
                 KeyStorageNakama.getWebSocketSSL()
         );
         this.socketClient.connect(session,this).get();
-        this.match = Optional.empty();
-        // 유틸리티 클래스
-        this.gson = new Gson();
+        this.matchOptional = Optional.empty();
         // 채팅 데이터
         this.chattingLog = new ArrayList<>();
         this.userPresenceList = new ArrayList<>();
     }
 
-    public Optional<Match> getMatch() {
-        return match;
-    }
-
     public final void createMatch(){
         try {
-            match = Optional.ofNullable(this.socketClient.createMatch().get());
+            matchOptional = Optional.ofNullable(this.socketClient.createMatch().get());
         } catch (ExecutionException | InterruptedException e) {
-            match = Optional.empty();
+            matchOptional = Optional.empty();
         }
     }
 
     public final void joinMatch(String matchId){
         try {
-            match = Optional.ofNullable(this.socketClient.joinMatch(matchId).get());
+            matchOptional = Optional.ofNullable(this.socketClient.joinMatch(matchId).get());
         } catch (ExecutionException | InterruptedException e) {
-            match = Optional.empty();
+            matchOptional = Optional.empty();
         }
     }
 
+    public Optional<Match> getMatchOptional() {
+        return matchOptional;
+    }
+
+    // message function
     public final void moveCurrentPlayer(Location location) {
         //send message
-        match.ifPresent(matchObject -> {
+        matchOptional.ifPresent(match -> {
             MovePlayerMessage movePlayerMessage = MovePlayerMessage.builder().build();
             socketClient.sendMatchData(
-                    matchObject.getMatchId(),
+                    match.getMatchId(),
                     movePlayerMessage.getOpCode().ordinal(),
                     movePlayerMessage.getPayload().getBytes(StandardCharsets.UTF_8));
         });
     }
 
     // 나가기
+    public void leaveRoom(){
+        matchOptional.ifPresent(match -> {
+            socketClient.leaveMatch(match.getMatchId());
+        });
+    }
 
+    public String getCurrentUserId(){
+        return session.getUserId();
+    }
+
+    // 콜백
     @Override
     public void onDisconnect(Throwable t) {
         super.onDisconnect(t);
@@ -130,6 +137,8 @@ public abstract class BaseRoomOperator extends AbstractSocketListener {
     @Override
     public final void onMatchData(MatchData matchData) {
         super.onMatchData(matchData);
+        Gson gson = new Gson();
+
         long networkOpCode = matchData.getOpCode();
         byte[] networkBytes = matchData.getData();
 
