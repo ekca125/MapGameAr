@@ -4,11 +4,13 @@ import android.graphics.Path;
 import android.location.Location;
 
 import com.ekcapaper.racingar.game.Player;
+import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.ekcapaper.racingar.network.OpCode;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
+import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Error;
 import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.MatchData;
@@ -43,9 +45,10 @@ public abstract class RoomOperator extends AbstractSocketListener {
     // 채팅 데이터
     private final List<String> chattingLog;
     // 서버와의 연동
+    private final Client client;
     private final Session session;
     private final SocketClient socketClient;
-    private final Match match;
+
     // 종료조건을 확인하는 쓰레드
     private ScheduledExecutorService scheduledExecutorServiceEndCheck;
     // 액티비티나 다른 함수에서 이 클래스에서 작업을 마치고 이후에 처리할 내용을 정의한다.
@@ -60,15 +63,14 @@ public abstract class RoomOperator extends AbstractSocketListener {
     // 상태
     private boolean started;
 
-    public RoomOperator(Session session, SocketClient socketClient, Match match) {
+    public RoomOperator(Client client ,Session session) {
         // 정보
         this.userPresenceList = new ArrayList<>();
         this.playerList = new ArrayList<>();
         this.chattingLog = new ArrayList<>();
         // 서버
+        this.client = client;
         this.session = session;
-        this.socketClient = socketClient;
-        this.match = match;
         // 종료조건 콜백
         this.victoryEndExecute = () -> {
         };
@@ -77,7 +79,13 @@ public abstract class RoomOperator extends AbstractSocketListener {
         this.basicEndExecute = () -> {
         };
         // 서버와 연동
+        socketClient = client.createSocket(
+                KeyStorageNakama.getWebSocketAddress(),
+                KeyStorageNakama.getWebSocketPort(),
+                KeyStorageNakama.getWebSocketSSL()
+        );
         socketClient.connect(session, this);
+
         //
         started = false;
     }
