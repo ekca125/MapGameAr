@@ -133,10 +133,15 @@ public abstract class RoomOperator extends AbstractSocketListener {
     }
 
     public Optional<Player> getPlayer(String userId){
-        return Optional.ofNullable(playerList
-                .stream()
-                .filter(player -> player.getUserId().equals(session.getUserId()))
-                .collect(Collectors.toList()).get(0));
+        try {
+            return Optional.ofNullable(playerList
+                    .stream()
+                    .filter(player -> player.getUserId().equals(session.getUserId()))
+                    .collect(Collectors.toList()).get(0));
+        }
+        catch (IndexOutOfBoundsException e){
+            return Optional.empty();
+        }
     }
 
     @Override
