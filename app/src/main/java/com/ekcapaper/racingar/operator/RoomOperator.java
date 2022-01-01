@@ -45,8 +45,6 @@ public abstract class RoomOperator extends AbstractSocketListener {
     // 채팅 데이터
     private final List<String> chattingLog;
 
-
-
     // 유틸리티
     private final Gson gson = new Gson();
     // 상태
@@ -57,23 +55,6 @@ public abstract class RoomOperator extends AbstractSocketListener {
         this.userPresenceList = new ArrayList<>();
         this.playerList = new ArrayList<>();
         this.chattingLog = new ArrayList<>();
-        // 서버
-        this.client = client;
-        this.session = session;
-        // 종료조건 콜백
-        this.victoryEndExecute = () -> {
-        };
-        this.defeatEndExecute = () -> {
-        };
-        this.basicEndExecute = () -> {
-        };
-        // 서버와 연동
-        socketClient = client.createSocket(
-                KeyStorageNakama.getWebSocketAddress(),
-                KeyStorageNakama.getWebSocketPort(),
-                KeyStorageNakama.getWebSocketSSL()
-        );
-        socketClient.connect(session, this);
 
         //
         started = false;

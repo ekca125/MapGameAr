@@ -1,6 +1,7 @@
 package com.ekcapaper.racingar.operator;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.google.gson.Gson;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Client;
@@ -16,6 +17,7 @@ import com.heroiclabs.nakama.StreamPresenceEvent;
 import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
 
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import lombok.Setter;
@@ -25,15 +27,8 @@ public class BaseRoomOperator extends AbstractSocketListener {
     private final Client client;
     private final Session session;
     private final SocketClient socketClient;
-    // 종료조건을 확인하는 쓰레드
-    private ScheduledExecutorService scheduledExecutorServiceEndCheck;
-    // 액티비티나 다른 함수에서 이 클래스에서 작업을 마치고 이후에 처리할 내용을 정의한다.
-    @Setter
-    private Runnable victoryEndExecute;
-    @Setter
-    private Runnable defeatEndExecute;
-    @Setter
-    private Runnable basicEndExecute;
+    // 유틸리티 클래스
+    private Gson gson;
 
     public BaseRoomOperator(Client client, Session session) {
         this.client = client;
@@ -44,6 +39,8 @@ public class BaseRoomOperator extends AbstractSocketListener {
                 KeyStorageNakama.getWebSocketSSL()
         );
         this.socketClient.connect(session,this);
+        // 유틸리티 클래스
+        this.gson = new Gson();
     }
 
     @Override
