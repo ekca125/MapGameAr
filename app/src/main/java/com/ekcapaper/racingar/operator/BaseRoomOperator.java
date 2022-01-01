@@ -1,5 +1,8 @@
 package com.ekcapaper.racingar.operator;
 
+import android.graphics.Path;
+import android.location.Location;
+
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
@@ -9,6 +12,7 @@ import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Error;
+import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.MatchData;
 import com.heroiclabs.nakama.MatchPresenceEvent;
 import com.heroiclabs.nakama.MatchmakerMatched;
@@ -24,6 +28,8 @@ import com.heroiclabs.nakama.api.NotificationList;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
@@ -35,6 +41,7 @@ public abstract class BaseRoomOperator extends AbstractSocketListener {
     protected final Client client;
     protected final Session session;
     private final SocketClient socketClient;
+    private Optional<Match> match;
     // 유틸리티 클래스
     private Gson gson;
     // 정보
@@ -43,7 +50,7 @@ public abstract class BaseRoomOperator extends AbstractSocketListener {
     // 채팅 데이터
     private final List<String> chattingLog;
 
-    public BaseRoomOperator(Client client, Session session) {
+    public BaseRoomOperator(Client client, Session session) throws ExecutionException, InterruptedException {
         this.client = client;
         this.session = session;
         this.socketClient = client.createSocket(
@@ -51,13 +58,47 @@ public abstract class BaseRoomOperator extends AbstractSocketListener {
                 KeyStorageNakama.getWebSocketPort(),
                 KeyStorageNakama.getWebSocketSSL()
         );
-        this.socketClient.connect(session,this);
+        this.socketClient.connect(session,this).get();
+        this.match = Optional.empty();
         // 유틸리티 클래스
         this.gson = new Gson();
         // 채팅 데이터
         this.chattingLog = new ArrayList<>();
         this.userPresenceList = new ArrayList<>();
     }
+
+    public Optional<Match> getMatch() {
+        return match;
+    }
+
+    public final void createMatch(){
+        try {
+            match = Optional.ofNullable(this.socketClient.createMatch().get());
+        } catch (ExecutionException | InterruptedException e) {
+            match = Optional.empty();
+        }
+    }
+
+    public final void joinMatch(String matchId){
+        try {
+            match = Optional.ofNullable(this.socketClient.joinMatch(matchId).get());
+        } catch (ExecutionException | InterruptedException e) {
+            match = Optional.empty();
+        }
+    }
+
+    public final void moveCurrentPlayer(Location location) {
+        //send message
+        match.ifPresent(matchObject -> {
+            MovePlayerMessage movePlayerMessage = MovePlayerMessage.builder().build();
+            socketClient.sendMatchData(
+                    matchObject.getMatchId(),
+                    movePlayerMessage.getOpCode().ordinal(),
+                    movePlayerMessage.getPayload().getBytes(StandardCharsets.UTF_8));
+        });
+    }
+
+    // 나가기
 
     @Override
     public void onDisconnect(Throwable t) {

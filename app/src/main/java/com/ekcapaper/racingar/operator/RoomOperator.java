@@ -30,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +41,7 @@ import lombok.Setter;
 
 public abstract class RoomOperator extends BaseRoomOperator {
     private final List<Player> playerList;
-    public RoomOperator(Client client, Session session) {
+    public RoomOperator(Client client, Session session) throws ExecutionException, InterruptedException {
         super(client, session);
         playerList = new ArrayList<>();
     }
@@ -68,6 +69,7 @@ public abstract class RoomOperator extends BaseRoomOperator {
         }));
     }
 
+    @Override
     protected void onMovePlayer(MovePlayerMessage movePlayerMessage){
         Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
         optionalPlayer.ifPresent((player -> {
@@ -78,7 +80,21 @@ public abstract class RoomOperator extends BaseRoomOperator {
         }));
     }
 
+    public Optional<Player> getCurrentPlayer() {
+        return getPlayer(session.getUserId());
+    }
 
+    public Optional<Player> getPlayer(String userId){
+        try {
+            return Optional.ofNullable(playerList
+                    .stream()
+                    .filter(player -> player.getUserId().equals(userId))
+                    .collect(Collectors.toList()).get(0));
+        }
+        catch (IndexOutOfBoundsException e){
+            return Optional.empty();
+        }
+    }
 
 
 
@@ -126,30 +142,11 @@ public abstract class RoomOperator extends BaseRoomOperator {
 
     protected abstract boolean isDefeat();
 
-    public void moveCurrentPlayer(Location location) {
-        //send message
-        MovePlayerMessage movePlayerMessage = MovePlayerMessage.builder().build();
-        socketClient.sendMatchData(
-                match.getMatchId(),
-                movePlayerMessage.getOpCode().ordinal(),
-                movePlayerMessage.getPayload().getBytes(StandardCharsets.UTF_8));
-    }
 
-    public Optional<Player> getCurrentPlayer() {
-        return getPlayer(session.getUserId());
-    }
 
-    public Optional<Player> getPlayer(String userId){
-        try {
-            return Optional.ofNullable(playerList
-                    .stream()
-                    .filter(player -> player.getUserId().equals(session.getUserId()))
-                    .collect(Collectors.toList()).get(0));
-        }
-        catch (IndexOutOfBoundsException e){
-            return Optional.empty();
-        }
-    }
+
+
+
 
 
 
