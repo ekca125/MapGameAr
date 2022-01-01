@@ -32,8 +32,8 @@ import lombok.Setter;
 
 public abstract class BaseRoomOperator extends AbstractSocketListener {
     // 서버와의 연동
-    private final Client client;
-    private final Session session;
+    protected final Client client;
+    protected final Session session;
     private final SocketClient socketClient;
     // 유틸리티 클래스
     private Gson gson;

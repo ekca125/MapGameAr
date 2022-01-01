@@ -38,10 +38,49 @@ import java.util.stream.Collectors;
 
 import lombok.Setter;
 
-public abstract class RoomOperator extends AbstractSocketListener {
-    // 서버에서의 유저들과 현재 방에서의 플레이어를 의미한다.
-    private final List<UserPresence> userPresenceList;
+public abstract class RoomOperator extends BaseRoomOperator {
     private final List<Player> playerList;
+    public RoomOperator(Client client, Session session) {
+        super(client, session);
+        playerList = new ArrayList<>();
+    }
+
+    @Override
+    public void onMatchPresence(MatchPresenceEvent matchPresence) {
+        super.onMatchPresence(matchPresence);
+        // join 처리
+        List<UserPresence> joinList = matchPresence.getJoins();
+        List<Player> joinPlayerList = joinList.stream()
+                .map((userPresence) -> new Player(userPresence.getUserId()))
+                .collect(Collectors.toList());
+        this.playerList.addAll(joinPlayerList);
+
+        // leave 처리
+        List<UserPresence> leaveList = matchPresence.getLeaves();
+        List<Player> leavePlayerList = leaveList.stream()
+                .map((userPresence -> new Player(userPresence.getUserId())))
+                .collect(Collectors.toList());
+        this.playerList.removeAll(leavePlayerList);
+
+        // 새로 들어온 사람이 위치를 갱신할 수 있도록 이동메시지를 보낸다.
+        getCurrentPlayer().ifPresent((player -> {
+            player.getLocation().ifPresent(this::moveCurrentPlayer);
+        }));
+    }
+
+    protected void onMovePlayer(MovePlayerMessage movePlayerMessage){
+        Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
+        optionalPlayer.ifPresent((player -> {
+            Location location = new Location("");
+            location.setLatitude(movePlayerMessage.getLatitude());
+            location.setLongitude(movePlayerMessage.getLongitude());
+            player.updateLocation(location);
+        }));
+    }
+
+
+
+
 
 
     // 유틸리티
@@ -49,15 +88,6 @@ public abstract class RoomOperator extends AbstractSocketListener {
     // 상태
     private boolean started;
 
-    public RoomOperator(Client client ,Session session) {
-        // 정보
-        this.userPresenceList = new ArrayList<>();
-        this.playerList = new ArrayList<>();
-        this.chattingLog = new ArrayList<>();
-
-        //
-        started = false;
-    }
 
     final protected void endCheck() {
         // 종료 처리 확인 후에 패배 승리 확인
@@ -123,76 +153,5 @@ public abstract class RoomOperator extends AbstractSocketListener {
 
 
 
-    @Override
-    public void onMatchData(MatchData matchData) {
-        super.onMatchData(matchData);
-        long networkOpCode = matchData.getOpCode();
-        byte[] networkBytes = matchData.getData();
 
-        OpCode opCode = OpCode.values()[(int) networkOpCode];
-        String data = new String(networkBytes,StandardCharsets.UTF_8);
-        switch (opCode){
-            case MOVE_PLAYER:
-                MovePlayerMessage movePlayerMessage = gson.fromJson(data,MovePlayerMessage.class);
-                onMovePlayer(movePlayerMessage);
-                break;
-            default:
-                break;
-        }
-    }
-
-    protected void onMovePlayer(MovePlayerMessage movePlayerMessage){
-        Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
-        optionalPlayer.ifPresent((player -> {
-            Location location = new Location("");
-            location.setLatitude(movePlayerMessage.getLatitude());
-            location.setLongitude(movePlayerMessage.getLongitude());
-            player.updateLocation(location);
-        }));
-    }
-
-    @Override
-    public void onMatchPresence(MatchPresenceEvent matchPresence) {
-        super.onMatchPresence(matchPresence);
-        // join 처리
-        List<UserPresence> joinList = matchPresence.getJoins();
-        List<Player> joinPlayerList = joinList.stream()
-                .map((userPresence) -> new Player(userPresence.getUserId()))
-                .collect(Collectors.toList());
-        this.userPresenceList.addAll(joinList);
-        this.playerList.addAll(joinPlayerList);
-
-        // leave 처리
-        List<UserPresence> leaveList = matchPresence.getLeaves();
-        List<Player> leavePlayerList = leaveList.stream()
-                .map((userPresence -> new Player(userPresence.getUserId())))
-                .collect(Collectors.toList());
-        this.userPresenceList.removeAll(leaveList);
-        this.playerList.removeAll(leavePlayerList);
-
-        // 새로 들어온 사람이 위치를 갱신할 수 있도록 이동메시지를 보낸다.
-        getCurrentPlayer().ifPresent((player -> {
-            player.getLocation().ifPresent(this::moveCurrentPlayer);
-        }));
-    }
-
-    @Override
-    public void onNotifications(NotificationList notifications) {
-        super.onNotifications(notifications);
-    }
-
-    @Override
-    public void onStatusPresence(StatusPresenceEvent presence) {
-        super.onStatusPresence(presence);
-    }
-
-    @Override
-    public void onStreamPresence(StreamPresenceEvent presence) {
-        super.onStreamPresence(presence);
-    }
-
-    @Override
-    public void onStreamData(StreamData data) {
-        super.onStreamData(data);
-    }
 }
