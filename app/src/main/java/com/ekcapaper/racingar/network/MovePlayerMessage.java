@@ -18,10 +18,4 @@ public class MovePlayerMessage extends Message {
         this.latitude = latitude;
         this.longitude = longitude;
     }
-
-    @Override
-    public String getPayload() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
-    }
 }

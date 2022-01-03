@@ -66,7 +66,7 @@ public class RoomClientTest {
                 .build();
         roomClient.sendMatchData(movePlayerMessage);
     }
-
+/*
     @Test
     public void onMovePlayerMessage() throws ExecutionException, InterruptedException {
         Client client;
@@ -101,4 +101,6 @@ public class RoomClientTest {
             });
         });
     }
+
+ */
 }

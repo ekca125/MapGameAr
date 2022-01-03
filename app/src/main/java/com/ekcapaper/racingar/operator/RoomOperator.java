@@ -6,6 +6,7 @@ import android.os.Looper;
 
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.network.GameStartMessage;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.ekcapaper.racingar.network.OpCode;
 import com.google.gson.Gson;
@@ -67,7 +68,40 @@ public abstract class RoomOperator extends RoomClient {
         };
     }
 
-    public void startGame(){
+    @Override
+    public void onMatchData(MatchData matchData) {
+        super.onMatchData(matchData);
+        Gson gson = new Gson();
+        long networkOpCode = matchData.getOpCode();
+        byte[] networkBytes = matchData.getData();
+
+        OpCode opCode = OpCode.values()[(int) networkOpCode];
+        String data = new String(networkBytes, StandardCharsets.UTF_8);
+        switch (opCode){
+            case MOVE_PLAYER:
+                MovePlayerMessage movePlayerMessage = gson.fromJson(data,MovePlayerMessage.class);
+                onMovePlayer(movePlayerMessage);
+                break;
+            case GAME_START:
+                GameStartMessage gameStartMessage = gson.fromJson(data,GameStartMessage.class);
+                onGameStart(gameStartMessage);
+                break;
+            default:
+                break;
+        }
+    }
+
+    void onMovePlayer(MovePlayerMessage movePlayerMessage) {
+        Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
+        optionalPlayer.ifPresent((player -> {
+            Location location = new Location("");
+            location.setLatitude(movePlayerMessage.getLatitude());
+            location.setLongitude(movePlayerMessage.getLongitude());
+            player.updateLocation(location);
+        }));
+    }
+
+    void onGameStart(GameStartMessage gameStartMessage){
         if(roomStatus == RoomStatus.READY) {
             roomStatus = RoomStatus.PROGRESS;
             roomEndChecker.schedule(roomEndCheckerTask,0,1000);

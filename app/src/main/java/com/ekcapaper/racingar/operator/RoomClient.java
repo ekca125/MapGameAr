@@ -63,33 +63,4 @@ public class RoomClient extends RoomLinker{
             this.playerList.removeAll(leavePlayerList);
         });
     }
-
-    @Override
-    public void onMatchData(MatchData matchData) {
-        super.onMatchData(matchData);
-        Gson gson = new Gson();
-        long networkOpCode = matchData.getOpCode();
-        byte[] networkBytes = matchData.getData();
-
-        OpCode opCode = OpCode.values()[(int) networkOpCode];
-        String data = new String(networkBytes, StandardCharsets.UTF_8);
-        switch (opCode){
-            case MOVE_PLAYER:
-                MovePlayerMessage movePlayerMessage = gson.fromJson(data,MovePlayerMessage.class);
-                onMovePlayer(movePlayerMessage);
-                break;
-            default:
-                break;
-        }
-    }
-
-    void onMovePlayer(MovePlayerMessage movePlayerMessage) {
-        Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
-        optionalPlayer.ifPresent((player -> {
-            Location location = new Location("");
-            location.setLatitude(movePlayerMessage.getLatitude());
-            location.setLongitude(movePlayerMessage.getLongitude());
-            player.updateLocation(location);
-        }));
-    }
 }
