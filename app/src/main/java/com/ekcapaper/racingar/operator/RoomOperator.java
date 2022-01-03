@@ -31,6 +31,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,23 +44,58 @@ import java.util.stream.Collectors;
 
 import lombok.Setter;
 
-public class RoomOperator extends RoomClient {
-    private enum Status{
-        NOT_START,
-        START,
+public abstract class RoomOperator extends RoomClient {
+    private enum RoomStatus{
+        READY,
         PROGRESS,
         END
     }
-    Status status;
-
+    RoomStatus roomStatus;
+    final Timer roomEndChecker;
+    final TimerTask roomEndCheckerTask;
     public RoomOperator(Client client, Session session) throws ExecutionException, InterruptedException {
         super(client, session);
-        status = Status.NOT_START;
+        roomStatus = RoomStatus.READY;
+        roomEndChecker = new Timer();
+        roomEndCheckerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if(isEnd()){
+                    endSequence();
+                }
+            }
+        };
     }
 
     public void startGame(){
-        status = Status.START;
-        
+        if(roomStatus == RoomStatus.READY) {
+            roomStatus = RoomStatus.PROGRESS;
+            roomEndChecker.schedule(roomEndCheckerTask,0,1000);
+        }
     }
 
+    // end
+    protected abstract boolean isEnd();
+    protected final void endSequence(){
+        if(isVictory()){
+            victorySequence();
+        }
+        else if(isDefeat()){
+            defeatSequence();
+        }
+        else{
+            defaultSequence();
+        }
+    }
+
+    // victory
+    protected abstract boolean isVictory();
+    protected abstract void victorySequence();
+
+    // defeat
+    protected abstract boolean isDefeat();
+    protected abstract void defeatSequence();
+
+    // default
+    protected abstract void defaultSequence();
 }
