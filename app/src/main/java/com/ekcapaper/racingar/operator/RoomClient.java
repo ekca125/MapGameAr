@@ -19,8 +19,11 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
+
 public class RoomClient extends RoomLinker{
     private List<Player> playerList;
+    @Getter
     private final String currentUserId;
 
     public RoomClient(Client client, Session session) throws ExecutionException, InterruptedException {

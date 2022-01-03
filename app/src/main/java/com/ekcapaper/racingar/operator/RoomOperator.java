@@ -29,6 +29,7 @@ import com.heroiclabs.nakama.api.NotificationList;
 import com.heroiclabs.nakama.api.User;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,9 +52,13 @@ public abstract class RoomOperator extends RoomClient {
         PROGRESS,
         END
     }
-    RoomStatus roomStatus;
-    final Timer roomEndChecker;
-    final TimerTask roomEndCheckerTask;
+    private RoomStatus roomStatus;
+    private final Timer roomEndChecker;
+    private final TimerTask roomEndCheckerTask;
+
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
+
     public RoomOperator(Client client, Session session) throws ExecutionException, InterruptedException {
         super(client, session);
         roomStatus = RoomStatus.READY;
@@ -105,11 +110,26 @@ public abstract class RoomOperator extends RoomClient {
         if(roomStatus == RoomStatus.READY) {
             roomStatus = RoomStatus.PROGRESS;
             roomEndChecker.schedule(roomEndCheckerTask,0,1000);
+
+            int limitTimeSecond = gameStartMessage.getLimitTimeSecond();
+            startDateTime = LocalDateTime.now();
+            if(limitTimeSecond != 0) {
+                endDateTime = startDateTime.plusSeconds(limitTimeSecond);
+            }
+            else{
+                endDateTime = null;
+            }
         }
     }
 
     // end
-    protected abstract boolean isEnd();
+    protected boolean isEnd(){
+        if(endDateTime == null){
+            return true;
+        }
+        LocalDateTime currentLocalDateTime = LocalDateTime.now();
+        return currentLocalDateTime.isAfter(endDateTime);
+    }
     protected final void endSequence(){
         if(isVictory()){
             victorySequence();

@@ -1,22 +1,26 @@
 package com.ekcapaper.racingar.operator;
 
 import com.ekcapaper.racingar.game.GameFlag;
+import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.network.GameStartMessage;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalLong;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.LongConsumer;
+import java.util.stream.Collectors;
 
-import lombok.Setter;
-
-public class RoomOperatorFlagGame extends RoomOperator{
+public abstract class RoomOperatorFlagGame extends RoomOperator{
     private final List<GameFlag> gameFlagList;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
 
     public RoomOperatorFlagGame(Client client, Session session) throws ExecutionException, InterruptedException {
         super(client, session);
@@ -26,28 +30,17 @@ public class RoomOperatorFlagGame extends RoomOperator{
     @Override
     void onGameStart(GameStartMessage gameStartMessage) {
         super.onGameStart(gameStartMessage);
-        int limitTimeSecond = gameStartMessage.getLimitTimeSecond();
-        startDateTime = LocalDateTime.now();
-        if(limitTimeSecond != 0) {
-            endDateTime = startDateTime.plusSeconds(limitTimeSecond);
-        }
-        else{
-            endDateTime = null;
-        }
     }
 
 
     @Override
     protected boolean isEnd() {
         long unownedFlagCount = gameFlagList.stream().filter(gameFlag -> !gameFlag.isOwned()).count();
-        if(unownedFlagCount == 0){
+        boolean end = super.isEnd();
+        if(end){
             return true;
         }
-        if(endDateTime == null){
-            return true;
-        }
-        LocalDateTime currentLocalDateTime = LocalDateTime.now();
-        if(currentLocalDateTime.isAfter(endDateTime)){
+        else if(unownedFlagCount == 0){
             return true;
         }
         return false;
@@ -55,26 +48,32 @@ public class RoomOperatorFlagGame extends RoomOperator{
 
     @Override
     protected boolean isVictory() {
+        Map<String, Long> gameFlagCountMap = gameFlagList.stream()
+                .filter(GameFlag::isOwned)
+                .collect(Collectors.groupingBy(GameFlag::getUserId,Collectors.counting()));
+        OptionalLong gameFlagCountMaxOptional = gameFlagCountMap.values().stream()
+                .mapToLong(Long::longValue)
+                .max();
+        try {
+            if (gameFlagCountMaxOptional.isPresent()) {
+                if (gameFlagCountMap.containsKey(getCurrentUserId())) {
+                    long ownGameFlagCount = gameFlagCountMap.get(getCurrentUserId());
+                    long gameFlagCountMax = gameFlagCountMaxOptional.getAsLong();
+                    if(gameFlagCountMax <= ownGameFlagCount){
+                        return true;
+                    }
+                }
+            }
+        }
+        catch (NullPointerException nullPointerException){
+            return false;
+        }
         return false;
     }
 
-    @Override
-    protected void victorySequence() {
-
-    }
 
     @Override
     protected boolean isDefeat() {
-        return false;
-    }
-
-    @Override
-    protected void defeatSequence() {
-
-    }
-
-    @Override
-    protected void defaultSequence() {
-
+        return !isVictory();
     }
 }
