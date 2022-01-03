@@ -2,6 +2,7 @@ package com.ekcapaper.racingar.operator;
 
 import android.graphics.Path;
 import android.location.Location;
+import android.os.Looper;
 
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
@@ -36,92 +37,28 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.logging.Handler;
 import java.util.stream.Collectors;
 
 import lombok.Setter;
 
-public abstract class RoomOperator extends BaseRoomOperator {
-    private final List<Player> playerList;
+public class RoomOperator extends RoomClient {
+    private enum Status{
+        NOT_START,
+        START,
+        PROGRESS,
+        END
+    }
+    Status status;
+
     public RoomOperator(Client client, Session session) throws ExecutionException, InterruptedException {
         super(client, session);
-        playerList = new ArrayList<>();
+        status = Status.NOT_START;
     }
 
-    @Override
-    public void onMatchPresence(MatchPresenceEvent matchPresence) {
-        super.onMatchPresence(matchPresence);
-        // join 처리
-        List<UserPresence> joinList = matchPresence.getJoins();
-        List<Player> joinPlayerList = joinList.stream()
-                .map((userPresence) -> new Player(userPresence.getUserId()))
-                .collect(Collectors.toList());
-        this.playerList.addAll(joinPlayerList);
-
-        // leave 처리
-        List<UserPresence> leaveList = matchPresence.getLeaves();
-        List<Player> leavePlayerList = leaveList.stream()
-                .map((userPresence -> new Player(userPresence.getUserId())))
-                .collect(Collectors.toList());
-        this.playerList.removeAll(leavePlayerList);
-
-        // 새로 들어온 사람이 위치를 갱신할 수 있도록 이동메시지를 보낸다.
-        getCurrentPlayer().ifPresent((player -> {
-            player.getLocation().ifPresent(this::moveCurrentPlayer);
-        }));
+    public void startGame(){
+        status = Status.START;
+        
     }
-
-    @Override
-    protected void onMovePlayer(MovePlayerMessage movePlayerMessage){
-        Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
-        optionalPlayer.ifPresent((player -> {
-            Location location = new Location("");
-            location.setLatitude(movePlayerMessage.getLatitude());
-            location.setLongitude(movePlayerMessage.getLongitude());
-            player.updateLocation(location);
-        }));
-    }
-
-    public Optional<Player> getPlayer(String userId){
-        try {
-            return Optional.ofNullable(playerList
-                    .stream()
-                    .filter(player -> player.getUserId().equals(userId))
-                    .collect(Collectors.toList()).get(0));
-        }
-        catch (IndexOutOfBoundsException e){
-            return Optional.empty();
-        }
-    }
-
-    public Optional<Player> getCurrentPlayer() {
-        return getPlayer(getCurrentUserId());
-    }
-
-    // 주기적으로 확인하는 형태를 취함
-    private ScheduledExecutorService scheduledExecutorServiceEndCheck;
-
-    protected abstract boolean isEnd();
-    protected abstract boolean isVictory();
-    protected abstract boolean isDefeat();
-
-    protected void endCheck(){
-        if(isEnd()){
-            finishSequence();
-            if(isVictory()){
-                victorySequence();
-            }
-            else if(isDefeat()){
-                defeatSequence();
-            }
-        }
-    }
-
-    @Override
-    public void startSequence() {
-        super.startSequence();
-        scheduledExecutorServiceEndCheck = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorServiceEndCheck.scheduleWithFixedDelay(this::endCheck,1,1, TimeUnit.SECONDS);
-    }
-
 
 }
