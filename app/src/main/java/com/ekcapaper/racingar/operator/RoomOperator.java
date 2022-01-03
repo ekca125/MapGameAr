@@ -29,7 +29,9 @@ import com.heroiclabs.nakama.api.NotificationList;
 import com.heroiclabs.nakama.api.User;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,8 +60,9 @@ public abstract class RoomOperator extends RoomClient {
 
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
+    private final Duration timeLimit;
 
-    public RoomOperator(Client client, Session session) throws ExecutionException, InterruptedException {
+    public RoomOperator(Client client, Session session, Duration timeLimit) throws ExecutionException, InterruptedException {
         super(client, session);
         roomStatus = RoomStatus.READY;
         roomEndChecker = new Timer();
@@ -71,6 +74,7 @@ public abstract class RoomOperator extends RoomClient {
                 }
             }
         };
+        this.timeLimit = timeLimit;
     }
 
     @Override
@@ -111,20 +115,14 @@ public abstract class RoomOperator extends RoomClient {
             roomStatus = RoomStatus.PROGRESS;
             roomEndChecker.schedule(roomEndCheckerTask,0,1000);
 
-            int limitTimeSecond = gameStartMessage.getLimitTimeSecond();
             startDateTime = LocalDateTime.now();
-            if(limitTimeSecond != 0) {
-                endDateTime = startDateTime.plusSeconds(limitTimeSecond);
-            }
-            else{
-                endDateTime = null;
-            }
+            endDateTime = startDateTime.plusSeconds(timeLimit.getSeconds());
         }
     }
 
     // end
     protected boolean isEnd(){
-        if(endDateTime == null){
+        if(timeLimit.equals(Duration.ZERO)){
             return true;
         }
         LocalDateTime currentLocalDateTime = LocalDateTime.now();

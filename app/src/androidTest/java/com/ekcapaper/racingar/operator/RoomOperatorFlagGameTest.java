@@ -10,6 +10,7 @@ import com.heroiclabs.nakama.Session;
 
 import org.junit.Test;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -29,7 +30,7 @@ public class RoomOperatorFlagGameTest {
         session = client.authenticateEmail(AccountStub.ID,AccountStub.PASSWORD).get();
         assertNotNull(session);
 
-        RoomOperatorFlagGame roomOperatorFlagGame = new RoomOperatorFlagGame(client,session, new ArrayList<>());
+        RoomOperatorFlagGame roomOperatorFlagGame = new RoomOperatorFlagGame(client,session, new ArrayList<>(), Duration.ofSeconds(100));
         roomOperatorFlagGame.createMatch();
         roomOperatorFlagGame.getCurrentMatch().orElseThrow(IllegalStateException::new);
 

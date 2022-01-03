@@ -9,6 +9,7 @@ import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -33,8 +34,8 @@ public class RoomOperatorFlagGame extends RoomOperator{
     */
     private final List<GameFlag> gameFlagList;
 
-    public RoomOperatorFlagGame(Client client, Session session, List<GameFlag> gameFlagList) throws ExecutionException, InterruptedException, IllegalStateException{
-        super(client, session);
+    public RoomOperatorFlagGame(Client client, Session session, List<GameFlag> gameFlagList, Duration timeLimit) throws ExecutionException, InterruptedException, IllegalStateException{
+        super(client, session, timeLimit);
         this.gameFlagList = gameFlagList;
         if(this.gameFlagList == null || this.gameFlagList.size()<=0){
             throw new IllegalStateException();
