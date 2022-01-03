@@ -49,7 +49,6 @@ public class RoomClient extends RoomLinker{
                     .collect(Collectors.toList());
             this.playerList.addAll(joinPlayerList);
         });
-        playerList = playerList.stream().distinct().collect(Collectors.toList());
 
         // leave 처리
         Optional<List<UserPresence>> leaveListOptional = Optional.ofNullable(matchPresence.getLeaves());
