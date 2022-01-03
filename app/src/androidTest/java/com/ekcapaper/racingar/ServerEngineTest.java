@@ -42,7 +42,11 @@ public class ServerEngineTest {
         assertNotNull(session);
 
         // 소켓
-        socketClient = client.createSocket();
+        socketClient = client.createSocket(
+                KeyStorageNakama.getWebSocketAddress(),
+                KeyStorageNakama.getWebSocketPort(),
+                KeyStorageNakama.getWebSocketSSL()
+        );
         assertNotNull(socketClient);
         socketClient.connect(session, new AbstractSocketListener() {
             @Override
