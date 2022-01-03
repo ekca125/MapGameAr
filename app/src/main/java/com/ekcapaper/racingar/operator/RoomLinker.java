@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutionException;
 
 import lombok.Getter;
 
-public abstract class RoomLinker extends AbstractSocketListener {
+public class RoomLinker extends AbstractSocketListener {
     // 서버와의 연동에 필요한 객체
     private final Client client;
     private final Session session;
@@ -115,20 +115,6 @@ public abstract class RoomLinker extends AbstractSocketListener {
     @Override
     public void onMatchData(MatchData matchData) {
         super.onMatchData(matchData);
-        Gson gson = new Gson();
-        long networkOpCode = matchData.getOpCode();
-        byte[] networkBytes = matchData.getData();
-
-        OpCode opCode = OpCode.values()[(int) networkOpCode];
-        String data = new String(networkBytes, StandardCharsets.UTF_8);
-        switch (opCode){
-            case MOVE_PLAYER:
-                MovePlayerMessage movePlayerMessage = gson.fromJson(data,MovePlayerMessage.class);
-                onMovePlayer(movePlayerMessage);
-                break;
-            default:
-                break;
-        }
     }
 
     @Override
@@ -162,7 +148,4 @@ public abstract class RoomLinker extends AbstractSocketListener {
     public void onStreamData(StreamData data) {
         super.onStreamData(data);
     }
-
-    // abstract receive
-    protected abstract void onMovePlayer(MovePlayerMessage movePlayerMessage);
 }
