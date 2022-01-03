@@ -23,17 +23,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.LongConsumer;
 import java.util.stream.Collectors;
 
-public class RoomOperatorFlagGame extends RoomOperator{
-    // Factory 에서 생성하여 가져온다.
-    // 이 객체의 생성에 Factory 를 사용하는 이유
-    /*
-        1. 맵을 만들때 REST API 를 이용해서 서버에서 받아온다.
-        2. 방에 접속하는 경우에는 스토리지 엔진에서 작성된 것을 가져온다.
+import lombok.Builder;
 
-        각각의 모드마다 createMatch 와 StorageEngine 에서 요구하는 것이 다르기 때문에 생성부분을 팩토리로 처리하는 것이 액티비티를 고려했을때에도 더 적합하다
-    */
+public class RoomOperatorFlagGame extends RoomOperator{
     private final List<GameFlag> gameFlagList;
 
+    @Builder
     public RoomOperatorFlagGame(Client client, Session session, List<GameFlag> gameFlagList, Duration timeLimit) throws ExecutionException, InterruptedException, IllegalStateException{
         super(client, session, timeLimit);
         this.gameFlagList = gameFlagList;
