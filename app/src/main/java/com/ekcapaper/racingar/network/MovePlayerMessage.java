@@ -1,5 +1,7 @@
 package com.ekcapaper.racingar.network;
 
+import android.location.Location;
+
 import com.google.gson.Gson;
 
 import lombok.Builder;
@@ -17,5 +19,12 @@ public class MovePlayerMessage extends Message {
         this.userId = userId;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public Location getLocation(){
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        return location;
     }
 }

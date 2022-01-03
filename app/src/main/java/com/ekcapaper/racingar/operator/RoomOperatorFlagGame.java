@@ -1,8 +1,11 @@
 package com.ekcapaper.racingar.operator;
 
+import android.location.Location;
+
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.network.GameStartMessage;
+import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
@@ -19,12 +22,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.LongConsumer;
 import java.util.stream.Collectors;
 
-public abstract class RoomOperatorFlagGame extends RoomOperator{
+public class RoomOperatorFlagGame extends RoomOperator{
+    // Factory 에서 생성하여 가져온다.
+    // 이 객체의 생성에 Factory 를 사용하는 이유
+    /*
+        1. 맵을 만들때 REST API 를 이용해서 서버에서 받아온다.
+        2. 방에 접속하는 경우에는 스토리지 엔진에서 작성된 것을 가져온다.
+
+        각각의 모드마다 createMatch 와 StorageEngine 에서 요구하는 것이 다르기 때문에 생성부분을 팩토리로 처리하는 것이 액티비티를 고려했을때에도 더 적합하다
+    */
     private final List<GameFlag> gameFlagList;
 
-    public RoomOperatorFlagGame(Client client, Session session) throws ExecutionException, InterruptedException {
+    public RoomOperatorFlagGame(Client client, Session session, List<GameFlag> gameFlagList) throws ExecutionException, InterruptedException, IllegalStateException{
         super(client, session);
-        gameFlagList = new ArrayList<>();
+        this.gameFlagList = gameFlagList;
+        if(this.gameFlagList == null || this.gameFlagList.size()<=0){
+            throw new IllegalStateException();
+        }
     }
 
     @Override
@@ -32,6 +46,14 @@ public abstract class RoomOperatorFlagGame extends RoomOperator{
         super.onGameStart(gameStartMessage);
     }
 
+
+    @Override
+    void onMovePlayer(MovePlayerMessage movePlayerMessage) {
+        super.onMovePlayer(movePlayerMessage);
+        for(GameFlag gameFlag:gameFlagList){
+            gameFlag.reflectPlayerLocation(movePlayerMessage.getLocation(), movePlayerMessage.getUserId());
+        }
+    }
 
     @Override
     protected boolean isEnd() {
@@ -71,9 +93,23 @@ public abstract class RoomOperatorFlagGame extends RoomOperator{
         return false;
     }
 
+    @Override
+    protected void victorySequence() {
+
+    }
 
     @Override
     protected boolean isDefeat() {
         return !isVictory();
+    }
+
+    @Override
+    protected void defeatSequence() {
+
+    }
+
+    @Override
+    protected void defaultSequence() {
+
     }
 }
