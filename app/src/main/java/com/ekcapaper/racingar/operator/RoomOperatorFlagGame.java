@@ -2,6 +2,7 @@ package com.ekcapaper.racingar.operator;
 
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
+import com.ekcapaper.racingar.operator.layer.RoomOperator;
 import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Match;
