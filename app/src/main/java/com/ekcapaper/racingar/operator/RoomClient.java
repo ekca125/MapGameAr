@@ -49,8 +49,6 @@ public class RoomClient implements SocketListener {
     // 메시지 로그
     private final List<String> chatLog;
 
-    @NonNull
-    @Builder
     public RoomClient(Client client, Session session) {
         this.client = client;
         this.session = session;

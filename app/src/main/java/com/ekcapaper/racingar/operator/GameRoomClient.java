@@ -21,15 +21,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import lombok.Builder;
+import lombok.Getter;
+
 public class GameRoomClient extends RoomClient {
     // 게임 플레이어
-    private final List<Player> playerList;
+    private Player currentPlayer;
+    private List<Player> playerList;
+    @Getter
     private RoomStatus roomStatus;
 
     public GameRoomClient(Client client, Session session) {
         super(client, session);
+        this.currentPlayer = new Player(session.getUserId());
+
         this.playerList = new ArrayList<>();
-        this.playerList.add(new Player(session.getUserId()));
+        this.playerList.add(currentPlayer);
+
         this.roomStatus = RoomStatus.GAME_NOT_READY;
     }
 
@@ -145,10 +153,4 @@ public class GameRoomClient extends RoomClient {
         roomStatus = RoomStatus.GAME_END;
     }
 
-    private enum RoomStatus {
-        GAME_NOT_READY,
-        GAME_READY,
-        GAME_STARTED,
-        GAME_END
-    }
 }

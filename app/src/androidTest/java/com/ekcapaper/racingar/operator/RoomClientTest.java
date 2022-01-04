@@ -28,15 +28,8 @@ public class RoomClientTest {
         session = client.authenticateEmail(AccountStub.ID, AccountStub.PASSWORD).get();
         assertNotNull(session);
 
-        RoomClient roomClient = RoomClient.builder()
-                .client(client)
-                .session(session)
-                .build();
+        RoomClient roomClient = new RoomClient(client,session);
         boolean success = roomClient.createMatch();
         assertTrue(success);
-    }
-
-    @Test
-    public void joinMatch() {
     }
 }
