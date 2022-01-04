@@ -1,7 +1,6 @@
 package com.ekcapaper.racingar.operator;
 
 import com.ekcapaper.racingar.game.GameFlag;
-import com.ekcapaper.racingar.network.GameStartMessage;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.Client;
@@ -11,12 +10,8 @@ import com.heroiclabs.nakama.SocketClient;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Map;
-import java.util.OptionalLong;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
-import lombok.Builder;
 import lombok.NonNull;
 
 public class RoomOperatorFlagGame extends RoomOperator {
@@ -33,6 +28,7 @@ public class RoomOperatorFlagGame extends RoomOperator {
         this.gameFlagList = gameFlagList;
     }
 
+
     @Override
     public void onMovePlayer(MovePlayerMessage movePlayerMessage) {
         super.onMovePlayer(movePlayerMessage);
@@ -43,42 +39,11 @@ public class RoomOperatorFlagGame extends RoomOperator {
 
     @Override
     public boolean isEnd() {
-        if(super.isEnd()){
+        if (super.isEnd()) {
             return true;
-        }
-        else{
+        } else {
             long unownedFlagCount = gameFlagList.stream().filter(gameFlag -> !gameFlag.isOwned()).count();
-            if(unownedFlagCount == 0){
-                return true;
-            }
-            else {
-                return false;
-            }
+            return unownedFlagCount == 0;
         }
     }
-/*
-    @Override
-    protected boolean isVictory() {
-        Map<String, Long> gameFlagCountMap = gameFlagList.stream()
-                .filter(GameFlag::isOwned)
-                .collect(Collectors.groupingBy(GameFlag::getUserId, Collectors.counting()));
-        OptionalLong gameFlagCountMaxOptional = gameFlagCountMap.values().stream()
-                .mapToLong(Long::longValue)
-                .max();
-        try {
-            if (gameFlagCountMaxOptional.isPresent()) {
-                if (gameFlagCountMap.containsKey(getSessio)) {
-                    long ownGameFlagCount = gameFlagCountMap.get(getCurrentUserId());
-                    long gameFlagCountMax = gameFlagCountMaxOptional.getAsLong();
-                    if (gameFlagCountMax <= ownGameFlagCount) {
-                        return true;
-                    }
-                }
-            }
-        } catch (NullPointerException nullPointerException) {
-            return false;
-        }
-        return false;
-    }
-*/
 }
