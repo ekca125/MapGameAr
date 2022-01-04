@@ -14,6 +14,7 @@ import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.MatchData;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketClient;
+import com.heroiclabs.nakama.api.ChannelMessage;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
