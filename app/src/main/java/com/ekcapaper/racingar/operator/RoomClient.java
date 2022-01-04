@@ -45,22 +45,23 @@ public class RoomClient extends RoomLinker {
     @Override
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
         super.onMatchPresence(matchPresence);
+        
         // join 처리
-        Optional<List<UserPresence>> joinListOptional = Optional.ofNullable(matchPresence.getJoins());
-        joinListOptional.ifPresent((joinList) -> {
+        List<UserPresence> joinList = matchPresence.getJoins();
+        if(joinList != null){
             List<Player> joinPlayerList = joinList.stream()
                     .map((userPresence) -> new Player(userPresence.getUserId()))
                     .collect(Collectors.toList());
             this.playerList.addAll(joinPlayerList);
-        });
-
+        }
+        
         // leave 처리
-        Optional<List<UserPresence>> leaveListOptional = Optional.ofNullable(matchPresence.getLeaves());
-        leaveListOptional.ifPresent((leaveList) -> {
+        List<UserPresence> leaveList = matchPresence.getLeaves();
+        if(leaveList != null){
             List<Player> leavePlayerList = leaveList.stream()
                     .map((userPresence -> new Player(userPresence.getUserId())))
                     .collect(Collectors.toList());
             this.playerList.removeAll(leavePlayerList);
-        });
+        }
     }
 }

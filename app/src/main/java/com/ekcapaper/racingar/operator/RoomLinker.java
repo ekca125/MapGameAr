@@ -15,10 +15,8 @@ import com.heroiclabs.nakama.api.ChannelMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -121,23 +119,31 @@ public class RoomLinker extends AbstractSocketListener {
     public void onChannelPresence(ChannelPresenceEvent presence) {
         super.onChannelPresence(presence);
         // join 처리
-        Optional<List<UserPresence>> joinListOptional = Optional.ofNullable(presence.getJoins());
-        joinListOptional.ifPresent(this.chatUserPresenceList::addAll);
+        List<UserPresence> joinList = presence.getJoins();
+        if (joinList != null) {
+            chatUserPresenceList.addAll(joinList);
+        }
 
         // leave 처리
-        Optional<List<UserPresence>> leaveListOptional = Optional.ofNullable(presence.getLeaves());
-        leaveListOptional.ifPresent(this.chatUserPresenceList::removeAll);
+        List<UserPresence> leaveList = presence.getLeaves();
+        if (leaveList != null) {
+            chatUserPresenceList.removeAll(leaveList);
+        }
     }
 
     @Override
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
         super.onMatchPresence(matchPresence);
         // join 처리
-        Optional<List<UserPresence>> joinListOptional = Optional.ofNullable(matchPresence.getJoins());
-        joinListOptional.ifPresent(this.realTimeUserPresenceList::addAll);
+        List<UserPresence> joinList = matchPresence.getJoins();
+        if (joinList != null) {
+            realTimeUserPresenceList.addAll(joinList);
+        }
 
         // leave 처리
-        Optional<List<UserPresence>> leaveListOptional = Optional.ofNullable(matchPresence.getLeaves());
-        leaveListOptional.ifPresent(this.realTimeUserPresenceList::removeAll);
+        List<UserPresence> leaveList = matchPresence.getLeaves();
+        if (leaveList != null) {
+            realTimeUserPresenceList.removeAll(leaveList);
+        }
     }
 }
