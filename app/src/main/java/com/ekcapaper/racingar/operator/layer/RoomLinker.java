@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -36,6 +37,7 @@ public class RoomLinker extends AbstractSocketListener {
     // 메시지 로그
     private final List<String> chatLog;
 
+    @Builder
     public RoomLinker(@NonNull Client client,
                       @NonNull Session session,
                       @NonNull SocketClient socketClient,
