@@ -6,6 +6,7 @@ import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.ekcapaper.racingar.network.OpCode;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.AbstractSocketListener;
+import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Error;
@@ -35,12 +36,18 @@ public class RoomLinker extends AbstractSocketListener {
     private final Client client;
     private final Session session;
     private final SocketClient socketClient;
-    // 정보
-    private final List<UserPresence> userPresenceList;
-    private final List<String> chattingLog;
-    // 방에 해당하는 객체
+    // 유저의 정보
+    private final List<UserPresence> realTimeUserPresenceList;
+    // 채팅 데이터
+    private final List<UserPresence> chatUserPresenceList;
+    private final List<String> chatLog;
+    // 매치 ID와 채팅 ID
+    private String matchId;
+    private String chatChannelId;
+    // 서버와 연동된 매치와 채팅
     @Getter
     private Optional<Match> currentMatch;
+    private Optional<Channel> currentChannel;
 
     public RoomLinker(Client client, Session session) throws ExecutionException, InterruptedException {
         this.client = client;
@@ -50,17 +57,22 @@ public class RoomLinker extends AbstractSocketListener {
                 KeyStorageNakama.getWebSocketPort(),
                 KeyStorageNakama.getWebSocketSSL()
         );
+        // 유저들의 프로필
+        this.realTimeUserPresenceList = new ArrayList<>();
+        // 유저들의 채팅 프로필과 채팅 데이터
+        this.chatUserPresenceList = new ArrayList<>();
+        this.chatLog = new ArrayList<>();
+        // 소켓 연결 및 매치 설정
         this.socketClient.connect(session, this).get();
         this.currentMatch = Optional.empty();
-        // 채팅 데이터
-        this.chattingLog = new ArrayList<>();
-        this.userPresenceList = new ArrayList<>();
     }
 
     // 방 생성 또는 입장
     public final void createMatch() {
         try {
-            currentMatch = Optional.ofNullable(this.socketClient.createMatch().get());
+            this.currentMatch = Optional.ofNullable(this.socketClient.createMatch().get());
+
+
         } catch (ExecutionException | InterruptedException e) {
             currentMatch = Optional.empty();
         }
@@ -88,7 +100,19 @@ public class RoomLinker extends AbstractSocketListener {
     // receive
     @Override
     public void onDisconnect(Throwable t) {
+        // 연결이 끊어졌을 때
         super.onDisconnect(t);
+        // 현재 매치 무효화
+        this.currentMatch.ifPresent((match)->{
+            String matchId = match.getMatchId();
+            this.socketClient.leaveMatch(matchId);
+            this.socketClient.leaveChat();
+        });
+
+        this.socketClient.leaveMatch();
+
+        this.currentMatch = Optional.empty();
+
     }
 
     @Override
@@ -99,12 +123,19 @@ public class RoomLinker extends AbstractSocketListener {
     @Override
     public void onChannelMessage(ChannelMessage message) {
         super.onChannelMessage(message);
-        chattingLog.add(message.getUsername() + " : " + message.getContent());
+        chatLog.add(message.getUsername() + " : " + message.getContent());
     }
 
     @Override
     public void onChannelPresence(ChannelPresenceEvent presence) {
         super.onChannelPresence(presence);
+        // join 처리
+        Optional<List<UserPresence>> joinListOptional = Optional.ofNullable(presence.getJoins());
+        joinListOptional.ifPresent(this.chatUserPresenceList::addAll);
+
+        // leave 처리
+        Optional<List<UserPresence>> leaveListOptional = Optional.ofNullable(presence.getLeaves());
+        leaveListOptional.ifPresent(this.chatUserPresenceList::removeAll);
     }
 
     @Override
@@ -122,11 +153,11 @@ public class RoomLinker extends AbstractSocketListener {
         super.onMatchPresence(matchPresence);
         // join 처리
         Optional<List<UserPresence>> joinListOptional = Optional.ofNullable(matchPresence.getJoins());
-        joinListOptional.ifPresent(this.userPresenceList::addAll);
+        joinListOptional.ifPresent(this.realTimeUserPresenceList::addAll);
 
         // leave 처리
         Optional<List<UserPresence>> leaveListOptional = Optional.ofNullable(matchPresence.getLeaves());
-        leaveListOptional.ifPresent(this.userPresenceList::removeAll);
+        leaveListOptional.ifPresent(this.realTimeUserPresenceList::removeAll);
     }
 
     @Override
