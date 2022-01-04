@@ -22,7 +22,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class RoomLinker extends AbstractSocketListener {
+public class BaseRoomLinker extends AbstractSocketListener {
     // 서버와의 연동에 필요한 객체
     private final Client client;
     private final Session session;
@@ -38,9 +38,9 @@ public class RoomLinker extends AbstractSocketListener {
     private final List<String> chatLog;
 
     @Builder
-    public RoomLinker(@NonNull Client client,
-                      @NonNull Session session,
-                      @NonNull SocketClient socketClient) throws ExecutionException, InterruptedException {
+    public BaseRoomLinker(@NonNull Client client,
+                          @NonNull Session session,
+                          @NonNull SocketClient socketClient) throws ExecutionException, InterruptedException {
         // 서버와의 연동에 필요한 객체
         this.client = client;
         this.session = session;

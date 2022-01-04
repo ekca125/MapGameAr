@@ -1,9 +1,7 @@
 package com.ekcapaper.racingar.operator.layer;
 
 import com.ekcapaper.racingar.game.Player;
-import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.Client;
-import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.MatchPresenceEvent;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketClient;
@@ -19,7 +17,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class GameRoomLinker extends RoomLinker {
+public class GameRoomLinker extends BaseRoomLinker {
     private final List<Player> playerList;
 
     public GameRoomLinker(@NonNull Client client,

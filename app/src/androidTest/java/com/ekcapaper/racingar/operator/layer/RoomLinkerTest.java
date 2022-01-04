@@ -25,13 +25,12 @@ import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
 public class RoomLinkerTest {
-    RoomLinker roomLinker;
+    BaseRoomLinker roomLinker;
 
     @Before
     public void makeRoomLinker() throws ExecutionException, InterruptedException {
@@ -119,7 +118,7 @@ public class RoomLinkerTest {
         assertNotNull(match);
         assertNotNull(channel);
 
-        this.roomLinker = RoomLinker.builder()
+        this.roomLinker = BaseRoomLinker.builder()
                 .client(client)
                 .session(session)
                 .socketClient(socketClient)
