@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator.layer;
+package com.ekcapaper.racingar.operator;
 
 import android.location.Location;
 
@@ -10,29 +10,60 @@ import com.ekcapaper.racingar.network.OpCode;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.MatchData;
+import com.heroiclabs.nakama.MatchPresenceEvent;
 import com.heroiclabs.nakama.Session;
-import com.heroiclabs.nakama.SocketClient;
+import com.heroiclabs.nakama.UserPresence;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
-import lombok.Getter;
-import lombok.NonNull;
-
-@Getter
-public class GameRoomClient extends GameRoomLinker {
+public class GameRoomClient extends RoomClient{
+    // 게임 플레이어
+    private final List<Player> playerList;
     private RoomStatus roomStatus;
 
-    public GameRoomClient(@NonNull Client client,
-                          @NonNull Session session,
-                          @NonNull SocketClient socketClient) throws ExecutionException, InterruptedException {
-        super(client, session, socketClient);
-        roomStatus = RoomStatus.READY;
+    public GameRoomClient(Client client, Session session) {
+        super(client, session);
+        this.playerList = new ArrayList<>();
+        this.playerList.add(new Player(session.getUserId()));
+
+        this.roomStatus = RoomStatus.READY;
     }
 
-    public boolean isEnd() {
-        return roomStatus == RoomStatus.END;
+    public Optional<Player> getPlayer(String userId) {
+        try {
+            Player goalPlayer = playerList.stream()
+                    .filter(player -> player.getUserId().equals(userId))
+                    .collect(Collectors.toList()).get(0);
+            return Optional.ofNullable(goalPlayer);
+        } catch (IndexOutOfBoundsException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public void onMatchPresence(MatchPresenceEvent matchPresence) {
+        super.onMatchPresence(matchPresence);
+        // join 처리
+        List<UserPresence> joinList = matchPresence.getJoins();
+        if (joinList != null) {
+            List<Player> joinPlayerList = joinList.stream()
+                    .map((userPresence) -> new Player(userPresence.getUserId()))
+                    .collect(Collectors.toList());
+            this.playerList.addAll(joinPlayerList);
+        }
+
+        // leave 처리
+        List<UserPresence> leaveList = matchPresence.getLeaves();
+        if (leaveList != null) {
+            List<Player> leavePlayerList = leaveList.stream()
+                    .map((userPresence -> new Player(userPresence.getUserId())))
+                    .collect(Collectors.toList());
+            this.playerList.removeAll(leavePlayerList);
+        }
     }
 
     @Override
@@ -61,6 +92,7 @@ public class GameRoomClient extends GameRoomLinker {
                 break;
         }
     }
+
 
     public void onGameStart(GameStartMessage gameStartMessage) {
         roomStatus = RoomStatus.PROGRESS;

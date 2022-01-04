@@ -1,7 +1,10 @@
-package com.ekcapaper.racingar.operator.layer;
+package com.ekcapaper.racingar.operator;
+
+import android.location.Location;
 
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Client;
@@ -29,7 +32,7 @@ import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.NonNull;
 
-public class RoomLinkLayer implements SocketListener {
+public class RoomClient implements SocketListener {
     // 서버와의 연동에 필요한 객체
     private final Client client;
     private final Session session;
@@ -38,8 +41,6 @@ public class RoomLinkLayer implements SocketListener {
     private final List<UserPresence> matchUserPresenceList;
     // 유저 프로필 (Chat Channel)
     private final List<UserPresence> channelUserPresenceList;
-    // 게임 플레이어
-    private final List<Player> playerList;
     // 서버와의 연동을 의미하는 객체들(Realtime, Chat Channel)
     private Match match;
     private final Channel channel;
@@ -48,7 +49,7 @@ public class RoomLinkLayer implements SocketListener {
 
     @NonNull
     @Builder
-    public RoomLinkLayer(Client client, Session session) {
+    public RoomClient(Client client, Session session) {
         this.client = client;
         this.session = session;
         this.socketClient = client.createSocket(
@@ -59,13 +60,10 @@ public class RoomLinkLayer implements SocketListener {
         this.matchUserPresenceList = new ArrayList<>();
         this.channelUserPresenceList = new ArrayList<>();
         this.chatLog = new ArrayList<>();
-        this.playerList = new ArrayList<>();
         match = null;
         channel = null;
         // 콜백 연동
         this.socketClient.connect(session, this);
-        //
-        this.playerList.add(new Player(session.getUserId()));
     }
 
     public boolean createMatch() {
@@ -88,27 +86,6 @@ public class RoomLinkLayer implements SocketListener {
         }
     }
 
-    public Optional<Player> getPlayer(String userId) {
-        try {
-            Player goalPlayer = playerList.stream()
-                    .filter(player -> player.getUserId().equals(userId))
-                    .collect(Collectors.toList()).get(0);
-            return Optional.ofNullable(goalPlayer);
-        } catch (IndexOutOfBoundsException e) {
-            return Optional.empty();
-        }
-    }
-
-    public Optional<Player> getCurrentPlayer() {
-        try {
-            Player goalPlayer = playerList.stream()
-                    .filter(player -> player.getUserId().equals(session.getUserId()))
-                    .collect(Collectors.toList()).get(0);
-            return Optional.ofNullable(goalPlayer);
-        } catch (IndexOutOfBoundsException e) {
-            return Optional.empty();
-        }
-    }
 
     @Override
     public void onDisconnect(Throwable t) {
@@ -177,22 +154,12 @@ public class RoomLinkLayer implements SocketListener {
         List<UserPresence> joinList = matchPresence.getJoins();
         if (joinList != null) {
             matchUserPresenceList.addAll(joinList);
-
-            List<Player> joinPlayerList = joinList.stream()
-                    .map((userPresence) -> new Player(userPresence.getUserId()))
-                    .collect(Collectors.toList());
-            this.playerList.addAll(joinPlayerList);
         }
 
         // leave 처리
         List<UserPresence> leaveList = matchPresence.getLeaves();
         if (leaveList != null) {
             matchUserPresenceList.removeAll(leaveList);
-
-            List<Player> leavePlayerList = leaveList.stream()
-                    .map((userPresence -> new Player(userPresence.getUserId())))
-                    .collect(Collectors.toList());
-            this.playerList.removeAll(leavePlayerList);
         }
     }
 
