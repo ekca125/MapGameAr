@@ -19,12 +19,12 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class RoomClient extends RoomLinker {
+public class GameRoomLinker extends RoomLinker {
     private final List<Player> playerList;
 
-    public RoomClient(@NonNull Client client,
-                      @NonNull Session session,
-                      @NonNull SocketClient socketClient) throws ExecutionException, InterruptedException {
+    public GameRoomLinker(@NonNull Client client,
+                          @NonNull Session session,
+                          @NonNull SocketClient socketClient) throws ExecutionException, InterruptedException {
         super(client, session, socketClient);
         playerList = new ArrayList<>();
         playerList.add(new Player(session.getUserId()));

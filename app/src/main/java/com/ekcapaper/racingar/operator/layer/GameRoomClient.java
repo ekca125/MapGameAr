@@ -8,13 +8,10 @@ import com.ekcapaper.racingar.network.GameStartMessage;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.ekcapaper.racingar.network.OpCode;
 import com.google.gson.Gson;
-import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.Client;
-import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.MatchData;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketClient;
-import com.heroiclabs.nakama.api.ChannelMessage;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -24,12 +21,12 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class RoomHandler extends RoomClient {
+public class GameRoomClient extends GameRoomLinker {
     private RoomStatus roomStatus;
 
-    public RoomHandler(@NonNull Client client,
-                       @NonNull Session session,
-                       @NonNull SocketClient socketClient) throws ExecutionException, InterruptedException {
+    public GameRoomClient(@NonNull Client client,
+                          @NonNull Session session,
+                          @NonNull SocketClient socketClient) throws ExecutionException, InterruptedException {
         super(client, session, socketClient);
         roomStatus = RoomStatus.READY;
     }

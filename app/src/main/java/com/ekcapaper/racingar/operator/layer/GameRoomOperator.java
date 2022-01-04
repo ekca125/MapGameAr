@@ -2,9 +2,7 @@ package com.ekcapaper.racingar.operator.layer;
 
 import com.ekcapaper.racingar.network.GameEndMessage;
 import com.ekcapaper.racingar.network.GameStartMessage;
-import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.Client;
-import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketClient;
 
@@ -17,17 +15,17 @@ import java.util.concurrent.ExecutionException;
 import kotlin.NotImplementedError;
 import lombok.NonNull;
 
-public class RoomOperator extends RoomHandler {
+public class GameRoomOperator extends GameRoomClient {
     private final Timer roomEndChecker;
     private final TimerTask roomEndCheckerTask;
     private final Duration timeLimit;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
 
-    public RoomOperator(@NonNull Client client,
-                        @NonNull Session session,
-                        @NonNull SocketClient socketClient,
-                        @NonNull Duration timeLimit) throws ExecutionException, InterruptedException {
+    public GameRoomOperator(@NonNull Client client,
+                            @NonNull Session session,
+                            @NonNull SocketClient socketClient,
+                            @NonNull Duration timeLimit) throws ExecutionException, InterruptedException {
         super(client, session, socketClient);
         roomEndChecker = new Timer();
         roomEndCheckerTask = new TimerTask() {
