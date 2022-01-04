@@ -27,10 +27,8 @@ public class RoomOperator extends RoomHandler {
     public RoomOperator(@NonNull Client client,
                         @NonNull Session session,
                         @NonNull SocketClient socketClient,
-                        @NonNull Match match,
-                        @NonNull Channel chatChannel,
                         @NonNull Duration timeLimit) throws ExecutionException, InterruptedException {
-        super(client, session, socketClient, match, chatChannel);
+        super(client, session, socketClient);
         roomEndChecker = new Timer();
         roomEndCheckerTask = new TimerTask() {
             @Override

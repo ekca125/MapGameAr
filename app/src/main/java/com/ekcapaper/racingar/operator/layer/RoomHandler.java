@@ -29,10 +29,8 @@ public class RoomHandler extends RoomClient {
 
     public RoomHandler(@NonNull Client client,
                        @NonNull Session session,
-                       @NonNull SocketClient socketClient,
-                       @NonNull Match match,
-                       @NonNull Channel chatChannel) throws ExecutionException, InterruptedException {
-        super(client, session, socketClient, match, chatChannel);
+                       @NonNull SocketClient socketClient) throws ExecutionException, InterruptedException {
+        super(client, session, socketClient);
         roomStatus = RoomStatus.READY;
     }
 

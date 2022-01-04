@@ -24,11 +24,9 @@ public class RoomOperatorFlagGame extends RoomOperator {
     public RoomOperatorFlagGame(@NonNull Client client,
                                 @NonNull Session session,
                                 @NonNull SocketClient socketClient,
-                                @NonNull Match match,
-                                @NonNull Channel chatChannel,
                                 @NonNull Duration timeLimit,
                                 @NonNull List<GameFlag> gameFlagList) throws ExecutionException, InterruptedException {
-        super(client, session, socketClient, match, chatChannel, timeLimit);
+        super(client, session, socketClient, timeLimit);
         this.gameFlagList = gameFlagList;
     }
 

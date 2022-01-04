@@ -24,10 +24,8 @@ public class RoomClient extends RoomLinker {
 
     public RoomClient(@NonNull Client client,
                       @NonNull Session session,
-                      @NonNull SocketClient socketClient,
-                      @NonNull Match match,
-                      @NonNull Channel chatChannel) throws ExecutionException, InterruptedException {
-        super(client, session, socketClient, match, chatChannel);
+                      @NonNull SocketClient socketClient) throws ExecutionException, InterruptedException {
+        super(client, session, socketClient);
         playerList = new ArrayList<>();
         playerList.add(new Player(session.getUserId()));
     }

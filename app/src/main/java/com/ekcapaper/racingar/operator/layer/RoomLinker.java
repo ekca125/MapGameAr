@@ -40,9 +40,7 @@ public class RoomLinker extends AbstractSocketListener {
     @Builder
     public RoomLinker(@NonNull Client client,
                       @NonNull Session session,
-                      @NonNull SocketClient socketClient,
-                      @NonNull Match match,
-                      @NonNull Channel chatChannel) throws ExecutionException, InterruptedException {
+                      @NonNull SocketClient socketClient) throws ExecutionException, InterruptedException {
         // 서버와의 연동에 필요한 객체
         this.client = client;
         this.session = session;
