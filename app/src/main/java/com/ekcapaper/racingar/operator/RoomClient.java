@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import lombok.NonNull;
 
 public class RoomClient extends RoomLinker {
-    private List<Player> playerList;
+    private final List<Player> playerList;
 
     public RoomClient(@NonNull Client client,
                       @NonNull Session session,
@@ -31,13 +31,12 @@ public class RoomClient extends RoomLinker {
     }
 
     public Optional<Player> getPlayer(String userId) {
-        try{
+        try {
             Player goalPlayer = playerList.stream()
                     .filter(player -> player.getUserId().equals(userId))
                     .collect(Collectors.toList()).get(0);
             return Optional.ofNullable(goalPlayer);
-        }
-        catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             return Optional.empty();
         }
     }
@@ -45,19 +44,19 @@ public class RoomClient extends RoomLinker {
     @Override
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
         super.onMatchPresence(matchPresence);
-        
+
         // join 처리
         List<UserPresence> joinList = matchPresence.getJoins();
-        if(joinList != null){
+        if (joinList != null) {
             List<Player> joinPlayerList = joinList.stream()
                     .map((userPresence) -> new Player(userPresence.getUserId()))
                     .collect(Collectors.toList());
             this.playerList.addAll(joinPlayerList);
         }
-        
+
         // leave 처리
         List<UserPresence> leaveList = matchPresence.getLeaves();
-        if(leaveList != null){
+        if (leaveList != null) {
             List<Player> leavePlayerList = leaveList.stream()
                     .map((userPresence -> new Player(userPresence.getUserId())))
                     .collect(Collectors.toList());
