@@ -5,6 +5,7 @@ import android.location.Location;
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.network.GameEndMessage;
 import com.ekcapaper.racingar.network.GameStartMessage;
+import com.ekcapaper.racingar.network.Message;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.ekcapaper.racingar.network.OpCode;
 import com.google.gson.Gson;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class GameRoomClient extends RoomClient{
+public class GameRoomClient extends RoomClient {
     // 게임 플레이어
     private final List<Player> playerList;
     private RoomStatus roomStatus;
@@ -29,8 +30,7 @@ public class GameRoomClient extends RoomClient{
         super(client, session);
         this.playerList = new ArrayList<>();
         this.playerList.add(new Player(session.getUserId()));
-
-        this.roomStatus = RoomStatus.READY;
+        this.roomStatus = RoomStatus.GAME_NOT_READY;
     }
 
     public Optional<Player> getPlayer(String userId) {
@@ -44,6 +44,26 @@ public class GameRoomClient extends RoomClient{
         }
     }
 
+    // create or join
+    @Override
+    public boolean createMatch() {
+        boolean success = super.createMatch();
+        if(success){
+            roomStatus = RoomStatus.GAME_READY;
+        }
+        return success;
+    }
+
+    @Override
+    public boolean joinMatch(String matchId) {
+        boolean success = super.joinMatch(matchId);
+        if(success){
+            roomStatus = RoomStatus.GAME_READY;
+        }
+        return success;
+    }
+
+    // match presence
     @Override
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
         super.onMatchPresence(matchPresence);
@@ -66,6 +86,7 @@ public class GameRoomClient extends RoomClient{
         }
     }
 
+    // match event
     @Override
     public void onMatchData(MatchData matchData) {
         super.onMatchData(matchData);
@@ -93,9 +114,17 @@ public class GameRoomClient extends RoomClient{
         }
     }
 
+    public void sendGameStartMessage(){
+        sendMatchData(new GameStartMessage());
+    }
 
     public void onGameStart(GameStartMessage gameStartMessage) {
-        roomStatus = RoomStatus.PROGRESS;
+        roomStatus = RoomStatus.GAME_STARTED;
+    }
+
+    public void sendMovePlayerMessage(String userId, Location location){
+        MovePlayerMessage movePlayerMessage = new MovePlayerMessage(userId, location.getLatitude(), location.getLongitude());
+        sendMatchData(movePlayerMessage);
     }
 
     public void onMovePlayer(MovePlayerMessage movePlayerMessage) {
@@ -108,13 +137,18 @@ public class GameRoomClient extends RoomClient{
         }));
     }
 
+    public void sendGameEndMessage(){
+        sendMatchData(new GameEndMessage());
+    }
+
     public void onGameEnd(GameEndMessage gameEndMessage) {
-        roomStatus = RoomStatus.END;
+        roomStatus = RoomStatus.GAME_END;
     }
 
     private enum RoomStatus {
-        READY,
-        PROGRESS,
-        END
+        GAME_NOT_READY,
+        GAME_READY,
+        GAME_STARTED,
+        GAME_END
     }
 }

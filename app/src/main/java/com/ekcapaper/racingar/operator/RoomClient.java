@@ -4,6 +4,7 @@ import android.location.Location;
 
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.network.Message;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
@@ -23,6 +24,7 @@ import com.heroiclabs.nakama.UserPresence;
 import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +62,7 @@ public class RoomClient implements SocketListener {
         this.matchUserPresenceList = new ArrayList<>();
         this.channelUserPresenceList = new ArrayList<>();
         this.chatLog = new ArrayList<>();
+        // null 초기화
         match = null;
         channel = null;
         // 콜백 연동
@@ -84,6 +87,14 @@ public class RoomClient implements SocketListener {
             match = null;
             return false;
         }
+    }
+
+    public final void sendMatchData(Message message) {
+        socketClient.sendMatchData(
+                match.getMatchId(),
+                message.getOpCode().ordinal(),
+                message.getPayload().getBytes(StandardCharsets.UTF_8)
+        );
     }
 
 
