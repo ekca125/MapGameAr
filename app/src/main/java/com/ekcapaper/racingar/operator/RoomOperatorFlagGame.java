@@ -33,9 +33,6 @@ public class RoomOperatorFlagGame extends RoomOperator {
         this.gameFlagList = gameFlagList;
     }
 
-
-
-
     @Override
     public void onMovePlayer(MovePlayerMessage movePlayerMessage) {
         super.onMovePlayer(movePlayerMessage);
@@ -46,13 +43,20 @@ public class RoomOperatorFlagGame extends RoomOperator {
 
     @Override
     public boolean isEnd() {
-        long unownedFlagCount = gameFlagList.stream().filter(gameFlag -> !gameFlag.isOwned()).count();
-        boolean end = super.isEnd();
-        if (end) {
+        if(super.isEnd()){
             return true;
-        } else return unownedFlagCount == 0;
+        }
+        else{
+            long unownedFlagCount = gameFlagList.stream().filter(gameFlag -> !gameFlag.isOwned()).count();
+            if(unownedFlagCount == 0){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
     }
-
+/*
     @Override
     protected boolean isVictory() {
         Map<String, Long> gameFlagCountMap = gameFlagList.stream()
@@ -63,7 +67,7 @@ public class RoomOperatorFlagGame extends RoomOperator {
                 .max();
         try {
             if (gameFlagCountMaxOptional.isPresent()) {
-                if (gameFlagCountMap.containsKey(getCurrentUserId())) {
+                if (gameFlagCountMap.containsKey(getSessio)) {
                     long ownGameFlagCount = gameFlagCountMap.get(getCurrentUserId());
                     long gameFlagCountMax = gameFlagCountMaxOptional.getAsLong();
                     if (gameFlagCountMax <= ownGameFlagCount) {
@@ -76,5 +80,5 @@ public class RoomOperatorFlagGame extends RoomOperator {
         }
         return false;
     }
-
+*/
 }
