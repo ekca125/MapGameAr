@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class RoomOperatorFlagGameFactory extends RoomOperatorFactory{
+public class RoomOperatorFlagGameFactory extends RoomOperatorFactory {
     public RoomOperatorFlagGameFactory(Client client, Session session, Duration timeLimit) {
         super(client, session, timeLimit);
     }
@@ -27,11 +27,11 @@ public class RoomOperatorFlagGameFactory extends RoomOperatorFactory{
     @Override
     public RoomOperator createRoom(Location playerLocation, double mapLengthKilometer) {
         AddressMapService addressMapService = AddressMapClient.getMapAddressService();
-        MapRange mapRange = MapRange.calculateMapRange(playerLocation,mapLengthKilometer);
+        MapRange mapRange = MapRange.calculateMapRange(playerLocation, mapLengthKilometer);
         Call<List<AddressDto>> addressDtoListCall = addressMapService.drawMapRangeRandom10(mapRange);
         try {
             Response<List<AddressDto>> addressDtoListResponse = addressDtoListCall.execute();
-            if(addressDtoListResponse.isSuccessful()){
+            if (addressDtoListResponse.isSuccessful()) {
                 List<AddressDto> addressDtoList = addressDtoListResponse.body();
                 List<GameFlag> gameFlagList = addressDtoList.stream()
                         .map((addressDto -> {

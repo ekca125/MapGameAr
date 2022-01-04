@@ -15,8 +15,10 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
 import lombok.NonNull;
 
+@Getter
 public class RoomClient extends RoomLinker {
     private final List<Player> playerList;
 

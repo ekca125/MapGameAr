@@ -19,5 +19,6 @@ public abstract class RoomOperatorFactory {
     }
 
     public abstract RoomOperator createRoom(Location location, double mapLengthKilometer);
+
     public abstract RoomOperator joinRoom(String matchId);
 }
