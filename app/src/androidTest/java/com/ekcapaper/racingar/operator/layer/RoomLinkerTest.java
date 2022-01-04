@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import com.ekcapaper.racingar.AccountStub;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.network.GameStartMessage;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
@@ -23,16 +24,17 @@ import com.heroiclabs.nakama.StreamPresenceEvent;
 import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
 
 public class RoomLinkerTest {
+    RoomLinker roomLinker;
 
-
-    @Test
-    public void makeTest() throws ExecutionException, InterruptedException {
+    @Before
+    public void makeRoomLinker() throws ExecutionException, InterruptedException {
         Client client;
         Session session;
         SocketClient socketClient;
@@ -116,6 +118,19 @@ public class RoomLinkerTest {
         Channel channel = socketClient.joinChat(match.getMatchId(), ChannelType.ROOM).get();
         assertNotNull(match);
         assertNotNull(channel);
+
+        this.roomLinker = RoomLinker.builder()
+                .client(client)
+                .session(session)
+                .socketClient(socketClient)
+                .match(match)
+                .chatChannel(channel)
+                .build();
     }
 
+    @Test
+    public void sendDataTest(){
+        roomLinker.sendMatchData(new GameStartMessage());
+        roomLinker.getSocketClient().writeChatMessage(roomLinker.getChatChannel().getId(),"test");
+    }
 }

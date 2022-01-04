@@ -47,9 +47,6 @@ public class RoomLinker extends AbstractSocketListener {
         this.client = client;
         this.session = session;
         this.socketClient = socketClient;
-        // 서버와의 연동을 의미하는 객체들(Realtime, Chat Channel)
-        this.match = match;
-        this.chatChannel = chatChannel;
         // 프로필들
         this.realTimeUserPresenceList = new ArrayList<>();
         this.chatUserPresenceList = new ArrayList<>();
@@ -116,6 +113,8 @@ public class RoomLinker extends AbstractSocketListener {
                 break;
         }
     }
+
+
 
     @Override
     public void onChannelPresence(ChannelPresenceEvent presence) {
