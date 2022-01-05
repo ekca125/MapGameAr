@@ -24,8 +24,8 @@ public abstract class GameRoomOperator extends GameRoomClient {
             }
         };
         this.endCheckTimer.schedule(endCheckTimerTask,
-                TimeUnit.SECONDS.convert(1, TimeUnit.MILLISECONDS),
-                TimeUnit.SECONDS.convert(1, TimeUnit.MILLISECONDS)
+                TimeUnit.MILLISECONDS.convert(1, TimeUnit.SECONDS),
+                TimeUnit.MILLISECONDS.convert(1, TimeUnit.SECONDS)
         );
     }
 
