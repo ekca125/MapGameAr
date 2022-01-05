@@ -1,6 +1,7 @@
 package com.ekcapaper.racingar.operator;
 
 import com.ekcapaper.racingar.network.GameEndMessage;
+import com.ekcapaper.racingar.operator.checker.EndChecker;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
@@ -8,24 +9,26 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-public class GameRoomOperator extends GameRoomClient{
+public class GameRoomOperator extends GameRoomClient {
     Timer endCheckTimer;
     TimerTask endCheckTimerTask;
+    EndChecker endChecker;
 
-    public GameRoomOperator(Client client, Session session) {
+    public GameRoomOperator(Client client, Session session, EndChecker endChecker) {
         super(client, session);
-        endCheckTimer = new Timer();
-        endCheckTimerTask = new TimerTask() {
+        this.endChecker = endChecker;
+        this.endCheckTimer = new Timer();
+        this.endCheckTimerTask = new TimerTask() {
             @Override
             public void run() {
-                if(isEnd()){
+                if (endChecker.isEnd()) {
                     sendMatchData(new GameEndMessage());
                 }
             }
         };
-        endCheckTimer.schedule(endCheckTimerTask,
-                TimeUnit.SECONDS.convert(1,TimeUnit.MILLISECONDS),
-                TimeUnit.SECONDS.convert(1,TimeUnit.MILLISECONDS)
+        this.endCheckTimer.schedule(endCheckTimerTask,
+                TimeUnit.SECONDS.convert(1, TimeUnit.MILLISECONDS),
+                TimeUnit.SECONDS.convert(1, TimeUnit.MILLISECONDS)
         );
     }
 
