@@ -8,7 +8,9 @@ import java.time.Duration;
 import java.util.List;
 
 public class FlagGameRoomOperator extends TimeLimitGameRoomOperator {
-    public FlagGameRoomOperator(Client client, Session session, Duration timeLimit) {
+    private final List<GameFlag> gameFlagList;
+    public FlagGameRoomOperator(Client client, Session session, Duration timeLimit, List<GameFlag> gameFlagList) {
         super(client, session, timeLimit);
+        this.gameFlagList = gameFlagList;
     }
 }
