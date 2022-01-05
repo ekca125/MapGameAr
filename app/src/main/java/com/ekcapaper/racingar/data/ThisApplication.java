@@ -21,8 +21,10 @@ import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.PermissionRead;
 import com.heroiclabs.nakama.PermissionWrite;
 import com.heroiclabs.nakama.Session;
+import com.heroiclabs.nakama.StorageObjectId;
 import com.heroiclabs.nakama.StorageObjectWrite;
 import com.heroiclabs.nakama.api.StorageObjectAcks;
+import com.heroiclabs.nakama.api.StorageObjects;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -150,11 +152,18 @@ public class ThisApplication extends Application {
         currentGameRoomOperator = flagGameRoomOperator;
         return true;
     }
+/*
+    public boolean joinRoom(String matchId){
+        StorageObjectId objectId = new StorageObjectId(getMatchCollectionName(matchId));
+        objectId.setKey();
+        objectId.setUserId(session.getUserId());
+        StorageObjects objects = client.readStorageObjects(session, objectId).get();
+        System.out.format("Read objects %s", objects.getObjectsList().toString());
 
-    public boolean joinRoom(){
+
         // 방에 입장하기
 
         // 읽어와서 오퍼레이터를 만들기
     }
-
+*/
 }
