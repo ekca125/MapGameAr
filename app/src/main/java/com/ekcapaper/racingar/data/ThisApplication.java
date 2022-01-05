@@ -81,13 +81,7 @@ public class ThisApplication extends Application {
         return gson.fromJson(json, new TypeToken<ArrayList<GameFlag>>(){}.getType());
     }
 
-    private String getMatchCollectionName(String matchId){
-        return "match-" + matchId;
-    }
 
-    private String getGameFlagListName(){
-        return "GameFlagList";
-    }
 
     
     // try catch로 정리
