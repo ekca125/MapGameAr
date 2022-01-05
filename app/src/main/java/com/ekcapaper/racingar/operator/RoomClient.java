@@ -1,11 +1,7 @@
 package com.ekcapaper.racingar.operator;
 
-import android.location.Location;
-
-import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.Message;
-import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Client;
@@ -27,12 +23,7 @@ import com.heroiclabs.nakama.api.NotificationList;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-
-import lombok.Builder;
-import lombok.NonNull;
 
 public class RoomClient implements SocketListener {
     // 서버와의 연동에 필요한 객체
@@ -43,11 +34,11 @@ public class RoomClient implements SocketListener {
     private final List<UserPresence> matchUserPresenceList;
     // 유저 프로필 (Chat Channel)
     private final List<UserPresence> channelUserPresenceList;
-    // 서버와의 연동을 의미하는 객체들(Realtime, Chat Channel)
-    private Match match;
     private final Channel channel;
     // 메시지 로그
     private final List<String> chatLog;
+    // 서버와의 연동을 의미하는 객체들(Realtime, Chat Channel)
+    private Match match;
 
     public RoomClient(Client client, Session session) {
         this.client = client;

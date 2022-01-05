@@ -5,7 +5,6 @@ import android.location.Location;
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.network.GameEndMessage;
 import com.ekcapaper.racingar.network.GameStartMessage;
-import com.ekcapaper.racingar.network.Message;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.ekcapaper.racingar.network.OpCode;
 import com.google.gson.Gson;
@@ -21,13 +20,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import lombok.Builder;
 import lombok.Getter;
 
 public class GameRoomClient extends RoomClient {
     // 게임 플레이어
-    private Player currentPlayer;
-    private List<Player> playerList;
+    private final Player currentPlayer;
+    private final List<Player> playerList;
     @Getter
     private RoomStatus roomStatus;
 
@@ -56,7 +54,7 @@ public class GameRoomClient extends RoomClient {
     @Override
     public boolean createMatch() {
         boolean success = super.createMatch();
-        if(success){
+        if (success) {
             roomStatus = RoomStatus.GAME_READY;
         }
         return success;
@@ -65,7 +63,7 @@ public class GameRoomClient extends RoomClient {
     @Override
     public boolean joinMatch(String matchId) {
         boolean success = super.joinMatch(matchId);
-        if(success){
+        if (success) {
             roomStatus = RoomStatus.GAME_READY;
         }
         return success;
@@ -122,7 +120,7 @@ public class GameRoomClient extends RoomClient {
         }
     }
 
-    public void sendGameStartMessage(){
+    public void declareGameStartMessage() {
         sendMatchData(new GameStartMessage());
     }
 
@@ -130,8 +128,8 @@ public class GameRoomClient extends RoomClient {
         roomStatus = RoomStatus.GAME_STARTED;
     }
 
-    public void sendMovePlayerMessage(String userId, Location location){
-        MovePlayerMessage movePlayerMessage = new MovePlayerMessage(userId, location.getLatitude(), location.getLongitude());
+    public void declareCurrentPlayerMove(Location location) {
+        MovePlayerMessage movePlayerMessage = new MovePlayerMessage(currentPlayer.getUserId(), location.getLatitude(), location.getLongitude());
         sendMatchData(movePlayerMessage);
     }
 
@@ -145,7 +143,7 @@ public class GameRoomClient extends RoomClient {
         }));
     }
 
-    public void sendGameEndMessage(){
+    public void declareGameEnd() {
         sendMatchData(new GameEndMessage());
     }
 

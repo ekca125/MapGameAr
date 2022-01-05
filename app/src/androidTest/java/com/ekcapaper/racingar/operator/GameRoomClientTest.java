@@ -58,7 +58,7 @@ public class GameRoomClientTest {
 
     @Test
     public void sendGameStartMessage() {
-        gameRoomClient.sendGameStartMessage();
+        gameRoomClient.declareGameStartMessage();
     }
 
     @Test
@@ -69,7 +69,7 @@ public class GameRoomClientTest {
 
     @Test
     public void sendGameEndMessage() {
-        gameRoomClient.sendGameEndMessage();
+        gameRoomClient.declareGameEnd();
     }
 
     @Test
