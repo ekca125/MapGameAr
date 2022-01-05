@@ -1,5 +1,6 @@
 package com.ekcapaper.racingar.operator;
 
+import com.ekcapaper.racingar.network.GameEndMessage;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
@@ -26,6 +27,13 @@ public abstract class GameRoomOperator extends GameRoomClient {
                 TimeUnit.SECONDS.convert(1, TimeUnit.MILLISECONDS),
                 TimeUnit.SECONDS.convert(1, TimeUnit.MILLISECONDS)
         );
+    }
+
+    @Override
+    public void onGameEnd(GameEndMessage gameEndMessage) {
+        super.onGameEnd(gameEndMessage);
+        endCheckTimerTask.cancel();
+        endCheckTimer.cancel();
     }
 
     abstract boolean isEnd();

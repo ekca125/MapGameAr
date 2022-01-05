@@ -55,7 +55,7 @@ public class GameRoomClient extends RoomClient {
     public boolean createMatch() {
         boolean success = super.createMatch();
         if (success) {
-            roomStatus = RoomStatus.GAME_READY;
+            changeRoomStatus(RoomStatus.GAME_READY);
         }
         return success;
     }
@@ -64,7 +64,7 @@ public class GameRoomClient extends RoomClient {
     public boolean joinMatch(String matchId) {
         boolean success = super.joinMatch(matchId);
         if (success) {
-            roomStatus = RoomStatus.GAME_READY;
+            changeRoomStatus(RoomStatus.GAME_READY);
         }
         return success;
     }
@@ -125,7 +125,7 @@ public class GameRoomClient extends RoomClient {
     }
 
     public void onGameStart(GameStartMessage gameStartMessage) {
-        roomStatus = RoomStatus.GAME_STARTED;
+        changeRoomStatus(RoomStatus.GAME_STARTED);
     }
 
     public void declareCurrentPlayerMove(Location location) {
@@ -148,7 +148,22 @@ public class GameRoomClient extends RoomClient {
     }
 
     public void onGameEnd(GameEndMessage gameEndMessage) {
-        roomStatus = RoomStatus.GAME_END;
+        changeRoomStatus(RoomStatus.GAME_END);
     }
 
+    private void changeRoomStatus(RoomStatus roomStatus){
+        // not ready -> ready -> started -> end
+        if(this.roomStatus == RoomStatus.GAME_NOT_READY && roomStatus == RoomStatus.GAME_READY){
+            this.roomStatus = roomStatus;
+        }
+        else if(this.roomStatus == RoomStatus.GAME_READY && roomStatus == RoomStatus.GAME_STARTED){
+            this.roomStatus = roomStatus;
+        }
+        else if(this.roomStatus == RoomStatus.GAME_STARTED && roomStatus == RoomStatus.GAME_END){
+            this.roomStatus = roomStatus;
+        }
+        else{
+            throw new IllegalStateException();
+        }
+    }
 }
