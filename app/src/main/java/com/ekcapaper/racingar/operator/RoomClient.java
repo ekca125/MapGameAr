@@ -23,6 +23,7 @@ import com.heroiclabs.nakama.api.NotificationList;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 public class RoomClient implements SocketListener {
@@ -56,6 +57,10 @@ public class RoomClient implements SocketListener {
         channel = null;
         // 콜백 연동
         this.socketClient.connect(session, this);
+    }
+
+    public Optional<Match> getMatch() {
+        return Optional.ofNullable(match);
     }
 
     public boolean createMatch() {

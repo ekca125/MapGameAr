@@ -3,6 +3,7 @@ package com.ekcapaper.racingar.operator;
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
+import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
