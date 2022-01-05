@@ -49,12 +49,18 @@ public class ThisApplication extends Application {
         return session;
     }
 
-    public boolean makeRoom(){
+    public boolean makeRoom(type){
+        // 방을 만드는 방법
 
+        // 데이터를 쓰기
+
+        // joinRoom
     }
 
-    public boolean joinRoom(){
+    public boolean joinRoom(){  
+        // 방에 입장하기
 
+        // 읽어와서 오퍼레이터를 만들기
     }
 
 }
