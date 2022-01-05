@@ -120,7 +120,7 @@ public class GameRoomClient extends RoomClient {
         }
     }
 
-    public void declareGameStartMessage() {
+    public void declareGameStart() {
         sendMatchData(new GameStartMessage());
     }
 

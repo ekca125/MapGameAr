@@ -58,7 +58,7 @@ public class GameRoomClientTest {
 
     @Test
     public void sendGameStartMessage() {
-        gameRoomClient.declareGameStartMessage();
+        gameRoomClient.declareGameStart();
     }
 
     @Test
