@@ -29,9 +29,4 @@ public class GameRoomOperator extends GameRoomClient{
         );
     }
 
-    public boolean isEnd(){
-
-    }
-
-    // end를 상위클래스에서 재정의
 }
