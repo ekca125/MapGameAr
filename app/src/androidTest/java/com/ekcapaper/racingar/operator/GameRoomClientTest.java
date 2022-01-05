@@ -7,6 +7,8 @@ import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.GameEndMessage;
 import com.ekcapaper.racingar.network.GameStartMessage;
+import com.ekcapaper.racingar.operator.data.RoomStatus;
+import com.ekcapaper.racingar.operator.layer.GameRoomClient;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;

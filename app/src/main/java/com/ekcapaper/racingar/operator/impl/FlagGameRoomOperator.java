@@ -1,9 +1,9 @@
-package com.ekcapaper.racingar.operator;
+package com.ekcapaper.racingar.operator.impl;
 
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
-import com.google.gson.Gson;
+import com.ekcapaper.racingar.operator.layer.TimeLimitGameRoomOperator;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
@@ -20,7 +20,7 @@ public class FlagGameRoomOperator extends TimeLimitGameRoomOperator {
     }
 
     @Override
-    boolean isEnd() {
+    public boolean isEnd() {
         if(super.isEnd()){
             return true;
         }

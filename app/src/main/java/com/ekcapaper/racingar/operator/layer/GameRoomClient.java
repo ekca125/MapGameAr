@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator;
+package com.ekcapaper.racingar.operator.layer;
 
 import android.location.Location;
 
@@ -7,6 +7,7 @@ import com.ekcapaper.racingar.network.GameEndMessage;
 import com.ekcapaper.racingar.network.GameStartMessage;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.ekcapaper.racingar.network.OpCode;
+import com.ekcapaper.racingar.operator.data.RoomStatus;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.MatchData;

@@ -8,8 +8,8 @@ import androidx.multidex.MultiDex;
 
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
-import com.ekcapaper.racingar.operator.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.GameRoomOperator;
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
+import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
@@ -21,10 +21,8 @@ import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.PermissionRead;
 import com.heroiclabs.nakama.PermissionWrite;
 import com.heroiclabs.nakama.Session;
-import com.heroiclabs.nakama.StorageObjectId;
 import com.heroiclabs.nakama.StorageObjectWrite;
 import com.heroiclabs.nakama.api.StorageObjectAcks;
-import com.heroiclabs.nakama.api.StorageObjects;
 
 import java.io.IOException;
 import java.time.Duration;
