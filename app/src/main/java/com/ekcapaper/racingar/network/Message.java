@@ -1,5 +1,7 @@
 package com.ekcapaper.racingar.network;
 
+import com.google.gson.Gson;
+
 public abstract class Message {
     private final OpCode opCode;
 
@@ -11,5 +13,8 @@ public abstract class Message {
         return opCode;
     }
 
-    public abstract String getPayload();
+    public String getPayload() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
 }
