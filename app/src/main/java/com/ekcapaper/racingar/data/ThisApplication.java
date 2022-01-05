@@ -16,6 +16,8 @@ import java.util.concurrent.ExecutionException;
 public class ThisApplication extends Application {
     private Client client;
     private Optional<Session> session;
+    // operator
+
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -46,4 +48,13 @@ public class ThisApplication extends Application {
     public Optional<Session> getSession() {
         return session;
     }
+
+    public boolean makeRoom(){
+
+    }
+
+    public boolean joinRoom(){
+
+    }
+
 }
