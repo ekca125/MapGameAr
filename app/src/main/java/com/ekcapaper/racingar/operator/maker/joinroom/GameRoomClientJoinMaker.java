@@ -20,7 +20,7 @@ public class GameRoomClientJoinMaker implements GameRoomClientMaker {
     @Override
     public GameRoomClient makeGameRoomClient() {
         GameRoomClient gameRoomClient = new GameRoomClient(client,session);
-        gameRoomClient.createMatch();
+        gameRoomClient.joinMatch(matchId);
         return gameRoomClient;
     }
 }

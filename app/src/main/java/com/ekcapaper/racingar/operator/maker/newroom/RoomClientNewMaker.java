@@ -7,8 +7,8 @@ import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
 public class RoomClientNewMaker implements RoomClientMaker {
-    private final Client client;
-    private final Session session;
+    protected final Client client;
+    protected final Session session;
 
     public RoomClientNewMaker(Client client, Session session) {
         this.client = client;

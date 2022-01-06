@@ -5,13 +5,9 @@ import com.ekcapaper.racingar.operator.maker.GameRoomOperatorMaker;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
-public class GameRoomOperatorNewMaker implements GameRoomOperatorMaker {
-    private final Client client;
-    private final Session session;
-
+public class GameRoomOperatorNewMaker extends GameRoomClientNewMaker implements GameRoomOperatorMaker {
     public GameRoomOperatorNewMaker(Client client, Session session) {
-        this.client = client;
-        this.session = session;
+        super(client, session);
     }
 
     @Override
