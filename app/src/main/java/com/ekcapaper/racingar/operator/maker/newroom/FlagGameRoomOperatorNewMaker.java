@@ -1,6 +1,7 @@
 package com.ekcapaper.racingar.operator.maker.newroom;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
@@ -72,6 +73,7 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         try {
             client.writeStorageObjects(session, saveGameObject).get();
         } catch (ExecutionException | InterruptedException e) {
+            Log.d("testtest",e.toString());
             return false;
         }
         return true;
@@ -87,12 +89,12 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         }
         Match match = flagGameRoomOperator.getMatch().get();
         String matchId = match.getMatchId();
-
+/*
         boolean writeSuccess = writeGameFlagList(matchId, gameFlagList);
         if (!writeSuccess) {
             return null;
         }
-
+*/
         return flagGameRoomOperator;
     }
 }

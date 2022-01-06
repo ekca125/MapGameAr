@@ -11,6 +11,7 @@ import com.ekcapaper.racingar.operator.layer.GameRoomClient;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
+import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 
 import org.junit.BeforeClass;
@@ -59,6 +60,25 @@ public class FlagGameRoomOperatorNewMakerTest {
         FlagGameRoomOperatorNewMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorNewMaker(client,session,duration,mapRange);
         List<GameFlag> gameFlagList = flagGameRoomOperatorNewMaker.requestGameFlagList(mapRange);
         assertNotNull(gameFlagList);
+    }
+
+    @Test
+    public void writeTest(){
+        Duration duration = Duration.ofSeconds(100);
+        MapRange mapRange = MapRange.calculateMapRange(LocationStub.location,1);
+
+        FlagGameRoomOperatorNewMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorNewMaker(client,session,duration,mapRange);
+        List<GameFlag> gameFlagList = flagGameRoomOperatorNewMaker.requestGameFlagList(mapRange);
+        assertNotNull(gameFlagList);
+
+        FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client, session, duration, gameFlagList);
+        boolean matchProcessSuccess = flagGameRoomOperator.createMatch();
+        assertTrue(matchProcessSuccess);
+
+        Match match = flagGameRoomOperator.getMatch().get();
+        String matchId = match.getMatchId();
+        boolean writeResult = flagGameRoomOperatorNewMaker.writeGameFlagList(matchId,gameFlagList);
+        assertTrue(writeResult);
     }
 
 
