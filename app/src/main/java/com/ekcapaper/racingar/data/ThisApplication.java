@@ -70,8 +70,4 @@ public class ThisApplication extends Application {
     public Optional<Session> getSessionOptional() {
         return Optional.ofNullable(session);
     }
-
-
-
-
 }
