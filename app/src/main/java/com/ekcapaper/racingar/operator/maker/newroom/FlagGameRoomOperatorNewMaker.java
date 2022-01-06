@@ -5,7 +5,7 @@ import android.location.Location;
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorMaker;
-import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataName;
+import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
@@ -35,46 +35,43 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         this.mapRange = mapRange;
     }
 
-    private List<GameFlag> makeGameFlagList(MapRange mapRange) throws IOException, IllegalStateException {
-        List<AddressDto> addressDtoList;
+    List<GameFlag> requestGameFlagList(MapRange mapRange){
+        Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom10(mapRange);
         try {
-            Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom10(mapRange);
             Response<List<AddressDto>> response = requester.execute();
             if(!response.isSuccessful()){
-                throw new IllegalStateException();
+                return null;
             }
-            addressDtoList = response.body();
-            assert addressDtoList != null;
-            if(addressDtoList.size() <= 0){
-                throw new IllegalStateException();
-            }
+            List<AddressDto> addressDtoList = response.body();
+            List<GameFlag> gameFlagList = addressDtoList.stream().map(addressDto -> {
+                Location location = new Location("");
+                location.setLatitude(addressDto.getLatitude());
+                location.setLongitude(addressDto.getLongitude());
+                return new GameFlag(location);
+            }).collect(Collectors.toList());
+            return gameFlagList;
         } catch (IOException e) {
-            throw e;
+            return null;
         }
-        return addressDtoList.stream().map(addressDto -> {
-            Location location = new Location("");
-            location.setLatitude(addressDto.getLatitude());
-            location.setLongitude(addressDto.getLongitude());
-            return new GameFlag(location);
-        }).collect(Collectors.toList());
     }
 
-    private boolean writeGameFlagList(String matchId, List<GameFlag> gameFlagList){
+    boolean writeGameFlagList(String matchId, List<GameFlag> gameFlagList){
+        // util
         Gson gson = new Gson();
-
-        String collectionName = ServerRoomSaveDataName.getCollectionName(matchId);
-        String keyData = ServerRoomSaveDataName.getGameFlagList();
-        String gameFlagListJson = gson.toJson(gameFlagList);
-
+        // data
+        String collectionName = ServerRoomSaveDataNameSpace.getCollectionName(matchId);
+        String keyName = ServerRoomSaveDataNameSpace.getGameFlagListName();
+        String jsonGameFlagList = gson.toJson(gameFlagList);
+        // write
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
-                keyData,
-                gameFlagListJson,
+                keyName,
+                jsonGameFlagList,
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE
         );
         try {
-            StorageObjectAcks acks = client.writeStorageObjects(session, saveGameObject).get();
+            client.writeStorageObjects(session, saveGameObject).get();
         } catch (ExecutionException | InterruptedException e) {
             return false;
         }
@@ -83,13 +80,21 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
 
     @Override
     public FlagGameRoomOperator makeFlagGameRoomOperator() {
+        List<GameFlag> gameFlagList = requestGameFlagList(mapRange);
+
+
+
+
         try {
             List<GameFlag> gameFlagList = makeGameFlagList(mapRange);
+
+
             FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client,session,timeLimit, gameFlagList);
             Match match = flagGameRoomOperator.getMatch().get();
+
             writeGameFlagList(match.getMatchId(),gameFlagList);
             return flagGameRoomOperator;
-        } catch (IOException | NullPointerException e) {
+        } catch (IOException | NullPointerException | IllegalStateException e) {
             return null;
         }
     }
