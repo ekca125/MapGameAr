@@ -18,7 +18,7 @@ public class RoomClientJoinMaker implements RoomClientMaker {
 
     @Override
     public RoomClient makeRoomClient() {
-        RoomClient roomClient = new RoomClient(client,session);
+        RoomClient roomClient = new RoomClient(client, session);
         roomClient.joinMatch(matchId);
         return roomClient;
     }

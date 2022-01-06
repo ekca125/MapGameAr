@@ -1,6 +1,5 @@
 package com.ekcapaper.racingar.operator.maker.newroom;
 
-import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.operator.layer.RoomClient;
 import com.ekcapaper.racingar.operator.maker.RoomClientMaker;
 import com.heroiclabs.nakama.Client;
@@ -17,7 +16,7 @@ public class RoomClientNewMaker implements RoomClientMaker {
 
     @Override
     public RoomClient makeRoomClient() {
-        RoomClient roomClient = new RoomClient(client,session);
+        RoomClient roomClient = new RoomClient(client, session);
         roomClient.createMatch();
         return roomClient;
     }

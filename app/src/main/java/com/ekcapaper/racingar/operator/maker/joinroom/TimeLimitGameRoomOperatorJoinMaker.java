@@ -17,7 +17,7 @@ public class TimeLimitGameRoomOperatorJoinMaker extends GameRoomOperatorJoinMake
 
     @Override
     public TimeLimitGameRoomOperator makeTimeLimitGameRoomOperator() {
-        TimeLimitGameRoomOperator timeLimitGameRoomOperator = new TimeLimitGameRoomOperator(client,session,timeLimit);
+        TimeLimitGameRoomOperator timeLimitGameRoomOperator = new TimeLimitGameRoomOperator(client, session, timeLimit);
         timeLimitGameRoomOperator.joinMatch(matchId);
         return timeLimitGameRoomOperator;
     }

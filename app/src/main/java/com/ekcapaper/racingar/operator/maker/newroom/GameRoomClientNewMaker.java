@@ -12,7 +12,7 @@ public class GameRoomClientNewMaker extends RoomClientNewMaker implements GameRo
 
     @Override
     public GameRoomClient makeGameRoomClient() {
-        GameRoomClient gameRoomClient = new GameRoomClient(client,session);
+        GameRoomClient gameRoomClient = new GameRoomClient(client, session);
         gameRoomClient.createMatch();
         return gameRoomClient;
     }

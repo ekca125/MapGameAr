@@ -1,8 +1,6 @@
 package com.ekcapaper.racingar.operator.maker.newroom;
 
-import com.ekcapaper.racingar.operator.layer.RoomClient;
 import com.ekcapaper.racingar.operator.layer.TimeLimitGameRoomOperator;
-import com.ekcapaper.racingar.operator.maker.RoomClientMaker;
 import com.ekcapaper.racingar.operator.maker.TimeLimitGameRoomOperatorMaker;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
@@ -19,7 +17,7 @@ public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker 
 
     @Override
     public TimeLimitGameRoomOperator makeTimeLimitGameRoomOperator() {
-        TimeLimitGameRoomOperator timeLimitGameRoomOperator = new TimeLimitGameRoomOperator(client,session,timeLimit);
+        TimeLimitGameRoomOperator timeLimitGameRoomOperator = new TimeLimitGameRoomOperator(client, session, timeLimit);
         timeLimitGameRoomOperator.createMatch();
         return timeLimitGameRoomOperator;
     }
