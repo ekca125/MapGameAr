@@ -1,6 +1,7 @@
 package com.ekcapaper.racingar.operator.maker.newroom;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
@@ -58,27 +59,35 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
     boolean writePrepareData(String matchId, List<GameFlag> gameFlagList) {
         // util
         Gson gson = new Gson();
-        // data
+        // collection
         String collectionName = ServerRoomSaveDataNameSpace.getCollectionName(matchId);
-        String keyName = ServerRoomSaveDataNameSpace.getRoomPrepareDataName();
 
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(ServerRoomSaveDataNameSpace.getGameFlagListJsonKey(), gson.toJson(gameFlagList));
-        jsonObject.addProperty(ServerRoomSaveDataNameSpace.getMapRangeKey(), gson.toJson(mapRange));
-
-        String saveJson = gson.toJson(jsonObject);
-
-        // write
+        // data 1
+        String keyNameMapRange = ServerRoomSaveDataNameSpace.getRoomPrepareKeyMapRangeName();
+        // MapRange
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
-                keyName,
-                saveJson,
+                keyNameMapRange,
+                gson.toJson(mapRange),
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE
         );
+
+        // data 2
+        String keyNameGameFlagList = ServerRoomSaveDataNameSpace.getRoomPrepareKeyMapRangeName();
+        // MapRange
+        StorageObjectWrite saveGameObject2 = new StorageObjectWrite(
+                collectionName,
+                keyNameGameFlagList,
+                gson.toJson(gameFlagList),
+                PermissionRead.PUBLIC_READ,
+                PermissionWrite.OWNER_WRITE
+        );
+
         try {
-            client.writeStorageObjects(session, saveGameObject).get();
+            client.writeStorageObjects(session, saveGameObject, saveGameObject2).get();
         } catch (ExecutionException | InterruptedException e) {
+            Log.d("test",e.toString());
             return false;
         }
         return true;

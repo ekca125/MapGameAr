@@ -77,7 +77,7 @@ public class FlagGameRoomOperatorNewMakerTest {
 
         Match match = flagGameRoomOperator.getMatch().get();
         String matchId = match.getMatchId();
-        boolean writeResult = flagGameRoomOperatorNewMaker.writeGameFlagList(matchId,gameFlagList);
+        boolean writeResult = flagGameRoomOperatorNewMaker.writePrepareData(matchId,gameFlagList);
         assertTrue(writeResult);
     }
 
