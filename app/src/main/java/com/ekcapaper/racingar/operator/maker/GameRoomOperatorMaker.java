@@ -1,8 +1,8 @@
-package com.ekcapaper.racingar.operator.factory;
+package com.ekcapaper.racingar.operator.maker;
 
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 
-public abstract class GameRoomOperatorFactory {
+public abstract class GameRoomOperatorMaker {
     protected static String getMatchCollectionName(String matchId){
         return "match-"+matchId;
     }
@@ -13,4 +13,8 @@ public abstract class GameRoomOperatorFactory {
 
     public abstract GameRoomOperator createRoom();
     public abstract GameRoomOperator joinRoom(String matchId);
+
+    protected abstract void prepare();
+    protected abstract void writeServerStorage();
+    public abstract GameRoomOperator make();
 }
