@@ -8,7 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-public abstract class GameRoomOperator extends GameRoomClient {
+public class GameRoomOperator extends GameRoomClient {
     Timer endCheckTimer;
     TimerTask endCheckTimerTask;
 
@@ -36,5 +36,7 @@ public abstract class GameRoomOperator extends GameRoomClient {
         endCheckTimer.cancel();
     }
 
-    abstract boolean isEnd();
+    boolean isEnd(){
+        return false;
+    }
 }
