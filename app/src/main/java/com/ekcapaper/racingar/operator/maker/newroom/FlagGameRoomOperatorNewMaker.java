@@ -16,7 +16,6 @@ import com.heroiclabs.nakama.PermissionRead;
 import com.heroiclabs.nakama.PermissionWrite;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.StorageObjectWrite;
-import com.heroiclabs.nakama.api.StorageObjectAcks;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -35,11 +34,11 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         this.mapRange = mapRange;
     }
 
-    List<GameFlag> requestGameFlagList(MapRange mapRange){
+    List<GameFlag> requestGameFlagList(MapRange mapRange) {
         Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom10(mapRange);
         try {
             Response<List<AddressDto>> response = requester.execute();
-            if(!response.isSuccessful()){
+            if (!response.isSuccessful()) {
                 return null;
             }
             List<AddressDto> addressDtoList = response.body();
@@ -55,7 +54,7 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         }
     }
 
-    boolean writeGameFlagList(String matchId, List<GameFlag> gameFlagList){
+    boolean writeGameFlagList(String matchId, List<GameFlag> gameFlagList) {
         // util
         Gson gson = new Gson();
         // data
@@ -81,21 +80,19 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
     @Override
     public FlagGameRoomOperator makeFlagGameRoomOperator() {
         List<GameFlag> gameFlagList = requestGameFlagList(mapRange);
-
-
-
-
-        try {
-            List<GameFlag> gameFlagList = makeGameFlagList(mapRange);
-
-
-            FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client,session,timeLimit, gameFlagList);
-            Match match = flagGameRoomOperator.getMatch().get();
-
-            writeGameFlagList(match.getMatchId(),gameFlagList);
-            return flagGameRoomOperator;
-        } catch (IOException | NullPointerException | IllegalStateException e) {
+        FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client, session, timeLimit, gameFlagList);
+        boolean matchProcessSuccess = flagGameRoomOperator.createMatch();
+        if (!matchProcessSuccess) {
             return null;
         }
+        Match match = flagGameRoomOperator.getMatch().get();
+        String matchId = match.getMatchId();
+
+        boolean writeSuccess = writeGameFlagList(matchId, gameFlagList);
+        if (!writeSuccess) {
+            return null;
+        }
+
+        return flagGameRoomOperator;
     }
 }
