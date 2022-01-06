@@ -29,28 +29,36 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
     public FlagGameRoomOperatorJoinMaker(Client client, Session session, String matchId, Duration timeLimit) {
         super(client, session, matchId, timeLimit);
     }
-/*
+
     boolean readPrepareData(){
         StorageObjectId objectId = new StorageObjectId(ServerRoomSaveDataNameSpace.getCollectionName(matchId));
-        objectId.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareDataName());
+        objectId.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareKeyMapRangeName());
         objectId.setUserId(session.getUserId());
         try {
-            StorageObjects objects = client.readStorageObjects(session, objectId).get();
-            List<StorageObject> storageObjectList = objects.getObjectsList();
-
-            String prepareDataJson = storageObjectList.get(0).getValue();
-
             Gson gson = new Gson();
-            JsonObject jsonObject = gson.fromJson(prepareDataJson,JsonObject.class);
 
-            String gameFlagListJson = jsonObject.get(ServerRoomSaveDataNameSpace.getGameFlagListJsonKey()).toString();
-            gameFlagList = gson.fromJson(gameFlagListJson, new TypeToken<List<GameFlag>>(){}.getType());
+            StorageObjects objects = client.readStorageObjects(session, objectId).get();
+            StorageObject object = objects.getObjects(0);
+            String value = object.getValue();
+            MapRange mapRange = gson.fromJson(value, MapRange.class);
+
+            objectId.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareKeyGameFlagListName());
+            StorageObjects objects1 = client.readStorageObjects(session, objectId).get();
+            StorageObject object1 = objects1.getObjects(0);
+            value = object1.getValue();
+
+            JsonObject jsonObject = gson.fromJson(value,JsonObject.class);
+            String data = jsonObject.get("flags").toString().trim().replace("\"[","[").replace("\"]","]");
+            Log.d("testtest",data);
+            List<GameFlag> gameFlagList = gson.fromJson(data,new TypeToken<List<GameFlag>>(){}.getType());
+
+
         } catch (ExecutionException | InterruptedException | NullPointerException e) {
             return false;
         }
         return true;
     }
-*/
+
     @Override
     public FlagGameRoomOperator makeFlagGameRoomOperator() {
         return null;

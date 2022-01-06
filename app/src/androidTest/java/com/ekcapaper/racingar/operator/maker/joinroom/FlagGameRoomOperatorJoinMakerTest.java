@@ -39,13 +39,13 @@ public class FlagGameRoomOperatorJoinMakerTest {
     @Test
     public void readPrepareData() {
         Duration duration = Duration.ofSeconds(100);
-        String matchId = "d04c07d3-0075-49ee-acd6-e61805e254dd.";
+        String matchId = "20af87b4-8db8-4b9d-a0a8-496f82714676";
 
         FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId,duration);
-        /*
-        boolean result = flagGameRoomOperatorJoinMaker();
+
+        boolean result = flagGameRoomOperatorJoinMaker.readPrepareData();
         assertTrue(result);
 
-         */
+
     }
 }

@@ -74,18 +74,22 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         );
 
         // data 2
-        String keyNameGameFlagList = ServerRoomSaveDataNameSpace.getRoomPrepareKeyMapRangeName();
+        String keyNameGameFlagList = ServerRoomSaveDataNameSpace.getRoomPrepareKeyGameFlagListName();
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("flags",gson.toJson(gameFlagList));
+
         // MapRange
         StorageObjectWrite saveGameObject2 = new StorageObjectWrite(
                 collectionName,
                 keyNameGameFlagList,
-                gson.toJson(gameFlagList),
+                jsonObject.toString(),
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE
         );
 
         try {
-            client.writeStorageObjects(session, saveGameObject, saveGameObject2).get();
+            client.writeStorageObjects(session, saveGameObject).get();
+            client.writeStorageObjects(session, saveGameObject2).get();
         } catch (ExecutionException | InterruptedException e) {
             Log.d("test",e.toString());
             return false;
