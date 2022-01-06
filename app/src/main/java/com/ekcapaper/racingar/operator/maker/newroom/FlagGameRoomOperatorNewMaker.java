@@ -1,7 +1,6 @@
 package com.ekcapaper.racingar.operator.maker.newroom;
 
 import android.location.Location;
-import android.util.Log;
 
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
@@ -11,6 +10,7 @@ import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.PermissionRead;
@@ -55,25 +55,30 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         }
     }
 
-    boolean writeGameFlagList(String matchId, List<GameFlag> gameFlagList) {
+    boolean writePrepareData(String matchId, List<GameFlag> gameFlagList) {
         // util
         Gson gson = new Gson();
         // data
         String collectionName = ServerRoomSaveDataNameSpace.getCollectionName(matchId);
-        String keyName = ServerRoomSaveDataNameSpace.getGameFlagListName();
-        String jsonGameFlagList = gson.toJson(gameFlagList);
+        String keyName = ServerRoomSaveDataNameSpace.getRoomPrepareDataName();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty(ServerRoomSaveDataNameSpace.getGameFlagListJsonKey(), gson.toJson(gameFlagList));
+        jsonObject.addProperty(ServerRoomSaveDataNameSpace.getMapRangeKey(), gson.toJson(mapRange));
+
+        String saveJson = gson.toJson(jsonObject);
+
         // write
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
                 keyName,
-                jsonGameFlagList,
+                saveJson,
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE
         );
         try {
             client.writeStorageObjects(session, saveGameObject).get();
         } catch (ExecutionException | InterruptedException e) {
-            Log.d("testtest",e.toString());
             return false;
         }
         return true;
@@ -89,12 +94,12 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         }
         Match match = flagGameRoomOperator.getMatch().get();
         String matchId = match.getMatchId();
-/*
-        boolean writeSuccess = writeGameFlagList(matchId, gameFlagList);
+
+        boolean writeSuccess = writePrepareData(matchId, gameFlagList);
         if (!writeSuccess) {
             return null;
         }
-*/
+
         return flagGameRoomOperator;
     }
 }

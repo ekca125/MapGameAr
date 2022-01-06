@@ -5,7 +5,11 @@ public class ServerRoomSaveDataNameSpace {
         return "Match-" + matchId;
     }
 
-    public static String getGameFlagListName() {
-        return "GameFlagList";
+    public static String getRoomPrepareDataName() {
+        return "Prepare";
     }
+
+    public static String getGameFlagListJsonKey() { return "flags";}
+
+    public static String getMapRangeKey() { return "mapRange";}
 }
