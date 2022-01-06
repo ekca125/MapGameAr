@@ -9,6 +9,8 @@ public class FlagGameRoomOperatorNewMakerTest {
 
     @Test
     public void makeGameFlagList() {
+        FlagGameRoomOperatorNewMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorNewMaker();
+
     }
 
     @Test
