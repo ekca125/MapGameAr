@@ -5,15 +5,10 @@ import com.ekcapaper.racingar.operator.maker.GameRoomOperatorMaker;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
-public class GameRoomOperatorJoinMaker implements GameRoomOperatorMaker {
-    private final Client client;
-    private final Session session;
-    private final String matchId;
+public class GameRoomOperatorJoinMaker extends GameRoomClientJoinMaker implements GameRoomOperatorMaker {
 
     public GameRoomOperatorJoinMaker(Client client, Session session, String matchId) {
-        this.client = client;
-        this.session = session;
-        this.matchId = matchId;
+        super(client, session, matchId);
     }
 
     @Override

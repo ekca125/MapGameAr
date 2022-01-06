@@ -6,15 +6,9 @@ import com.ekcapaper.racingar.operator.maker.GameRoomClientMaker;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
-public class GameRoomClientJoinMaker implements GameRoomClientMaker {
-    private final Client client;
-    private final Session session;
-    private final String matchId;
-
+public class GameRoomClientJoinMaker extends RoomClientJoinMaker implements GameRoomClientMaker {
     public GameRoomClientJoinMaker(Client client, Session session, String matchId) {
-        this.client = client;
-        this.session = session;
-        this.matchId = matchId;
+        super(client, session, matchId);
     }
 
     @Override

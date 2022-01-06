@@ -6,9 +6,9 @@ import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
 public class RoomClientJoinMaker implements RoomClientMaker {
-    private final Client client;
-    private final Session session;
-    private final String matchId;
+    protected final Client client;
+    protected final Session session;
+    protected final String matchId;
 
     public RoomClientJoinMaker(Client client, Session session, String matchId) {
         this.client = client;
