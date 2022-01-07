@@ -98,17 +98,23 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
 
     @Override
     public FlagGameRoomOperator makeFlagGameRoomOperator() {
+        // 맵 받아오기
         List<GameFlag> gameFlagList = requestGameFlagList(mapRange);
+        if(gameFlagList == null){
+            return null;
+        }
+        // 방 만들기
         FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client, session, timeLimit, gameFlagList);
         boolean matchProcessSuccess = flagGameRoomOperator.createMatch();
         if (!matchProcessSuccess) {
             return null;
         }
+        // 방 데이터 쓰기
         Match match = flagGameRoomOperator.getMatch().get();
         String matchId = match.getMatchId();
-
         boolean writeSuccess = writePrepareData(matchId, gameFlagList);
         if (!writeSuccess) {
+
             return null;
         }
 

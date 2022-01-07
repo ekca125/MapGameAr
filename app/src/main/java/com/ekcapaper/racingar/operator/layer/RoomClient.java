@@ -83,6 +83,14 @@ public class RoomClient implements SocketListener {
         }
     }
 
+    public void leaveMatch(){
+        String matchId = match.getMatchId();
+        String chatChannelId = channel.getId();
+
+        socketClient.leaveMatch(matchId);
+        socketClient.leaveChat(chatChannelId);
+    }
+
     public final void sendMatchData(Message message) {
         socketClient.sendMatchData(
                 match.getMatchId(),
@@ -94,11 +102,7 @@ public class RoomClient implements SocketListener {
 
     @Override
     public void onDisconnect(Throwable t) {
-        String matchId = match.getMatchId();
-        String chatChannelId = channel.getId();
-
-        socketClient.leaveMatch(matchId);
-        socketClient.leaveChat(chatChannelId);
+        leaveMatch();
     }
 
     @Override
