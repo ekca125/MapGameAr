@@ -26,39 +26,23 @@ public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker 
         this.timeLimit = timeLimit;
     }
 
-    boolean writePrepareData(String matchId, List<GameFlag> gameFlagList) {
+    boolean writePrepareData(String matchId, Duration timeLimit) {
         // util
         Gson gson = new Gson();
         // collection
         String collectionName = ServerRoomSaveDataNameSpace.getCollectionName(matchId);
 
         // data 1
-        String keyNameMapRange = ServerRoomSaveDataNameSpace.getRoomPrepareKeyMapRangeName();
-        // MapRange
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
-                keyNameMapRange,
-                gson.toJson(mapRange),
-                PermissionRead.PUBLIC_READ,
-                PermissionWrite.OWNER_WRITE
-        );
-
-        // data 2
-        String keyNameGameFlagList = ServerRoomSaveDataNameSpace.getRoomPrepareKeyGameFlagListName();
-        GameFlagListDto gameFlagListDto = new GameFlagListDto(gameFlagList);
-
-        // MapRange
-        StorageObjectWrite saveGameObject2 = new StorageObjectWrite(
-                collectionName,
-                keyNameGameFlagList,
-                gson.toJson(gameFlagListDto),
+                ServerRoomSaveDataNameSpace.getRoomPrepareKeyTimeLimit(),
+                gson.toJson(timeLimit.toString()),
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE
         );
 
         try {
             client.writeStorageObjects(session, saveGameObject).get();
-            client.writeStorageObjects(session, saveGameObject2).get();
         } catch (ExecutionException | InterruptedException e) {
             Log.d("test", e.toString());
             return false;

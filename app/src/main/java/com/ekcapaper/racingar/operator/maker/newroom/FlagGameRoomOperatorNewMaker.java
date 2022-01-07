@@ -57,6 +57,7 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
     }
 
     boolean writePrepareData(String matchId, List<GameFlag> gameFlagList) {
+        writePrepareData(matchId,timeLimit);
         // util
         Gson gson = new Gson();
         // collection
