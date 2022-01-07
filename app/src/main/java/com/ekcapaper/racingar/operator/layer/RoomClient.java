@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator;
+package com.ekcapaper.racingar.operator.layer;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.Message;
@@ -23,6 +23,7 @@ import com.heroiclabs.nakama.api.NotificationList;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 public class RoomClient implements SocketListener {
@@ -58,6 +59,10 @@ public class RoomClient implements SocketListener {
         this.socketClient.connect(session, this);
     }
 
+    public Optional<Match> getMatch() {
+        return Optional.ofNullable(match);
+    }
+
     public boolean createMatch() {
         try {
             match = socketClient.createMatch().get();
@@ -78,6 +83,14 @@ public class RoomClient implements SocketListener {
         }
     }
 
+    public void leaveMatch() {
+        String matchId = match.getMatchId();
+        String chatChannelId = channel.getId();
+
+        socketClient.leaveMatch(matchId);
+        socketClient.leaveChat(chatChannelId);
+    }
+
     public final void sendMatchData(Message message) {
         socketClient.sendMatchData(
                 match.getMatchId(),
@@ -89,11 +102,7 @@ public class RoomClient implements SocketListener {
 
     @Override
     public void onDisconnect(Throwable t) {
-        String matchId = match.getMatchId();
-        String chatChannelId = channel.getId();
-
-        socketClient.leaveMatch(matchId);
-        socketClient.leaveChat(chatChannelId);
+        leaveMatch();
     }
 
     @Override

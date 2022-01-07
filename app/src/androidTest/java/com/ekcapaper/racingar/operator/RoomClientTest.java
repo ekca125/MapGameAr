@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import com.ekcapaper.racingar.AccountStub;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.operator.layer.RoomClient;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;

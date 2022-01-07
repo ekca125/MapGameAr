@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator;
+package com.ekcapaper.racingar.operator.layer;
 
 import android.location.Location;
 
@@ -7,6 +7,7 @@ import com.ekcapaper.racingar.network.GameEndMessage;
 import com.ekcapaper.racingar.network.GameStartMessage;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.ekcapaper.racingar.network.OpCode;
+import com.ekcapaper.racingar.operator.data.RoomStatus;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.MatchData;
@@ -151,18 +152,15 @@ public class GameRoomClient extends RoomClient {
         changeRoomStatus(RoomStatus.GAME_END);
     }
 
-    private void changeRoomStatus(RoomStatus roomStatus){
+    private void changeRoomStatus(RoomStatus roomStatus) {
         // not ready -> ready -> started -> end
-        if(this.roomStatus == RoomStatus.GAME_NOT_READY && roomStatus == RoomStatus.GAME_READY){
+        if (this.roomStatus == RoomStatus.GAME_NOT_READY && roomStatus == RoomStatus.GAME_READY) {
             this.roomStatus = roomStatus;
-        }
-        else if(this.roomStatus == RoomStatus.GAME_READY && roomStatus == RoomStatus.GAME_STARTED){
+        } else if (this.roomStatus == RoomStatus.GAME_READY && roomStatus == RoomStatus.GAME_STARTED) {
             this.roomStatus = roomStatus;
-        }
-        else if(this.roomStatus == RoomStatus.GAME_STARTED && roomStatus == RoomStatus.GAME_END){
+        } else if (this.roomStatus == RoomStatus.GAME_STARTED && roomStatus == RoomStatus.GAME_END) {
             this.roomStatus = roomStatus;
-        }
-        else{
+        } else {
             throw new IllegalStateException();
         }
     }

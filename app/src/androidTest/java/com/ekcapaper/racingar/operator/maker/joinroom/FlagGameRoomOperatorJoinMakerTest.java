@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator;
+package com.ekcapaper.racingar.operator.maker.joinroom;
 
 import static org.junit.Assert.*;
 
@@ -6,23 +6,22 @@ import com.ekcapaper.racingar.AccountStub;
 import com.ekcapaper.racingar.LocationStub;
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
-import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
+import com.ekcapaper.racingar.operator.maker.newroom.FlagGameRoomOperatorNewMaker;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
+import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class FlagGameRoomOperatorTest {
-    public static FlagGameRoomOperator flagGameRoomOperator;
+public class FlagGameRoomOperatorJoinMakerTest {
     public static Client client;
     public static Session session;
 
@@ -36,34 +35,17 @@ public class FlagGameRoomOperatorTest {
         );
         session = client.authenticateEmail(AccountStub.ID, AccountStub.PASSWORD).get();
         assertNotNull(session);
-
-        List<GameFlag> gameFlagList = new ArrayList<>();
-        gameFlagList.add(new GameFlag(LocationStub.location));
-
-        flagGameRoomOperator = new FlagGameRoomOperator(client,session, Duration.ofSeconds(360),gameFlagList);
     }
-
     @Test
-    public void onMovePlayer() {
-        boolean result = flagGameRoomOperator.createMatch();
+    public void readPrepareData() {
+        Duration duration = Duration.ofSeconds(100);
+        String matchId = "82bd6911-df55-4e68-b7f4-d75678468924";
+
+        FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId,duration);
+
+        boolean result = flagGameRoomOperatorJoinMaker.readPrepareData();
         assertTrue(result);
 
-        flagGameRoomOperator.declareGameStart();
 
-        int size1 = flagGameRoomOperator.getUnownedFlagList().size();
-        assertEquals(1, size1);
-
-        flagGameRoomOperator.onMovePlayer(new MovePlayerMessage(
-                session.getUserId(),
-                LocationStub.location.getLatitude(),
-                LocationStub.location.getLongitude()
-        ));
-
-        int point = flagGameRoomOperator.getPoint(session.getUserId());
-        assertEquals(1, point);
-
-        int size2 = flagGameRoomOperator.getUnownedFlagList().size();
-        assertEquals(0, size2);
     }
-
 }
