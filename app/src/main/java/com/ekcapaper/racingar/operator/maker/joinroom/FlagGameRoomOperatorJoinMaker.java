@@ -4,7 +4,7 @@ import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
-import com.ekcapaper.racingar.operator.maker.dto.GameFlagListDto;
+import com.ekcapaper.racingar.operator.maker.dto.PrepareDataFlagGameRoom;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
@@ -47,8 +47,8 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
 
             StorageObjects storageObjectsGameFlagListDto = client.readStorageObjects(session, storageObjectIdMapRange).get();
             StorageObject storageObjectGameFlagListDto = storageObjectsGameFlagListDto.getObjects(0);
-            GameFlagListDto gameFlagListDto = gson.fromJson(storageObjectGameFlagListDto.getValue(), GameFlagListDto.class);
-            List<GameFlag> gameFlagList = gameFlagListDto.getGameFlagList();
+            PrepareDataFlagGameRoom prepareDataFlagGameRoom = gson.fromJson(storageObjectGameFlagListDto.getValue(), PrepareDataFlagGameRoom.class);
+            List<GameFlag> gameFlagList = prepareDataFlagGameRoom.getGameFlagList();
 
             this.mapRange = mapRange;
             this.gameFlagList = gameFlagList;
