@@ -58,29 +58,9 @@ public class FlagGameRoomOperatorNewMakerTest {
         MapRange mapRange = MapRange.calculateMapRange(LocationStub.location,1);
 
         FlagGameRoomOperatorNewMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorNewMaker(client,session,duration,mapRange);
-        List<GameFlag> gameFlagList = flagGameRoomOperatorNewMaker.requestGameFlagList(mapRange);
-        assertNotNull(gameFlagList);
+        boolean result = flagGameRoomOperatorNewMaker.requestGameFlagList(mapRange);
+        assertTrue(result);
     }
-
-    @Test
-    public void writeTest(){
-        Duration duration = Duration.ofSeconds(100);
-        MapRange mapRange = MapRange.calculateMapRange(LocationStub.location,1);
-
-        FlagGameRoomOperatorNewMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorNewMaker(client,session,duration,mapRange);
-        List<GameFlag> gameFlagList = flagGameRoomOperatorNewMaker.requestGameFlagList(mapRange);
-        assertNotNull(gameFlagList);
-
-        FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client, session, duration, gameFlagList);
-        boolean matchProcessSuccess = flagGameRoomOperator.createMatch();
-        assertTrue(matchProcessSuccess);
-
-        Match match = flagGameRoomOperator.getMatch().get();
-        String matchId = match.getMatchId();
-        boolean writeResult = flagGameRoomOperatorNewMaker.writePrepareData(matchId,gameFlagList);
-        assertTrue(writeResult);
-    }
-
 
     @Test
     public void makeFlagGameRoomOperator() {
@@ -91,6 +71,4 @@ public class FlagGameRoomOperatorNewMakerTest {
         FlagGameRoomOperator flagGameRoomOperator = flagGameRoomOperatorNewMaker.makeFlagGameRoomOperator();
         assertNotNull(flagGameRoomOperator);
     }
-
-
 }

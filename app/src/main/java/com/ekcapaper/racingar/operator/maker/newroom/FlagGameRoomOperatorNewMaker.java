@@ -5,9 +5,12 @@ import android.util.Log;
 
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorMaker;
-import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
-import com.ekcapaper.racingar.operator.maker.dto.GameFlagListDto;
+import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
+import com.ekcapaper.racingar.operator.maker.data.PrepareDataFlagGameRoom;
+import com.ekcapaper.racingar.operator.maker.data.RoomInfoFlagGame;
+import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
+import com.ekcapaper.racingar.operator.maker.readwrite.RoomInfoWriter;
+import com.ekcapaper.racingar.operator.maker.readwrite.RoomPrepareDataWriter;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
@@ -28,20 +31,23 @@ import java.util.stream.Collectors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMaker implements FlagGameRoomOperatorMaker {
+public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMaker implements FlagGameRoomOperatorMaker, RoomInfoWriter, RoomPrepareDataWriter {
     private final MapRange mapRange;
+    private List<GameFlag> gameFlagList;
 
     public FlagGameRoomOperatorNewMaker(Client client, Session session, Duration timeLimit, MapRange mapRange) {
         super(client, session, timeLimit);
         this.mapRange = mapRange;
+        this.gameFlagList = null;
     }
 
-    List<GameFlag> requestGameFlagList(MapRange mapRange) {
+    boolean requestGameFlagList(MapRange mapRange) {
         Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom10(mapRange);
         try {
             Response<List<AddressDto>> response = requester.execute();
             if (!response.isSuccessful()) {
-                return null;
+                gameFlagList = null;
+                return false;
             }
             List<AddressDto> addressDtoList = response.body();
             List<GameFlag> gameFlagList = addressDtoList.stream().map(addressDto -> {
@@ -50,45 +56,56 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
                 location.setLongitude(addressDto.getLongitude());
                 return new GameFlag(location);
             }).collect(Collectors.toList());
-            return gameFlagList;
+            this.gameFlagList = gameFlagList;
         } catch (IOException e) {
-            return null;
+            gameFlagList = null;
+            return false;
         }
+        return true;
     }
 
-    boolean writePrepareData(String matchId, List<GameFlag> gameFlagList) {
+
+    @Override
+    public boolean writeRoomInfo(String matchId) {
         // util
         Gson gson = new Gson();
         // collection
-        String collectionName = ServerRoomSaveDataNameSpace.getCollectionName(matchId);
+        String collectionName = SaveDataNameDefine.getCollectionName(matchId);
+        RoomInfoFlagGame roomInfoFlagGame = new RoomInfoFlagGame(timeLimit.getSeconds(), mapRange);
 
-        // data 1
-        String keyNameMapRange = ServerRoomSaveDataNameSpace.getRoomPrepareKeyMapRangeName();
-        // MapRange
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
-                keyNameMapRange,
-                gson.toJson(mapRange),
+                SaveDataNameDefine.getDataRoomInfoKey(),
+                gson.toJson(roomInfoFlagGame),
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE
         );
-
-        // data 2
-        String keyNameGameFlagList = ServerRoomSaveDataNameSpace.getRoomPrepareKeyGameFlagListName();
-        GameFlagListDto gameFlagListDto = new GameFlagListDto(gameFlagList);
-
-        // MapRange
-        StorageObjectWrite saveGameObject2 = new StorageObjectWrite(
-                collectionName,
-                keyNameGameFlagList,
-                gson.toJson(gameFlagListDto),
-                PermissionRead.PUBLIC_READ,
-                PermissionWrite.OWNER_WRITE
-        );
-
         try {
             client.writeStorageObjects(session, saveGameObject).get();
-            client.writeStorageObjects(session, saveGameObject2).get();
+        } catch (ExecutionException | InterruptedException e) {
+            Log.d("test", e.toString());
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean writeRoomPrepareData(String matchId) {
+        // util
+        Gson gson = new Gson();
+        // collection
+        String collectionName = SaveDataNameDefine.getCollectionName(matchId);
+        PrepareDataFlagGameRoom roomInfoFlagGame = new PrepareDataFlagGameRoom(gameFlagList);
+
+        StorageObjectWrite saveGameObject = new StorageObjectWrite(
+                collectionName,
+                SaveDataNameDefine.getDataRoomPrepareKey(),
+                gson.toJson(roomInfoFlagGame),
+                PermissionRead.PUBLIC_READ,
+                PermissionWrite.OWNER_WRITE
+        );
+        try {
+            client.writeStorageObjects(session, saveGameObject).get();
         } catch (ExecutionException | InterruptedException e) {
             Log.d("test", e.toString());
             return false;
@@ -99,8 +116,8 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
     @Override
     public FlagGameRoomOperator makeFlagGameRoomOperator() {
         // 맵 받아오기
-        List<GameFlag> gameFlagList = requestGameFlagList(mapRange);
-        if (gameFlagList == null) {
+        boolean result = requestGameFlagList(mapRange);
+        if (!result) {
             return null;
         }
         // 방 만들기
@@ -112,11 +129,13 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         // 방 데이터 쓰기
         Match match = flagGameRoomOperator.getMatch().get();
         String matchId = match.getMatchId();
-        boolean writeSuccess = writePrepareData(matchId, gameFlagList);
+        boolean writeSuccess = writeRoomInfo(matchId) && writeRoomPrepareData(matchId);
         if (!writeSuccess) {
             flagGameRoomOperator.leaveMatch();
             return null;
         }
         return flagGameRoomOperator;
     }
+
+
 }

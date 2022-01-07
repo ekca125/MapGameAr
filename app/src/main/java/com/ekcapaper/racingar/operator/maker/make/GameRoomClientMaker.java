@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator.maker;
+package com.ekcapaper.racingar.operator.maker.make;
 
 import com.ekcapaper.racingar.operator.layer.GameRoomClient;
 

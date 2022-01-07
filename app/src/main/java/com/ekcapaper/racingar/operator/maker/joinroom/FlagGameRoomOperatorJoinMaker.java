@@ -2,9 +2,12 @@ package com.ekcapaper.racingar.operator.maker.joinroom;
 
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorMaker;
-import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
-import com.ekcapaper.racingar.operator.maker.dto.GameFlagListDto;
+import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
+import com.ekcapaper.racingar.operator.maker.data.PrepareDataFlagGameRoom;
+import com.ekcapaper.racingar.operator.maker.data.RoomInfoFlagGame;
+import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
+import com.ekcapaper.racingar.operator.maker.readwrite.RoomInfoReader;
+import com.ekcapaper.racingar.operator.maker.readwrite.RoomPrepareDataReader;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
@@ -17,40 +20,54 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoinMaker implements FlagGameRoomOperatorMaker {
+public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoinMaker implements FlagGameRoomOperatorMaker, RoomInfoReader, RoomPrepareDataReader {
     private MapRange mapRange;
     private List<GameFlag> gameFlagList;
 
-    public FlagGameRoomOperatorJoinMaker(Client client, Session session, String matchId, Duration timeLimit) {
-        super(client, session, matchId, timeLimit);
+    public FlagGameRoomOperatorJoinMaker(Client client, Session session, String matchId) {
+        super(client, session, matchId);
         mapRange = null;
         gameFlagList = null;
     }
 
-    boolean readPrepareData() {
+    @Override
+    public boolean readRoomInfo() {
         try {
             // util
             Gson gson = new Gson();
-            // storage 1 (MapRange)
-            StorageObjectId storageObjectIdMapRange = new StorageObjectId(ServerRoomSaveDataNameSpace.getCollectionName(matchId));
-            storageObjectIdMapRange.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareKeyMapRangeName());
-            storageObjectIdMapRange.setUserId(session.getUserId());
+            //
+            StorageObjectId storageObjectId = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
+            storageObjectId.setKey(SaveDataNameDefine.getDataRoomInfoKey());
+            storageObjectId.setUserId(session.getUserId());
 
-            StorageObjects storageObjectsMapRange = client.readStorageObjects(session, storageObjectIdMapRange).get();
+            StorageObjects storageObjectsMapRange = client.readStorageObjects(session, storageObjectId).get();
             StorageObject storageObjectMapRange = storageObjectsMapRange.getObjects(0);
-            MapRange mapRange = gson.fromJson(storageObjectMapRange.getValue(), MapRange.class);
+            RoomInfoFlagGame roomInfoFlagGame = gson.fromJson(storageObjectMapRange.getValue(), RoomInfoFlagGame.class);
 
-            // storage 2 (GameFlagListDto)
-            StorageObjectId storageObjectIdGameFlagListDto = new StorageObjectId(ServerRoomSaveDataNameSpace.getCollectionName(matchId));
-            storageObjectIdGameFlagListDto.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareKeyGameFlagListName());
+            timeLimit = Duration.ofSeconds(roomInfoFlagGame.getTimeLimitSeconds());
+            mapRange = roomInfoFlagGame.getMapRange();
+        } catch (ExecutionException | InterruptedException | NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean readPrepareData() {
+        try {
+            // util
+            Gson gson = new Gson();
+
+            // 
+            StorageObjectId storageObjectIdGameFlagListDto = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
+            storageObjectIdGameFlagListDto.setKey(SaveDataNameDefine.getDataRoomPrepareKey());
             storageObjectIdGameFlagListDto.setUserId(session.getUserId());
 
-            StorageObjects storageObjectsGameFlagListDto = client.readStorageObjects(session, storageObjectIdMapRange).get();
+            StorageObjects storageObjectsGameFlagListDto = client.readStorageObjects(session, storageObjectIdGameFlagListDto).get();
             StorageObject storageObjectGameFlagListDto = storageObjectsGameFlagListDto.getObjects(0);
-            GameFlagListDto gameFlagListDto = gson.fromJson(storageObjectGameFlagListDto.getValue(), GameFlagListDto.class);
-            List<GameFlag> gameFlagList = gameFlagListDto.getGameFlagList();
+            PrepareDataFlagGameRoom prepareDataFlagGameRoom = gson.fromJson(storageObjectGameFlagListDto.getValue(), PrepareDataFlagGameRoom.class);
+            List<GameFlag> gameFlagList = prepareDataFlagGameRoom.getGameFlagList();
 
-            this.mapRange = mapRange;
             this.gameFlagList = gameFlagList;
         } catch (ExecutionException | InterruptedException | NullPointerException e) {
             return false;
@@ -61,7 +78,7 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
     @Override
     public FlagGameRoomOperator makeFlagGameRoomOperator() {
         // 방 데이터 읽기
-        boolean result = readPrepareData();
+        boolean result = readRoomInfo() && readPrepareData();
         if (!result) {
             return null;
         }

@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator.maker.dto;
+package com.ekcapaper.racingar.operator.maker.data;
 
 import com.ekcapaper.racingar.game.GameFlag;
 
@@ -9,10 +9,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GameFlagListDto {
+public class PrepareDataFlagGameRoom {
     List<GameFlag> gameFlagList;
 
-    public GameFlagListDto(List<GameFlag> gameFlagList) {
+    public PrepareDataFlagGameRoom(List<GameFlag> gameFlagList) {
         this.gameFlagList = gameFlagList;
     }
 }
