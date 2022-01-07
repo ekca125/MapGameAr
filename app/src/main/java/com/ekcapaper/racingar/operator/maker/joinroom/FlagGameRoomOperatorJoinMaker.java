@@ -3,7 +3,10 @@ package com.ekcapaper.racingar.operator.maker.joinroom;
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
+import com.ekcapaper.racingar.operator.maker.data.RoomInfoReader;
+import com.ekcapaper.racingar.operator.maker.data.RoomPrepareDataReader;
 import com.ekcapaper.racingar.operator.maker.dto.PrepareDataFlagGameRoom;
+import com.ekcapaper.racingar.operator.maker.dto.RoomInfoFlagGame;
 import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.google.gson.Gson;
@@ -17,17 +20,38 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoinMaker implements FlagGameRoomOperatorMaker {
+public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoinMaker implements FlagGameRoomOperatorMaker, RoomInfoReader, RoomPrepareDataReader {
     private MapRange mapRange;
     private List<GameFlag> gameFlagList;
 
-    public FlagGameRoomOperatorJoinMaker(Client client, Session session, String matchId, Duration timeLimit) {
-        super(client, session, matchId, timeLimit);
+    public FlagGameRoomOperatorJoinMaker(Client client, Session session, String matchId) {
+        super(client, session, matchId);
         mapRange = null;
         gameFlagList = null;
     }
 
-    boolean readPrepareData() {
+    @Override
+    public boolean readRoomInfo() {
+        try {
+            // util
+            Gson gson = new Gson();
+            // storage 1 (MapRange)
+            StorageObjectId storageObjectIdMapRange = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
+            storageObjectIdMapRange.setKey(SaveDataNameDefine.getDataRoomInfoKey());
+            storageObjectIdMapRange.setUserId(session.getUserId());
+
+            StorageObjects storageObjectsMapRange = client.readStorageObjects(session, storageObjectIdMapRange).get();
+            StorageObject storageObjectMapRange = storageObjectsMapRange.getObjects(0);
+            RoomInfoFlagGame roomInfoFlagGame = gson.fromJson(storageObjectMapRange.getValue(), RoomInfoFlagGame.class);
+        }
+        catch (ExecutionException | InterruptedException | NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean readPrepareData() {
         try {
             // util
             Gson gson = new Gson();
@@ -61,7 +85,7 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
     @Override
     public FlagGameRoomOperator makeFlagGameRoomOperator() {
         // 방 데이터 읽기
-        boolean result = readPrepareData();
+        boolean result = readRoomInfo() && readPrepareData();
         if (!result) {
             return null;
         }

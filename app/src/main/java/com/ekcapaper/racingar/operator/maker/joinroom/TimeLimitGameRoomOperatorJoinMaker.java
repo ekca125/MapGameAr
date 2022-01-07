@@ -32,7 +32,6 @@ public class TimeLimitGameRoomOperatorJoinMaker extends GameRoomOperatorJoinMake
         if(!result){
             return null;
         }
-
         TimeLimitGameRoomOperator timeLimitGameRoomOperator = new TimeLimitGameRoomOperator(client, session, timeLimit);
         timeLimitGameRoomOperator.joinMatch(matchId);
         return timeLimitGameRoomOperator;
@@ -56,6 +55,5 @@ public class TimeLimitGameRoomOperatorJoinMaker extends GameRoomOperatorJoinMake
             return false;
         }
         return true;
-
     }
 }
