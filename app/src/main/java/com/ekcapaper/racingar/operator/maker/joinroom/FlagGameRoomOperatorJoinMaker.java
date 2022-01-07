@@ -6,8 +6,10 @@ import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
+import com.ekcapaper.racingar.operator.maker.dto.GameFlagListDto;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -28,31 +30,35 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
 
     public FlagGameRoomOperatorJoinMaker(Client client, Session session, String matchId, Duration timeLimit) {
         super(client, session, matchId, timeLimit);
+        mapRange = null;
+        gameFlagList = null;
     }
 
     boolean readPrepareData(){
-        StorageObjectId objectId = new StorageObjectId(ServerRoomSaveDataNameSpace.getCollectionName(matchId));
-        objectId.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareKeyMapRangeName());
-        objectId.setUserId(session.getUserId());
         try {
+            // util
             Gson gson = new Gson();
+            // storage 1 (MapRange)
+            StorageObjectId storageObjectIdMapRange = new StorageObjectId(ServerRoomSaveDataNameSpace.getCollectionName(matchId));
+            storageObjectIdMapRange.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareKeyMapRangeName());
+            storageObjectIdMapRange.setUserId(session.getUserId());
 
-            StorageObjects objects = client.readStorageObjects(session, objectId).get();
-            StorageObject object = objects.getObjects(0);
-            String value = object.getValue();
-            MapRange mapRange = gson.fromJson(value, MapRange.class);
+            StorageObjects storageObjectsMapRange = client.readStorageObjects(session, storageObjectIdMapRange).get();
+            StorageObject storageObjectMapRange = storageObjectsMapRange.getObjects(0);
+            MapRange mapRange = gson.fromJson(storageObjectMapRange.getValue(), MapRange.class);
 
-            objectId.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareKeyGameFlagListName());
-            StorageObjects objects1 = client.readStorageObjects(session, objectId).get();
-            StorageObject object1 = objects1.getObjects(0);
-            value = object1.getValue();
+            // storage 2 (GameFlagListDto)
+            StorageObjectId storageObjectIdGameFlagListDto = new StorageObjectId(ServerRoomSaveDataNameSpace.getCollectionName(matchId));
+            storageObjectIdMapRange.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareKeyGameFlagListName());
+            storageObjectIdMapRange.setUserId(session.getUserId());
 
-            JsonObject jsonObject = gson.fromJson(value,JsonObject.class);
-            String data = jsonObject.get("flags").toString().trim().replace("\"[","[").replace("\"]","]");
-            Log.d("testtest",data);
-            List<GameFlag> gameFlagList = gson.fromJson(data,new TypeToken<List<GameFlag>>(){}.getType());
+            StorageObjects storageObjectsGameFlagListDto = client.readStorageObjects(session, storageObjectIdMapRange).get();
+            StorageObject storageObjectGameFlagListDto = storageObjectsGameFlagListDto.getObjects(0);
+            GameFlagListDto gameFlagListDto = gson.fromJson(storageObjectGameFlagListDto.getValue(), GameFlagListDto.class);
+            List<GameFlag> gameFlagList = gameFlagListDto.getGameFlagList();
 
-
+            this.mapRange = mapRange;
+            this.gameFlagList = gameFlagList;
         } catch (ExecutionException | InterruptedException | NullPointerException e) {
             return false;
         }
@@ -61,6 +67,11 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
 
     @Override
     public FlagGameRoomOperator makeFlagGameRoomOperator() {
+        if(this.mapRange == null || this.gameFlagList == null){
+            throw new IllegalStateException();
+        }
+        FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client,session,timeLimit,gameFlagList);
+
         return null;
     }
 }

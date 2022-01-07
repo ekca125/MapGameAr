@@ -39,7 +39,7 @@ public class FlagGameRoomOperatorJoinMakerTest {
     @Test
     public void readPrepareData() {
         Duration duration = Duration.ofSeconds(100);
-        String matchId = "20af87b4-8db8-4b9d-a0a8-496f82714676";
+        String matchId = "82bd6911-df55-4e68-b7f4-d75678468924";
 
         FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId,duration);
 

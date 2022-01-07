@@ -7,6 +7,7 @@ import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
+import com.ekcapaper.racingar.operator.maker.dto.GameFlagListDto;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
@@ -75,14 +76,13 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
 
         // data 2
         String keyNameGameFlagList = ServerRoomSaveDataNameSpace.getRoomPrepareKeyGameFlagListName();
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("flags",gson.toJson(gameFlagList));
+        GameFlagListDto gameFlagListDto = new GameFlagListDto(gameFlagList);
 
         // MapRange
         StorageObjectWrite saveGameObject2 = new StorageObjectWrite(
                 collectionName,
                 keyNameGameFlagList,
-                jsonObject.toString(),
+                gson.toJson(gameFlagListDto),
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE
         );

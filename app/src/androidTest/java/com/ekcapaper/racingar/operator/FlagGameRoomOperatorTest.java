@@ -8,6 +8,7 @@ import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
+import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;

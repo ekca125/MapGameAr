@@ -4,6 +4,7 @@ import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.network.MovePlayerMessage;
 import com.ekcapaper.racingar.operator.layer.TimeLimitGameRoomOperator;
+import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
