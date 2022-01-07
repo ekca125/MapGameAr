@@ -26,10 +26,9 @@ public class TimeLimitGameRoomOperator extends GameRoomOperator {
 
     @Override
     public boolean isEnd() {
-        if(getRoomStatus() != RoomStatus.GAME_STARTED){
+        if (getRoomStatus() != RoomStatus.GAME_STARTED) {
             return false;
-        }
-        else{
+        } else {
             return LocalDateTime.now().isAfter(endTime);
         }
     }

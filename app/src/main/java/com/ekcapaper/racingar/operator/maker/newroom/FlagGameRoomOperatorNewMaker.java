@@ -12,7 +12,6 @@ import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.PermissionRead;
@@ -91,7 +90,7 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
             client.writeStorageObjects(session, saveGameObject).get();
             client.writeStorageObjects(session, saveGameObject2).get();
         } catch (ExecutionException | InterruptedException e) {
-            Log.d("test",e.toString());
+            Log.d("test", e.toString());
             return false;
         }
         return true;

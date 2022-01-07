@@ -36,7 +36,7 @@ public class GameRoomOperator extends GameRoomClient {
         endCheckTimer.cancel();
     }
 
-    boolean isEnd(){
+    boolean isEnd() {
         return false;
     }
 }

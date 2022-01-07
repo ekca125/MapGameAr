@@ -1,7 +1,5 @@
 package com.ekcapaper.racingar.operator.maker.joinroom;
 
-import android.util.Log;
-
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorMaker;
@@ -9,10 +7,6 @@ import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
 import com.ekcapaper.racingar.operator.maker.dto.GameFlagListDto;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.StorageObjectId;
@@ -22,7 +16,6 @@ import com.heroiclabs.nakama.api.StorageObjects;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoinMaker implements FlagGameRoomOperatorMaker {
     private MapRange mapRange;
@@ -34,7 +27,7 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
         gameFlagList = null;
     }
 
-    boolean readPrepareData(){
+    boolean readPrepareData() {
         try {
             // util
             Gson gson = new Gson();
@@ -67,10 +60,10 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
 
     @Override
     public FlagGameRoomOperator makeFlagGameRoomOperator() {
-        if(this.mapRange == null || this.gameFlagList == null){
+        if (this.mapRange == null || this.gameFlagList == null) {
             throw new IllegalStateException();
         }
-        FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client,session,timeLimit,gameFlagList);
+        FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client, session, timeLimit, gameFlagList);
 
         return null;
     }

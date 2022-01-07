@@ -152,18 +152,15 @@ public class GameRoomClient extends RoomClient {
         changeRoomStatus(RoomStatus.GAME_END);
     }
 
-    private void changeRoomStatus(RoomStatus roomStatus){
+    private void changeRoomStatus(RoomStatus roomStatus) {
         // not ready -> ready -> started -> end
-        if(this.roomStatus == RoomStatus.GAME_NOT_READY && roomStatus == RoomStatus.GAME_READY){
+        if (this.roomStatus == RoomStatus.GAME_NOT_READY && roomStatus == RoomStatus.GAME_READY) {
             this.roomStatus = roomStatus;
-        }
-        else if(this.roomStatus == RoomStatus.GAME_READY && roomStatus == RoomStatus.GAME_STARTED){
+        } else if (this.roomStatus == RoomStatus.GAME_READY && roomStatus == RoomStatus.GAME_STARTED) {
             this.roomStatus = roomStatus;
-        }
-        else if(this.roomStatus == RoomStatus.GAME_STARTED && roomStatus == RoomStatus.GAME_END){
+        } else if (this.roomStatus == RoomStatus.GAME_STARTED && roomStatus == RoomStatus.GAME_END) {
             this.roomStatus = roomStatus;
-        }
-        else{
+        } else {
             throw new IllegalStateException();
         }
     }
