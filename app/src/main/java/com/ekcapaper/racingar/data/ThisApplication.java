@@ -86,7 +86,7 @@ public class ThisApplication extends Application {
             return false;
         }
     }
-/*
+
     public boolean joinFlagGameRoom(String matchId){
         FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
         FlagGameRoomOperator flagGameRoomOperator = flagGameRoomOperatorJoinMaker.makeFlagGameRoomOperator();
@@ -98,7 +98,7 @@ public class ThisApplication extends Application {
             return false;
         }
     }
-*/
+
     public ListenableFuture<MatchList> getCurrentMatches(){
         return client.listMatches(session);
     }
