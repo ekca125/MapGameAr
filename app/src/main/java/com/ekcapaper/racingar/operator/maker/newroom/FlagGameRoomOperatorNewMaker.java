@@ -71,7 +71,7 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         Gson gson = new Gson();
         // collection
         String collectionName = SaveDataNameDefine.getCollectionName(matchId);
-        RoomInfoFlagGame roomInfoFlagGame = new RoomInfoFlagGame(timeLimit.getSeconds(),mapRange);
+        RoomInfoFlagGame roomInfoFlagGame = new RoomInfoFlagGame(timeLimit.getSeconds(), mapRange);
 
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,

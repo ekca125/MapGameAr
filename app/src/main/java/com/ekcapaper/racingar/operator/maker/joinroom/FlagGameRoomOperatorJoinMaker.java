@@ -46,8 +46,7 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
 
             timeLimit = Duration.ofSeconds(roomInfoFlagGame.getTimeLimitSeconds());
             mapRange = roomInfoFlagGame.getMapRange();
-        }
-        catch (ExecutionException | InterruptedException | NullPointerException e) {
+        } catch (ExecutionException | InterruptedException | NullPointerException e) {
             return false;
         }
         return true;

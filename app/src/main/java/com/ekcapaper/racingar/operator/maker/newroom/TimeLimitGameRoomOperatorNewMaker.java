@@ -30,7 +30,7 @@ public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker 
     public TimeLimitGameRoomOperator makeTimeLimitGameRoomOperator() {
         TimeLimitGameRoomOperator timeLimitGameRoomOperator = new TimeLimitGameRoomOperator(client, session, timeLimit);
         boolean result = timeLimitGameRoomOperator.createMatch();
-        if(!result){
+        if (!result) {
             return null;
         }
         Match match = timeLimitGameRoomOperator.getMatch().get();
