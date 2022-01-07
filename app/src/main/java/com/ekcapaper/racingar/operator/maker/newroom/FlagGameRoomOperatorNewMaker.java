@@ -100,7 +100,7 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
     public FlagGameRoomOperator makeFlagGameRoomOperator() {
         // 맵 받아오기
         List<GameFlag> gameFlagList = requestGameFlagList(mapRange);
-        if(gameFlagList == null){
+        if (gameFlagList == null) {
             return null;
         }
         // 방 만들기
@@ -114,10 +114,9 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         String matchId = match.getMatchId();
         boolean writeSuccess = writePrepareData(matchId, gameFlagList);
         if (!writeSuccess) {
-
+            flagGameRoomOperator.leaveMatch();
             return null;
         }
-
         return flagGameRoomOperator;
     }
 }

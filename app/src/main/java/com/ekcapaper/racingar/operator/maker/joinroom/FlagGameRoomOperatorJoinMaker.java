@@ -60,9 +60,12 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
 
     @Override
     public FlagGameRoomOperator makeFlagGameRoomOperator() {
-        if (this.mapRange == null || this.gameFlagList == null) {
-            throw new IllegalStateException();
+        // 방 데이터 읽기
+        boolean result = readPrepareData();
+        if (!result) {
+            return null;
         }
+        // 방 입장
         FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client, session, timeLimit, gameFlagList);
         flagGameRoomOperator.joinMatch(matchId);
         return flagGameRoomOperator;

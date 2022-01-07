@@ -83,7 +83,7 @@ public class RoomClient implements SocketListener {
         }
     }
 
-    public void leaveMatch(){
+    public void leaveMatch() {
         String matchId = match.getMatchId();
         String chatChannelId = channel.getId();
 
