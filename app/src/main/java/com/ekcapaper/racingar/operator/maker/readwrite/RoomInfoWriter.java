@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator.maker.rw;
+package com.ekcapaper.racingar.operator.maker.readwrite;
 
 public interface RoomInfoWriter {
     boolean writeRoomInfo(String matchId);
