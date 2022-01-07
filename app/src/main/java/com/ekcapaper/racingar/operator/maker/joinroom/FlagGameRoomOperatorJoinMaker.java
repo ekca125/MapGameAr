@@ -63,6 +63,8 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
         if (this.mapRange == null || this.gameFlagList == null) {
             throw new IllegalStateException();
         }
-        return new FlagGameRoomOperator(client, session, timeLimit, gameFlagList);
+        FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client, session, timeLimit, gameFlagList);
+        flagGameRoomOperator.joinMatch(matchId);
+        return flagGameRoomOperator;
     }
 }
