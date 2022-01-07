@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorMaker;
+import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
 import com.ekcapaper.racingar.operator.maker.dto.PrepareDataFlagGameRoom;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;

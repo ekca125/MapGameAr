@@ -1,7 +1,7 @@
 package com.ekcapaper.racingar.operator.maker.joinroom;
 
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
-import com.ekcapaper.racingar.operator.maker.GameRoomOperatorMaker;
+import com.ekcapaper.racingar.operator.maker.make.GameRoomOperatorMaker;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
