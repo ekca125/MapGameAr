@@ -42,8 +42,8 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
 
             // storage 2 (GameFlagListDto)
             StorageObjectId storageObjectIdGameFlagListDto = new StorageObjectId(ServerRoomSaveDataNameSpace.getCollectionName(matchId));
-            storageObjectIdMapRange.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareKeyGameFlagListName());
-            storageObjectIdMapRange.setUserId(session.getUserId());
+            storageObjectIdGameFlagListDto.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareKeyGameFlagListName());
+            storageObjectIdGameFlagListDto.setUserId(session.getUserId());
 
             StorageObjects storageObjectsGameFlagListDto = client.readStorageObjects(session, storageObjectIdMapRange).get();
             StorageObject storageObjectGameFlagListDto = storageObjectsGameFlagListDto.getObjects(0);
@@ -63,8 +63,6 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
         if (this.mapRange == null || this.gameFlagList == null) {
             throw new IllegalStateException();
         }
-        FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client, session, timeLimit, gameFlagList);
-
-        return null;
+        return new FlagGameRoomOperator(client, session, timeLimit, gameFlagList);
     }
 }
