@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator.maker.dto;
+package com.ekcapaper.racingar.operator.maker.data;
 
 import lombok.Getter;
 

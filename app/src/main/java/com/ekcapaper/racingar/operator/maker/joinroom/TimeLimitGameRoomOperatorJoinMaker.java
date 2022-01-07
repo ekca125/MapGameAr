@@ -3,7 +3,7 @@ package com.ekcapaper.racingar.operator.maker.joinroom;
 import com.ekcapaper.racingar.operator.layer.TimeLimitGameRoomOperator;
 import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
 import com.ekcapaper.racingar.operator.maker.rw.RoomInfoReader;
-import com.ekcapaper.racingar.operator.maker.dto.RoomInfoTimeLimit;
+import com.ekcapaper.racingar.operator.maker.data.RoomInfoTimeLimit;
 import com.ekcapaper.racingar.operator.maker.make.TimeLimitGameRoomOperatorMaker;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
