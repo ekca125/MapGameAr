@@ -2,9 +2,9 @@ package com.ekcapaper.racingar.operator.maker.joinroom;
 
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
 import com.ekcapaper.racingar.operator.maker.dto.PrepareDataFlagGameRoom;
+import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;

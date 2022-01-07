@@ -5,9 +5,13 @@ public class ServerRoomSaveDataNameSpace {
         return "Match-" + matchId.replace(".", "");
     }
 
-    public static String getRoomPrepareKey() {return "Prepare-Data";}
+    public static String getRoomPrepareKey() {
+        return "Prepare-Data";
+    }
 
-    public static String getRoomPrepareKeyTimeLimit() {return "Prepare-TimeLimit";}
+    public static String getRoomPrepareKeyTimeLimit() {
+        return "Prepare-TimeLimit";
+    }
 
     public static String getRoomPrepareKeyGameFlagListName() {
         return "Prepare-GameFlag";
