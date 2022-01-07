@@ -35,14 +35,17 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
         try {
             // util
             Gson gson = new Gson();
-            // storage 1 (MapRange)
-            StorageObjectId storageObjectIdMapRange = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
-            storageObjectIdMapRange.setKey(SaveDataNameDefine.getDataRoomInfoKey());
-            storageObjectIdMapRange.setUserId(session.getUserId());
+            //
+            StorageObjectId storageObjectId = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
+            storageObjectId.setKey(SaveDataNameDefine.getDataRoomInfoKey());
+            storageObjectId.setUserId(session.getUserId());
 
-            StorageObjects storageObjectsMapRange = client.readStorageObjects(session, storageObjectIdMapRange).get();
+            StorageObjects storageObjectsMapRange = client.readStorageObjects(session, storageObjectId).get();
             StorageObject storageObjectMapRange = storageObjectsMapRange.getObjects(0);
             RoomInfoFlagGame roomInfoFlagGame = gson.fromJson(storageObjectMapRange.getValue(), RoomInfoFlagGame.class);
+
+            timeLimit = Duration.ofSeconds(roomInfoFlagGame.getTimeLimitSeconds());
+            mapRange = roomInfoFlagGame.getMapRange();
         }
         catch (ExecutionException | InterruptedException | NullPointerException e) {
             return false;
@@ -55,26 +58,17 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
         try {
             // util
             Gson gson = new Gson();
-            // storage 1 (MapRange)
-            StorageObjectId storageObjectIdMapRange = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
-            storageObjectIdMapRange.setKey(SaveDataNameDefine.getRoomPrepareKeyMapRangeName());
-            storageObjectIdMapRange.setUserId(session.getUserId());
-
-            StorageObjects storageObjectsMapRange = client.readStorageObjects(session, storageObjectIdMapRange).get();
-            StorageObject storageObjectMapRange = storageObjectsMapRange.getObjects(0);
-            MapRange mapRange = gson.fromJson(storageObjectMapRange.getValue(), MapRange.class);
 
             // storage 2 (GameFlagListDto)
             StorageObjectId storageObjectIdGameFlagListDto = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
-            storageObjectIdGameFlagListDto.setKey(SaveDataNameDefine.getRoomPrepareKeyGameFlagListName());
+            storageObjectIdGameFlagListDto.setKey(SaveDataNameDefine.getDataRoomPrepareKey());
             storageObjectIdGameFlagListDto.setUserId(session.getUserId());
 
-            StorageObjects storageObjectsGameFlagListDto = client.readStorageObjects(session, storageObjectIdMapRange).get();
+            StorageObjects storageObjectsGameFlagListDto = client.readStorageObjects(session, storageObjectIdGameFlagListDto).get();
             StorageObject storageObjectGameFlagListDto = storageObjectsGameFlagListDto.getObjects(0);
             PrepareDataFlagGameRoom prepareDataFlagGameRoom = gson.fromJson(storageObjectGameFlagListDto.getValue(), PrepareDataFlagGameRoom.class);
             List<GameFlag> gameFlagList = prepareDataFlagGameRoom.getGameFlagList();
 
-            this.mapRange = mapRange;
             this.gameFlagList = gameFlagList;
         } catch (ExecutionException | InterruptedException | NullPointerException e) {
             return false;

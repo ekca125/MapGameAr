@@ -129,7 +129,7 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         // 방 데이터 쓰기
         Match match = flagGameRoomOperator.getMatch().get();
         String matchId = match.getMatchId();
-        boolean writeSuccess = writeRoomInfo(matchId) || writeRoomPrepareData(matchId);
+        boolean writeSuccess = writeRoomInfo(matchId) && writeRoomPrepareData(matchId);
         if (!writeSuccess) {
             flagGameRoomOperator.leaveMatch();
             return null;

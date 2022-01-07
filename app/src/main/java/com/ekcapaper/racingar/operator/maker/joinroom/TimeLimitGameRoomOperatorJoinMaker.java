@@ -43,13 +43,13 @@ public class TimeLimitGameRoomOperatorJoinMaker extends GameRoomOperatorJoinMake
             // util
             Gson gson = new Gson();
             // storage 1 (RoomInfo)
-            StorageObjectId storageObjectIdMapRange = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
-            storageObjectIdMapRange.setKey(SaveDataNameDefine.getDataRoomInfoKey());
-            storageObjectIdMapRange.setUserId(session.getUserId());
+            StorageObjectId storageObjectId = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
+            storageObjectId.setKey(SaveDataNameDefine.getDataRoomInfoKey());
+            storageObjectId.setUserId(session.getUserId());
 
-            StorageObjects storageObjectsMapRange = client.readStorageObjects(session, storageObjectIdMapRange).get();
-            StorageObject storageObjectMapRange = storageObjectsMapRange.getObjects(0);
-            RoomInfoTimeLimit roomInfoTimeLimit = gson.fromJson(storageObjectMapRange.getValue(), RoomInfoTimeLimit.class);
+            StorageObjects storageObjects = client.readStorageObjects(session, storageObjectId).get();
+            StorageObject storageObject = storageObjects.getObjects(0);
+            RoomInfoTimeLimit roomInfoTimeLimit = gson.fromJson(storageObject.getValue(), RoomInfoTimeLimit.class);
             timeLimit = Duration.ofSeconds(roomInfoTimeLimit.getTimeLimitSeconds());
         } catch (ExecutionException | InterruptedException | NullPointerException e) {
             return false;
