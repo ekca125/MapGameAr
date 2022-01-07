@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
+import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
 import com.ekcapaper.racingar.operator.maker.dto.PrepareDataFlagGameRoom;
 import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
@@ -66,11 +66,11 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         // util
         Gson gson = new Gson();
         // collection
-        String collectionName = ServerRoomSaveDataNameSpace.getCollectionName(matchId);
+        String collectionName = SaveDataNameDefine.getCollectionName(matchId);
         PrepareDataFlagGameRoom prepareDataFlagGameRoom = new PrepareDataFlagGameRoom(gameFlagList);
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
-                ServerRoomSaveDataNameSpace.getRoomPrepareKey(),
+                SaveDataNameDefine.getRoomPrepareKey(),
                 gson.toJson(prepareDataFlagGameRoom),
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE

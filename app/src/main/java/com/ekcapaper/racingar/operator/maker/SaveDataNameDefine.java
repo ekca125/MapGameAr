@@ -1,6 +1,6 @@
 package com.ekcapaper.racingar.operator.maker;
 
-public class ServerRoomSaveDataNameSpace {
+public class SaveDataNameDefine {
     public static String getCollectionName(String matchId) {
         return "Match-" + matchId.replace(".", "");
     }

@@ -2,7 +2,7 @@ package com.ekcapaper.racingar.operator.maker.joinroom;
 
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
+import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
 import com.ekcapaper.racingar.operator.maker.dto.PrepareDataFlagGameRoom;
 import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
@@ -32,8 +32,8 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
             // util
             Gson gson = new Gson();
             // storage 1 (MapRange)
-            StorageObjectId storageObjectIdMapRange = new StorageObjectId(ServerRoomSaveDataNameSpace.getCollectionName(matchId));
-            storageObjectIdMapRange.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareKeyMapRangeName());
+            StorageObjectId storageObjectIdMapRange = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
+            storageObjectIdMapRange.setKey(SaveDataNameDefine.getRoomPrepareKeyMapRangeName());
             storageObjectIdMapRange.setUserId(session.getUserId());
 
             StorageObjects storageObjectsMapRange = client.readStorageObjects(session, storageObjectIdMapRange).get();
@@ -41,8 +41,8 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
             MapRange mapRange = gson.fromJson(storageObjectMapRange.getValue(), MapRange.class);
 
             // storage 2 (GameFlagListDto)
-            StorageObjectId storageObjectIdGameFlagListDto = new StorageObjectId(ServerRoomSaveDataNameSpace.getCollectionName(matchId));
-            storageObjectIdGameFlagListDto.setKey(ServerRoomSaveDataNameSpace.getRoomPrepareKeyGameFlagListName());
+            StorageObjectId storageObjectIdGameFlagListDto = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
+            storageObjectIdGameFlagListDto.setKey(SaveDataNameDefine.getRoomPrepareKeyGameFlagListName());
             storageObjectIdGameFlagListDto.setUserId(session.getUserId());
 
             StorageObjects storageObjectsGameFlagListDto = client.readStorageObjects(session, storageObjectIdMapRange).get();

@@ -3,11 +3,13 @@ package com.ekcapaper.racingar.operator.maker.newroom;
 import android.util.Log;
 
 import com.ekcapaper.racingar.operator.layer.TimeLimitGameRoomOperator;
-import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
+import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
+import com.ekcapaper.racingar.operator.maker.data.RoomInfoWriter;
 import com.ekcapaper.racingar.operator.maker.dto.PrepareDataTimeLimit;
 import com.ekcapaper.racingar.operator.maker.make.TimeLimitGameRoomOperatorMaker;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
+import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.PermissionRead;
 import com.heroiclabs.nakama.PermissionWrite;
 import com.heroiclabs.nakama.Session;
@@ -16,7 +18,7 @@ import com.heroiclabs.nakama.StorageObjectWrite;
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 
-public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker implements TimeLimitGameRoomOperatorMaker {
+public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker implements TimeLimitGameRoomOperatorMaker, RoomInfoWriter {
     Duration timeLimit;
 
     public TimeLimitGameRoomOperatorNewMaker(Client client, Session session, Duration timeLimit) {
@@ -24,17 +26,28 @@ public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker 
         this.timeLimit = timeLimit;
     }
 
+    @Override
+    public TimeLimitGameRoomOperator makeTimeLimitGameRoomOperator() {
+        TimeLimitGameRoomOperator timeLimitGameRoomOperator = new TimeLimitGameRoomOperator(client, session, timeLimit);
+        boolean result = timeLimitGameRoomOperator.createMatch();
+        if(!result){
+            return null;
+        }
+        Match match = timeLimitGameRoomOperator.getMatch().get();
+        writeRoomInfo(match.getMatchId());
+        return timeLimitGameRoomOperator;
+    }
 
     @Override
-    public boolean writePrepareData(String matchId) {
+    public boolean writeRoomInfo(String matchId) {
         Gson gson = new Gson();
         // collection
-        String collectionName = ServerRoomSaveDataNameSpace.getCollectionName(matchId);
+        String collectionName = SaveDataNameDefine.getCollectionName(matchId);
         // data 1
         PrepareDataTimeLimit prepareDataTimeLimit = new PrepareDataTimeLimit(timeLimit.getSeconds());
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
-                ServerRoomSaveDataNameSpace.getRoomPrepareKey(),
+                SaveDataNameDefine.getRoomPrepareKey(),
                 gson.toJson(prepareDataTimeLimit),
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE
@@ -46,12 +59,5 @@ public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker 
             return false;
         }
         return true;
-    }
-
-    @Override
-    public TimeLimitGameRoomOperator makeTimeLimitGameRoomOperator() {
-        TimeLimitGameRoomOperator timeLimitGameRoomOperator = new TimeLimitGameRoomOperator(client, session, timeLimit);
-        timeLimitGameRoomOperator.createMatch();
-        return timeLimitGameRoomOperator;
     }
 }
