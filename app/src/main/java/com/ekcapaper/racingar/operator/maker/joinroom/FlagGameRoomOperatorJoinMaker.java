@@ -59,7 +59,7 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
             // util
             Gson gson = new Gson();
 
-            // storage 2 (GameFlagListDto)
+            // 
             StorageObjectId storageObjectIdGameFlagListDto = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
             storageObjectIdGameFlagListDto.setKey(SaveDataNameDefine.getDataRoomPrepareKey());
             storageObjectIdGameFlagListDto.setUserId(session.getUserId());

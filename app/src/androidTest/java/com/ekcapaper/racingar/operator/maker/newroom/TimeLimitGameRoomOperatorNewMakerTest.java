@@ -33,7 +33,7 @@ public class TimeLimitGameRoomOperatorNewMakerTest {
     @Test
     public void getPrepareData() {
         TimeLimitGameRoomOperatorNewMaker timeLimitGameRoomOperatorNewMaker = new TimeLimitGameRoomOperatorNewMaker(client,session, Duration.ofSeconds(100));
-        timeLimitGameRoomOperatorNewMaker.getPrepareData();
+        timeLimitGameRoomOperatorNewMaker.makeTimeLimitGameRoomOperator();
     }
 
     @Test

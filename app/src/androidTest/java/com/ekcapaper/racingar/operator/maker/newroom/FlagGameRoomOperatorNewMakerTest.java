@@ -71,6 +71,4 @@ public class FlagGameRoomOperatorNewMakerTest {
         FlagGameRoomOperator flagGameRoomOperator = flagGameRoomOperatorNewMaker.makeFlagGameRoomOperator();
         assertNotNull(flagGameRoomOperator);
     }
-
-
 }

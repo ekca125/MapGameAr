@@ -36,16 +36,33 @@ public class FlagGameRoomOperatorJoinMakerTest {
         session = client.authenticateEmail(AccountStub.ID, AccountStub.PASSWORD).get();
         assertNotNull(session);
     }
+
+
+
     @Test
     public void readPrepareData() {
-        Duration duration = Duration.ofSeconds(100);
-        String matchId = "82bd6911-df55-4e68-b7f4-d75678468924";
+        String matchId = "0abdc362-04d9-4664-823a-4c9c4553d9de";
 
-        FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId,duration);
-
+        FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
         boolean result = flagGameRoomOperatorJoinMaker.readPrepareData();
         assertTrue(result);
+    }
 
+    @Test
+    public void readRoomInfo() {
+        String matchId = "0abdc362-04d9-4664-823a-4c9c4553d9de";
 
+        FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
+        boolean result = flagGameRoomOperatorJoinMaker.readRoomInfo();
+        assertTrue(result);
+    }
+
+    @Test
+    public void makeFlagGameRoomOperator() {
+        String matchId = "0abdc362-04d9-4664-823a-4c9c4553d9de";
+
+        FlagGameRoomOperatorJoinMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
+        FlagGameRoomOperator flagGameRoomOperator = flagGameRoomOperatorNewMaker.makeFlagGameRoomOperator();
+        assertNotNull(flagGameRoomOperator);
     }
 }
