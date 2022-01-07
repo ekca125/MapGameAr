@@ -3,7 +3,6 @@ package com.ekcapaper.racingar.operator.maker.newroom;
 import android.util.Log;
 
 import com.ekcapaper.racingar.operator.layer.TimeLimitGameRoomOperator;
-import com.ekcapaper.racingar.operator.maker.PrepareDataWriter;
 import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
 import com.ekcapaper.racingar.operator.maker.TimeLimitGameRoomOperatorMaker;
 import com.ekcapaper.racingar.operator.maker.dto.PrepareDataTimeLimit;
@@ -17,7 +16,7 @@ import com.heroiclabs.nakama.StorageObjectWrite;
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 
-public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker implements TimeLimitGameRoomOperatorMaker, PrepareDataWriter {
+public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker implements TimeLimitGameRoomOperatorMaker {
     Duration timeLimit;
 
     public TimeLimitGameRoomOperatorNewMaker(Client client, Session session, Duration timeLimit) {
