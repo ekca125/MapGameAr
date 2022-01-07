@@ -6,7 +6,10 @@ import android.util.Log;
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
+import com.ekcapaper.racingar.operator.maker.data.RoomInfoWriter;
+import com.ekcapaper.racingar.operator.maker.data.RoomPrepareDataWriter;
 import com.ekcapaper.racingar.operator.maker.dto.PrepareDataFlagGameRoom;
+import com.ekcapaper.racingar.operator.maker.dto.RoomInfoFlagGame;
 import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
@@ -28,7 +31,7 @@ import java.util.stream.Collectors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMaker implements FlagGameRoomOperatorMaker {
+public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMaker implements FlagGameRoomOperatorMaker, RoomInfoWriter, RoomPrepareDataWriter {
     private final MapRange mapRange;
     private List<GameFlag> gameFlagList;
 
@@ -61,17 +64,43 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         return true;
     }
 
+
     @Override
-    public boolean writePrepareData(String matchId) {
+    public boolean writeRoomInfo(String matchId) {
         // util
         Gson gson = new Gson();
         // collection
         String collectionName = SaveDataNameDefine.getCollectionName(matchId);
-        PrepareDataFlagGameRoom prepareDataFlagGameRoom = new PrepareDataFlagGameRoom(gameFlagList);
+        RoomInfoFlagGame roomInfoFlagGame = new RoomInfoFlagGame(timeLimit.getSeconds(),mapRange);
+
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
-                SaveDataNameDefine.getRoomPrepareKey(),
-                gson.toJson(prepareDataFlagGameRoom),
+                SaveDataNameDefine.getDataRoomInfoKey(),
+                gson.toJson(roomInfoFlagGame),
+                PermissionRead.PUBLIC_READ,
+                PermissionWrite.OWNER_WRITE
+        );
+        try {
+            client.writeStorageObjects(session, saveGameObject).get();
+        } catch (ExecutionException | InterruptedException e) {
+            Log.d("test", e.toString());
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean writeRoomPrepareData(String matchId) {
+        // util
+        Gson gson = new Gson();
+        // collection
+        String collectionName = SaveDataNameDefine.getCollectionName(matchId);
+        PrepareDataFlagGameRoom roomInfoFlagGame = new PrepareDataFlagGameRoom(gameFlagList);
+
+        StorageObjectWrite saveGameObject = new StorageObjectWrite(
+                collectionName,
+                SaveDataNameDefine.getDataRoomPrepareKey(),
+                gson.toJson(roomInfoFlagGame),
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE
         );
@@ -100,11 +129,13 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         // 방 데이터 쓰기
         Match match = flagGameRoomOperator.getMatch().get();
         String matchId = match.getMatchId();
-        boolean writeSuccess = writePrepareData(matchId);
+        boolean writeSuccess = writeRoomInfo(matchId) || writeRoomPrepareData(matchId);
         if (!writeSuccess) {
             flagGameRoomOperator.leaveMatch();
             return null;
         }
         return flagGameRoomOperator;
     }
+
+
 }

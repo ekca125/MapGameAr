@@ -5,7 +5,7 @@ import android.util.Log;
 import com.ekcapaper.racingar.operator.layer.TimeLimitGameRoomOperator;
 import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
 import com.ekcapaper.racingar.operator.maker.data.RoomInfoWriter;
-import com.ekcapaper.racingar.operator.maker.dto.PrepareDataTimeLimit;
+import com.ekcapaper.racingar.operator.maker.dto.RoomInfoTimeLimit;
 import com.ekcapaper.racingar.operator.maker.make.TimeLimitGameRoomOperatorMaker;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
@@ -44,11 +44,11 @@ public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker 
         // collection
         String collectionName = SaveDataNameDefine.getCollectionName(matchId);
         // data 1
-        PrepareDataTimeLimit prepareDataTimeLimit = new PrepareDataTimeLimit(timeLimit.getSeconds());
+        RoomInfoTimeLimit roomInfoTimeLimit = new RoomInfoTimeLimit(timeLimit.getSeconds());
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
-                SaveDataNameDefine.getRoomPrepareKey(),
-                gson.toJson(prepareDataTimeLimit),
+                SaveDataNameDefine.getDataRoomInfoKey(),
+                gson.toJson(roomInfoTimeLimit),
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE
         );

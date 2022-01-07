@@ -5,19 +5,12 @@ public class SaveDataNameDefine {
         return "Match-" + matchId.replace(".", "");
     }
 
-    public static String getRoomPrepareKey() {
-        return "Prepare-Data";
+    public static String getDataRoomInfoKey() {
+        return "Room-Info";
     }
 
-    public static String getRoomPrepareKeyTimeLimit() {
-        return "Prepare-TimeLimit";
+    public static String getDataRoomPrepareKey() {
+        return "Room-Prepare";
     }
 
-    public static String getRoomPrepareKeyGameFlagListName() {
-        return "Prepare-GameFlag";
-    }
-
-    public static String getRoomPrepareKeyMapRangeName() {
-        return "Prepare-MapRange";
-    }
 }
