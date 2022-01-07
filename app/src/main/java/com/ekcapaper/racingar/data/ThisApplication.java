@@ -10,9 +10,12 @@ import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
+import com.ekcapaper.racingar.operator.maker.joinroom.FlagGameRoomOperatorJoinMaker;
+import com.ekcapaper.racingar.operator.maker.newroom.FlagGameRoomOperatorNewMaker;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.heroiclabs.nakama.Client;
@@ -22,6 +25,7 @@ import com.heroiclabs.nakama.PermissionRead;
 import com.heroiclabs.nakama.PermissionWrite;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.StorageObjectWrite;
+import com.heroiclabs.nakama.api.MatchList;
 import com.heroiclabs.nakama.api.StorageObjectAcks;
 
 import java.io.IOException;
@@ -69,5 +73,33 @@ public class ThisApplication extends Application {
 
     public Optional<Session> getSessionOptional() {
         return Optional.ofNullable(session);
+    }
+
+    public boolean createFlagGameRoom(Duration timeLimit, MapRange mapRange){
+        FlagGameRoomOperatorNewMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorNewMaker(client,session,timeLimit,mapRange);
+        FlagGameRoomOperator flagGameRoomOperator = flagGameRoomOperatorNewMaker.makeFlagGameRoomOperator();
+        if(flagGameRoomOperator != null){
+            this.currentGameRoomOperator = flagGameRoomOperator;
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+/*
+    public boolean joinFlagGameRoom(String matchId){
+        FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
+        FlagGameRoomOperator flagGameRoomOperator = flagGameRoomOperatorJoinMaker.makeFlagGameRoomOperator();
+        if(flagGameRoomOperator != null){
+            this.currentGameRoomOperator = flagGameRoomOperator;
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+*/
+    public ListenableFuture<MatchList> getCurrentMatches(){
+        return client.listMatches(session);
     }
 }

@@ -1,11 +1,22 @@
 package com.ekcapaper.racingar.operator.maker.newroom;
 
+import android.util.Log;
+
+import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.operator.layer.TimeLimitGameRoomOperator;
+import com.ekcapaper.racingar.operator.maker.ServerRoomSaveDataNameSpace;
 import com.ekcapaper.racingar.operator.maker.TimeLimitGameRoomOperatorMaker;
+import com.ekcapaper.racingar.operator.maker.dto.GameFlagListDto;
+import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
+import com.heroiclabs.nakama.PermissionRead;
+import com.heroiclabs.nakama.PermissionWrite;
 import com.heroiclabs.nakama.Session;
+import com.heroiclabs.nakama.StorageObjectWrite;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker implements TimeLimitGameRoomOperatorMaker {
     Duration timeLimit;
@@ -13,6 +24,46 @@ public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker 
     public TimeLimitGameRoomOperatorNewMaker(Client client, Session session, Duration timeLimit) {
         super(client, session);
         this.timeLimit = timeLimit;
+    }
+
+    boolean writePrepareData(String matchId, List<GameFlag> gameFlagList) {
+        // util
+        Gson gson = new Gson();
+        // collection
+        String collectionName = ServerRoomSaveDataNameSpace.getCollectionName(matchId);
+
+        // data 1
+        String keyNameMapRange = ServerRoomSaveDataNameSpace.getRoomPrepareKeyMapRangeName();
+        // MapRange
+        StorageObjectWrite saveGameObject = new StorageObjectWrite(
+                collectionName,
+                keyNameMapRange,
+                gson.toJson(mapRange),
+                PermissionRead.PUBLIC_READ,
+                PermissionWrite.OWNER_WRITE
+        );
+
+        // data 2
+        String keyNameGameFlagList = ServerRoomSaveDataNameSpace.getRoomPrepareKeyGameFlagListName();
+        GameFlagListDto gameFlagListDto = new GameFlagListDto(gameFlagList);
+
+        // MapRange
+        StorageObjectWrite saveGameObject2 = new StorageObjectWrite(
+                collectionName,
+                keyNameGameFlagList,
+                gson.toJson(gameFlagListDto),
+                PermissionRead.PUBLIC_READ,
+                PermissionWrite.OWNER_WRITE
+        );
+
+        try {
+            client.writeStorageObjects(session, saveGameObject).get();
+            client.writeStorageObjects(session, saveGameObject2).get();
+        } catch (ExecutionException | InterruptedException e) {
+            Log.d("test", e.toString());
+            return false;
+        }
+        return true;
     }
 
     @Override
