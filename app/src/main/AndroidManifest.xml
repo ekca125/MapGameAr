@@ -19,6 +19,18 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.raar.GameMapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.raar.GameRoomActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.raar.GameRoomGenerateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.raar.LobbyActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.raar.LoginActivity"
             android:exported="false" />
         <activity
