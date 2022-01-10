@@ -20,7 +20,13 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".activity.raar.activity.GameMapActivity"
-            android:exported="true" ></activity>
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".activity.raar.activity.GameRoomActivity"
             android:exported="true" >
@@ -28,10 +34,9 @@
         </activity>
         <activity
             android:name=".activity.raar.activity.GameRoomGenerateActivity"
-            android:exported="true" >            <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
+            android:exported="true" >
+
+        </activity>
         <activity
             android:name=".activity.raar.activity.LobbyActivity"
             android:exported="true" >
