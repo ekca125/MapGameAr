@@ -21,24 +21,22 @@ import java.util.List;
 
 public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<GameRoomInfo> items = new ArrayList<>();
+    private List<People> items = new ArrayList<>();
 
     private Context ctx;
-    private AdapterLobby.OnItemClickListener mOnItemClickListener;
-    private int animation_type = 0;
+    private AdapterListBasic.OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, GameRoomInfo obj, int position);
+        void onItemClick(View view, People obj, int position);
     }
 
-    public void setOnItemClickListener(final AdapterLobby.OnItemClickListener mItemClickListener) {
+    public void setOnItemClickListener(final AdapterListBasic.OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public AdapterLobby(Context context, List<GameRoomInfo> items, int animation_type) {
+    public AdapterLobby(Context context, List<People> items) {
         this.items = items;
         ctx = context;
-        this.animation_type = animation_type;
     }
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
@@ -65,12 +63,11 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        Log.e("onBindViewHolder", "onBindViewHolder : " + position);
-        if (holder instanceof AdapterListAnimation.OriginalViewHolder) {
-            AdapterListAnimation.OriginalViewHolder view = (AdapterListAnimation.OriginalViewHolder) holder;
+        if (holder instanceof AdapterListBasic.OriginalViewHolder) {
+            AdapterListBasic.OriginalViewHolder view = (AdapterListBasic.OriginalViewHolder) holder;
 
-            GameRoomInfo p = items.get(position);
-            view.name.setText(position + " | " + p.name);
+            People p = items.get(position);
+            view.name.setText(p.name);
             Tools.displayImageRound(ctx, view.image, p.image);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -80,20 +77,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     }
                 }
             });
-            setAnimation(view.itemView, position);
         }
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                on_attach = false;
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
-        super.onAttachedToRecyclerView(recyclerView);
     }
 
     @Override
@@ -101,13 +85,4 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         return items.size();
     }
 
-    private int lastPosition = -1;
-    private boolean on_attach = true;
-
-    private void setAnimation(View view, int position) {
-        if (position > lastPosition) {
-            ItemAnimation.animate(view, on_attach ? position : -1, animation_type);
-            lastPosition = position;
-        }
-    }
 }
