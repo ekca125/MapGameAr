@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
     <application
-        android:name="com.ekcapaper.racingar.data.ThisApplication"
+        android:name=".data.ThisApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -19,1191 +19,1194 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileRealEstate"
+            android:name=".activity.raar.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.profile.ProfileRealEstate"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileStudent"
+            android:name=".activity.profile.ProfileStudent"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileLocationRating"
+            android:name=".activity.profile.ProfileLocationRating"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileCafe"
+            android:name=".activity.profile.ProfileCafe"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileNewsLight"
+            android:name=".activity.profile.ProfileNewsLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormMaterialPrefixSuffix"
+            android:name=".activity.form.FormMaterialPrefixSuffix"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormMaterialNoLabelOutlined"
+            android:name=".activity.form.FormMaterialNoLabelOutlined"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormMaterialNoLabel"
+            android:name=".activity.form.FormMaterialNoLabel"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormMaterialIcon"
+            android:name=".activity.form.FormMaterialIcon"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormMaterialContactOutlined"
+            android:name=".activity.form.FormMaterialContactOutlined"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormMaterialContactFilled"
+            android:name=".activity.form.FormMaterialContactFilled"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormMaterialErrorHelperText"
+            android:name=".activity.form.FormMaterialErrorHelperText"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormMaterialBasic"
+            android:name=".activity.form.FormMaterialBasic"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsSimpleTopIndicator"
+            android:name=".activity.tabs.TabsSimpleTopIndicator"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsSimpleProduct"
+            android:name=".activity.tabs.TabsSimpleProduct"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsSimpleGreen"
+            android:name=".activity.tabs.TabsSimpleGreen"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsSimpleLight"
+            android:name=".activity.tabs.TabsSimpleLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerBackIcon"
+            android:name=".activity.menu.MenuDrawerBackIcon"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerBack"
+            android:name=".activity.menu.MenuDrawerBack"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerSliderSimple"
+            android:name=".activity.menu.MenuDrawerSliderSimple"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerSlider"
+            android:name=".activity.menu.MenuDrawerSlider"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerIcon"
+            android:name=".activity.menu.MenuDrawerIcon"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerIconSub"
+            android:name=".activity.menu.MenuDrawerIconSub"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerColorful"
+            android:name=".activity.menu.MenuDrawerColorful"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerCard"
+            android:name=".activity.menu.MenuDrawerCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.snackbartoast.SnackbarMaterial"
+            android:name=".activity.snackbartoast.SnackbarMaterial"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.slider.SliderFilterFlight"
+            android:name=".activity.slider.SliderFilterFlight"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerBottomCard"
+            android:name=".activity.menu.MenuDrawerBottomCard"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerBottom"
+            android:name=".activity.menu.MenuDrawerBottom"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressButtonLinear"
+            android:name=".activity.progressactivity.ProgressButtonLinear"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressButtonDone"
+            android:name=".activity.progressactivity.ProgressButtonDone"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressButtonPercent"
+            android:name=".activity.progressactivity.ProgressButtonPercent"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressButtonSide"
+            android:name=".activity.progressactivity.ProgressButtonSide"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressButton"
+            android:name=".activity.progressactivity.ProgressButton"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.banner.BannerSmallSuccess"
+            android:name=".activity.banner.BannerSmallSuccess"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.banner.BannerSmallWarning"
+            android:name=".activity.banner.BannerSmallWarning"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.banner.BannerSmallInfo"
+            android:name=".activity.banner.BannerSmallInfo"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.banner.BannerPin"
+            android:name=".activity.banner.BannerPin"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.banner.BannerDark"
+            android:name=".activity.banner.BannerDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.banner.BannerWarning"
+            android:name=".activity.banner.BannerWarning"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.banner.BannerInfo"
+            android:name=".activity.banner.BannerInfo"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.banner.BannerWhite"
+            android:name=".activity.banner.BannerWhite"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.banner.BannerBasic"
+            android:name=".activity.banner.BannerBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.backdrop.BackdropSelection"
+            android:name=".activity.backdrop.BackdropSelection"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.backdrop.BackdropTextField"
+            android:name=".activity.backdrop.BackdropTextField"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.backdrop.BackdropSteppers"
+            android:name=".activity.backdrop.BackdropSteppers"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.backdrop.BackdropNavigation"
+            android:name=".activity.backdrop.BackdropNavigation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.backdrop.BackdropFilter"
+            android:name=".activity.backdrop.BackdropFilter"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.backdrop.BackdropBasic"
+            android:name=".activity.backdrop.BackdropBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.checkradio.CheckboxParentChild"
+            android:name=".activity.checkradio.CheckboxParentChild"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.checkradio.RadioSwitchBasic"
+            android:name=".activity.checkradio.RadioSwitchBasic"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.checkradio.CheckboxBasic"
+            android:name=".activity.checkradio.CheckboxBasic"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationAnimated"
+            android:name=".activity.bottomnavigation.BottomNavigationAnimated"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationBadgeBlink"
+            android:name=".activity.bottomnavigation.BottomNavigationBadgeBlink"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationBadge"
+            android:name=".activity.bottomnavigation.BottomNavigationBadge"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.FabExpand"
+            android:name=".activity.button.FabExpand"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.sidesheet.SideSheetBasic"
+            android:name=".activity.sidesheet.SideSheetBasic"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomsheet.BottomSheetTransform"
+            android:name=".activity.bottomsheet.BottomSheetTransform"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.motion.MotionFabView"
+            android:name=".activity.motion.MotionFabView"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.motion.MotionPageBasicDetails"
+            android:name=".activity.motion.MotionPageBasicDetails"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.motion.MotionInboxDetails"
+            android:name=".activity.motion.MotionInboxDetails"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.motion.MotionPageCardDetails"
+            android:name=".activity.motion.MotionPageCardDetails"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.motion.MotionPageBasic"
+            android:name=".activity.motion.MotionPageBasic"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.motion.MotionSearchBarExpand"
+            android:name=".activity.motion.MotionSearchBarExpand"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.motion.MotionFab"
+            android:name=".activity.motion.MotionFab"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.motion.MotionList"
+            android:name=".activity.motion.MotionList"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.motion.MotionCard"
+            android:name=".activity.motion.MotionCard"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.chip.ChipAction"
+            android:name=".activity.chip.ChipAction"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.chip.ChipChoice"
+            android:name=".activity.chip.ChipChoice"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.chip.ChipFilter"
+            android:name=".activity.chip.ChipFilter"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.chip.ChipInput"
+            android:name=".activity.chip.ChipInput"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.chip.ChipGroup"
+            android:name=".activity.chip.ChipGroup"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.card.CardScrolling"
+            android:name=".activity.card.CardScrolling"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.card.CardDivider"
+            android:name=".activity.card.CardDivider"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.card.CardExpand"
+            android:name=".activity.card.CardExpand"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.card.CardBasicOutlined"
+            android:name=".activity.card.CardBasicOutlined"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.FabAnimation"
+            android:name=".activity.button.FabAnimation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.ButtonWithIcon"
+            android:name=".activity.button.ButtonWithIcon"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.ButtonOutlined"
+            android:name=".activity.button.ButtonOutlined"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.ButtonTextLabel"
+            android:name=".activity.button.ButtonTextLabel"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.ButtonHighEmphasis"
+            android:name=".activity.button.ButtonHighEmphasis"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.ButtonMaterial"
+            android:name=".activity.button.ButtonMaterial"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomsheet.BottomSheetAnimation"
+            android:name=".activity.bottomsheet.BottomSheetAnimation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomsheet.BottomSheetExpand"
+            android:name=".activity.bottomsheet.BottomSheetExpand"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomsheet.BottomSheetPlayer"
+            android:name=".activity.bottomsheet.BottomSheetPlayer"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomsheet.BottomSheetMenu"
+            android:name=".activity.bottomsheet.BottomSheetMenu"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomsheet.BottomSheetFilter"
+            android:name=".activity.bottomsheet.BottomSheetFilter"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.slider.SliderRange"
+            android:name=".activity.slider.SliderRange"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.card.CardCheckable"
+            android:name=".activity.card.CardCheckable"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.FabExtend"
+            android:name=".activity.button.FabExtend"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.toolbar.ToolbarBottomScroll"
+            android:name=".activity.toolbar.ToolbarBottomScroll"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.toolbar.ToolbarBottomFab"
+            android:name=".activity.toolbar.ToolbarBottomFab"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.toolbar.ToolbarBottomBasic"
+            android:name=".activity.toolbar.ToolbarBottomBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.ButtonToggleBasic"
+            android:name=".activity.button.ButtonToggleBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.article.ArticleBookReview"
+            android:name=".activity.article.ArticleBookReview"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.article.ArticleDetails"
+            android:name=".activity.article.ArticleDetails"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardTravelPackage"
+            android:name=".activity.dashboard.DashboardTravelPackage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardCoursesProgress"
+            android:name=".activity.dashboard.DashboardCoursesProgress"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.login.LoginBigImage"
+            android:name=".activity.login.LoginBigImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.timeline.TimelineCard"
+            android:name=".activity.timeline.TimelineCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationBasic"
+            android:name=".activity.bottomnavigation.BottomNavigationBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationShifting"
+            android:name=".activity.bottomnavigation.BottomNavigationShifting"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomsheet.BottomSheetBasic"
+            android:name=".activity.bottomsheet.BottomSheetBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomsheet.BottomSheetList"
+            android:name=".activity.bottomsheet.BottomSheetList"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.ButtonBasic"
+            android:name=".activity.button.ButtonBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.card.CardBasic"
+            android:name=".activity.card.CardBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.chip.ChipBasic"
+            android:name=".activity.chip.ChipBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogBasic"
+            android:name=".activity.dialog.DialogBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.expansionpanel.ExpansionPanelBasic"
+            android:name=".activity.expansionpanel.ExpansionPanelBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.gridlist.GridBasic"
+            android:name=".activity.gridlist.GridBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.list.ListBasic"
+            android:name=".activity.list.ListBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.picker.PickerTimeDark"
+            android:name=".activity.picker.PickerTimeDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressBasic"
+            android:name=".activity.progressactivity.ProgressBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.slider.SliderLight"
+            android:name=".activity.slider.SliderLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.slider.SliderDark"
+            android:name=".activity.slider.SliderDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.snackbartoast.SnackbarToastBasic"
+            android:name=".activity.snackbartoast.SnackbarToastBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.stepper.StepperText"
+            android:name=".activity.stepper.StepperText"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsBasic"
+            android:name=".activity.tabs.TabsBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormLogin"
+            android:name=".activity.form.FormLogin"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.toolbar.ToolbarBasic"
+            android:name=".activity.toolbar.ToolbarBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.FabMiddle"
+            android:name=".activity.button.FabMiddle"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.ButtonInUtilities"
+            android:name=".activity.button.ButtonInUtilities"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.card.CardTimeline"
+            android:name=".activity.card.CardTimeline"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogFullscreen"
+            android:name=".activity.dialog.DialogFullscreen"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogCustom"
+            android:name=".activity.dialog.DialogCustom"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.expansionpanel.ExpansionPanelTicket"
+            android:name=".activity.expansionpanel.ExpansionPanelTicket"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.expansionpanel.ExpansionPanelInvoice"
+            android:name=".activity.expansionpanel.ExpansionPanelInvoice"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.gridlist.GridSingleLine"
+            android:name=".activity.gridlist.GridSingleLine"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.gridlist.GridSectioned"
+            android:name=".activity.gridlist.GridSectioned"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.list.ListSectioned"
+            android:name=".activity.list.ListSectioned"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.list.ListExpand"
+            android:name=".activity.list.ListExpand"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.list.ListDrag"
+            android:name=".activity.list.ListDrag"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.list.ListSwipe"
+            android:name=".activity.list.ListSwipe"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.list.ListAnimation"
+            android:name=".activity.list.ListAnimation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerNews"
+            android:name=".activity.menu.MenuDrawerNews"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerMail"
+            android:name=".activity.menu.MenuDrawerMail"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerSimpleLight"
+            android:name=".activity.menu.MenuDrawerSimpleLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerSimpleDark"
+            android:name=".activity.menu.MenuDrawerSimpleDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerNoIcon"
+            android:name=".activity.menu.MenuDrawerNoIcon"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.picker.PickerDateLight"
+            android:name=".activity.picker.PickerDateLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.picker.PickerDateDark"
+            android:name=".activity.picker.PickerDateDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.picker.PickerTimeLight"
+            android:name=".activity.picker.PickerTimeLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressPullRefresh"
+            android:name=".activity.progressactivity.ProgressPullRefresh"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressOnScroll"
+            android:name=".activity.progressactivity.ProgressOnScroll"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressLinearCenter"
+            android:name=".activity.progressactivity.ProgressLinearCenter"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.slider.SliderColorPicker"
+            android:name=".activity.slider.SliderColorPicker"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.snackbartoast.SnackbarAndFab"
+            android:name=".activity.snackbartoast.SnackbarAndFab"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.stepper.StepperVertical"
+            android:name=".activity.stepper.StepperVertical"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.stepper.StepperProgress"
+            android:name=".activity.stepper.StepperProgress"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.stepper.StepperWizardLight"
+            android:name=".activity.stepper.StepperWizardLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsIcon"
+            android:name=".activity.tabs.TabsIcon"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsTextIcon"
+            android:name=".activity.tabs.TabsTextIcon"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsLight"
+            android:name=".activity.tabs.TabsLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsStore"
+            android:name=".activity.tabs.TabsStore"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.toolbar.ToolbarCollapse"
+            android:name=".activity.toolbar.ToolbarCollapse"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.toolbar.ToolbarCollapsePin"
+            android:name=".activity.toolbar.ToolbarCollapsePin"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormProfileData"
+            android:name=".activity.form.FormProfileData"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormWithIcon"
+            android:name=".activity.form.FormWithIcon"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsIconLight"
+            android:name=".activity.tabs.TabsIconLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsIconStack"
+            android:name=".activity.tabs.TabsIconStack"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.stepper.StepperDots"
+            android:name=".activity.stepper.StepperDots"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.stepper.StepperWizardColor"
+            android:name=".activity.stepper.StepperWizardColor"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressCircleCenter"
+            android:name=".activity.progressactivity.ProgressCircleCenter"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressLinearTop"
+            android:name=".activity.progressactivity.ProgressLinearTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.picker.PickerColor"
+            android:name=".activity.picker.PickerColor"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.picker.PickerLocation"
+            android:name=".activity.picker.PickerLocation"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuOverflowToolbar"
+            android:name=".activity.menu.MenuOverflowToolbar"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuOverflowList"
+            android:name=".activity.menu.MenuOverflowList"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.list.ListMultiSelection"
+            android:name=".activity.list.ListMultiSelection"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.gridlist.GridTwoLine"
+            android:name=".activity.gridlist.GridTwoLine"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.gridlist.GridAlbums"
+            android:name=".activity.gridlist.GridAlbums"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogCustomInfo"
+            android:name=".activity.dialog.DialogCustomInfo"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogCustomWarning"
+            android:name=".activity.dialog.DialogCustomWarning"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogCustomLight"
+            android:name=".activity.dialog.DialogCustomLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogAddPost"
+            android:name=".activity.dialog.DialogAddPost"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogCustomDark"
+            android:name=".activity.dialog.DialogCustomDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogAddReview"
+            android:name=".activity.dialog.DialogAddReview"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.chip.ChipTag"
+            android:name=".activity.chip.ChipTag"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.card.CardOverlap"
+            android:name=".activity.card.CardOverlap"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.card.CardWizard"
+            android:name=".activity.card.CardWizard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.card.CardWizardLight"
+            android:name=".activity.card.CardWizardLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.FabMore"
+            android:name=".activity.button.FabMore"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.button.FabMoreText"
+            android:name=".activity.button.FabMoreText"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomsheet.BottomSheetMap"
+            android:name=".activity.bottomsheet.BottomSheetMap"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomsheet.BottomSheetFloating"
+            android:name=".activity.bottomsheet.BottomSheetFloating"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomsheet.BottomSheetFull"
+            android:name=".activity.bottomsheet.BottomSheetFull"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationLight"
+            android:name=".activity.bottomnavigation.BottomNavigationLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.toolbar.ToolbarLight"
+            android:name=".activity.toolbar.ToolbarLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.toolbar.ToolbarDark"
+            android:name=".activity.toolbar.ToolbarDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormTextArea"
+            android:name=".activity.form.FormTextArea"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsScroll"
+            android:name=".activity.tabs.TabsScroll"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsDark"
+            android:name=".activity.tabs.TabsDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormSignUp"
+            android:name=".activity.form.FormSignUp"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.gridlist.GridCaller"
+            android:name=".activity.gridlist.GridCaller"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationDark"
+            android:name=".activity.bottomnavigation.BottomNavigationDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationIcon"
+            android:name=".activity.bottomnavigation.BottomNavigationIcon"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.card.CardWizardOverlap"
+            android:name=".activity.card.CardWizardOverlap"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfilePolygon"
+            android:name=".activity.profile.ProfilePolygon"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfilePurple"
+            android:name=".activity.profile.ProfilePurple"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileRed"
+            android:name=".activity.profile.ProfileRed"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileBlueAppbar"
+            android:name=".activity.profile.ProfileBlueAppbar"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileImageAppbar"
+            android:name=".activity.profile.ProfileImageAppbar"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileDrawerImage"
+            android:name=".activity.profile.ProfileDrawerImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileGallery"
+            android:name=".activity.profile.ProfileGallery"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileGalleryTwo"
+            android:name=".activity.profile.ProfileGalleryTwo"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileDrawerSimple"
+            android:name=".activity.profile.ProfileDrawerSimple"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.noitem.NoItemArchived"
+            android:name=".activity.noitem.NoItemArchived"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.noitem.NoItemSearch"
+            android:name=".activity.noitem.NoItemSearch"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.noitem.NoItemInternetIcon"
+            android:name=".activity.noitem.NoItemInternetIcon"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.noitem.NoItemInternetImage"
+            android:name=".activity.noitem.NoItemInternetImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.noitem.NoItemBgCity"
+            android:name=".activity.noitem.NoItemBgCity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.noitem.NoItemBgCactus"
+            android:name=".activity.noitem.NoItemBgCactus"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.noitem.NoItemTabs"
+            android:name=".activity.noitem.NoItemTabs"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchToolbarLight"
+            android:name=".activity.search.SearchToolbarLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchToolbarDark"
+            android:name=".activity.search.SearchToolbarDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchPrimary"
+            android:name=".activity.search.SearchPrimary"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchStore"
+            android:name=".activity.search.SearchStore"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchCity"
+            android:name=".activity.search.SearchCity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchPrimaryBg"
+            android:name=".activity.search.SearchPrimaryBg"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchHistoryCard"
+            android:name=".activity.search.SearchHistoryCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingCategoryList"
+            android:name=".activity.shopping.ShoppingCategoryList"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.tabs.TabsRound"
+            android:name=".activity.tabs.TabsRound"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingCategoryCard"
+            android:name=".activity.shopping.ShoppingCategoryCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingCategoryImage"
+            android:name=".activity.shopping.ShoppingCategoryImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingCheckoutCard"
+            android:name=".activity.shopping.ShoppingCheckoutCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingProductGrid"
+            android:name=".activity.shopping.ShoppingProductGrid"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingProductDetails"
+            android:name=".activity.shopping.ShoppingProductDetails"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingSubCategoryTabs"
+            android:name=".activity.shopping.ShoppingSubCategoryTabs"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingProductAdvDetails"
+            android:name=".activity.shopping.ShoppingProductAdvDetails"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.sliderimage.SliderImageHeader"
+            android:name=".activity.sliderimage.SliderImageHeader"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.sliderimage.SliderImageHeaderAuto"
+            android:name=".activity.sliderimage.SliderImageHeaderAuto"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.sliderimage.SliderImageCard"
+            android:name=".activity.sliderimage.SliderImageCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.sliderimage.SliderImageCardAuto"
+            android:name=".activity.sliderimage.SliderImageCardAuto"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerMusicBasic"
+            android:name=".activity.player.PlayerMusicBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerMusicLight"
+            android:name=".activity.player.PlayerMusicLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerMusicAlbumDark"
+            android:name=".activity.player.PlayerMusicAlbumDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerMusicAlbumCircle"
+            android:name=".activity.player.PlayerMusicAlbumCircle"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerMusicAlbumSimple"
+            android:name=".activity.player.PlayerMusicAlbumSimple"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerMusicSongList"
+            android:name=".activity.player.PlayerMusicSongList"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerMusicTabs"
+            android:name=".activity.player.PlayerMusicTabs"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerMusicTabsIcon"
+            android:name=".activity.player.PlayerMusicTabsIcon"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerMusicAlbumGrid"
+            android:name=".activity.player.PlayerMusicAlbumGrid"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.timeline.TimelineFeed"
+            android:name=".activity.timeline.TimelineFeed"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.timeline.TimelinePath"
+            android:name=".activity.timeline.TimelinePath"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.timeline.TimelineTwitter"
+            android:name=".activity.timeline.TimelineTwitter"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.timeline.TimelineSimple"
+            android:name=".activity.timeline.TimelineSimple"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.timeline.TimelineDotCard"
+            android:name=".activity.timeline.TimelineDotCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.settings.SettingProfile"
+            android:name=".activity.settings.SettingProfile"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.settings.SettingSectioned"
+            android:name=".activity.settings.SettingSectioned"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.settings.SettingFlat"
+            android:name=".activity.settings.SettingFlat"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.settings.SettingProfileLight"
+            android:name=".activity.settings.SettingProfileLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.verification.VerificationPhone"
+            android:name=".activity.verification.VerificationPhone"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.verification.VerificationCode"
+            android:name=".activity.verification.VerificationCode"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.verification.VerificationHeader"
+            android:name=".activity.verification.VerificationHeader"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.verification.VerificationImage"
+            android:name=".activity.verification.VerificationImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.verification.VerificationOrange"
+            android:name=".activity.verification.VerificationOrange"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.verification.VerificationBlue"
+            android:name=".activity.verification.VerificationBlue"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.login.LoginSimpleLight"
+            android:name=".activity.login.LoginSimpleLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.login.LoginSimpleGreen"
+            android:name=".activity.login.LoginSimpleGreen"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.login.LoginImageTeal"
+            android:name=".activity.login.LoginImageTeal"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.login.LoginCardLight"
+            android:name=".activity.login.LoginCardLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.login.LoginCardOverlap"
+            android:name=".activity.login.LoginCardOverlap"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.login.LoginSimpleDark"
+            android:name=".activity.login.LoginSimpleDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.payment.PaymentProfile"
+            android:name=".activity.payment.PaymentProfile"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.payment.PaymentForm"
+            android:name=".activity.payment.PaymentForm"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.payment.PaymentCardCollections"
+            android:name=".activity.payment.PaymentCardCollections"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.payment.PaymentCardDetails"
+            android:name=".activity.payment.PaymentCardDetails"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.payment.PaymentSuccessDialog"
+            android:name=".activity.payment.PaymentSuccessDialog"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressDotsBounce"
+            android:name=".activity.progressactivity.ProgressDotsBounce"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressDotsFade"
+            android:name=".activity.progressactivity.ProgressDotsFade"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.progressactivity.ProgressDotsGrow"
+            android:name=".activity.progressactivity.ProgressDotsGrow"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileFabMenu"
+            android:name=".activity.profile.ProfileFabMenu"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileCardList"
+            android:name=".activity.profile.ProfileCardList"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationPrimary"
+            android:name=".activity.bottomnavigation.BottomNavigationPrimary"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationMapBlue"
+            android:name=".activity.bottomnavigation.BottomNavigationMapBlue"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardGridFab"
+            android:name=".activity.dashboard.DashboardGridFab"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardStatistics"
+            android:name=".activity.dashboard.DashboardStatistics"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerMusicGenre"
+            android:name=".activity.player.PlayerMusicGenre"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerMusicGenreImage"
+            android:name=".activity.player.PlayerMusicGenreImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerMusicGenreLight"
+            android:name=".activity.player.PlayerMusicGenreLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardPayBill"
+            android:name=".activity.dashboard.DashboardPayBill"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardFlight"
+            android:name=".activity.dashboard.DashboardFlight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.article.ArticleMedium"
+            android:name=".activity.article.ArticleMedium"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.article.ArticleMediumDark"
+            android:name=".activity.article.ArticleMediumDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.article.ArticleBigHeader"
+            android:name=".activity.article.ArticleBigHeader"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.article.ArticleStepper"
+            android:name=".activity.article.ArticleStepper"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.article.ArticleFood"
+            android:name=".activity.article.ArticleFood"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.article.ArticleSimple"
+            android:name=".activity.article.ArticleSimple"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.article.ArticleCard"
+            android:name=".activity.article.ArticleCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.article.ArticleFoodReview"
+            android:name=".activity.article.ArticleFoodReview"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingCartSimple"
+            android:name=".activity.shopping.ShoppingCartSimple"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingCartCard"
+            android:name=".activity.shopping.ShoppingCartCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingCartCardDark"
+            android:name=".activity.shopping.ShoppingCartCardDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingCheckoutStep"
+            android:name=".activity.shopping.ShoppingCheckoutStep"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingCheckoutTimeline"
+            android:name=".activity.shopping.ShoppingCheckoutTimeline"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingCheckoutOnePage"
+            android:name=".activity.shopping.ShoppingCheckoutOnePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogGDPRBasic"
+            android:name=".activity.dialog.DialogGDPRBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogTermOfServices"
+            android:name=".activity.dialog.DialogTermOfServices"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogHeader"
+            android:name=".activity.dialog.DialogHeader"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogImage"
+            android:name=".activity.dialog.DialogImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.about.AboutDialogMainAction"
+            android:name=".activity.about.AboutDialogMainAction"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.about.AboutCompany"
+            android:name=".activity.about.AboutCompany"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.about.AboutCompanyImage"
+            android:name=".activity.about.AboutCompanyImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.about.AboutCompanyCard"
+            android:name=".activity.about.AboutCompanyCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.about.AboutApp"
+            android:name=".activity.about.AboutApp"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.about.AboutAppSimple"
+            android:name=".activity.about.AboutAppSimple"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.about.AboutAppSimpleBlue"
+            android:name=".activity.about.AboutAppSimpleBlue"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerVideoBasic"
+            android:name=".activity.player.PlayerVideoBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.player.PlayerVideoSimple"
+            android:name=".activity.player.PlayerVideoSimple"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchFilterHotel"
+            android:name=".activity.search.SearchFilterHotel"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchFilterProduct"
+            android:name=".activity.search.SearchFilterProduct"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchFilterProperty"
+            android:name=".activity.search.SearchFilterProperty"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardFinance"
+            android:name=".activity.dashboard.DashboardFinance"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardCryptocurrency"
+            android:name=".activity.dashboard.DashboardCryptocurrency"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardWallet"
+            android:name=".activity.dashboard.DashboardWallet"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardWalletGreen"
+            android:name=".activity.dashboard.DashboardWalletGreen"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationLightSimple"
+            android:name=".activity.bottomnavigation.BottomNavigationLightSimple"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileCardOverlap"
+            android:name=".activity.profile.ProfileCardOverlap"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileCardHeader"
+            android:name=".activity.profile.ProfileCardHeader"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileCardHeaderImage"
+            android:name=".activity.profile.ProfileCardHeaderImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileSkills"
+            android:name=".activity.profile.ProfileSkills"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileRating"
+            android:name=".activity.profile.ProfileRating"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileFreelancer"
+            android:name=".activity.profile.ProfileFreelancer"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileFormal"
+            android:name=".activity.profile.ProfileFormal"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormAddress"
+            android:name=".activity.form.FormAddress"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormCheckout"
+            android:name=".activity.form.FormCheckout"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormSignupImage"
+            android:name=".activity.form.FormSignupImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormSignupImageOutline"
+            android:name=".activity.form.FormSignupImageOutline"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormEcommerce"
+            android:name=".activity.form.FormEcommerce"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormSignupImageCard"
+            android:name=".activity.form.FormSignupImageCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormSignupCardStack"
+            android:name=".activity.form.FormSignupCardStack"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormSignupCard"
+            android:name=".activity.form.FormSignupCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormSignupDark"
+            android:name=".activity.form.FormSignupDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.snackbartoast.SnackbarCustom"
+            android:name=".activity.snackbartoast.SnackbarCustom"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.snackbartoast.ToastCustom"
+            android:name=".activity.snackbartoast.ToastCustom"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.chat.ChatWhatsapp"
+            android:name=".activity.chat.ChatWhatsapp"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.chat.ChatBBM"
+            android:name=".activity.chat.ChatBBM"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.chat.ChatFacebook"
+            android:name=".activity.chat.ChatFacebook"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.chat.ChatTelegram"
+            android:name=".activity.chat.ChatTelegram"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.shopping.ShoppingTrackingOrder"
+            android:name=".activity.shopping.ShoppingTrackingOrder"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.list.ListNewsLight"
+            android:name=".activity.list.ListNewsLight"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.list.ListNewsLightHorizontal"
+            android:name=".activity.list.ListNewsLightHorizontal"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.list.ListNewsCard"
+            android:name=".activity.list.ListNewsCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.list.ListNewsImage"
+            android:name=".activity.list.ListNewsImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchEventType"
+            android:name=".activity.search.SearchEventType"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchSuggestion"
+            android:name=".activity.search.SearchSuggestion"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchSuggestionRed"
+            android:name=".activity.search.SearchSuggestionRed"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchOutlet"
+            android:name=".activity.search.SearchOutlet"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.search.SearchOutletYellow"
+            android:name=".activity.search.SearchOutletYellow"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileWallet"
+            android:name=".activity.profile.ProfileWallet"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardDana"
+            android:name=".activity.dashboard.DashboardDana"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileTab"
+            android:name=".activity.profile.ProfileTab"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfilePink"
+            android:name=".activity.profile.ProfilePink"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileWhite"
+            android:name=".activity.profile.ProfileWhite"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileDark"
+            android:name=".activity.profile.ProfileDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardTravel"
+            android:name=".activity.dashboard.DashboardTravel"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dashboard.DashboardNews"
+            android:name=".activity.dashboard.DashboardNews"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.sliderimage.SliderSnapBasic"
+            android:name=".activity.sliderimage.SliderSnapBasic"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.sliderimage.SliderSnapCard"
+            android:name=".activity.sliderimage.SliderSnapCard"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.sliderimage.SliderSnapFull"
+            android:name=".activity.sliderimage.SliderSnapFull"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.sliderimage.SliderSnapNews"
+            android:name=".activity.sliderimage.SliderSnapNews"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormInputOutlined"
+            android:name=".activity.form.FormInputOutlined"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Material" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormAddProject"
+            android:name=".activity.form.FormAddProject"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.form.FormAddProjectBlue"
+            android:name=".activity.form.FormAddProjectBlue"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerWhite"
+            android:name=".activity.menu.MenuDrawerWhite"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerWhiteProgress"
+            android:name=".activity.menu.MenuDrawerWhiteProgress"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerAgri"
+            android:name=".activity.menu.MenuDrawerAgri"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerFilter"
+            android:name=".activity.menu.MenuDrawerFilter"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerAdmin"
+            android:name=".activity.menu.MenuDrawerAdmin"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.menu.MenuDrawerAdminDark"
+            android:name=".activity.menu.MenuDrawerAdminDark"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogMenuPayment"
+            android:name=".activity.dialog.DialogMenuPayment"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogAchievement"
+            android:name=".activity.dialog.DialogAchievement"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.dialog.DialogContactUs"
+            android:name=".activity.dialog.DialogContactUs"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationArticle"
+            android:name=".activity.bottomnavigation.BottomNavigationArticle"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationShop"
+            android:name=".activity.bottomnavigation.BottomNavigationShop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationSmall"
+            android:name=".activity.bottomnavigation.BottomNavigationSmall"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.bottomnavigation.BottomNavigationMain"
+            android:name=".activity.bottomnavigation.BottomNavigationMain"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.profile.ProfileCircleImage"
+            android:name=".activity.profile.ProfileCircleImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.timeline.TimelineExplore"
+            android:name=".activity.timeline.TimelineExplore"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.timeline.TimelineImageMix"
+            android:name=".activity.timeline.TimelineImageMix"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.timeline.TimelineImageFit"
+            android:name=".activity.timeline.TimelineImageFit"
             android:screenOrientation="portrait" />
 
         <uses-library
@@ -1215,23 +1218,24 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="com.ekcapaper.racingar.room.ActivityFavorites"
+            android:name=".room.ActivityFavorites"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.fcm.ActivityNotifications"
+            android:name=".fcm.ActivityNotifications"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.fcm.ActivityDialogNotification"
+            android:name=".fcm.ActivityDialogNotification"
             android:theme="@style/AppTheme.Dialog.NoActionBar" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.ActivityWebView"
+            android:name=".activity.ActivityWebView"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.ekcapaper.racingar.activity.MainMenu"
+            android:name=".activity.MainMenu"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
