@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.activity.raar.adapter.AdapterLobby;
+import com.ekcapaper.racingar.adapter.AdapterListBasic;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.model.People;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LobbyActivity extends AppCompatActivity {
@@ -51,23 +53,18 @@ public class LobbyActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        List<People> items = DataGenerator.getPeopleData(this);
-        items.addAll(DataGenerator.getPeopleData(this));
-        items.addAll(DataGenerator.getPeopleData(this));
-
         //set data and list adapter
         mAdapter = new AdapterLobby(this, items);
         recyclerView.setAdapter(mAdapter);
 
         // on item list clicked
         mAdapter.setOnItemClickListener(
-                new AdapterLobby.OnItemClickListener() {
+                new AdapterListBasic.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, People obj, int position) {
                         Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
                     }
                 });
-
     }
 
     @Override
