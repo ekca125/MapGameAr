@@ -15,6 +15,7 @@ import android.view.View;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterListAnimation;
 import com.ekcapaper.racingar.data.DataGenerator;
+import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.model.People;
 import com.ekcapaper.racingar.utils.ItemAnimation;
 import com.ekcapaper.racingar.utils.Tools;
@@ -28,7 +29,7 @@ public class LobbyActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private AdapterListAnimation mAdapter;
-    private List<People> items = new ArrayList<>();
+    private List<GameRoomInfo> items = new ArrayList<>();
     private int animation_type = ItemAnimation.BOTTOM_UP;
 
     @Override
