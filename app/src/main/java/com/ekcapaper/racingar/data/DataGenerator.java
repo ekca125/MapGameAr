@@ -7,6 +7,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.model.CardViewImg;
+import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.model.Image;
 import com.ekcapaper.racingar.model.Inbox;
 import com.ekcapaper.racingar.model.MusicAlbum;
@@ -112,6 +113,28 @@ public class DataGenerator {
             obj.subtitle = subtitles.get(getRandomIndex(subtitles.size()));
             items.add(obj);
         }
+        return items;
+    }
+
+    /**
+     * Generate dummy data people
+     *
+     * @param ctx android context
+     * @return list of object
+     */
+    public static List<GameRoomInfo> getGameRoomInfoData(Context ctx) {
+        List<GameRoomInfo> items = new ArrayList<>();
+        TypedArray drw_arr = ctx.getResources().obtainTypedArray(R.array.people_images);
+        String name_arr[] = ctx.getResources().getStringArray(R.array.people_names);
+
+        for (int i = 0; i < drw_arr.length(); i++) {
+            GameRoomInfo obj = new GameRoomInfo();
+            obj.image = drw_arr.getResourceId(i, -1);
+            obj.name = name_arr[i];
+            obj.imageDrw = ctx.getResources().getDrawable(obj.image);
+            items.add(obj);
+        }
+        Collections.shuffle(items);
         return items;
     }
 
