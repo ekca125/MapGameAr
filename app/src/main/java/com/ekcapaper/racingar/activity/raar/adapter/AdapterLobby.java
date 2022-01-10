@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
@@ -21,13 +22,13 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<People> items = new ArrayList<>();
 
     private Context ctx;
-    private AdapterListBasic.OnItemClickListener mOnItemClickListener;
+    private AdapterLobby.OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(View view, People obj, int position);
     }
 
-    public void setOnItemClickListener(final AdapterListBasic.OnItemClickListener mItemClickListener) {
+    public void setOnItemClickListener(final AdapterLobby.OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
     }
 
@@ -59,18 +60,18 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        if (holder instanceof AdapterListBasic.OriginalViewHolder) {
-            AdapterListBasic.OriginalViewHolder view = (AdapterListBasic.OriginalViewHolder) holder;
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof AdapterLobby.OriginalViewHolder) {
+            AdapterLobby.OriginalViewHolder view = (AdapterLobby.OriginalViewHolder) holder;
 
-            People p = items.get(position);
+            People p = items.get(holder.getAdapterPosition());
             view.name.setText(p.name);
             Tools.displayImageRound(ctx, view.image, p.image);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemClick(view, items.get(position), position);
+                        mOnItemClickListener.onItemClick(view, items.get(holder.getAdapterPosition()), holder.getAdapterPosition());
                     }
                 }
             });

@@ -53,18 +53,22 @@ public class LobbyActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
+        //
+        List<People> items = DataGenerator.getPeopleData(this);
+        items.addAll(DataGenerator.getPeopleData(this));
+        items.addAll(DataGenerator.getPeopleData(this));
+
         //set data and list adapter
         mAdapter = new AdapterLobby(this, items);
         recyclerView.setAdapter(mAdapter);
 
         // on item list clicked
-        mAdapter.setOnItemClickListener(
-                new AdapterListBasic.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, People obj, int position) {
-                        Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
-                    }
-                });
+        mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, People obj, int position) {
+                Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
