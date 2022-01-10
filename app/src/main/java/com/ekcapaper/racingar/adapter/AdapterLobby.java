@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
+import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.model.People;
 import com.ekcapaper.racingar.utils.ItemAnimation;
 import com.ekcapaper.racingar.utils.Tools;
@@ -20,21 +21,21 @@ import java.util.List;
 
 public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<People> items = new ArrayList<>();
+    private List<GameRoomInfo> items = new ArrayList<>();
 
     private Context ctx;
     private AdapterLobby.OnItemClickListener mOnItemClickListener;
     private int animation_type = 0;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, AdapterLobby obj, int position);
+        void onItemClick(View view, GameRoomInfo obj, int position);
     }
 
     public void setOnItemClickListener(final AdapterLobby.OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public AdapterLobby(Context context, List<People> items, int animation_type) {
+    public AdapterLobby(Context context, List<GameRoomInfo> items, int animation_type) {
         this.items = items;
         ctx = context;
         this.animation_type = animation_type;
@@ -57,7 +58,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh;
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_people_chat, parent, false);
-        vh = new AdapterListAnimation.OriginalViewHolder(v);
+        vh = new AdapterLobby.OriginalViewHolder(v);
         return vh;
     }
 
@@ -68,7 +69,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         if (holder instanceof AdapterListAnimation.OriginalViewHolder) {
             AdapterListAnimation.OriginalViewHolder view = (AdapterListAnimation.OriginalViewHolder) holder;
 
-            People p = items.get(position);
+            GameRoomInfo p = items.get(position);
             view.name.setText(position + " | " + p.name);
             Tools.displayImageRound(ctx, view.image, p.image);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {

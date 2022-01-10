@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterListAnimation;
+import com.ekcapaper.racingar.adapter.AdapterLobby;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.model.People;
@@ -28,7 +29,7 @@ public class LobbyActivity extends AppCompatActivity {
     private View parent_view;
 
     private RecyclerView recyclerView;
-    private AdapterListAnimation mAdapter;
+    private AdapterLobby mAdapter;
     private List<GameRoomInfo> items = new ArrayList<>();
     private int animation_type = ItemAnimation.BOTTOM_UP;
 
@@ -67,13 +68,12 @@ public class LobbyActivity extends AppCompatActivity {
 
     private void setAdapter() {
         //set data and list adapter
-        mAdapter = new AdapterListAnimation(this, items, animation_type);
+        mAdapter = new AdapterLobby(this, items, animation_type);
         recyclerView.setAdapter(mAdapter);
 
-        // on item list clicked
-        mAdapter.setOnItemClickListener(new AdapterListAnimation.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, People obj, int position) {
+            public void onItemClick(View view, GameRoomInfo obj, int position) {
                 Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
