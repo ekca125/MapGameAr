@@ -1,12 +1,10 @@
-package com.ekcapaper.racingar.activity.raar;
+package com.ekcapaper.racingar.activity.raar.activity;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,17 +12,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.adapter.AdapterListAnimation;
 import com.ekcapaper.racingar.adapter.AdapterListBasic;
-import com.ekcapaper.racingar.adapter.AdapterLobby;
 import com.ekcapaper.racingar.data.DataGenerator;
-import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.model.People;
-import com.ekcapaper.racingar.utils.ItemAnimation;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LobbyActivity extends AppCompatActivity {

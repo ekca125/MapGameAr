@@ -1,14 +1,16 @@
-package com.ekcapaper.racingar.activity.raar;
+package com.ekcapaper.racingar.activity.raar.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
 import com.ekcapaper.racingar.R;
-public class GameRoomGenerateActivity extends AppCompatActivity {
+
+public class GameMapActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_room_generate);
+        setContentView(R.layout.activity_game_map);
     }
 }
