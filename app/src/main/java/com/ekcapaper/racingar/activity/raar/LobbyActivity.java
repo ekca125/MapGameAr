@@ -11,9 +11,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterListAnimation;
+import com.ekcapaper.racingar.adapter.AdapterListBasic;
 import com.ekcapaper.racingar.adapter.AdapterLobby;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.model.GameRoomInfo;
@@ -26,12 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LobbyActivity extends AppCompatActivity {
+
     private View parent_view;
 
     private RecyclerView recyclerView;
-    private AdapterLobby mAdapter;
-    private List<GameRoomInfo> items = new ArrayList<>();
-    private int animation_type = ItemAnimation.BOTTOM_UP;
+    private AdapterListBasic mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class LobbyActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Animation");
+        getSupportActionBar().setTitle("Basic");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Tools.setSystemBarColor(this);
     }
@@ -57,77 +58,37 @@ public class LobbyActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        items = DataGenerator.getGameRoomInfoData(this);
-        items.addAll(DataGenerator.getGameRoomInfoData(this));
-        items.addAll(DataGenerator.getGameRoomInfoData(this));
-        items.addAll(DataGenerator.getGameRoomInfoData(this));
-        items.addAll(DataGenerator.getGameRoomInfoData(this));
+        List<People> items = DataGenerator.getPeopleData(this);
+        items.addAll(DataGenerator.getPeopleData(this));
+        items.addAll(DataGenerator.getPeopleData(this));
 
-        showSingleChoiceDialog();
-    }
-
-    private void setAdapter() {
         //set data and list adapter
-        mAdapter = new AdapterLobby(this, items, animation_type);
+        mAdapter = new AdapterListBasic(this, items);
         recyclerView.setAdapter(mAdapter);
 
-        mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
+        // on item list clicked
+        mAdapter.setOnItemClickListener(new AdapterListBasic.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, GameRoomInfo obj, int position) {
+            public void onItemClick(View view, People obj, int position) {
                 Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_list_animation, menu);
+        getMenuInflater().inflate(R.menu.menu_search_setting, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case android.R.id.home:
-                finish();
-                break;
-            case R.id.action_refresh:
-                setAdapter();
-                break;
-            case R.id.action_mode:
-                showSingleChoiceDialog();
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        } else {
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private static final String[] ANIMATION_TYPE = new String[]{
-            "Bottom Up", "Fade In", "Left to Right", "Right to Left"
-    };
-
-    private void showSingleChoiceDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Animation Type");
-        builder.setCancelable(false);
-        builder.setSingleChoiceItems(ANIMATION_TYPE, -1, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String selected = ANIMATION_TYPE[i];
-                if (selected.equalsIgnoreCase("Bottom Up")) {
-                    animation_type = ItemAnimation.BOTTOM_UP;
-                } else if (selected.equalsIgnoreCase("Fade In")) {
-                    animation_type = ItemAnimation.FADE_IN;
-                } else if (selected.equalsIgnoreCase("Left to Right")) {
-                    animation_type = ItemAnimation.LEFT_RIGHT;
-                } else if (selected.equalsIgnoreCase("Right to Left")) {
-                    animation_type = ItemAnimation.RIGHT_LEFT;
-                }
-                getSupportActionBar().setTitle(selected);
-                setAdapter();
-                dialogInterface.dismiss();
-            }
-        });
-        builder.show();
     }
 }
