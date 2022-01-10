@@ -1,18 +1,18 @@
 package com.ekcapaper.racingar.activity.raar.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.adapter.AdapterListBasic;
+import com.ekcapaper.racingar.activity.raar.adapter.AdapterLobby;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.model.People;
 import com.ekcapaper.racingar.utils.Tools;
@@ -25,7 +25,7 @@ public class LobbyActivity extends AppCompatActivity {
     private View parent_view;
 
     private RecyclerView recyclerView;
-    private AdapterListBasic mAdapter;
+    private AdapterLobby mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Basic");
@@ -47,7 +47,7 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void initComponent() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
@@ -56,16 +56,17 @@ public class LobbyActivity extends AppCompatActivity {
         items.addAll(DataGenerator.getPeopleData(this));
 
         //set data and list adapter
-        mAdapter = new AdapterListBasic(this, items);
+        mAdapter = new AdapterLobby(this, items);
         recyclerView.setAdapter(mAdapter);
 
         // on item list clicked
-        mAdapter.setOnItemClickListener(new AdapterListBasic.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, People obj, int position) {
-                Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
-            }
-        });
+        mAdapter.setOnItemClickListener(
+                new AdapterLobby.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, People obj, int position) {
+                        Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
+                    }
+                });
 
     }
 
