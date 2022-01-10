@@ -56,11 +56,11 @@ public class LobbyActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        items = DataGenerator.getPeopleData(this);
-        items.addAll(DataGenerator.getPeopleData(this));
-        items.addAll(DataGenerator.getPeopleData(this));
-        items.addAll(DataGenerator.getPeopleData(this));
-        items.addAll(DataGenerator.getPeopleData(this));
+        items = DataGenerator.getGameRoomInfoData(this);
+        items.addAll(DataGenerator.getGameRoomInfoData(this));
+        items.addAll(DataGenerator.getGameRoomInfoData(this));
+        items.addAll(DataGenerator.getGameRoomInfoData(this));
+        items.addAll(DataGenerator.getGameRoomInfoData(this));
 
         showSingleChoiceDialog();
     }
