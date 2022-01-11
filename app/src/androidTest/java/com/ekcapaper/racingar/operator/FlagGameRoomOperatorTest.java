@@ -2,8 +2,8 @@ package com.ekcapaper.racingar.operator;
 
 import static org.junit.Assert.*;
 
-import com.ekcapaper.racingar.activity.raar.stub.AccountStub;
-import com.ekcapaper.racingar.activity.raar.stub.LocationStub;
+import com.ekcapaper.racingar.stub.AccountStub;
+import com.ekcapaper.racingar.stub.LocationStub;
 import com.ekcapaper.racingar.game.GameFlag;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.MovePlayerMessage;

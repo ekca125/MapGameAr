@@ -1,24 +1,21 @@
-package com.ekcapaper.racingar.activity.raar.activity;
+package com.ekcapaper.racingar.activity.raar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.activity.raar.stub.AccountStub;
+import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.heroiclabs.nakama.Session;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 public class LoginActivity extends AppCompatActivity {
     private ThisApplication thisApplication;

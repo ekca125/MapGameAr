@@ -2,8 +2,8 @@ package com.ekcapaper.racingar.operator.maker.newroom;
 
 import static org.junit.Assert.*;
 
-import com.ekcapaper.racingar.activity.raar.stub.AccountStub;
-import com.ekcapaper.racingar.activity.raar.stub.LocationStub;
+import com.ekcapaper.racingar.stub.AccountStub;
+import com.ekcapaper.racingar.stub.LocationStub;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;

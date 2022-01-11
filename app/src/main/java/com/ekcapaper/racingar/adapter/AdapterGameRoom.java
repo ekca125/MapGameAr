@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.activity.raar.adapter;
+package com.ekcapaper.racingar.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,10 +12,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.activity.raar.model.GameRoomInfo;
-import com.ekcapaper.racingar.adapter.AdapterListSwipe;
+import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
-import com.ekcapaper.racingar.model.Social;
 import com.ekcapaper.racingar.utils.Tools;
 
 import java.util.ArrayList;

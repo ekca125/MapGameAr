@@ -2,7 +2,7 @@ package com.ekcapaper.racingar;
 
 import static org.junit.Assert.assertNotNull;
 
-import com.ekcapaper.racingar.activity.raar.stub.AccountStub;
+import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.ChannelPresenceEvent;

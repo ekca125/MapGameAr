@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.activity.raar.model;
+package com.ekcapaper.racingar.model;
 
 import android.graphics.drawable.Drawable;
 

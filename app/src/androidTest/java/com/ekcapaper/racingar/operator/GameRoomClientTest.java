@@ -2,7 +2,7 @@ package com.ekcapaper.racingar.operator;
 
 import static org.junit.Assert.*;
 
-import com.ekcapaper.racingar.activity.raar.stub.AccountStub;
+import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.GameEndMessage;

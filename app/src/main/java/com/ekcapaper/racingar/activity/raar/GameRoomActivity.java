@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.activity.raar.activity;
+package com.ekcapaper.racingar.activity.raar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -15,12 +15,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.activity.raar.adapter.AdapterGameRoom;
-import com.ekcapaper.racingar.activity.raar.model.GameRoomInfo;
-import com.ekcapaper.racingar.adapter.AdapterListSwipe;
+import com.ekcapaper.racingar.adapter.AdapterGameRoom;
+import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
-import com.ekcapaper.racingar.model.Social;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
 

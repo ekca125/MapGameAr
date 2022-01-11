@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.activity.raar.adapter;
+package com.ekcapaper.racingar.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.activity.raar.model.GameLobbyRoomInfo;
+import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
 import com.ekcapaper.racingar.utils.Tools;
 
 import java.util.ArrayList;

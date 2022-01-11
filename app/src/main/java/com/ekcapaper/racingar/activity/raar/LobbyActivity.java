@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.activity.raar.activity;
+package com.ekcapaper.racingar.activity.raar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.activity.raar.adapter.AdapterLobby;
-import com.ekcapaper.racingar.activity.raar.model.GameLobbyRoomInfo;
+import com.ekcapaper.racingar.adapter.AdapterLobby;
+import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.utils.Tools;
 
