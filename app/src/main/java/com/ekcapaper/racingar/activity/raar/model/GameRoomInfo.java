@@ -3,14 +3,13 @@ package com.ekcapaper.racingar.activity.raar.model;
 import android.graphics.drawable.Drawable;
 
 public class GameRoomInfo {
+    // info
+    public String name;
     public int image;
     public Drawable imageDrw;
-    public String name;
+    // map info
+    
 
     public GameRoomInfo() {
-    }
-
-    public GameRoomInfo(String name) {
-        this.name = name;
     }
 }
