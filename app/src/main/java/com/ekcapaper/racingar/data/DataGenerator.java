@@ -131,6 +131,7 @@ public class DataGenerator {
             GameRoomInfo obj = new GameRoomInfo();
             obj.image = drw_arr.getResourceId(i, -1);
             obj.name = name_arr[i];
+            obj.distanceCenter = "1m";
             obj.imageDrw = ctx.getResources().getDrawable(obj.image);
             items.add(obj);
         }

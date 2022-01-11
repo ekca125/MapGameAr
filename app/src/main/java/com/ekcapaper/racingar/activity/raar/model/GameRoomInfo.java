@@ -8,7 +8,8 @@ public class GameRoomInfo {
     public int image;
     public Drawable imageDrw;
     // map info
-    
+    public String distanceCenter;
+
 
     public GameRoomInfo() {
     }
