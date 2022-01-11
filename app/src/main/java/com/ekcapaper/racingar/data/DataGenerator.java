@@ -126,17 +126,13 @@ public class DataGenerator {
      */
     public static List<GameLobbyRoomInfo> getGameRoomInfoData(Context ctx) {
         List<GameLobbyRoomInfo> items = new ArrayList<>();
-        TypedArray drw_arr = ctx.getResources().obtainTypedArray(R.array.people_images);
-        String name_arr[] = ctx.getResources().getStringArray(R.array.people_names);
-
-        for (int i = 0; i < drw_arr.length(); i++) {
+        for (int i = 0; i < 2; i++) {
             GameLobbyRoomInfo obj = new GameLobbyRoomInfo();
             obj.name = "game "+String.valueOf(i);
             obj.distanceCenter = "1m";
             obj.gameType = GameType.GAME_TYPE_FLAG;
             items.add(obj);
         }
-        Collections.shuffle(items);
         return items;
     }
 
@@ -201,7 +197,6 @@ public class DataGenerator {
             obj.imageDrw = ctx.getResources().getDrawable(obj.image);
             items.add(obj);
         }
-        Collections.shuffle(items);
         return items;
     }
 

@@ -18,6 +18,7 @@ import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.utils.Tools;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LobbyActivity extends AppCompatActivity {
@@ -26,6 +27,8 @@ public class LobbyActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private AdapterLobby mAdapter;
+
+    private List<GameLobbyRoomInfo> items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +54,8 @@ public class LobbyActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        //
-        List<GameLobbyRoomInfo> items = DataGenerator.getGameRoomInfoData(this);
-        items.addAll(DataGenerator.getGameRoomInfoData(this));
-        items.addAll(DataGenerator.getGameRoomInfoData(this));
+        // data
+        items = new ArrayList<>();
 
         //set data and list adapter
         mAdapter = new AdapterLobby(this, items);
@@ -69,6 +70,10 @@ public class LobbyActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // stub
+        items.addAll(DataGenerator.getGameRoomInfoData(this));
+        items.addAll(DataGenerator.getGameRoomInfoData(this));
     }
 
     @Override

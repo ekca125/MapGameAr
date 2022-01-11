@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 public class FlagGameRoomOperatorJoinMakerTest {
     public static Client client;
     public static Session session;
+    public static String matchId;
 
     @BeforeClass
     public static void init() throws ExecutionException, InterruptedException {
@@ -28,14 +29,14 @@ public class FlagGameRoomOperatorJoinMakerTest {
         );
         session = client.authenticateEmail(AccountStub.ID, AccountStub.PASSWORD).get();
         assertNotNull(session);
+
+        matchId = "dff439c1-70e3-4534-925b-19f941b221b1";
     }
 
 
 
     @Test
     public void readPrepareData() {
-        String matchId = "0abdc362-04d9-4664-823a-4c9c4553d9de";
-
         FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
         boolean result = flagGameRoomOperatorJoinMaker.readPrepareData();
         assertTrue(result);
@@ -43,8 +44,6 @@ public class FlagGameRoomOperatorJoinMakerTest {
 
     @Test
     public void readRoomInfo() {
-        String matchId = "0abdc362-04d9-4664-823a-4c9c4553d9de";
-
         FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
         boolean result = flagGameRoomOperatorJoinMaker.readRoomInfo();
         assertTrue(result);
@@ -52,8 +51,6 @@ public class FlagGameRoomOperatorJoinMakerTest {
 
     @Test
     public void makeFlagGameRoomOperator() {
-        String matchId = "0abdc362-04d9-4664-823a-4c9c4553d9de";
-
         FlagGameRoomOperatorJoinMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
         FlagGameRoomOperator flagGameRoomOperator = flagGameRoomOperatorNewMaker.makeFlagGameRoomOperator();
         assertNotNull(flagGameRoomOperator);
