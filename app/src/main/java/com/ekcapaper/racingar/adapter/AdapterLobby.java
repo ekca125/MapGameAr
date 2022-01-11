@@ -69,7 +69,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
             GameLobbyRoomInfo gri = items.get(holder.getAdapterPosition());
             view.name.setText(gri.name);
-            view.description.setText(gri.name);
+            view.description.setText(gri.getGameTypeString());
             view.distance_center.setText(gri.distanceCenter);
             Tools.displayImageRound(ctx, view.image, gri.image);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
