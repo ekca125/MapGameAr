@@ -6,10 +6,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
@@ -32,13 +34,22 @@ public class GameRoomActivity extends AppCompatActivity {
     private AdapterGameRoom mAdapter;
     private ItemTouchHelper mItemTouchHelper;
 
-
+    private Button button_game_start;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_room);
         parent_view = findViewById(android.R.id.content);
+
+        button_game_start = findViewById(R.id.button_game_start);
+        button_game_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),GameMapActivity.class);
+                startActivity(intent);
+            }
+        });
 
         initToolbar();
         initComponent();
