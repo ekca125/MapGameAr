@@ -2,7 +2,7 @@ package com.ekcapaper.racingar.activity.raar.model;
 
 import android.graphics.drawable.Drawable;
 
-public class GameRoomInfo {
+public class GameLobbyRoomInfo {
     // info
     public String name;
     public int image;
@@ -11,6 +11,6 @@ public class GameRoomInfo {
     public String distanceCenter;
 
 
-    public GameRoomInfo() {
+    public GameLobbyRoomInfo() {
     }
 }

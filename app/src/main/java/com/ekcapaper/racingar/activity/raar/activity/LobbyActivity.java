@@ -1,5 +1,6 @@
 package com.ekcapaper.racingar.activity.raar.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,14 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.activity.raar.adapter.AdapterLobby;
-import com.ekcapaper.racingar.activity.raar.model.GameRoomInfo;
-import com.ekcapaper.racingar.adapter.AdapterListBasic;
+import com.ekcapaper.racingar.activity.raar.model.GameLobbyRoomInfo;
 import com.ekcapaper.racingar.data.DataGenerator;
-import com.ekcapaper.racingar.model.People;
 import com.ekcapaper.racingar.utils.Tools;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LobbyActivity extends AppCompatActivity {
@@ -55,7 +52,7 @@ public class LobbyActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
         //
-        List<GameRoomInfo> items = DataGenerator.getGameRoomInfoData(this);
+        List<GameLobbyRoomInfo> items = DataGenerator.getGameRoomInfoData(this);
         items.addAll(DataGenerator.getGameRoomInfoData(this));
         items.addAll(DataGenerator.getGameRoomInfoData(this));
 
@@ -66,7 +63,9 @@ public class LobbyActivity extends AppCompatActivity {
         // on item list clicked
         mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, GameRoomInfo obj, int position) {
+            public void onItemClick(View view, GameLobbyRoomInfo obj, int position) {
+                Intent intent = new Intent(getApplicationContext(),GameRoomActivity.class);
+                startActivity(intent);
                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
             }
         });

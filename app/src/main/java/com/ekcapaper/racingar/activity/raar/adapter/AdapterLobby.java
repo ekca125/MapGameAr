@@ -11,29 +11,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.activity.raar.model.GameRoomInfo;
-import com.ekcapaper.racingar.adapter.AdapterListBasic;
-import com.ekcapaper.racingar.model.People;
+import com.ekcapaper.racingar.activity.raar.model.GameLobbyRoomInfo;
 import com.ekcapaper.racingar.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private List<GameRoomInfo> items = new ArrayList<>();
+    private List<GameLobbyRoomInfo> items = new ArrayList<>();
 
     private Context ctx;
     private AdapterLobby.OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, GameRoomInfo obj, int position);
+        void onItemClick(View view, GameLobbyRoomInfo obj, int position);
     }
 
     public void setOnItemClickListener(final AdapterLobby.OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public AdapterLobby(Context context, List<GameRoomInfo> items) {
+    public AdapterLobby(Context context, List<GameLobbyRoomInfo> items) {
         this.items = items;
         ctx = context;
     }
@@ -69,7 +67,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         if (holder instanceof AdapterLobby.OriginalViewHolder) {
             AdapterLobby.OriginalViewHolder view = (AdapterLobby.OriginalViewHolder) holder;
 
-            GameRoomInfo gri = items.get(holder.getAdapterPosition());
+            GameLobbyRoomInfo gri = items.get(holder.getAdapterPosition());
             view.name.setText(gri.name);
             view.description.setText(gri.name);
             view.distance_center.setText(gri.distanceCenter);

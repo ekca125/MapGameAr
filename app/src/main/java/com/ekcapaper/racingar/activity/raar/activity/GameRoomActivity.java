@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
+import com.ekcapaper.racingar.activity.raar.adapter.AdapterGameRoom;
 import com.ekcapaper.racingar.adapter.AdapterListSwipe;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
@@ -27,7 +28,7 @@ public class GameRoomActivity extends AppCompatActivity {
     private View parent_view;
 
     private RecyclerView recyclerView;
-    private AdapterListSwipe mAdapter;
+    private AdapterGameRoom mAdapter;
     private ItemTouchHelper mItemTouchHelper;
 
     @Override
@@ -57,11 +58,11 @@ public class GameRoomActivity extends AppCompatActivity {
         List<Social> items = DataGenerator.getSocialData(this);
 
         //set data and list adapter
-        mAdapter = new AdapterListSwipe(this, items);
+        mAdapter = new AdapterGameRoom(this, items);
         recyclerView.setAdapter(mAdapter);
 
         // on item list clicked
-        mAdapter.setOnItemClickListener(new AdapterListSwipe.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new AdapterGameRoom.OnItemClickListener() {
             @Override
             public void onItemClick(View view, Social obj, int position) {
                 Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
