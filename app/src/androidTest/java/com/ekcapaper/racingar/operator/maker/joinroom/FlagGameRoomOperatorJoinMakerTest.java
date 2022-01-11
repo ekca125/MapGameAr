@@ -2,23 +2,16 @@ package com.ekcapaper.racingar.operator.maker.joinroom;
 
 import static org.junit.Assert.*;
 
-import com.ekcapaper.racingar.AccountStub;
-import com.ekcapaper.racingar.LocationStub;
-import com.ekcapaper.racingar.game.GameFlag;
+import com.ekcapaper.racingar.activity.raar.stub.AccountStub;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.maker.newroom.FlagGameRoomOperatorNewMaker;
-import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
-import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.time.Duration;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class FlagGameRoomOperatorJoinMakerTest {

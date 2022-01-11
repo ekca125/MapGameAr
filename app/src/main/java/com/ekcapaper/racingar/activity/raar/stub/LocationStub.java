@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar;
+package com.ekcapaper.racingar.activity.raar.stub;
 
 import android.location.Location;
 
