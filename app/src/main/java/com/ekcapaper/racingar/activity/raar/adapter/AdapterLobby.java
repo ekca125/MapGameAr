@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
+import com.ekcapaper.racingar.activity.raar.model.GameRoomInfo;
 import com.ekcapaper.racingar.adapter.AdapterListBasic;
 import com.ekcapaper.racingar.model.People;
 import com.ekcapaper.racingar.utils.Tools;
@@ -19,20 +20,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private List<People> items = new ArrayList<>();
+    private List<GameRoomInfo> items = new ArrayList<>();
 
     private Context ctx;
     private AdapterLobby.OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, People obj, int position);
+        void onItemClick(View view, GameRoomInfo obj, int position);
     }
 
     public void setOnItemClickListener(final AdapterLobby.OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public AdapterLobby(Context context, List<People> items) {
+    public AdapterLobby(Context context, List<GameRoomInfo> items) {
         this.items = items;
         ctx = context;
     }
@@ -64,9 +65,9 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         if (holder instanceof AdapterLobby.OriginalViewHolder) {
             AdapterLobby.OriginalViewHolder view = (AdapterLobby.OriginalViewHolder) holder;
 
-            People p = items.get(holder.getAdapterPosition());
-            view.name.setText(p.name);
-            Tools.displayImageRound(ctx, view.image, p.image);
+            GameRoomInfo gri = items.get(holder.getAdapterPosition());
+            view.name.setText(gri.name);
+            Tools.displayImageRound(ctx, view.image, gri.image);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

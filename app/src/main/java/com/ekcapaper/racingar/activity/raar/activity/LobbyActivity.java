@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.activity.raar.adapter.AdapterLobby;
+import com.ekcapaper.racingar.activity.raar.model.GameRoomInfo;
 import com.ekcapaper.racingar.adapter.AdapterListBasic;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.model.People;
@@ -54,9 +55,9 @@ public class LobbyActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
         //
-        List<People> items = DataGenerator.getPeopleData(this);
-        items.addAll(DataGenerator.getPeopleData(this));
-        items.addAll(DataGenerator.getPeopleData(this));
+        List<GameRoomInfo> items = DataGenerator.getGameRoomInfoData(this);
+        items.addAll(DataGenerator.getGameRoomInfoData(this));
+        items.addAll(DataGenerator.getGameRoomInfoData(this));
 
         //set data and list adapter
         mAdapter = new AdapterLobby(this, items);
@@ -65,7 +66,7 @@ public class LobbyActivity extends AppCompatActivity {
         // on item list clicked
         mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, People obj, int position) {
+            public void onItemClick(View view, GameRoomInfo obj, int position) {
                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
             }
         });
