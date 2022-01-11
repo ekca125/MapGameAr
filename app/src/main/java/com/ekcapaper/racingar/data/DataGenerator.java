@@ -7,7 +7,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.model.CardViewImg;
-import com.ekcapaper.racingar.model.GameRoomInfo;
+import com.ekcapaper.racingar.activity.raar.model.GameRoomInfo;
 import com.ekcapaper.racingar.model.Image;
 import com.ekcapaper.racingar.model.Inbox;
 import com.ekcapaper.racingar.model.MusicAlbum;
