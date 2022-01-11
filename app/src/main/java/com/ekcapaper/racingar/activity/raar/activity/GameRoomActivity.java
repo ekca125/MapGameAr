@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.activity.raar.adapter.AdapterGameRoom;
+import com.ekcapaper.racingar.activity.raar.model.GameRoomInfo;
 import com.ekcapaper.racingar.adapter.AdapterListSwipe;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
@@ -30,6 +31,8 @@ public class GameRoomActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private AdapterGameRoom mAdapter;
     private ItemTouchHelper mItemTouchHelper;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +58,7 @@ public class GameRoomActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        List<Social> items = DataGenerator.getSocialData(this);
+        List<GameRoomInfo> items = DataGenerator.getGameRoomInfo(this);
 
         //set data and list adapter
         mAdapter = new AdapterGameRoom(this, items);
@@ -64,7 +67,7 @@ public class GameRoomActivity extends AppCompatActivity {
         // on item list clicked
         mAdapter.setOnItemClickListener(new AdapterGameRoom.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, Social obj, int position) {
+            public void onItemClick(View view, GameRoomInfo obj, int position) {
                 Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
             }
         });

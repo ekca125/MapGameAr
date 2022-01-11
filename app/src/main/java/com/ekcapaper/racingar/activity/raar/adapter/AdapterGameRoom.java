@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
+import com.ekcapaper.racingar.activity.raar.model.GameRoomInfo;
 import com.ekcapaper.racingar.adapter.AdapterListSwipe;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
 import com.ekcapaper.racingar.model.Social;
@@ -22,21 +23,21 @@ import java.util.List;
 
 public class AdapterGameRoom extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SwipeItemTouchHelper.SwipeHelperAdapter{
 
-    private List<Social> items = new ArrayList<>();
-    private List<Social> items_swiped = new ArrayList<>();
+    private List<GameRoomInfo> items = new ArrayList<>();
+    private List<GameRoomInfo> items_swiped = new ArrayList<>();
 
     private Context ctx;
     private AdapterGameRoom.OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, Social obj, int position);
+        void onItemClick(View view, GameRoomInfo obj, int position);
     }
 
     public void setOnItemClickListener(final AdapterGameRoom.OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public AdapterGameRoom(Context context, List<Social> items) {
+    public AdapterGameRoom(Context context, List<GameRoomInfo> items) {
         this.items = items;
         ctx = context;
     }
@@ -82,7 +83,7 @@ public class AdapterGameRoom extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (holder instanceof AdapterGameRoom.OriginalViewHolder) {
             final AdapterGameRoom.OriginalViewHolder view = (AdapterGameRoom.OriginalViewHolder) holder;
 
-            final Social p = items.get(position);
+            final GameRoomInfo p = items.get(position);
             view.name.setText(p.name);
             Tools.displayImageOriginal(ctx, view.image, p.image);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +117,7 @@ public class AdapterGameRoom extends RecyclerView.Adapter<RecyclerView.ViewHolde
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                for (Social s : items_swiped) {
+                for (GameRoomInfo s : items_swiped) {
                     int index_removed = items.indexOf(s);
                     if (index_removed != -1) {
                         items.remove(index_removed);
