@@ -2,6 +2,7 @@ package com.ekcapaper.racingar.operator.maker.newroom;
 
 import android.util.Log;
 
+import com.ekcapaper.racingar.game.GameType;
 import com.ekcapaper.racingar.operator.layer.TimeLimitGameRoomOperator;
 import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
 import com.ekcapaper.racingar.operator.maker.data.RoomInfoTimeLimit;
@@ -44,7 +45,7 @@ public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker 
         // collection
         String collectionName = SaveDataNameDefine.getCollectionName(matchId);
         // data 1
-        RoomInfoTimeLimit roomInfoTimeLimit = new RoomInfoTimeLimit(timeLimit.getSeconds());
+        RoomInfoTimeLimit roomInfoTimeLimit = new RoomInfoTimeLimit(timeLimit.getSeconds(), GameType.GAME_TYPE_TIME_LIMIT);
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
                 SaveDataNameDefine.getDataRoomInfoKey(),
