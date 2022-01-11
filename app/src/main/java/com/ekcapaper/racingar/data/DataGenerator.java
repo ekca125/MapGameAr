@@ -131,11 +131,9 @@ public class DataGenerator {
 
         for (int i = 0; i < drw_arr.length(); i++) {
             GameLobbyRoomInfo obj = new GameLobbyRoomInfo();
-            obj.image = R.drawable.badge_reward;
             obj.name = "game "+String.valueOf(i);
             obj.distanceCenter = "1m";
             obj.gameType = GameType.GAME_TYPE_FLAG;
-            obj.imageDrw = ctx.getResources().getDrawable(obj.image);
             items.add(obj);
         }
         Collections.shuffle(items);
