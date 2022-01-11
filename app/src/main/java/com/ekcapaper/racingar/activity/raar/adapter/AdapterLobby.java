@@ -54,7 +54,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh;
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_people_chat, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_game_room_info, parent, false);
         vh = new AdapterLobby.OriginalViewHolder(v);
         return vh;
     }
