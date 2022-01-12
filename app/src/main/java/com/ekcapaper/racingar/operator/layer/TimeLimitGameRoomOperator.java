@@ -1,7 +1,7 @@
 package com.ekcapaper.racingar.operator.layer;
 
 import com.ekcapaper.racingar.network.GameMessageStart;
-import com.ekcapaper.racingar.modelgame.RoomStatus;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomStatus;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 

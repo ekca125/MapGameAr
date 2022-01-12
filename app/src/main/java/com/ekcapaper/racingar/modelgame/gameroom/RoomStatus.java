@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.modelgame;
+package com.ekcapaper.racingar.modelgame.gameroom;
 
 public enum RoomStatus {
     GAME_NOT_READY,

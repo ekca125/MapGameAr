@@ -1,7 +1,7 @@
 package com.ekcapaper.racingar.model;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.modelgame.GameType;
+import com.ekcapaper.racingar.modelgame.play.GameType;
 
 public class GameLobbyRoomInfo {
     // info

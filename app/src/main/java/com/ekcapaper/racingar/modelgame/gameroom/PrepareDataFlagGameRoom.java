@@ -1,4 +1,6 @@
-package com.ekcapaper.racingar.modelgame;
+package com.ekcapaper.racingar.modelgame.gameroom;
+
+import com.ekcapaper.racingar.modelgame.play.GameFlag;
 
 import java.util.List;
 

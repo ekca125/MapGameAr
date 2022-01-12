@@ -1,4 +1,6 @@
-package com.ekcapaper.racingar.modelgame;
+package com.ekcapaper.racingar.modelgame.gameroom;
+
+import com.ekcapaper.racingar.modelgame.play.GameType;
 
 import lombok.Getter;
 
