@@ -1,10 +1,8 @@
-package com.ekcapaper.racingar.modelgame.gameroom.info.reader;
+package com.ekcapaper.racingar.modelgame.gameroom.prepare.reader;
 
 import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.google.gson.Gson;
-import com.heroiclabs.nakama.Client;
-import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.StorageObjectId;
 import com.heroiclabs.nakama.api.StorageObject;
 import com.heroiclabs.nakama.api.StorageObjects;
@@ -12,24 +10,14 @@ import com.heroiclabs.nakama.api.StorageObjects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-public class RoomInfoReader {
-    private final Client client;
-    private final Session session;
-    private final String matchId;
-    //
-    private final String collectionName;
-    private final String keyName;
+public class PrepareDataFlagGameRoomReader implements PrepareDataReader{
 
-    public RoomInfoReader(Client client, Session session, String matchId) {
-        this.client = client;
-        this.session = session;
-        this.matchId = matchId;
-        //
-        this.collectionName = RoomDataSpace.getCollectionName(matchId);
-        this.keyName = RoomDataSpace.getDataRoomInfoKey();
-    }
 
-    public Optional<RoomInfo> readRoomInfo(){
+    @Override
+    public Object readPrepareData() {
+        // 정보
+        String collectionName = RoomDataSpace.getCollectionName(matchId);
+        String keyName = RoomDataSpace.getDataRoomInfoKey();
         // 준비
         StorageObjectId objectId = new StorageObjectId(collectionName);
         objectId.setKey(keyName);
@@ -41,7 +29,7 @@ public class RoomInfoReader {
             String jsonData = object.getValue();
             // 변환
             Gson gson = new Gson();
-            return Optional.ofNullable(gson.fromJson(jsonData,RoomInfo.class));
+            return Optional.ofNullable(gson.fromJson(jsonData, RoomInfo.class));
         } catch (ExecutionException | InterruptedException | IndexOutOfBoundsException e) {
             //e.printStackTrace();
             return Optional.empty();
