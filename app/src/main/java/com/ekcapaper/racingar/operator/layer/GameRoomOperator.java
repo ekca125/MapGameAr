@@ -50,7 +50,7 @@ public class GameRoomOperator extends GameRoomClient {
         endCheckTimerTask.cancel();
         endCheckTimer.cancel();
     }
-    
+
     public boolean isEnd() {
         if (this.getGameStatus() != GameStatus.GAME_STARTED) {
             return false;
