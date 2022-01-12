@@ -7,7 +7,7 @@ import com.ekcapaper.racingar.network.GameMessageEnd;
 import com.ekcapaper.racingar.network.GameMessageStart;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
 import com.ekcapaper.racingar.network.GameMessageOpCode;
-import com.ekcapaper.racingar.operator.data.RoomStatus;
+import com.ekcapaper.racingar.game.RoomStatus;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.MatchData;

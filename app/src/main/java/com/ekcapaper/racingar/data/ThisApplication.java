@@ -9,7 +9,7 @@ import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
-import com.ekcapaper.racingar.operator.maker.data.RoomInfoFlagGame;
+import com.ekcapaper.racingar.game.RoomInfoFlagGame;
 import com.ekcapaper.racingar.operator.maker.joinroom.FlagGameRoomOperatorJoinMaker;
 import com.ekcapaper.racingar.operator.maker.newroom.FlagGameRoomOperatorNewMaker;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;

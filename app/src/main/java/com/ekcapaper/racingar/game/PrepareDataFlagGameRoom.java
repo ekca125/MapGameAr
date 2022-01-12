@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator.maker.data;
+package com.ekcapaper.racingar.game;
 
 import com.ekcapaper.racingar.game.GameFlag;
 

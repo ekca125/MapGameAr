@@ -1,6 +1,5 @@
-package com.ekcapaper.racingar.operator.maker.data;
+package com.ekcapaper.racingar.game;
 
-import com.ekcapaper.racingar.game.GameType;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 
 import lombok.Getter;
