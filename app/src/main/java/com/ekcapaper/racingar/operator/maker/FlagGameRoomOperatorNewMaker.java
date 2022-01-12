@@ -3,6 +3,7 @@ package com.ekcapaper.racingar.operator.maker;
 import android.location.Location;
 
 import com.ekcapaper.racingar.modelgame.address.MapRange;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.writer.RoomInfoWriter;
 import com.ekcapaper.racingar.modelgame.gameroom.prepare.PrepareDataFlagGameRoom;
@@ -81,9 +82,11 @@ public class FlagGameRoomOperatorNewMaker implements GameRoomOperatorMaker{
         }
 
         try {
-            RoomInfoWriter roomInfoWriter = new RoomInfoWriter(client, session, flagGameRoomOperator.getMatch().getMatchId());
-            PrepareDataFlagGameRoomWriter prepareDataFlagGameRoomWriter = new PrepareDataFlagGameRoomWriter(client,session,flagGameRoomOperator.getMatch().getMatchId());
-            result = roomInfoWriter.writeRoomInfo(new RoomInfo(timeLimit.getSeconds(), gameType, mapRange))
+            String matchId = RoomDataSpace.normalizeMatchId(flagGameRoomOperator.getMatch().getMatchId());
+
+            RoomInfoWriter roomInfoWriter = new RoomInfoWriter(client, session, matchId);
+            PrepareDataFlagGameRoomWriter prepareDataFlagGameRoomWriter = new PrepareDataFlagGameRoomWriter(client,session,matchId);
+            result = roomInfoWriter.writeRoomInfo(new RoomInfo(timeLimit.getSeconds(), gameType, mapRange, matchId))
                     && prepareDataFlagGameRoomWriter.writePrepareData(new PrepareDataFlagGameRoom(gameFlagList));
         }
         catch (NullPointerException e){
