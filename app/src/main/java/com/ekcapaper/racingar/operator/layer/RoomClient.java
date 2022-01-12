@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class RoomClient implements SocketListener {
     // 서버와의 연동에 필요한 객체
@@ -32,9 +33,9 @@ public class RoomClient implements SocketListener {
     private final Session session;
     private final SocketClient socketClient;
     // 유저 프로필 (Realtime)
-    private final List<UserPresence> matchUserPresenceList;
+    private List<UserPresence> matchUserPresenceList;
     // 유저 프로필 (Chat Channel)
-    private final List<UserPresence> channelUserPresenceList;
+    private List<UserPresence> channelUserPresenceList;
     private final Channel channel;
     // 메시지 로그
     private final List<String> chatLog;
@@ -139,12 +140,14 @@ public class RoomClient implements SocketListener {
         if (joinList != null) {
             channelUserPresenceList.addAll(joinList);
         }
+        channelUserPresenceList = joinList.stream().distinct().collect(Collectors.toList());
 
         // leave 처리
         List<UserPresence> leaveList = presence.getLeaves();
         if (leaveList != null) {
             channelUserPresenceList.removeAll(leaveList);
         }
+        channelUserPresenceList = leaveList.stream().distinct().collect(Collectors.toList());
     }
 
     @Override

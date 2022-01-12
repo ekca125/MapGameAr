@@ -65,5 +65,7 @@ public class FlagGameRoomOperatorNewMakerTest {
         FlagGameRoomOperatorNewMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorNewMaker(client,session,duration,mapRange);
         FlagGameRoomOperator flagGameRoomOperator = flagGameRoomOperatorNewMaker.makeFlagGameRoomOperator();
         assertNotNull(flagGameRoomOperator);
+
+        assertEquals(1, flagGameRoomOperator.getPlayerList().size());
     }
 }
