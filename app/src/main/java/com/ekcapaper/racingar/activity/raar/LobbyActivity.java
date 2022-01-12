@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +34,8 @@ public class LobbyActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private AdapterLobby mAdapter;
 
+    private Button button_new_room;
+
     private List<GameLobbyRoomInfo> items;
 
     // 관제
@@ -44,6 +47,15 @@ public class LobbyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lobby);
         parent_view = findViewById(android.R.id.content);
         thisApplication = (ThisApplication) getApplicationContext();
+
+        button_new_room = findViewById(R.id.button_new_room);
+        button_new_room.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),GameRoomGenerateActivity.class);
+                startActivity(intent);
+            }
+        });
 
         initToolbar();
         initComponent();
@@ -78,6 +90,7 @@ public class LobbyActivity extends AppCompatActivity {
                     // 위치 정보를 가져와서 설정
                     gameLobbyRoomInfo.distanceCenter = "11111";
                     gameLobbyRoomInfo.name = roomInfo.getMatchId();
+                    return gameLobbyRoomInfo;
                 })
                 .collect(Collectors.toList());
 
@@ -111,6 +124,7 @@ public class LobbyActivity extends AppCompatActivity {
         }
         else if(item.getItemId() == R.id.action_refresh){
             refreshLobby();
+            Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }
