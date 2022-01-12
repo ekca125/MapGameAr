@@ -47,25 +47,4 @@ public class FlagGameRoomOperatorNewMakerTest {
         assertNotNull(session);
     }
 
-    @Test
-    public void makeGameFlagList() {
-        Duration duration = Duration.ofSeconds(100);
-        MapRange mapRange = MapRange.calculateMapRange(LocationStub.location,1);
-
-        FlagGameRoomOperatorNewMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorNewMaker(client,session,duration,mapRange);
-        boolean result = flagGameRoomOperatorNewMaker.requestGameFlagList(mapRange);
-        assertTrue(result);
-    }
-
-    @Test
-    public void makeFlagGameRoomOperator() {
-        Duration duration = Duration.ofSeconds(100);
-        MapRange mapRange = MapRange.calculateMapRange(LocationStub.location,1);
-
-        FlagGameRoomOperatorNewMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorNewMaker(client,session,duration,mapRange);
-        FlagGameRoomOperator flagGameRoomOperator = flagGameRoomOperatorNewMaker.makeFlagGameRoomOperator();
-        assertNotNull(flagGameRoomOperator);
-
-        assertEquals(1, flagGameRoomOperator.getPlayerList().size());
-    }
 }

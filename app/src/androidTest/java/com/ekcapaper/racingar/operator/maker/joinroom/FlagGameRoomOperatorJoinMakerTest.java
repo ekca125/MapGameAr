@@ -33,26 +33,4 @@ public class FlagGameRoomOperatorJoinMakerTest {
         matchId = "99458b9f-0c09-4d5e-8d6a-4272c197ac3f";
     }
 
-
-
-    @Test
-    public void readPrepareData() {
-        FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
-        boolean result = flagGameRoomOperatorJoinMaker.readPrepareData();
-        assertTrue(result);
-    }
-
-    @Test
-    public void readRoomInfo() {
-        FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
-        boolean result = flagGameRoomOperatorJoinMaker.readRoomInfo();
-        assertTrue(result);
-    }
-
-    @Test
-    public void makeFlagGameRoomOperator() {
-        FlagGameRoomOperatorJoinMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
-        FlagGameRoomOperator flagGameRoomOperator = flagGameRoomOperatorNewMaker.makeFlagGameRoomOperator();
-        assertNotNull(flagGameRoomOperator);
-    }
 }
