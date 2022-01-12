@@ -13,15 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.adapter.AdapterListAnimation;
 import com.ekcapaper.racingar.adapter.AdapterLobby;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
-import com.ekcapaper.racingar.data.DataGenerator;
-import com.ekcapaper.racingar.model.People;
-import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
+import com.ekcapaper.racingar.modelgame.SaveDataNameDefine;
 import com.ekcapaper.racingar.utils.Tools;
-import com.google.android.material.snackbar.Snackbar;
 import com.heroiclabs.nakama.api.Match;
 import com.heroiclabs.nakama.api.MatchList;
 

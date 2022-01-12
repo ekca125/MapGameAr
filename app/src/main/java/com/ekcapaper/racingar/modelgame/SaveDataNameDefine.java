@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator.maker;
+package com.ekcapaper.racingar.modelgame;
 
 public class SaveDataNameDefine {
     public static String getCollectionName(String matchId) {

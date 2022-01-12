@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.game;
+package com.ekcapaper.racingar.modelgame;
 
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 

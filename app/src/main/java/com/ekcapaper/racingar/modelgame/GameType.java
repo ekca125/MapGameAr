@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.game;
+package com.ekcapaper.racingar.modelgame;
 
 public enum GameType {
     GAME_TYPE_TIME_LIMIT,

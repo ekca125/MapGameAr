@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.stub.LocationStub;
-import com.ekcapaper.racingar.game.GameFlag;
+import com.ekcapaper.racingar.modelgame.GameFlag;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;

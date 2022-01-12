@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.game;
+package com.ekcapaper.racingar.modelgame;
 
 import android.location.Location;
 
