@@ -2,6 +2,7 @@ package com.ekcapaper.racingar.data;
 
 import android.app.Application;
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.multidex.MultiDex;
 
@@ -9,6 +10,7 @@ import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.reader.RoomInfoReader;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
@@ -33,7 +35,7 @@ public class ThisApplication extends Application {
 
     @Getter
     private ExecutorService executorService;
-
+    // current location - 앱이 실행되는 동안에 계속해서 변경
 
     @Override
     protected void attachBaseContext(Context base) {
