@@ -6,7 +6,7 @@ import android.content.res.TypedArray;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.game.GameType;
+import com.ekcapaper.racingar.modelgame.GameType;
 import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.model.CardViewImg;
 import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
