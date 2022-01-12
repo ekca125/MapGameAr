@@ -2,9 +2,9 @@ package com.ekcapaper.racingar.operator.maker.joinroom;
 
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.modelgame.SaveDataNameDefine;
-import com.ekcapaper.racingar.modelgame.gameroom.PrepareDataFlagGameRoom;
-import com.ekcapaper.racingar.modelgame.gameroom.RoomInfoFlagGame;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
+import com.ekcapaper.racingar.modelgame.gameroom.prepare.PrepareDataFlagGameRoom;
+import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfoFlagGame;
 import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.modelgame.gameroom.reader.RoomInfoReader;
 import com.ekcapaper.racingar.modelgame.gameroom.reader.RoomPrepareDataReader;
@@ -36,8 +36,8 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
             // util
             Gson gson = new Gson();
             //
-            StorageObjectId storageObjectId = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
-            storageObjectId.setKey(SaveDataNameDefine.getDataRoomInfoKey());
+            StorageObjectId storageObjectId = new StorageObjectId(RoomDataSpace.getCollectionName(matchId));
+            storageObjectId.setKey(RoomDataSpace.getDataRoomInfoKey());
             storageObjectId.setUserId(session.getUserId());
 
             StorageObjects storageObjectsMapRange = client.readStorageObjects(session, storageObjectId).get();
@@ -59,8 +59,8 @@ public class FlagGameRoomOperatorJoinMaker extends TimeLimitGameRoomOperatorJoin
             Gson gson = new Gson();
 
             // 
-            StorageObjectId storageObjectIdGameFlagListDto = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
-            storageObjectIdGameFlagListDto.setKey(SaveDataNameDefine.getDataRoomPrepareKey());
+            StorageObjectId storageObjectIdGameFlagListDto = new StorageObjectId(RoomDataSpace.getCollectionName(matchId));
+            storageObjectIdGameFlagListDto.setKey(RoomDataSpace.getDataRoomPrepareKey());
             storageObjectIdGameFlagListDto.setUserId(session.getUserId());
 
             StorageObjects storageObjectsGameFlagListDto = client.readStorageObjects(session, storageObjectIdGameFlagListDto).get();

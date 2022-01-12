@@ -1,6 +1,6 @@
-package com.ekcapaper.racingar.modelgame;
+package com.ekcapaper.racingar.modelgame.gameroom;
 
-public class SaveDataNameDefine {
+public class RoomDataSpace {
     public static String getCollectionName(String matchId) {
         return "Match-" + matchId.replace(".", "");
     }

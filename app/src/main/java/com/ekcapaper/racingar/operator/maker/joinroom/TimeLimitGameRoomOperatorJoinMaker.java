@@ -1,8 +1,8 @@
 package com.ekcapaper.racingar.operator.maker.joinroom;
 
 import com.ekcapaper.racingar.operator.layer.TimeLimitGameRoomOperator;
-import com.ekcapaper.racingar.modelgame.SaveDataNameDefine;
-import com.ekcapaper.racingar.modelgame.gameroom.RoomInfoTimeLimit;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
+import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfoTimeLimit;
 import com.ekcapaper.racingar.operator.maker.make.TimeLimitGameRoomOperatorMaker;
 import com.ekcapaper.racingar.modelgame.gameroom.reader.RoomInfoReader;
 import com.google.gson.Gson;
@@ -39,8 +39,8 @@ public class TimeLimitGameRoomOperatorJoinMaker extends GameRoomOperatorJoinMake
             // util
             Gson gson = new Gson();
             // storage 1 (RoomInfo)
-            StorageObjectId storageObjectId = new StorageObjectId(SaveDataNameDefine.getCollectionName(matchId));
-            storageObjectId.setKey(SaveDataNameDefine.getDataRoomInfoKey());
+            StorageObjectId storageObjectId = new StorageObjectId(RoomDataSpace.getCollectionName(matchId));
+            storageObjectId.setKey(RoomDataSpace.getDataRoomInfoKey());
             storageObjectId.setUserId(session.getUserId());
 
             StorageObjects storageObjects = client.readStorageObjects(session, storageObjectId).get();

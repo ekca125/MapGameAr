@@ -8,8 +8,8 @@ import androidx.multidex.MultiDex;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
-import com.ekcapaper.racingar.modelgame.SaveDataNameDefine;
-import com.ekcapaper.racingar.modelgame.gameroom.RoomInfoFlagGame;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
+import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfoFlagGame;
 import com.ekcapaper.racingar.operator.maker.joinroom.FlagGameRoomOperatorJoinMaker;
 import com.ekcapaper.racingar.operator.maker.newroom.FlagGameRoomOperatorNewMaker;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
@@ -111,8 +111,8 @@ public class ThisApplication extends Application {
         List<RoomInfoFlagGame> roomInfoFlagGameList = matchList.getMatchesList().stream().map(match -> {
             Gson gson = new Gson();
 
-            StorageObjectId storageObjectId = new StorageObjectId(SaveDataNameDefine.getCollectionName(match.getMatchId()));
-            storageObjectId.setKey(SaveDataNameDefine.getDataRoomInfoKey());
+            StorageObjectId storageObjectId = new StorageObjectId(RoomDataSpace.getCollectionName(match.getMatchId()));
+            storageObjectId.setKey(RoomDataSpace.getDataRoomInfoKey());
             storageObjectId.setUserId(session.getUserId());
 
             StorageObjects storageObjectsMapRange = null;

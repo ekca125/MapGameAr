@@ -1,7 +1,7 @@
 package com.ekcapaper.racingar.operator.layer;
 
+import com.ekcapaper.racingar.modelgame.play.GameStatus;
 import com.ekcapaper.racingar.network.GameMessageStart;
-import com.ekcapaper.racingar.modelgame.gameroom.RoomStatus;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
@@ -26,7 +26,7 @@ public class TimeLimitGameRoomOperator extends GameRoomOperator {
 
     @Override
     public boolean isEnd() {
-        if (getRoomStatus() != RoomStatus.GAME_STARTED) {
+        if (this.getGameStatus() != GameStatus.GAME_STARTED) {
             return false;
         } else {
             return LocalDateTime.now().isAfter(endTime);

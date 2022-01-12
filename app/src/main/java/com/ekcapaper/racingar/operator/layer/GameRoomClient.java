@@ -2,12 +2,12 @@ package com.ekcapaper.racingar.operator.layer;
 
 import android.location.Location;
 
+import com.ekcapaper.racingar.modelgame.play.GameStatus;
 import com.ekcapaper.racingar.modelgame.play.Player;
 import com.ekcapaper.racingar.network.GameMessageEnd;
 import com.ekcapaper.racingar.network.GameMessageStart;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
 import com.ekcapaper.racingar.network.GameMessageOpCode;
-import com.ekcapaper.racingar.modelgame.gameroom.RoomStatus;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.MatchData;
@@ -29,7 +29,7 @@ public class GameRoomClient extends RoomClient {
     @Getter
     private List<Player> playerList;
     @Getter
-    private RoomStatus roomStatus;
+    private GameStatus gameStatus;
 
     public GameRoomClient(Client client, Session session) {
         super(client, session);
@@ -38,7 +38,7 @@ public class GameRoomClient extends RoomClient {
         this.playerList = new ArrayList<>();
         this.playerList.add(currentPlayer);
 
-        this.roomStatus = RoomStatus.GAME_NOT_READY;
+        this.gameStatus = GameStatus.GAME_NOT_READY;
     }
 
     public Optional<Player> getPlayer(String userId) {
@@ -57,7 +57,7 @@ public class GameRoomClient extends RoomClient {
     public boolean createMatch() {
         boolean success = super.createMatch();
         if (success) {
-            changeRoomStatus(RoomStatus.GAME_READY);
+            changeRoomStatus(GameStatus.GAME_READY);
         }
         return success;
     }
@@ -66,7 +66,7 @@ public class GameRoomClient extends RoomClient {
     public boolean joinMatch(String matchId) {
         boolean success = super.joinMatch(matchId);
         if (success) {
-            changeRoomStatus(RoomStatus.GAME_READY);
+            changeRoomStatus(GameStatus.GAME_READY);
         }
         return success;
     }
@@ -128,7 +128,7 @@ public class GameRoomClient extends RoomClient {
     }
 
     public void onGameStart(GameMessageStart gameMessageStart) {
-        changeRoomStatus(RoomStatus.GAME_STARTED);
+        changeRoomStatus(GameStatus.GAME_STARTED);
     }
 
     public void declareCurrentPlayerMove(Location location) {
@@ -151,17 +151,17 @@ public class GameRoomClient extends RoomClient {
     }
 
     public void onGameEnd(GameMessageEnd gameMessageEnd) {
-        changeRoomStatus(RoomStatus.GAME_END);
+        changeRoomStatus(GameStatus.GAME_END);
     }
 
-    private void changeRoomStatus(RoomStatus roomStatus) {
+    private void changeRoomStatus(GameStatus gameStatus) {
         // not ready -> ready -> started -> end
-        if (this.roomStatus == RoomStatus.GAME_NOT_READY && roomStatus == RoomStatus.GAME_READY) {
-            this.roomStatus = roomStatus;
-        } else if (this.roomStatus == RoomStatus.GAME_READY && roomStatus == RoomStatus.GAME_STARTED) {
-            this.roomStatus = roomStatus;
-        } else if (this.roomStatus == RoomStatus.GAME_STARTED && roomStatus == RoomStatus.GAME_END) {
-            this.roomStatus = roomStatus;
+        if (this.gameStatus == GameStatus.GAME_NOT_READY && gameStatus == GameStatus.GAME_READY) {
+            this.gameStatus = gameStatus;
+        } else if (this.gameStatus == GameStatus.GAME_READY && gameStatus == GameStatus.GAME_STARTED) {
+            this.gameStatus = gameStatus;
+        } else if (this.gameStatus == GameStatus.GAME_STARTED && gameStatus == GameStatus.GAME_END) {
+            this.gameStatus = gameStatus;
         } else {
             throw new IllegalStateException();
         }

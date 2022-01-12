@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.modelgame.gameroom;
+package com.ekcapaper.racingar.modelgame.gameroom.prepare;
 
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 

@@ -6,9 +6,9 @@ import android.util.Log;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.modelgame.SaveDataNameDefine;
-import com.ekcapaper.racingar.modelgame.gameroom.PrepareDataFlagGameRoom;
-import com.ekcapaper.racingar.modelgame.gameroom.RoomInfoFlagGame;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
+import com.ekcapaper.racingar.modelgame.gameroom.prepare.PrepareDataFlagGameRoom;
+import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfoFlagGame;
 import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.modelgame.gameroom.writer.RoomInfoWriter;
 import com.ekcapaper.racingar.modelgame.gameroom.writer.RoomPrepareDataWriter;
@@ -71,12 +71,12 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         // util
         Gson gson = new Gson();
         // collection
-        String collectionName = SaveDataNameDefine.getCollectionName(matchId);
+        String collectionName = RoomDataSpace.getCollectionName(matchId);
         RoomInfoFlagGame roomInfoFlagGame = new RoomInfoFlagGame(timeLimit.getSeconds(), GameType.GAME_TYPE_FLAG, mapRange);
 
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
-                SaveDataNameDefine.getDataRoomInfoKey(),
+                RoomDataSpace.getDataRoomInfoKey(),
                 gson.toJson(roomInfoFlagGame),
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE
@@ -95,12 +95,12 @@ public class FlagGameRoomOperatorNewMaker extends TimeLimitGameRoomOperatorNewMa
         // util
         Gson gson = new Gson();
         // collection
-        String collectionName = SaveDataNameDefine.getCollectionName(matchId);
+        String collectionName = RoomDataSpace.getCollectionName(matchId);
         PrepareDataFlagGameRoom roomInfoFlagGame = new PrepareDataFlagGameRoom(gameFlagList);
 
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
-                SaveDataNameDefine.getDataRoomPrepareKey(),
+                RoomDataSpace.getDataRoomPrepareKey(),
                 gson.toJson(roomInfoFlagGame),
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE

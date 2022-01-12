@@ -16,7 +16,7 @@ import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterLobby;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
-import com.ekcapaper.racingar.modelgame.SaveDataNameDefine;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.utils.Tools;
 import com.heroiclabs.nakama.api.Match;
 import com.heroiclabs.nakama.api.MatchList;
@@ -73,8 +73,8 @@ public class LobbyActivity extends AppCompatActivity {
             List<Match> matches = matchList.getMatchesList();
             matches.stream().forEach((match -> {
                 String matchId = match.getMatchId();
-                String collectionName = SaveDataNameDefine.getCollectionName(matchId);
-                String roomInfoKey = SaveDataNameDefine.getDataRoomInfoKey();
+                String collectionName = RoomDataSpace.getCollectionName(matchId);
+                String roomInfoKey = RoomDataSpace.getDataRoomInfoKey();
 
 
 

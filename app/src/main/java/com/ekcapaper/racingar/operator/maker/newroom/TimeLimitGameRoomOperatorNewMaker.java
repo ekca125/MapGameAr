@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.operator.layer.TimeLimitGameRoomOperator;
-import com.ekcapaper.racingar.modelgame.SaveDataNameDefine;
-import com.ekcapaper.racingar.modelgame.gameroom.RoomInfoTimeLimit;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
+import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfoTimeLimit;
 import com.ekcapaper.racingar.operator.maker.make.TimeLimitGameRoomOperatorMaker;
 import com.ekcapaper.racingar.modelgame.gameroom.writer.RoomInfoWriter;
 import com.google.gson.Gson;
@@ -43,12 +43,12 @@ public class TimeLimitGameRoomOperatorNewMaker extends GameRoomOperatorNewMaker 
     public boolean writeRoomInfo(String matchId) {
         Gson gson = new Gson();
         // collection
-        String collectionName = SaveDataNameDefine.getCollectionName(matchId);
+        String collectionName = RoomDataSpace.getCollectionName(matchId);
         // data 1
         RoomInfoTimeLimit roomInfoTimeLimit = new RoomInfoTimeLimit(timeLimit.getSeconds(), GameType.GAME_TYPE_TIME_LIMIT);
         StorageObjectWrite saveGameObject = new StorageObjectWrite(
                 collectionName,
-                SaveDataNameDefine.getDataRoomInfoKey(),
+                RoomDataSpace.getDataRoomInfoKey(),
                 gson.toJson(roomInfoTimeLimit),
                 PermissionRead.PUBLIC_READ,
                 PermissionWrite.OWNER_WRITE
