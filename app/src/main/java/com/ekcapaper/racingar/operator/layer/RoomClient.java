@@ -1,7 +1,7 @@
 package com.ekcapaper.racingar.operator.layer;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
-import com.ekcapaper.racingar.network.Message;
+import com.ekcapaper.racingar.network.GameMessage;
 import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Client;
@@ -27,6 +27,8 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
+
 public class RoomClient implements SocketListener {
     // 서버와의 연동에 필요한 객체
     private final Client client;
@@ -40,6 +42,7 @@ public class RoomClient implements SocketListener {
     // 메시지 로그
     private final List<String> chatLog;
     // 서버와의 연동을 의미하는 객체들(Realtime, Chat Channel)
+    @Getter
     private Match match;
 
     public RoomClient(Client client, Session session) {
@@ -58,10 +61,6 @@ public class RoomClient implements SocketListener {
         channel = null;
         // 콜백 연동
         this.socketClient.connect(session, this);
-    }
-
-    public Optional<Match> getMatch() {
-        return Optional.ofNullable(match);
     }
 
     public boolean createMatch() {
@@ -92,11 +91,11 @@ public class RoomClient implements SocketListener {
         socketClient.leaveChat(chatChannelId);
     }
 
-    public final void sendMatchData(Message message) {
+    public final void sendMatchData(GameMessage gameMessage) {
         socketClient.sendMatchData(
                 match.getMatchId(),
-                message.getOpCode().ordinal(),
-                message.getPayload().getBytes(StandardCharsets.UTF_8)
+                gameMessage.getOpCode().ordinal(),
+                gameMessage.getPayload().getBytes(StandardCharsets.UTF_8)
         );
     }
 

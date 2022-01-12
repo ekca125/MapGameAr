@@ -1,7 +1,7 @@
 package com.ekcapaper.racingar.retrofit;
 
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
-import com.ekcapaper.racingar.retrofit.dto.MapRange;
+import com.ekcapaper.racingar.modelgame.address.MapRange;
 
 import java.util.List;
 

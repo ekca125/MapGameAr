@@ -4,9 +4,9 @@ import static org.junit.Assert.*;
 
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.stub.LocationStub;
-import com.ekcapaper.racingar.game.GameFlag;
+import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
-import com.ekcapaper.racingar.network.MovePlayerMessage;
+import com.ekcapaper.racingar.network.GameMessageMovePlayer;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
@@ -52,7 +52,7 @@ public class FlagGameRoomOperatorTest {
         int size1 = flagGameRoomOperator.getUnownedFlagList().size();
         assertEquals(1, size1);
 
-        flagGameRoomOperator.onMovePlayer(new MovePlayerMessage(
+        flagGameRoomOperator.onMovePlayer(new GameMessageMovePlayer(
                 session.getUserId(),
                 LocationStub.location.getLatitude(),
                 LocationStub.location.getLongitude()

@@ -2,12 +2,12 @@ package com.ekcapaper.racingar.operator.layer;
 
 import android.location.Location;
 
-import com.ekcapaper.racingar.game.Player;
-import com.ekcapaper.racingar.network.GameEndMessage;
-import com.ekcapaper.racingar.network.GameStartMessage;
-import com.ekcapaper.racingar.network.MovePlayerMessage;
-import com.ekcapaper.racingar.network.OpCode;
-import com.ekcapaper.racingar.operator.data.RoomStatus;
+import com.ekcapaper.racingar.modelgame.play.GameStatus;
+import com.ekcapaper.racingar.modelgame.play.Player;
+import com.ekcapaper.racingar.network.GameMessageEnd;
+import com.ekcapaper.racingar.network.GameMessageStart;
+import com.ekcapaper.racingar.network.GameMessageMovePlayer;
+import com.ekcapaper.racingar.network.GameMessageOpCode;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.MatchData;
@@ -29,7 +29,7 @@ public class GameRoomClient extends RoomClient {
     @Getter
     private List<Player> playerList;
     @Getter
-    private RoomStatus roomStatus;
+    private GameStatus gameStatus;
 
     public GameRoomClient(Client client, Session session) {
         super(client, session);
@@ -38,7 +38,7 @@ public class GameRoomClient extends RoomClient {
         this.playerList = new ArrayList<>();
         this.playerList.add(currentPlayer);
 
-        this.roomStatus = RoomStatus.GAME_NOT_READY;
+        this.gameStatus = GameStatus.GAME_NOT_READY;
     }
 
     public Optional<Player> getPlayer(String userId) {
@@ -57,7 +57,7 @@ public class GameRoomClient extends RoomClient {
     public boolean createMatch() {
         boolean success = super.createMatch();
         if (success) {
-            changeRoomStatus(RoomStatus.GAME_READY);
+            changeRoomStatus(GameStatus.GAME_READY);
         }
         return success;
     }
@@ -66,7 +66,7 @@ public class GameRoomClient extends RoomClient {
     public boolean joinMatch(String matchId) {
         boolean success = super.joinMatch(matchId);
         if (success) {
-            changeRoomStatus(RoomStatus.GAME_READY);
+            changeRoomStatus(GameStatus.GAME_READY);
         }
         return success;
     }
@@ -103,20 +103,20 @@ public class GameRoomClient extends RoomClient {
         long networkOpCode = matchData.getOpCode();
         byte[] networkBytes = matchData.getData();
 
-        OpCode opCode = OpCode.values()[(int) networkOpCode];
+        GameMessageOpCode gameMessageOpCode = GameMessageOpCode.values()[(int) networkOpCode];
         String data = new String(networkBytes, StandardCharsets.UTF_8);
-        switch (opCode) {
+        switch (gameMessageOpCode) {
             case MOVE_PLAYER:
-                MovePlayerMessage movePlayerMessage = gson.fromJson(data, MovePlayerMessage.class);
-                onMovePlayer(movePlayerMessage);
+                GameMessageMovePlayer gameMessageMovePlayer = gson.fromJson(data, GameMessageMovePlayer.class);
+                onMovePlayer(gameMessageMovePlayer);
                 break;
             case GAME_START:
-                GameStartMessage gameStartMessage = gson.fromJson(data, GameStartMessage.class);
-                onGameStart(gameStartMessage);
+                GameMessageStart gameMessageStart = gson.fromJson(data, GameMessageStart.class);
+                onGameStart(gameMessageStart);
                 break;
             case GAME_END:
-                GameEndMessage gameEndMessage = gson.fromJson(data, GameEndMessage.class);
-                onGameEnd(gameEndMessage);
+                GameMessageEnd gameMessageEnd = gson.fromJson(data, GameMessageEnd.class);
+                onGameEnd(gameMessageEnd);
                 break;
             default:
                 break;
@@ -124,44 +124,44 @@ public class GameRoomClient extends RoomClient {
     }
 
     public void declareGameStart() {
-        sendMatchData(new GameStartMessage());
+        sendMatchData(new GameMessageStart());
     }
 
-    public void onGameStart(GameStartMessage gameStartMessage) {
-        changeRoomStatus(RoomStatus.GAME_STARTED);
+    public void onGameStart(GameMessageStart gameMessageStart) {
+        changeRoomStatus(GameStatus.GAME_STARTED);
     }
 
     public void declareCurrentPlayerMove(Location location) {
-        MovePlayerMessage movePlayerMessage = new MovePlayerMessage(currentPlayer.getUserId(), location.getLatitude(), location.getLongitude());
-        sendMatchData(movePlayerMessage);
+        GameMessageMovePlayer gameMessageMovePlayer = new GameMessageMovePlayer(currentPlayer.getUserId(), location.getLatitude(), location.getLongitude());
+        sendMatchData(gameMessageMovePlayer);
     }
 
-    public void onMovePlayer(MovePlayerMessage movePlayerMessage) {
-        Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
+    public void onMovePlayer(GameMessageMovePlayer gameMessageMovePlayer) {
+        Optional<Player> optionalPlayer = getPlayer(gameMessageMovePlayer.getUserId());
         optionalPlayer.ifPresent((player -> {
             Location location = new Location("");
-            location.setLatitude(movePlayerMessage.getLatitude());
-            location.setLongitude(movePlayerMessage.getLongitude());
+            location.setLatitude(gameMessageMovePlayer.getLatitude());
+            location.setLongitude(gameMessageMovePlayer.getLongitude());
             player.updateLocation(location);
         }));
     }
 
     public void declareGameEnd() {
-        sendMatchData(new GameEndMessage());
+        sendMatchData(new GameMessageEnd());
     }
 
-    public void onGameEnd(GameEndMessage gameEndMessage) {
-        changeRoomStatus(RoomStatus.GAME_END);
+    public void onGameEnd(GameMessageEnd gameMessageEnd) {
+        changeRoomStatus(GameStatus.GAME_END);
     }
 
-    private void changeRoomStatus(RoomStatus roomStatus) {
+    private void changeRoomStatus(GameStatus gameStatus) {
         // not ready -> ready -> started -> end
-        if (this.roomStatus == RoomStatus.GAME_NOT_READY && roomStatus == RoomStatus.GAME_READY) {
-            this.roomStatus = roomStatus;
-        } else if (this.roomStatus == RoomStatus.GAME_READY && roomStatus == RoomStatus.GAME_STARTED) {
-            this.roomStatus = roomStatus;
-        } else if (this.roomStatus == RoomStatus.GAME_STARTED && roomStatus == RoomStatus.GAME_END) {
-            this.roomStatus = roomStatus;
+        if (this.gameStatus == GameStatus.GAME_NOT_READY && gameStatus == GameStatus.GAME_READY) {
+            this.gameStatus = gameStatus;
+        } else if (this.gameStatus == GameStatus.GAME_READY && gameStatus == GameStatus.GAME_STARTED) {
+            this.gameStatus = gameStatus;
+        } else if (this.gameStatus == GameStatus.GAME_STARTED && gameStatus == GameStatus.GAME_END) {
+            this.gameStatus = gameStatus;
         } else {
             throw new IllegalStateException();
         }

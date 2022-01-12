@@ -1,9 +1,7 @@
 package com.ekcapaper.racingar.model;
 
-import android.graphics.drawable.Drawable;
-
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.game.GameType;
+import com.ekcapaper.racingar.modelgame.play.GameType;
 
 public class GameLobbyRoomInfo {
     // info
