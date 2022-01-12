@@ -17,10 +17,12 @@ import com.heroiclabs.nakama.api.MatchList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import lombok.Getter;
 
@@ -79,12 +81,12 @@ public class ThisApplication extends Application {
         if(matchList == null){
             return new ArrayList<>();
         }
-        for(Match match : matchList.getMatchesList()){
-
-        }
-
-        matchList.getMatchesList()
-        RoomInfoReader roomInfoReader = new RoomInfoReader(client,session,)
-
+        return matchList.getMatchesList().stream()
+                .map((match)->{
+                    RoomInfoReader roomInfoReader = new RoomInfoReader(client,session,match.getMatchId());
+                    return roomInfoReader.readRoomInfo();
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }
