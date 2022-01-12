@@ -140,14 +140,13 @@ public class RoomClient implements SocketListener {
         if (joinList != null) {
             channelUserPresenceList.addAll(joinList);
         }
-        channelUserPresenceList = joinList.stream().distinct().collect(Collectors.toList());
 
         // leave 처리
         List<UserPresence> leaveList = presence.getLeaves();
         if (leaveList != null) {
             channelUserPresenceList.removeAll(leaveList);
         }
-        channelUserPresenceList = leaveList.stream().distinct().collect(Collectors.toList());
+        channelUserPresenceList = channelUserPresenceList.stream().distinct().collect(Collectors.toList());
     }
 
     @Override
@@ -173,6 +172,7 @@ public class RoomClient implements SocketListener {
         if (leaveList != null) {
             matchUserPresenceList.removeAll(leaveList);
         }
+        matchUserPresenceList = matchUserPresenceList.stream().distinct().collect(Collectors.toList());
     }
 
     @Override
