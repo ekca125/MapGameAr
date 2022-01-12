@@ -30,11 +30,6 @@ public class TimeLimitGameRoomOperatorNewMakerTest {
         assertNotNull(session);
     }
 
-    @Test
-    public void getPrepareData() {
-        TimeLimitGameRoomOperatorNewMaker timeLimitGameRoomOperatorNewMaker = new TimeLimitGameRoomOperatorNewMaker(client,session, Duration.ofSeconds(100));
-        timeLimitGameRoomOperatorNewMaker.makeTimeLimitGameRoomOperator();
-    }
 
     @Test
     public void writePrepareData() {
