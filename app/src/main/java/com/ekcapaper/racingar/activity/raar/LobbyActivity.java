@@ -17,12 +17,14 @@ import com.ekcapaper.racingar.adapter.AdapterLobby;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
+import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.utils.Tools;
 import com.heroiclabs.nakama.api.Match;
 import com.heroiclabs.nakama.api.MatchList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LobbyActivity extends AppCompatActivity {
 
@@ -66,22 +68,18 @@ public class LobbyActivity extends AppCompatActivity {
 
     private void refreshLobby() {
         // data
-        items = new ArrayList<>();
+        // items = new ArrayList<>();
 
-        MatchList matchList = thisApplication.getCurrentMatches();
-        if(matchList != null){
-            List<Match> matches = matchList.getMatchesList();
-            matches.stream().forEach((match -> {
-                String matchId = match.getMatchId();
-                String collectionName = RoomDataSpace.getCollectionName(matchId);
-                String roomInfoKey = RoomDataSpace.getDataRoomInfoKey();
-
-
-
-
-            }));
-        }
-
+        List<RoomInfo> roomInfoList = thisApplication.getCurrentRoomInfo();
+        items = roomInfoList.stream()
+                .map((roomInfo)->{
+                    GameLobbyRoomInfo gameLobbyRoomInfo = new GameLobbyRoomInfo();
+                    gameLobbyRoomInfo.gameType = roomInfo.getGameType();
+                    // 위치 정보를 가져와서 설정
+                    gameLobbyRoomInfo.distanceCenter = "11111";
+                    gameLobbyRoomInfo.name = roomInfo.getMatchId();
+                })
+                .collect(Collectors.toList());
 
         //set data and list adapter
         mAdapter = new AdapterLobby(this, items);
