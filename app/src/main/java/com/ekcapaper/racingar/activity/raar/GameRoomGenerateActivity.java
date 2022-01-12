@@ -3,18 +3,23 @@ package com.ekcapaper.racingar.activity.raar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
+import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.utils.Tools;
 
 public class GameRoomGenerateActivity extends AppCompatActivity {
+    private Button button_generate_room;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +34,17 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         Tools.setSystemBarColor(this, R.color.grey_5);
         Tools.setSystemBarLight(this);
 
-        ArrayAdapter adapter2 = new ArrayAdapter(this, android.R.layout.simple_list_item_1, new String[]{"CA", "NY", "AL", "VA", "OH", "KS"});
+        ArrayAdapter adapter2 = new ArrayAdapter(this, android.R.layout.simple_list_item_1, new String[]{GameType.GAME_TYPE_FLAG.toString()});
         ((AutoCompleteTextView) findViewById(R.id.dropdown_state)).setAdapter(adapter2);
+
+        button_generate_room = findViewById(R.id.button_generate_room);
+        button_generate_room.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),GameRoomActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
