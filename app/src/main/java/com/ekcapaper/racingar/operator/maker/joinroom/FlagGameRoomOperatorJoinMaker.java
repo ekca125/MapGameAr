@@ -1,13 +1,13 @@
 package com.ekcapaper.racingar.operator.maker.joinroom;
 
-import com.ekcapaper.racingar.modelgame.GameFlag;
+import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.modelgame.SaveDataNameDefine;
-import com.ekcapaper.racingar.modelgame.PrepareDataFlagGameRoom;
-import com.ekcapaper.racingar.modelgame.RoomInfoFlagGame;
+import com.ekcapaper.racingar.modelgame.gameroom.PrepareDataFlagGameRoom;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomInfoFlagGame;
 import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
-import com.ekcapaper.racingar.modelgame.reader.RoomInfoReader;
-import com.ekcapaper.racingar.modelgame.reader.RoomPrepareDataReader;
+import com.ekcapaper.racingar.modelgame.gameroom.reader.RoomInfoReader;
+import com.ekcapaper.racingar.modelgame.gameroom.reader.RoomPrepareDataReader;
 import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;

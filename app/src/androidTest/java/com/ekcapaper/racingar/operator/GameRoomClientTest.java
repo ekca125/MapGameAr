@@ -3,11 +3,11 @@ package com.ekcapaper.racingar.operator;
 import static org.junit.Assert.*;
 
 import com.ekcapaper.racingar.stub.AccountStub;
-import com.ekcapaper.racingar.modelgame.Player;
+import com.ekcapaper.racingar.modelgame.play.Player;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.GameMessageEnd;
 import com.ekcapaper.racingar.network.GameMessageStart;
-import com.ekcapaper.racingar.modelgame.RoomStatus;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomStatus;
 import com.ekcapaper.racingar.operator.layer.GameRoomClient;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;

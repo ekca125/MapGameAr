@@ -1,7 +1,7 @@
 package com.ekcapaper.racingar.operator.impl;
 
-import com.ekcapaper.racingar.modelgame.GameFlag;
-import com.ekcapaper.racingar.modelgame.Player;
+import com.ekcapaper.racingar.modelgame.play.GameFlag;
+import com.ekcapaper.racingar.modelgame.play.Player;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
 import com.ekcapaper.racingar.operator.layer.TimeLimitGameRoomOperator;
 import com.heroiclabs.nakama.Client;
