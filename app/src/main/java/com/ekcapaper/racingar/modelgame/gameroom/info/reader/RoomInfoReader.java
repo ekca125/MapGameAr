@@ -29,7 +29,7 @@ public class RoomInfoReader {
         this.keyName = RoomDataSpace.getDataRoomInfoKey();
     }
 
-    public Optional<RoomInfo> readRoomInfo(){
+    public RoomInfo readRoomInfo(){
         // 준비
         StorageObjectId objectId = new StorageObjectId(collectionName);
         objectId.setKey(keyName);
@@ -41,10 +41,10 @@ public class RoomInfoReader {
             String jsonData = object.getValue();
             // 변환
             Gson gson = new Gson();
-            return Optional.ofNullable(gson.fromJson(jsonData,RoomInfo.class));
+            return gson.fromJson(jsonData,RoomInfo.class);
         } catch (ExecutionException | InterruptedException | IndexOutOfBoundsException e) {
             //e.printStackTrace();
-            return Optional.empty();
+            return null;
         }
     }
 }

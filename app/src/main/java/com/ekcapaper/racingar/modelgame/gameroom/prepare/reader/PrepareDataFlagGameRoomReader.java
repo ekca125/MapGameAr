@@ -18,7 +18,7 @@ public class PrepareDataFlagGameRoomReader extends PrepareDataReader{
         super(client, session, matchId);
     }
 
-    public Optional<PrepareDataFlagGameRoom> readPrepareData(){
+    public PrepareDataFlagGameRoom readPrepareData(){
         // 준비
         StorageObjectId objectId = new StorageObjectId(collectionName);
         objectId.setKey(keyName);
@@ -30,10 +30,10 @@ public class PrepareDataFlagGameRoomReader extends PrepareDataReader{
             String jsonData = object.getValue();
             // 변환
             Gson gson = new Gson();
-            return Optional.ofNullable(gson.fromJson(jsonData, PrepareDataFlagGameRoom.class));
+            return gson.fromJson(jsonData, PrepareDataFlagGameRoom.class);
         } catch (ExecutionException | InterruptedException | IndexOutOfBoundsException e) {
             //e.printStackTrace();
-            return Optional.empty();
+            return null;
         }
     }
 }
