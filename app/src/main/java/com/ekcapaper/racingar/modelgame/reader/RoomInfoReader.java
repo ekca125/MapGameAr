@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator.maker.readwrite;
+package com.ekcapaper.racingar.modelgame.reader;
 
 public interface RoomInfoReader {
     boolean readRoomInfo();
