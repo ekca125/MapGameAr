@@ -12,7 +12,7 @@ import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfoFlagGame;
 import com.ekcapaper.racingar.operator.maker.joinroom.FlagGameRoomOperatorJoinMaker;
 import com.ekcapaper.racingar.operator.maker.newroom.FlagGameRoomOperatorNewMaker;
-import com.ekcapaper.racingar.retrofit.dto.MapRange;
+import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;

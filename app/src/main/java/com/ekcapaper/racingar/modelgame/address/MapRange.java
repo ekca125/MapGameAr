@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.retrofit.dto;
+package com.ekcapaper.racingar.modelgame.address;
 
 import android.location.Location;
 

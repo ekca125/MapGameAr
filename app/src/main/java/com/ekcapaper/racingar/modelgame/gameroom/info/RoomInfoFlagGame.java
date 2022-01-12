@@ -1,7 +1,7 @@
 package com.ekcapaper.racingar.modelgame.gameroom.info;
 
 import com.ekcapaper.racingar.modelgame.play.GameType;
-import com.ekcapaper.racingar.retrofit.dto.MapRange;
+import com.ekcapaper.racingar.modelgame.address.MapRange;
 
 import lombok.Getter;
 

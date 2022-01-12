@@ -14,7 +14,7 @@ import com.ekcapaper.racingar.modelgame.gameroom.writer.RoomInfoWriter;
 import com.ekcapaper.racingar.modelgame.gameroom.writer.RoomPrepareDataWriter;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
-import com.ekcapaper.racingar.retrofit.dto.MapRange;
+import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Match;

@@ -3,7 +3,7 @@ package com.ekcapaper.racingar.retrofit;
 import static org.junit.Assert.*;
 
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
-import com.ekcapaper.racingar.retrofit.dto.MapRange;
+import com.ekcapaper.racingar.modelgame.address.MapRange;
 
 import org.junit.Test;
 

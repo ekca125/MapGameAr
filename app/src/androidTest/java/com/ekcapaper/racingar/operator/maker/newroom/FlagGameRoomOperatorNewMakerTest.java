@@ -6,7 +6,7 @@ import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.stub.LocationStub;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.retrofit.dto.MapRange;
+import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;

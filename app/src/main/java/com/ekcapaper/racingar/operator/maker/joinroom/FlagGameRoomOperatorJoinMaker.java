@@ -8,7 +8,7 @@ import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfoFlagGame;
 import com.ekcapaper.racingar.operator.maker.make.FlagGameRoomOperatorMaker;
 import com.ekcapaper.racingar.modelgame.gameroom.reader.RoomInfoReader;
 import com.ekcapaper.racingar.modelgame.gameroom.reader.RoomPrepareDataReader;
-import com.ekcapaper.racingar.retrofit.dto.MapRange;
+import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
