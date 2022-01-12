@@ -2,28 +2,22 @@ package com.ekcapaper.racingar.operator.maker.joinroom;
 
 import static org.junit.Assert.*;
 
-import com.ekcapaper.racingar.AccountStub;
-import com.ekcapaper.racingar.LocationStub;
-import com.ekcapaper.racingar.game.GameFlag;
+import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.maker.newroom.FlagGameRoomOperatorNewMaker;
-import com.ekcapaper.racingar.retrofit.dto.MapRange;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
-import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.time.Duration;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class FlagGameRoomOperatorJoinMakerTest {
     public static Client client;
     public static Session session;
+    public static String matchId;
 
     @BeforeClass
     public static void init() throws ExecutionException, InterruptedException {
@@ -35,14 +29,14 @@ public class FlagGameRoomOperatorJoinMakerTest {
         );
         session = client.authenticateEmail(AccountStub.ID, AccountStub.PASSWORD).get();
         assertNotNull(session);
+
+        matchId = "dff439c1-70e3-4534-925b-19f941b221b1";
     }
 
 
 
     @Test
     public void readPrepareData() {
-        String matchId = "0abdc362-04d9-4664-823a-4c9c4553d9de";
-
         FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
         boolean result = flagGameRoomOperatorJoinMaker.readPrepareData();
         assertTrue(result);
@@ -50,8 +44,6 @@ public class FlagGameRoomOperatorJoinMakerTest {
 
     @Test
     public void readRoomInfo() {
-        String matchId = "0abdc362-04d9-4664-823a-4c9c4553d9de";
-
         FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
         boolean result = flagGameRoomOperatorJoinMaker.readRoomInfo();
         assertTrue(result);
@@ -59,8 +51,6 @@ public class FlagGameRoomOperatorJoinMakerTest {
 
     @Test
     public void makeFlagGameRoomOperator() {
-        String matchId = "0abdc362-04d9-4664-823a-4c9c4553d9de";
-
         FlagGameRoomOperatorJoinMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
         FlagGameRoomOperator flagGameRoomOperator = flagGameRoomOperatorNewMaker.makeFlagGameRoomOperator();
         assertNotNull(flagGameRoomOperator);

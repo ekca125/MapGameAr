@@ -26,7 +26,8 @@ import lombok.Getter;
 public class GameRoomClient extends RoomClient {
     // 게임 플레이어
     private final Player currentPlayer;
-    private final List<Player> playerList;
+    @Getter
+    private List<Player> playerList;
     @Getter
     private RoomStatus roomStatus;
 
@@ -80,7 +81,7 @@ public class GameRoomClient extends RoomClient {
             List<Player> joinPlayerList = joinList.stream()
                     .map((userPresence) -> new Player(userPresence.getUserId()))
                     .collect(Collectors.toList());
-            this.playerList.addAll(joinPlayerList);
+            playerList.addAll(joinPlayerList);
         }
 
         // leave 처리
@@ -89,8 +90,9 @@ public class GameRoomClient extends RoomClient {
             List<Player> leavePlayerList = leaveList.stream()
                     .map((userPresence -> new Player(userPresence.getUserId())))
                     .collect(Collectors.toList());
-            this.playerList.removeAll(leavePlayerList);
+            playerList.removeAll(leavePlayerList);
         }
+        playerList = playerList.stream().distinct().collect(Collectors.toList());
     }
 
     // match event

@@ -1,5 +1,6 @@
-package com.ekcapaper.racingar.activity.raar.activity;
+package com.ekcapaper.racingar.activity.raar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,12 +13,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.activity.raar.adapter.AdapterLobby;
-import com.ekcapaper.racingar.adapter.AdapterListBasic;
+import com.ekcapaper.racingar.adapter.AdapterListAnimation;
+import com.ekcapaper.racingar.adapter.AdapterLobby;
+import com.ekcapaper.racingar.data.ThisApplication;
+import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.model.People;
+import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
+import com.heroiclabs.nakama.api.Match;
+import com.heroiclabs.nakama.api.MatchList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +35,17 @@ public class LobbyActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private AdapterLobby mAdapter;
 
+    private List<GameLobbyRoomInfo> items;
+
+    // 관제
+    private ThisApplication thisApplication;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
         parent_view = findViewById(android.R.id.content);
+        thisApplication = (ThisApplication) getApplicationContext();
 
         initToolbar();
         initComponent();
@@ -53,27 +65,48 @@ public class LobbyActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        //
-        List<People> items = DataGenerator.getPeopleData(this);
-        items.addAll(DataGenerator.getPeopleData(this));
-        items.addAll(DataGenerator.getPeopleData(this));
+        refreshLobby();
+    }
+
+    private void refreshLobby() {
+        // data
+        items = new ArrayList<>();
+
+        MatchList matchList = thisApplication.getCurrentMatches();
+        if(matchList != null){
+            List<Match> matches = matchList.getMatchesList();
+            matches.stream().forEach((match -> {
+                String matchId = match.getMatchId();
+                String collectionName = SaveDataNameDefine.getCollectionName(matchId);
+                String roomInfoKey = SaveDataNameDefine.getDataRoomInfoKey();
+
+
+
+
+            }));
+        }
+
 
         //set data and list adapter
         mAdapter = new AdapterLobby(this, items);
         recyclerView.setAdapter(mAdapter);
-
         // on item list clicked
         mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, People obj, int position) {
+            public void onItemClick(View view, GameLobbyRoomInfo obj, int position) {
+                Intent intent = new Intent(getApplicationContext(),GameRoomActivity.class);
+                startActivity(intent);
                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
             }
         });
+        // stub
+        //items.addAll(DataGenerator.getGameRoomInfoData(this));
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search_setting, menu);
+        getMenuInflater().inflate(R.menu.menu_refresh_setting, menu);
         return true;
     }
 
@@ -81,6 +114,9 @@ public class LobbyActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+        }
+        else if(item.getItemId() == R.id.action_refresh){
+            refreshLobby();
         } else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }

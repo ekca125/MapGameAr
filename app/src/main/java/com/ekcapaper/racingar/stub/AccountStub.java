@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar;
+package com.ekcapaper.racingar.stub;
 
 public class AccountStub {
     public static String ID = "abcd1234@example.com";

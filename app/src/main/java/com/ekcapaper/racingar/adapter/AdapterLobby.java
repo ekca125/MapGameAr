@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.activity.raar.adapter;
+package com.ekcapaper.racingar.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,28 +11,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.adapter.AdapterListBasic;
-import com.ekcapaper.racingar.model.People;
+import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
 import com.ekcapaper.racingar.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private List<People> items = new ArrayList<>();
+    private List<GameLobbyRoomInfo> items = new ArrayList<>();
 
     private Context ctx;
     private AdapterLobby.OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, People obj, int position);
+        void onItemClick(View view, GameLobbyRoomInfo obj, int position);
     }
 
     public void setOnItemClickListener(final AdapterLobby.OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public AdapterLobby(Context context, List<People> items) {
+    public AdapterLobby(Context context, List<GameLobbyRoomInfo> items) {
         this.items = items;
         ctx = context;
     }
@@ -40,12 +39,16 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
         public ImageView image;
         public TextView name;
+        public TextView distance_center;
+        public TextView description;
         public View lyt_parent;
 
         public OriginalViewHolder(View v) {
             super(v);
             image = (ImageView) v.findViewById(R.id.image);
             name = (TextView) v.findViewById(R.id.name);
+            distance_center = (TextView) v.findViewById(R.id.distance_center);
+            description = (TextView) v.findViewById(R.id.description);
             lyt_parent = (View) v.findViewById(R.id.lyt_parent);
         }
     }
@@ -53,7 +56,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh;
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_people_chat, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_game_room_lobby_info, parent, false);
         vh = new AdapterLobby.OriginalViewHolder(v);
         return vh;
     }
@@ -64,9 +67,11 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         if (holder instanceof AdapterLobby.OriginalViewHolder) {
             AdapterLobby.OriginalViewHolder view = (AdapterLobby.OriginalViewHolder) holder;
 
-            People p = items.get(holder.getAdapterPosition());
-            view.name.setText(p.name);
-            Tools.displayImageRound(ctx, view.image, p.image);
+            GameLobbyRoomInfo gri = items.get(holder.getAdapterPosition());
+            view.name.setText(gri.name);
+            view.description.setText(gri.getGameTypeString());
+            view.distance_center.setText(gri.distanceCenter);
+            Tools.displayImageRound(ctx, view.image, gri.getImage());
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

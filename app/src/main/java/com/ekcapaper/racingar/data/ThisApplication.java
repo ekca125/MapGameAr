@@ -26,12 +26,20 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+
+import lombok.Getter;
 
 public class ThisApplication extends Application {
     private Client client;
     private Session session;
     private GameRoomOperator currentGameRoomOperator;
+
+    @Getter
+    private ExecutorService executorService;
+
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -50,6 +58,7 @@ public class ThisApplication extends Application {
         );
         session = null;
         currentGameRoomOperator = null;
+        executorService = Executors.newFixedThreadPool(4);
     }
 
     public void login(String email, String password) {

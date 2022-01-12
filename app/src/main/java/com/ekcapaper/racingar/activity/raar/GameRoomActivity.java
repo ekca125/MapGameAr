@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.activity.raar.activity;
+package com.ekcapaper.racingar.activity.raar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -6,17 +6,19 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.adapter.AdapterListSwipe;
+import com.ekcapaper.racingar.adapter.AdapterGameRoom;
+import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
-import com.ekcapaper.racingar.model.Social;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -27,14 +29,25 @@ public class GameRoomActivity extends AppCompatActivity {
     private View parent_view;
 
     private RecyclerView recyclerView;
-    private AdapterListSwipe mAdapter;
+    private AdapterGameRoom mAdapter;
     private ItemTouchHelper mItemTouchHelper;
+
+    private Button button_game_start;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_room);
         parent_view = findViewById(android.R.id.content);
+
+        button_game_start = findViewById(R.id.button_game_start);
+        button_game_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),GameMapActivity.class);
+                startActivity(intent);
+            }
+        });
 
         initToolbar();
         initComponent();
@@ -54,16 +67,16 @@ public class GameRoomActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        List<Social> items = DataGenerator.getSocialData(this);
+        List<GameRoomInfo> items = DataGenerator.getGameRoomInfo(this);
 
         //set data and list adapter
-        mAdapter = new AdapterListSwipe(this, items);
+        mAdapter = new AdapterGameRoom(this, items);
         recyclerView.setAdapter(mAdapter);
 
         // on item list clicked
-        mAdapter.setOnItemClickListener(new AdapterListSwipe.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new AdapterGameRoom.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, Social obj, int position) {
+            public void onItemClick(View view, GameRoomInfo obj, int position) {
                 Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
             }
         });

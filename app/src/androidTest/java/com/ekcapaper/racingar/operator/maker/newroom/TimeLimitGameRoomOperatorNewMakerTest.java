@@ -2,7 +2,7 @@ package com.ekcapaper.racingar.operator.maker.newroom;
 
 import static org.junit.Assert.*;
 
-import com.ekcapaper.racingar.AccountStub;
+import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;

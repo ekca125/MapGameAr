@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.activity.raar.activity;
+package com.ekcapaper.racingar.activity.raar;
 
 import androidx.appcompat.app.AppCompatActivity;
 

@@ -2,7 +2,7 @@ package com.ekcapaper.racingar.data;
 
 import androidx.test.core.app.ApplicationProvider;
 
-import com.ekcapaper.racingar.AccountStub;
+import com.ekcapaper.racingar.stub.AccountStub;
 
 import org.junit.Test;
 
