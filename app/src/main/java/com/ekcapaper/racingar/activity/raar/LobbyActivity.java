@@ -15,11 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterListAnimation;
 import com.ekcapaper.racingar.adapter.AdapterLobby;
+import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.model.People;
+import com.ekcapaper.racingar.operator.maker.SaveDataNameDefine;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
+import com.heroiclabs.nakama.api.Match;
+import com.heroiclabs.nakama.api.MatchList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +37,15 @@ public class LobbyActivity extends AppCompatActivity {
 
     private List<GameLobbyRoomInfo> items;
 
+    // 관제
+    private ThisApplication thisApplication;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
         parent_view = findViewById(android.R.id.content);
+        thisApplication = (ThisApplication) getApplicationContext();
 
         initToolbar();
         initComponent();
@@ -63,6 +71,23 @@ public class LobbyActivity extends AppCompatActivity {
     private void refreshLobby() {
         // data
         items = new ArrayList<>();
+
+        MatchList matchList = thisApplication.getCurrentMatches();
+        if(matchList != null){
+            List<Match> matches = matchList.getMatchesList();
+            matches.stream().forEach((match -> {
+                String matchId = match.getMatchId();
+                String collectionName = SaveDataNameDefine.getCollectionName(matchId);
+                String roomInfoKey = SaveDataNameDefine.getDataRoomInfoKey();
+
+                
+
+
+            }));
+
+        }
+
+
         //set data and list adapter
         mAdapter = new AdapterLobby(this, items);
         recyclerView.setAdapter(mAdapter);
@@ -76,7 +101,7 @@ public class LobbyActivity extends AppCompatActivity {
             }
         });
         // stub
-        items.addAll(DataGenerator.getGameRoomInfoData(this));
+        //items.addAll(DataGenerator.getGameRoomInfoData(this));
     }
 
 
