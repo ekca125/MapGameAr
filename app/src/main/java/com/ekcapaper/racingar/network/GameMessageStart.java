@@ -2,9 +2,9 @@ package com.ekcapaper.racingar.network;
 
 import com.google.gson.Gson;
 
-public class GameStartMessage extends Message{
-    public GameStartMessage() {
-        super(OpCode.GAME_START);
+public class GameMessageStart extends GameMessage {
+    public GameMessageStart() {
+        super(GameMessageOpCode.GAME_START);
     }
 
     @Override

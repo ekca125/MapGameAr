@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.game.Player;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
-import com.ekcapaper.racingar.network.GameEndMessage;
-import com.ekcapaper.racingar.network.GameStartMessage;
+import com.ekcapaper.racingar.network.GameMessageEnd;
+import com.ekcapaper.racingar.network.GameMessageStart;
 import com.ekcapaper.racingar.operator.data.RoomStatus;
 import com.ekcapaper.racingar.operator.layer.GameRoomClient;
 import com.heroiclabs.nakama.Client;
@@ -65,7 +65,7 @@ public class GameRoomClientTest {
 
     @Test
     public void onGameStart() {
-        gameRoomClient.onGameStart(new GameStartMessage());
+        gameRoomClient.onGameStart(new GameMessageStart());
         assertSame(gameRoomClient.getRoomStatus(), RoomStatus.GAME_STARTED);
     }
 
@@ -76,7 +76,7 @@ public class GameRoomClientTest {
 
     @Test
     public void onGameEnd() {
-        gameRoomClient.onGameEnd(new GameEndMessage());
+        gameRoomClient.onGameEnd(new GameMessageEnd());
         assertSame(gameRoomClient.getRoomStatus(), RoomStatus.GAME_END);
     }
 }

@@ -3,10 +3,10 @@ package com.ekcapaper.racingar.operator.layer;
 import android.location.Location;
 
 import com.ekcapaper.racingar.game.Player;
-import com.ekcapaper.racingar.network.GameEndMessage;
-import com.ekcapaper.racingar.network.GameStartMessage;
-import com.ekcapaper.racingar.network.MovePlayerMessage;
-import com.ekcapaper.racingar.network.OpCode;
+import com.ekcapaper.racingar.network.GameMessageEnd;
+import com.ekcapaper.racingar.network.GameMessageStart;
+import com.ekcapaper.racingar.network.GameMessageMovePlayer;
+import com.ekcapaper.racingar.network.GameMessageOpCode;
 import com.ekcapaper.racingar.operator.data.RoomStatus;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
@@ -103,20 +103,20 @@ public class GameRoomClient extends RoomClient {
         long networkOpCode = matchData.getOpCode();
         byte[] networkBytes = matchData.getData();
 
-        OpCode opCode = OpCode.values()[(int) networkOpCode];
+        GameMessageOpCode gameMessageOpCode = GameMessageOpCode.values()[(int) networkOpCode];
         String data = new String(networkBytes, StandardCharsets.UTF_8);
-        switch (opCode) {
+        switch (gameMessageOpCode) {
             case MOVE_PLAYER:
-                MovePlayerMessage movePlayerMessage = gson.fromJson(data, MovePlayerMessage.class);
-                onMovePlayer(movePlayerMessage);
+                GameMessageMovePlayer gameMessageMovePlayer = gson.fromJson(data, GameMessageMovePlayer.class);
+                onMovePlayer(gameMessageMovePlayer);
                 break;
             case GAME_START:
-                GameStartMessage gameStartMessage = gson.fromJson(data, GameStartMessage.class);
-                onGameStart(gameStartMessage);
+                GameMessageStart gameMessageStart = gson.fromJson(data, GameMessageStart.class);
+                onGameStart(gameMessageStart);
                 break;
             case GAME_END:
-                GameEndMessage gameEndMessage = gson.fromJson(data, GameEndMessage.class);
-                onGameEnd(gameEndMessage);
+                GameMessageEnd gameMessageEnd = gson.fromJson(data, GameMessageEnd.class);
+                onGameEnd(gameMessageEnd);
                 break;
             default:
                 break;
@@ -124,33 +124,33 @@ public class GameRoomClient extends RoomClient {
     }
 
     public void declareGameStart() {
-        sendMatchData(new GameStartMessage());
+        sendMatchData(new GameMessageStart());
     }
 
-    public void onGameStart(GameStartMessage gameStartMessage) {
+    public void onGameStart(GameMessageStart gameMessageStart) {
         changeRoomStatus(RoomStatus.GAME_STARTED);
     }
 
     public void declareCurrentPlayerMove(Location location) {
-        MovePlayerMessage movePlayerMessage = new MovePlayerMessage(currentPlayer.getUserId(), location.getLatitude(), location.getLongitude());
-        sendMatchData(movePlayerMessage);
+        GameMessageMovePlayer gameMessageMovePlayer = new GameMessageMovePlayer(currentPlayer.getUserId(), location.getLatitude(), location.getLongitude());
+        sendMatchData(gameMessageMovePlayer);
     }
 
-    public void onMovePlayer(MovePlayerMessage movePlayerMessage) {
-        Optional<Player> optionalPlayer = getPlayer(movePlayerMessage.getUserId());
+    public void onMovePlayer(GameMessageMovePlayer gameMessageMovePlayer) {
+        Optional<Player> optionalPlayer = getPlayer(gameMessageMovePlayer.getUserId());
         optionalPlayer.ifPresent((player -> {
             Location location = new Location("");
-            location.setLatitude(movePlayerMessage.getLatitude());
-            location.setLongitude(movePlayerMessage.getLongitude());
+            location.setLatitude(gameMessageMovePlayer.getLatitude());
+            location.setLongitude(gameMessageMovePlayer.getLongitude());
             player.updateLocation(location);
         }));
     }
 
     public void declareGameEnd() {
-        sendMatchData(new GameEndMessage());
+        sendMatchData(new GameMessageEnd());
     }
 
-    public void onGameEnd(GameEndMessage gameEndMessage) {
+    public void onGameEnd(GameMessageEnd gameMessageEnd) {
         changeRoomStatus(RoomStatus.GAME_END);
     }
 

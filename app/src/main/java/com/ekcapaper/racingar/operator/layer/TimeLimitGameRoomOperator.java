@@ -1,6 +1,6 @@
 package com.ekcapaper.racingar.operator.layer;
 
-import com.ekcapaper.racingar.network.GameStartMessage;
+import com.ekcapaper.racingar.network.GameMessageStart;
 import com.ekcapaper.racingar.operator.data.RoomStatus;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
@@ -19,8 +19,8 @@ public class TimeLimitGameRoomOperator extends GameRoomOperator {
     }
 
     @Override
-    public void onGameStart(GameStartMessage gameStartMessage) {
-        super.onGameStart(gameStartMessage);
+    public void onGameStart(GameMessageStart gameMessageStart) {
+        super.onGameStart(gameMessageStart);
         endTime = LocalDateTime.now().plusSeconds(timeLimit.getSeconds());
     }
 

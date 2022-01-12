@@ -1,7 +1,7 @@
 package com.ekcapaper.racingar.operator.layer;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
-import com.ekcapaper.racingar.network.Message;
+import com.ekcapaper.racingar.network.GameMessage;
 import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Client;
@@ -92,11 +92,11 @@ public class RoomClient implements SocketListener {
         socketClient.leaveChat(chatChannelId);
     }
 
-    public final void sendMatchData(Message message) {
+    public final void sendMatchData(GameMessage gameMessage) {
         socketClient.sendMatchData(
                 match.getMatchId(),
-                message.getOpCode().ordinal(),
-                message.getPayload().getBytes(StandardCharsets.UTF_8)
+                gameMessage.getOpCode().ordinal(),
+                gameMessage.getPayload().getBytes(StandardCharsets.UTF_8)
         );
     }
 

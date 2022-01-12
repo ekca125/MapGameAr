@@ -2,10 +2,9 @@ package com.ekcapaper.racingar.network;
 
 import static org.junit.Assert.*;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-public class MovePlayerMessageTest {
+public class MovePlayerGameMessageTest {
 
     @Test
     public void getPayload() {
@@ -13,7 +12,7 @@ public class MovePlayerMessageTest {
         double latitude = 12;
         double longitude = 23;
 
-        MovePlayerMessage message = MovePlayerMessage
+        GameMessageMovePlayer message = GameMessageMovePlayer
                 .builder()
                 .userId(userId)
                 .latitude(latitude)

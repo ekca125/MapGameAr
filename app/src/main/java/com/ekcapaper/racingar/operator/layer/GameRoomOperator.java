@@ -1,6 +1,6 @@
 package com.ekcapaper.racingar.operator.layer;
 
-import com.ekcapaper.racingar.network.GameEndMessage;
+import com.ekcapaper.racingar.network.GameMessageEnd;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
@@ -30,8 +30,8 @@ public class GameRoomOperator extends GameRoomClient {
     }
 
     @Override
-    public void onGameEnd(GameEndMessage gameEndMessage) {
-        super.onGameEnd(gameEndMessage);
+    public void onGameEnd(GameMessageEnd gameMessageEnd) {
+        super.onGameEnd(gameMessageEnd);
         endCheckTimerTask.cancel();
         endCheckTimer.cancel();
     }
