@@ -80,11 +80,10 @@ public class LobbyActivity extends AppCompatActivity {
                 String collectionName = SaveDataNameDefine.getCollectionName(matchId);
                 String roomInfoKey = SaveDataNameDefine.getDataRoomInfoKey();
 
-                
+
 
 
             }));
-
         }
 
 
