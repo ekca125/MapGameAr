@@ -30,7 +30,7 @@ public class FlagGameRoomOperatorJoinMakerTest {
         session = client.authenticateEmail(AccountStub.ID, AccountStub.PASSWORD).get();
         assertNotNull(session);
 
-        matchId = "d0dd35a6-5cea-40bc-ad1f-ee8e4327e5bb";
+        matchId = "57db5c52-7e4e-4509-b4b2-b7c1a089deb7";
     }
     @Test
     public void make() {

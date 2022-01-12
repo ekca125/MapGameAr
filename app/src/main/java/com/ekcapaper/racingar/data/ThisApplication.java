@@ -6,12 +6,17 @@ import android.content.Context;
 import androidx.multidex.MultiDex;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
+import com.ekcapaper.racingar.modelgame.gameroom.info.reader.RoomInfoReader;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
+import com.heroiclabs.nakama.api.Match;
 import com.heroiclabs.nakama.api.MatchList;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -69,5 +74,17 @@ public class ThisApplication extends Application {
         }
     }
 
+    public List<RoomInfo> getCurrentRoomInfo(){
+        MatchList matchList = getCurrentMatches();
+        if(matchList == null){
+            return new ArrayList<>();
+        }
+        for(Match match : matchList.getMatchesList()){
 
+        }
+
+        matchList.getMatchesList()
+        RoomInfoReader roomInfoReader = new RoomInfoReader(client,session,)
+
+    }
 }
