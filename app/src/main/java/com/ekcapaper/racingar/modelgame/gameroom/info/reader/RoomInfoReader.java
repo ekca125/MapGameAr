@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.modelgame.gameroom.reader;
+package com.ekcapaper.racingar.modelgame.gameroom.info.reader;
 
 import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
