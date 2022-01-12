@@ -27,6 +27,8 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
+
 public class RoomClient implements SocketListener {
     // 서버와의 연동에 필요한 객체
     private final Client client;
@@ -40,6 +42,7 @@ public class RoomClient implements SocketListener {
     // 메시지 로그
     private final List<String> chatLog;
     // 서버와의 연동을 의미하는 객체들(Realtime, Chat Channel)
+    @Getter
     private Match match;
 
     public RoomClient(Client client, Session session) {
@@ -58,10 +61,6 @@ public class RoomClient implements SocketListener {
         channel = null;
         // 콜백 연동
         this.socketClient.connect(session, this);
-    }
-
-    public Optional<Match> getMatch() {
-        return Optional.ofNullable(match);
     }
 
     public boolean createMatch() {
