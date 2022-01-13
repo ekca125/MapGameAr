@@ -1,33 +1,23 @@
 package com.ekcapaper.racingar.data;
 
-import android.Manifest;
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.graphics.Path;
-import android.location.Location;
-import android.os.Looper;
-import android.util.Log;
-import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
 import androidx.multidex.MultiDex;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.reader.RoomInfoReader;
+import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationAvailability;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
+import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorNewMaker;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
-import com.heroiclabs.nakama.api.Match;
 import com.heroiclabs.nakama.api.MatchList;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -90,17 +80,29 @@ public class ThisApplication extends Application {
         }
     }
 
-    public List<RoomInfo> getCurrentRoomInfo(){
+    public List<RoomInfo> getCurrentRoomInfo() {
         MatchList matchList = getCurrentMatches();
-        if(matchList == null){
+        if (matchList == null) {
             return new ArrayList<>();
         }
         return matchList.getMatchesList().stream()
-                .map((match)->{
-                    RoomInfoReader roomInfoReader = new RoomInfoReader(client,session,match.getMatchId());
+                .map((match) -> {
+                    RoomInfoReader roomInfoReader = new RoomInfoReader(client, session, match.getMatchId());
                     return roomInfoReader.readRoomInfo();
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
+
+    public boolean makeGameRoom(GameType gameType, Duration timeLimit, MapRange mapRange) {
+        switch (gameType) {
+            case GAME_TYPE_FLAG:
+                FlagGameRoomOperatorNewMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorNewMaker(client, session, timeLimit, mapRange);
+                currentGameRoomOperator = flagGameRoomOperatorNewMaker.make();
+                return currentGameRoomOperator != null;
+            default:
+                return false;
+        }
+    }
+
 }
