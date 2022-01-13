@@ -43,12 +43,13 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Address"
+                android:hint="Latitude"
                 app:endIconDrawable="@drawable/ic_location_outline"
                 app:endIconMode="custom"
                 app:endIconTint="@color/colorPrimaryLight">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_input_latitude"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -58,12 +59,13 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Address"
+                android:hint="Longitude"
                 app:endIconDrawable="@drawable/ic_location_outline"
                 app:endIconMode="custom"
                 app:endIconTint="@color/colorPrimaryLight">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_input_longitude"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -99,7 +101,7 @@
                 android:id="@+id/button_generate_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="방 생성" />
 
         </LinearLayout>
 

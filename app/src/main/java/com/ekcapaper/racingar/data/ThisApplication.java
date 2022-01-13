@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Path;
 import android.location.Location;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -17,6 +18,7 @@ import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.reader.RoomInfoReader;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -59,6 +61,8 @@ public class ThisApplication extends Application {
 
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         locationCallback = new LocationCallback() {
             @Override
@@ -67,7 +71,9 @@ public class ThisApplication extends Application {
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-                    ThisApplication.this.currentLocation = Optional.ofNullable(location);
+                    if(location != null) {
+                        ThisApplication.this.currentLocation = Optional.ofNullable(location);
+                    }
                 }
             }
         };
