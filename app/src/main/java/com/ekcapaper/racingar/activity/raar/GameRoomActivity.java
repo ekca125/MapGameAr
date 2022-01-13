@@ -16,15 +16,20 @@ import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterGameRoom;
+import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
+import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameRoomActivity extends AppCompatActivity {
+    private ThisApplication thisApplication;
+    private GameRoomOperator gameRoomOperator;
 
     private View parent_view;
 
@@ -39,6 +44,9 @@ public class GameRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_room);
         parent_view = findViewById(android.R.id.content);
+
+        thisApplication = (ThisApplication) getApplicationContext();
+        gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
 
         button_game_start = findViewById(R.id.button_game_start);
         button_game_start.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +75,14 @@ public class GameRoomActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        List<GameRoomInfo> items = DataGenerator.getGameRoomInfo(this);
+        //List<GameRoomInfo> items = DataGenerator.getGameRoomInfo(this);
+        List<GameRoomInfo> items = gameRoomOperator.getPlayerList().stream().map(player->{
+            GameRoomInfo obj = new GameRoomInfo();
+            obj.image = R.drawable.image_2;
+            obj.name = String.valueOf(player.getUserId());
+            obj.imageDrw = this.getResources().getDrawable(obj.image);
+            return obj;
+        }).collect(Collectors.toList());
 
         //set data and list adapter
         mAdapter = new AdapterGameRoom(this, items);

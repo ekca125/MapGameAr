@@ -79,16 +79,16 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Longitude"
-                app:endIconDrawable="@drawable/ic_location_outline"
+                android:hint="Time Limit"
+                app:endIconDrawable="@drawable/ic_timelapse"
                 app:endIconMode="custom"
                 app:endIconTint="@color/colorPrimaryLight">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/text_input_time_limit"
-                    android:inputType="numberDecimal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

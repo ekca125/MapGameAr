@@ -28,22 +28,27 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class GameRoomGenerateActivity extends AppCompatActivity {
     private final int ACTIVITY_REQUEST_CODE = 0;
+    // location checker
     Timer checkTimer;
     TimerTask endCheckTimerTask;
     LocationRequestSpace locationRequestSpace;
     boolean checkAndUpdateStatus;
+    // layout
     private TextInputEditText text_input_latitude;
     private TextInputEditText text_input_longitude;
     private TextInputEditText text_input_time_limit;
     private AutoCompleteTextView dropdown_state;
     private Button button_generate_room;
     private ThisApplication thisApplication;
+    // GameType
     private GameType gameType;
     private GameType[] gameTypeArray;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,42 +71,57 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         text_input_latitude = findViewById(R.id.text_input_latitude);
         text_input_longitude = findViewById(R.id.text_input_longitude);
         text_input_time_limit = findViewById(R.id.text_input_time_limit);
-        // 게임 종류를 확인하는 어댑터 설정
+        dropdown_state = findViewById(R.id.dropdown_state);
+        // 게임 종류를 설정하는 텍스트 입력을 설정
         gameTypeArray = GameType.values();
         ArrayAdapter adapter2 = new ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
                 Arrays.stream(gameTypeArray).map(Enum::toString).collect(Collectors.toList())
         );
-        ((AutoCompleteTextView) findViewById(R.id.dropdown_state)).setAdapter(adapter2);
-        dropdown_state = ((AutoCompleteTextView) findViewById(R.id.dropdown_state));
+        dropdown_state.setAdapter(adapter2);
+        dropdown_state = findViewById(R.id.dropdown_state);
         dropdown_state.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 gameType = gameTypeArray[i];
             }
         });
-
+        // 기본 설정
+        // drop down
+        dropdown_state.setText(GameType.GAME_TYPE_FLAG.toString());
+        // 생성 버튼
+        button_generate_room.setEnabled(false);
+        button_generate_room.setText("위치를 가져오는 중..");
         button_generate_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 generateRoomAndMoveRoom();
             }
         });
+        // time limit
+        text_input_time_limit.setText("3600");
     }
 
-    private void generateRoomAndMoveRoom(){
+    private void generateRoomAndMoveRoom() {
         locationRequestSpace.getCurrentLocation().ifPresent(location -> {
             button_generate_room.setEnabled(false);
-            MapRange mapRange = MapRange.calculateMapRange(location,1);
+            CompletableFuture.supplyAsync(() -> {
+                MapRange mapRange = MapRange.calculateMapRange(location, 1);
+                return thisApplication.makeGameRoom(gameType, Duration.ofSeconds(100), mapRange);
+            }).thenAccept(result -> {
+                GameRoomGenerateActivity.this.runOnUiThread(() -> {
+                    if (result) {
+                        stopCheckAndUpdate();
+                        Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
+                        startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
+                    } else {
+                        Toast.makeText(this, "방 생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    button_generate_room.setEnabled(true);
+                });
+            });
             //boolean result = thisApplication.makeGameRoom(gameType, Duration.ofSeconds(Integer.parseInt(text_input_time_limit.getText().toString())), mapRange);
-            boolean result = thisApplication.makeGameRoom(gameType, Duration.ofSeconds(100), mapRange);
-            if(result){
-                stopCheckAndUpdate();
-                Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
-                startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
-                button_generate_room.setEnabled(true);
-            }
         });
     }
 
@@ -157,6 +177,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                         locationRequestSpace.getCurrentLocation().ifPresent(location -> {
                             text_input_latitude.setText(String.valueOf(Math.abs(location.getLatitude())));
                             text_input_longitude.setText(String.valueOf(Math.abs(location.getLongitude())));
+                            button_generate_room.setEnabled(true);
+                            button_generate_room.setText("방을 생성하기");
                         });
                     });
                 }

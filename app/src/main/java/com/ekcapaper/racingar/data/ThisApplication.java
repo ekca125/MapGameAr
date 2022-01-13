@@ -32,12 +32,12 @@ import lombok.Getter;
 public class ThisApplication extends Application {
     private Client client;
     private Session session;
+
+    @Getter
     private GameRoomOperator currentGameRoomOperator;
 
     @Getter
     private ExecutorService executorService;
-
-
     //
     @Override
     protected void attachBaseContext(Context base) {

@@ -17,7 +17,7 @@
         android:id="@+id/button_game_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start" />
+        android:text="게임 시작" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
