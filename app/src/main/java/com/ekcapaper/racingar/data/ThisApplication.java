@@ -2,6 +2,7 @@ package com.ekcapaper.racingar.data;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.multidex.MultiDex;
@@ -35,7 +36,15 @@ public class ThisApplication extends Application {
 
     @Getter
     private ExecutorService executorService;
+
     // current location - 앱이 실행되는 동안에 계속해서 변경
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    public void startLocationApp(){
+        fusedLocationProviderClient = new FusedLocationProviderClient(this);
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest,
+                locationCallback,
+                Looper.getMainLooper());
+    }
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -55,6 +64,7 @@ public class ThisApplication extends Application {
         session = null;
         currentGameRoomOperator = null;
         executorService = Executors.newFixedThreadPool(4);
+        fusedLocationProviderClient = null;
     }
 
     public void login(String email, String password) {

@@ -44,7 +44,7 @@ public class SetupAppActivity extends AppCompatActivity {
     }
 
     private void startAppStartActivity(){
-        
+
 
 
         Intent intent = new Intent(this,LoginActivity.class);
