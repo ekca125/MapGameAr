@@ -25,8 +25,10 @@ import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 public class GameRoomGenerateActivity extends AppCompatActivity {
     private final int ACTIVITY_REQUEST_CODE = 0;
@@ -36,12 +38,12 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     boolean checkAndUpdateStatus;
     private TextInputEditText text_input_latitude;
     private TextInputEditText text_input_longitude;
+    private TextInputEditText text_input_time_limit;
     private AutoCompleteTextView dropdown_state;
     private Button button_generate_room;
     private ThisApplication thisApplication;
     private GameType gameType;
     private GameType[] gameTypeArray;
-    private String[] gameTypeStringArray;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,14 +65,14 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         button_generate_room = findViewById(R.id.button_generate_room);
         text_input_latitude = findViewById(R.id.text_input_latitude);
         text_input_longitude = findViewById(R.id.text_input_longitude);
+        text_input_time_limit = findViewById(R.id.text_input_time_limit);
         // 게임 종류를 확인하는 어댑터 설정
         gameTypeArray = GameType.values();
-        gameTypeStringArray = new String[gameTypeStringArray.length];
-        for(int i=0;i<gameTypeArray.length;i++){
-            gameTypeStringArray[i] = gameTypeArray[i].toString();
-        }
-
-        ArrayAdapter adapter2 = new ArrayAdapter(this, android.R.layout.simple_list_item_1, gameTypeStringArray);
+        ArrayAdapter adapter2 = new ArrayAdapter(
+                this,
+                android.R.layout.simple_list_item_1,
+                Arrays.stream(gameTypeArray).map(Enum::toString).collect(Collectors.toList())
+        );
         ((AutoCompleteTextView) findViewById(R.id.dropdown_state)).setAdapter(adapter2);
         dropdown_state = ((AutoCompleteTextView) findViewById(R.id.dropdown_state));
         dropdown_state.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -90,12 +92,15 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
 
     private void generateRoomAndMoveRoom(){
         locationRequestSpace.getCurrentLocation().ifPresent(location -> {
+            button_generate_room.setEnabled(false);
             MapRange mapRange = MapRange.calculateMapRange(location,1);
+            //boolean result = thisApplication.makeGameRoom(gameType, Duration.ofSeconds(Integer.parseInt(text_input_time_limit.getText().toString())), mapRange);
             boolean result = thisApplication.makeGameRoom(gameType, Duration.ofSeconds(100), mapRange);
             if(result){
                 stopCheckAndUpdate();
                 Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
                 startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
+                button_generate_room.setEnabled(true);
             }
         });
     }
