@@ -1,5 +1,6 @@
 package com.ekcapaper.racingar.activity.raar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -40,6 +41,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
 
     LocationRequestSpace locationRequestSpace;
 
+    private final int ACTIVITY_REQUEST_CODE = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,9 +69,15 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(),GameRoomActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,ACTIVITY_REQUEST_CODE);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        finish();
     }
 
     @Override
@@ -94,14 +103,14 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         this.checkTimer.cancel();
         this.checkTimer = null;
 
-        locationRequestSpace.stopRequest();
-        locationRequestSpace=null;
+        this.locationRequestSpace.stopRequest();
+        this.locationRequestSpace=null;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        locationRequestSpace = new LocationRequestSpace(this);
+        this.locationRequestSpace = new LocationRequestSpace(this);
 
         this.checkTimer = new Timer();
         this.endCheckTimerTask = new TimerTask() {
