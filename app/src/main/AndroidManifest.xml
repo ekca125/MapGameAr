@@ -20,7 +20,14 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".activity.raar.SetupAppActivity"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".activity.raar.GameMapActivity"
             android:exported="true"></activity>
@@ -36,11 +43,7 @@
         <activity
             android:name=".activity.raar.LoginActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.profile.ProfileRealEstate"
