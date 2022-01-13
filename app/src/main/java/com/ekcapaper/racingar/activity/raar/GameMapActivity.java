@@ -2,12 +2,15 @@ package com.ekcapaper.racingar.activity.raar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
+import com.ekcapaper.racingar.data.ThisApplication;
+import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,6 +33,9 @@ public class GameMapActivity extends AppCompatActivity {
     // map
     private GoogleMap mMap;
     private boolean mapReady;
+    // game room operator
+    private ThisApplication thisApplication;
+    private GameRoomOperator gameRoomOperator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,9 @@ public class GameMapActivity extends AppCompatActivity {
         Tools.setSystemBarColor(this, R.color.colorPrimary);
 
         mapReady = false;
+
+        thisApplication = (ThisApplication) getApplicationContext();
+        gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
     }
 
     private void initMapFragment() {
@@ -97,7 +106,6 @@ public class GameMapActivity extends AppCompatActivity {
         }
     }
 
-    Marker marker = null;
 
     private void startCheckAndUpdate() {
         if (!checkAndUpdateStatus) {
@@ -111,22 +119,28 @@ public class GameMapActivity extends AppCompatActivity {
                     GameMapActivity.this.runOnUiThread(()->{
                         if(mapReady){
                             locationRequestSpace.getCurrentLocation().ifPresent((location)->{
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 13));
-                                if(marker != null){
-                                    marker.remove();
-                                    marker = null;
-                                }
-                                marker = mMap.addMarker(new MarkerOptions()
-                                        .position(new LatLng(location.getLatitude(),location.getLongitude()))
-                                        .title("Marker in Sydney"));
+                                syncGameMap(location);
                             });
-
                         }
                     });
                 }
             };
             this.checkTimer.schedule(endCheckTimerTask, 0, 1000);
         }
+    }
+
+    Marker playerMarker = null;
+    private void syncGameMap(Location location){
+        // 관제 시스템과 연동하는 방법을 만들어보기
+        
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 13));
+        if(playerMarker != null){
+            playerMarker.remove();
+            playerMarker = null;
+        }
+        playerMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(location.getLatitude(),location.getLongitude()))
+                .title("Marker in Sydney"));
     }
 
     @Override
