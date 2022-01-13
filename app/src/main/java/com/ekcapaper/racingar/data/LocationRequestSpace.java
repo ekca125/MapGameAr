@@ -4,8 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Looper;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -18,53 +22,34 @@ import java.util.Optional;
 import lombok.Getter;
 
 public class LocationRequestSpace {
-    // 위치
+    private Context context;
     @Getter
     private Optional<Location> currentLocation;
 
     // 위치 서비스
-    private LocationRequest locationRequest;
-    private LocationCallback locationCallback;
-    private FusedLocationProviderClient fusedLocationProviderClient;
+    LocationManager locationManager;
+    LocationListener locationListener;
 
-    private Context context;
-
-    public LocationRequestSpace(Context context){
+    public LocationRequestSpace(Context context) {
         this.context = context;
-
         currentLocation = Optional.empty();
 
-        locationRequest = LocationRequest.create();
-        locationRequest.setInterval(1000);
-        locationRequest.setFastestInterval(1000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        locationCallback = new LocationCallback() {
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
             @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                for (Location location : locationResult.getLocations()) {
-                    if(location != null) {
-                        LocationRequestSpace.this.currentLocation = Optional.ofNullable(location);
-                    }
-                }
+            public void onLocationChanged(@NonNull Location location) {
+                currentLocation = Optional.ofNullable(location);
             }
         };
 
-        fusedLocationProviderClient = new FusedLocationProviderClient(context);
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        fusedLocationProviderClient.requestLocationUpdates(new LocationRequest(),
-                locationCallback,
-                Looper.getMainLooper());
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
     public void stopRequest(){
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        locationManager.removeUpdates(locationListener);
     }
-
 }
