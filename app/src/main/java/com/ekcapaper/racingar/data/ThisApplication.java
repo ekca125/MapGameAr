@@ -47,46 +47,6 @@ public class ThisApplication extends Application {
     @Getter
     private ExecutorService executorService;
 
-    // 위치
-    @Getter
-    private Optional<Location> currentLocation;
-
-    // 위치 서비스
-    private LocationRequest locationRequest;
-    private LocationCallback locationCallback;
-    private FusedLocationProviderClient fusedLocationProviderClient;
-
-    public void startLocationOversight() {
-        currentLocation = Optional.empty();
-
-        locationRequest = LocationRequest.create();
-        locationRequest.setInterval(1000);
-        locationRequest.setFastestInterval(1000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                for (Location location : locationResult.getLocations()) {
-                    if(location != null) {
-                        ThisApplication.this.currentLocation = Optional.ofNullable(location);
-                    }
-                }
-            }
-        };
-
-        fusedLocationProviderClient = new FusedLocationProviderClient(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        fusedLocationProviderClient.requestLocationUpdates(new LocationRequest(),
-                locationCallback,
-                Looper.getMainLooper());
-    }
 
     //
     @Override
@@ -107,7 +67,6 @@ public class ThisApplication extends Application {
         session = null;
         currentGameRoomOperator = null;
         executorService = Executors.newFixedThreadPool(4);
-        fusedLocationProviderClient = null;
     }
 
     public void login(String email, String password) {

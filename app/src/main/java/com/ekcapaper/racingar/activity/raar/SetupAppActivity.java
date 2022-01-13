@@ -45,9 +45,6 @@ public class SetupAppActivity extends AppCompatActivity {
     }
 
     private void startAppStartActivity(){
-        ThisApplication thisApplication = (ThisApplication) getApplicationContext();
-        thisApplication.startLocationOversight();
-
         Intent intent = new Intent(this,LoginActivity.class);
         startActivityForResult(intent,ACTIVITY_REQUEST_CODE);
     }

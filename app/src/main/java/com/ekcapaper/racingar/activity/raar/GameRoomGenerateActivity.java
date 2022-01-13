@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
+import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.utils.Tools;
@@ -36,6 +37,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
 
     Timer checkTimer;
     TimerTask endCheckTimerTask;
+
+    LocationRequestSpace locationRequestSpace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,17 +93,22 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         super.onPause();
         this.checkTimer.cancel();
         this.checkTimer = null;
+
+        locationRequestSpace.stopRequest();
+        locationRequestSpace=null;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        locationRequestSpace = new LocationRequestSpace(this);
+
         this.checkTimer = new Timer();
         this.endCheckTimerTask = new TimerTask() {
             @Override
             public void run() {
                 GameRoomGenerateActivity.this.runOnUiThread(() -> {
-                    thisApplication.getCurrentLocation().ifPresent(location -> {
+                    locationRequestSpace.getCurrentLocation().ifPresent(location -> {
                         text_input_latitude.setText(String.valueOf(Math.abs(location.getLatitude())));
                         text_input_longitude.setText(String.valueOf(Math.abs(location.getLongitude())));
                     });
