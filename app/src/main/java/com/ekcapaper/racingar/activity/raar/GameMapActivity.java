@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
+import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,9 +18,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class GameMapActivity extends AppCompatActivity {
+import java.util.Timer;
+import java.util.TimerTask;
 
+public class GameMapActivity extends AppCompatActivity {
+    // location checker
+    Timer checkTimer;
+    TimerTask endCheckTimerTask;
+    LocationRequestSpace locationRequestSpace;
+    boolean checkAndUpdateStatus;
+    // map
     private GoogleMap mMap;
+    private boolean mapReady;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +38,8 @@ public class GameMapActivity extends AppCompatActivity {
 
         initMapFragment();
         Tools.setSystemBarColor(this, R.color.colorPrimary);
+
+        mapReady = false;
     }
 
     private void initMapFragment() {
@@ -49,6 +61,7 @@ public class GameMapActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+                mapReady = true;
             }
         });
     }
@@ -71,5 +84,50 @@ public class GameMapActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Add Clicked", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    // location checker
+    private void stopCheckAndUpdate() {
+        if (checkAndUpdateStatus) {
+            checkAndUpdateStatus = false;
+            this.checkTimer.cancel();
+            this.checkTimer = null;
+            this.locationRequestSpace.stopRequest();
+            this.locationRequestSpace = null;
+        }
+    }
+
+    private void startCheckAndUpdate() {
+        if (!checkAndUpdateStatus) {
+            checkAndUpdateStatus = true;
+            this.locationRequestSpace = new LocationRequestSpace(this);
+
+            this.checkTimer = new Timer();
+            this.endCheckTimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    GameMapActivity.this.runOnUiThread(()->{
+                        if(mapReady){
+                            locationRequestSpace.getCurrentLocation().ifPresent((location)->{
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 13));
+                            });
+                        }
+                    });
+                }
+            };
+            this.checkTimer.schedule(endCheckTimerTask, 0, 1000);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startCheckAndUpdate();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopCheckAndUpdate();
     }
 }
