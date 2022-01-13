@@ -1,10 +1,15 @@
 package com.ekcapaper.racingar.data;
 
+import android.Manifest;
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Path;
+import android.location.Location;
 import android.os.Looper;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
 import androidx.multidex.MultiDex;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
@@ -12,6 +17,9 @@ import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.reader.RoomInfoReader;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
@@ -37,15 +45,44 @@ public class ThisApplication extends Application {
     @Getter
     private ExecutorService executorService;
 
-    // current location - 앱이 실행되는 동안에 계속해서 변경
+    // 위치
+    @Getter
+    private Optional<Location> currentLocation;
+
+    // 위치 서비스
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    public void startLocationApp(){
+
+    public void startLocationOversight() {
+        currentLocation = Optional.empty();
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(1000);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    ThisApplication.this.currentLocation = Optional.ofNullable(location);
+                }
+            }
+        };
+
         fusedLocationProviderClient = new FusedLocationProviderClient(this);
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest,
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.requestLocationUpdates(new LocationRequest(),
                 locationCallback,
                 Looper.getMainLooper());
     }
 
+    //
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);

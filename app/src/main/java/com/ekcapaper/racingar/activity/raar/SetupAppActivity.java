@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ekcapaper.racingar.R;
+import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.utils.Tools;
 
 public class SetupAppActivity extends AppCompatActivity {
@@ -44,8 +45,8 @@ public class SetupAppActivity extends AppCompatActivity {
     }
 
     private void startAppStartActivity(){
-
-
+        ThisApplication thisApplication = (ThisApplication) getApplicationContext();
+        thisApplication.startLocationOversight();
 
         Intent intent = new Intent(this,LoginActivity.class);
         startActivityForResult(intent,ACTIVITY_REQUEST_CODE);
