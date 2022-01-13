@@ -97,6 +97,8 @@ public class GameMapActivity extends AppCompatActivity {
         }
     }
 
+    Marker marker = null;
+
     private void startCheckAndUpdate() {
         if (!checkAndUpdateStatus) {
             checkAndUpdateStatus = true;
@@ -110,7 +112,15 @@ public class GameMapActivity extends AppCompatActivity {
                         if(mapReady){
                             locationRequestSpace.getCurrentLocation().ifPresent((location)->{
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 13));
+                                if(marker != null){
+                                    marker.remove();
+                                    marker = null;
+                                }
+                                marker = mMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(location.getLatitude(),location.getLongitude()))
+                                        .title("Marker in Sydney"));
                             });
+
                         }
                     });
                 }
