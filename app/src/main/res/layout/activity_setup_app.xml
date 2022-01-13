@@ -7,11 +7,13 @@
     android:orientation="vertical"
     tools:context=".activity.raar.SetupAppActivity">
 
-    <Button
-        android:id="@+id/button_request_permission"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="권한 요청" />
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <TextView
         android:id="@+id/textView_setup_app"

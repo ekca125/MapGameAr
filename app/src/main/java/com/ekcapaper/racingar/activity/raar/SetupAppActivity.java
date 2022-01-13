@@ -3,6 +3,7 @@ package com.ekcapaper.racingar.activity.raar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -16,12 +17,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ekcapaper.racingar.R;
+import com.ekcapaper.racingar.utils.Tools;
 
 public class SetupAppActivity extends AppCompatActivity {
     private final int PERMISSION_REQUEST_CODE = 1;
     private final int ACTIVITY_REQUEST_CODE = 2;
 
-    Button button_request_permission;
     TextView textView_setup_app;
 
     @Override
@@ -29,32 +30,30 @@ public class SetupAppActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup_app);
 
-        button_request_permission = findViewById(R.id.button_request_permission);
         textView_setup_app = findViewById(R.id.textView_setup_app);
-
-        button_request_permission.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                permissionCheckAndAction();
-            }
-        });
         permissionCheckAndAction();
     }
 
-    private void startNextActivity(){
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_apps);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("권한 요청");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Tools.setSystemBarColor(this);
+    }
+
+    private void startAppStartActivity(){
+        
+
+
         Intent intent = new Intent(this,LoginActivity.class);
         startActivityForResult(intent,ACTIVITY_REQUEST_CODE);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        finish();
-    }
-
     protected void permissionCheckAndAction(){
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            startNextActivity();
+            startAppStartActivity();
         }
         else{
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
@@ -66,8 +65,14 @@ public class SetupAppActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startNextActivity();
+                startAppStartActivity();
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        finish();
     }
 }
