@@ -1,17 +1,15 @@
 package com.ekcapaper.racingar.activity.raar;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.data.LocationRequestSpace;
+import com.ekcapaper.racingar.data.LocationRequestSpaceUpdater;
 import com.ekcapaper.racingar.data.ThisApplication;
-import com.ekcapaper.racingar.modelgame.play.Player;
-import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.gms.maps.CameraUpdate;
@@ -23,15 +21,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.function.Consumer;
 
 public class GameMapActivity extends AppCompatActivity {
     // location checker
-    Timer checkTimer;
-    TimerTask endCheckTimerTask;
-    LocationRequestSpace locationRequestSpace;
-    boolean checkAndUpdateStatus;
+    LocationRequestSpaceUpdater locationRequestSpaceUpdater;
+    Marker playerMarker = null;
     // map
     private GoogleMap mMap;
     private boolean mapReady;
@@ -51,6 +46,8 @@ public class GameMapActivity extends AppCompatActivity {
 
         thisApplication = (ThisApplication) getApplicationContext();
         gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
+
+        locationRequestSpaceUpdater = new LocationRequestSpaceUpdater(this);
     }
 
     private void initMapFragment() {
@@ -71,7 +68,6 @@ public class GameMapActivity extends AppCompatActivity {
         return CameraUpdateFactory.newLatLngZoom(new LatLng(37.76496792, -122.42206407), 13);
     }
 
-
     public void clickAction(View view) {
         int id = view.getId();
         switch (id) {
@@ -87,81 +83,40 @@ public class GameMapActivity extends AppCompatActivity {
         }
     }
 
-    // location checker
-    private void stopCheckAndUpdate() {
-        if (checkAndUpdateStatus) {
-            checkAndUpdateStatus = false;
-            this.checkTimer.cancel();
-            this.checkTimer = null;
-            this.locationRequestSpace.stopRequest();
-            this.locationRequestSpace = null;
+    private void syncGameMap() {
+        if (!mapReady) {
+            return;
         }
-    }
-
-
-    private void startCheckAndUpdate() {
-        if (!checkAndUpdateStatus) {
-            checkAndUpdateStatus = true;
-            this.locationRequestSpace = new LocationRequestSpace(this);
-
-            this.checkTimer = new Timer();
-            this.endCheckTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    GameMapActivity.this.runOnUiThread(()->{
-                        if(mapReady){
-                            locationRequestSpace.getCurrentLocation().ifPresent((location)->{
-                                gameRoomOperator.declareCurrentPlayerMove(location);
-                                syncGameMap();
-                            });
-                        }
-                    });
-                }
-            };
-            this.checkTimer.schedule(endCheckTimerTask, 0, 1000);
-        }
-    }
-
-    Marker playerMarker = null;
-    private void syncGameMap(){
-        // 현재 플레이어의 위치를 이동시킨다.
-        Player player = gameRoomOperator.getCurrentPlayer();
-        player.getLocation().ifPresent(location -> {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 13));
-            if(playerMarker != null){
+        gameRoomOperator.getCurrentPlayer().getLocation().ifPresent(location -> {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+            if (playerMarker != null) {
                 playerMarker.remove();
                 playerMarker = null;
             }
             playerMarker = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(location.getLatitude(),location.getLongitude()))
+                    .position(new LatLng(location.getLatitude(), location.getLongitude()))
                     .title("Marker in Sydney"));
         });
-
-        /*
-        if(gameRoomOperator instanceof FlagGameRoomOperator){
-            FlagGameRoomOperator flagGameRoomOperator = (FlagGameRoomOperator) gameRoomOperator;
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 13));
-            if(playerMarker != null){
-                playerMarker.remove();
-                playerMarker = null;
-            }
-            playerMarker = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(location.getLatitude(),location.getLongitude()))
-                    .title("Marker in Sydney"));
-
-        }
-        */
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        startCheckAndUpdate();
+        locationRequestSpaceUpdater.start(new Consumer<Location>() {
+            @Override
+            public void accept(Location location) {
+                runOnUiThread(() -> {
+                            gameRoomOperator.declareCurrentPlayerMove(location);
+                            syncGameMap();
+                        }
+                );
+            }
+        });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        stopCheckAndUpdate();
+        locationRequestSpaceUpdater.stop();
     }
 }
