@@ -17,13 +17,9 @@ import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterLobby;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
-import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.utils.Tools;
-import com.heroiclabs.nakama.api.Match;
-import com.heroiclabs.nakama.api.MatchList;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,9 +73,6 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void refreshLobby() {
-        // data
-        // items = new ArrayList<>();
-
         List<RoomInfo> roomInfoList = thisApplication.getCurrentRoomInfo();
         items = roomInfoList.stream()
                 .map((roomInfo) -> {
@@ -91,7 +84,6 @@ public class LobbyActivity extends AppCompatActivity {
                     return gameLobbyRoomInfo;
                 })
                 .collect(Collectors.toList());
-
         //set data and list adapter
         mAdapter = new AdapterLobby(this, items);
         recyclerView.setAdapter(mAdapter);
