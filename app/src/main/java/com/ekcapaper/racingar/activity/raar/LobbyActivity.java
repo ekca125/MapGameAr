@@ -37,15 +37,17 @@ public class LobbyActivity extends AppCompatActivity {
     // activity data
     private AdapterLobby mAdapter;
     private List<GameLobbyRoomInfo> items;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
-        parent_view = findViewById(android.R.id.content);
+        // 관제
         thisApplication = (ThisApplication) getApplicationContext();
-
+        // activity component
+        parent_view = findViewById(android.R.id.content);
         button_new_room = findViewById(R.id.button_new_room);
+        // activity component 설정
         button_new_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +57,7 @@ public class LobbyActivity extends AppCompatActivity {
         });
 
         initToolbar();
-        initComponent();
+        initLobbyComponent();
     }
 
     private void initToolbar() {
@@ -67,11 +69,10 @@ public class LobbyActivity extends AppCompatActivity {
         Tools.setSystemBarColor(this);
     }
 
-    private void initComponent() {
+    private void initLobbyComponent() {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-
         refreshLobby();
     }
 
@@ -103,8 +104,6 @@ public class LobbyActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
             }
         });
-        // stub
-        //items.addAll(DataGenerator.getGameRoomInfoData(this));
     }
 
 
