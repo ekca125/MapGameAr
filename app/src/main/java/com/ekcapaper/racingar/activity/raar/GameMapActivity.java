@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.ThisApplication;
+import com.ekcapaper.racingar.modelgame.play.Player;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 import com.ekcapaper.racingar.utils.Tools;
@@ -61,16 +62,6 @@ public class GameMapActivity extends AppCompatActivity {
                 MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(37.7610237, -122.4217785));
                 mMap.addMarker(markerOptions);
                 mMap.moveCamera(zoomingLocation());
-                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-                        try {
-                            mMap.animateCamera(zoomingLocation());
-                        } catch (Exception e) {
-                        }
-                        return true;
-                    }
-                });
                 mapReady = true;
             }
         });
@@ -120,7 +111,8 @@ public class GameMapActivity extends AppCompatActivity {
                     GameMapActivity.this.runOnUiThread(()->{
                         if(mapReady){
                             locationRequestSpace.getCurrentLocation().ifPresent((location)->{
-                                syncGameMap(location);
+                                gameRoomOperator.declareCurrentPlayerMove(location);
+                                syncGameMap();
                             });
                         }
                     });
@@ -131,8 +123,23 @@ public class GameMapActivity extends AppCompatActivity {
     }
 
     Marker playerMarker = null;
-    private void syncGameMap(Location location){
+    private void syncGameMap(){
+        // 현재 플레이어의 위치를 이동시킨다.
+        Player player = gameRoomOperator.getCurrentPlayer();
+        player.getLocation().ifPresent(location -> {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 13));
+            if(playerMarker != null){
+                playerMarker.remove();
+                playerMarker = null;
+            }
+            playerMarker = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(location.getLatitude(),location.getLongitude()))
+                    .title("Marker in Sydney"));
+        });
+
+        /*
         if(gameRoomOperator instanceof FlagGameRoomOperator){
+            FlagGameRoomOperator flagGameRoomOperator = (FlagGameRoomOperator) gameRoomOperator;
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 13));
             if(playerMarker != null){
                 playerMarker.remove();
@@ -143,6 +150,7 @@ public class GameMapActivity extends AppCompatActivity {
                     .title("Marker in Sydney"));
 
         }
+        */
     }
 
     @Override

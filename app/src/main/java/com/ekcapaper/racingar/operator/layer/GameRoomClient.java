@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 
 public class GameRoomClient extends RoomClient {
-    // 게임 플레이어
+    @Getter
     private final Player currentPlayer;
     @Getter
     private List<Player> playerList;
