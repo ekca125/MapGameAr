@@ -20,19 +20,36 @@ import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.utils.Tools;
 
+/*
+    SetupAppActivity 의 흐름
+    1. 권한이 존재하는지 확인한다.
+    2. 권한이 있다면 로그인 액티비티로 이동한다.
+    3. 권한이 없다면 권한을 요청하고 사용자에게 권한을 받으면 로그인 액티비티로 이동한다.
+    4. 권한을 거부당하면 앱을 종료한다.
+*/
+
 public class SetupAppActivity extends AppCompatActivity {
+    // request codes
     private final int PERMISSION_REQUEST_CODE = 1;
     private final int ACTIVITY_REQUEST_CODE = 2;
-
+    // activity component
     TextView textView_setup_app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup_app);
-
+        // activity component
         textView_setup_app = findViewById(R.id.textView_setup_app);
-        permissionCheckAndAction();
+        // activity 설정
+        initToolbar();
+        // 권한을 확인한 후에 실행
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            startAppStartActivity();
+        }
+        else{
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
+        }
     }
 
     private void initToolbar() {
@@ -44,18 +61,15 @@ public class SetupAppActivity extends AppCompatActivity {
         Tools.setSystemBarColor(this);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        finish();
+    }
+
     private void startAppStartActivity(){
         Intent intent = new Intent(this,LoginActivity.class);
         startActivityForResult(intent,ACTIVITY_REQUEST_CODE);
-    }
-
-    protected void permissionCheckAndAction(){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            startAppStartActivity();
-        }
-        else{
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
-        }
     }
 
     @Override
@@ -66,11 +80,5 @@ public class SetupAppActivity extends AppCompatActivity {
                 startAppStartActivity();
             }
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        finish();
     }
 }
