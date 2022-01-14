@@ -28,19 +28,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LobbyActivity extends AppCompatActivity {
-
-    private View parent_view;
-
-    private RecyclerView recyclerView;
-    private AdapterLobby mAdapter;
-
-    private Button button_new_room;
-
-    private List<GameLobbyRoomInfo> items;
-
     // 관제
     private ThisApplication thisApplication;
-
+    // activity component
+    private View parent_view;
+    private RecyclerView recyclerView;
+    private Button button_new_room;
+    // activity data
+    private AdapterLobby mAdapter;
+    private List<GameLobbyRoomInfo> items;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +49,7 @@ public class LobbyActivity extends AppCompatActivity {
         button_new_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),GameRoomGenerateActivity.class);
+                Intent intent = new Intent(getApplicationContext(), GameRoomGenerateActivity.class);
                 startActivity(intent);
             }
         });
@@ -84,7 +81,7 @@ public class LobbyActivity extends AppCompatActivity {
 
         List<RoomInfo> roomInfoList = thisApplication.getCurrentRoomInfo();
         items = roomInfoList.stream()
-                .map((roomInfo)->{
+                .map((roomInfo) -> {
                     GameLobbyRoomInfo gameLobbyRoomInfo = new GameLobbyRoomInfo();
                     gameLobbyRoomInfo.gameType = roomInfo.getGameType();
                     // 위치 정보를 가져와서 설정
@@ -101,7 +98,7 @@ public class LobbyActivity extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
             @Override
             public void onItemClick(View view, GameLobbyRoomInfo obj, int position) {
-                Intent intent = new Intent(getApplicationContext(),GameRoomActivity.class);
+                Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
                 startActivity(intent);
                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
             }
@@ -121,8 +118,7 @@ public class LobbyActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
-        }
-        else if(item.getItemId() == R.id.action_refresh){
+        } else if (item.getItemId() == R.id.action_refresh) {
             refreshLobby();
             Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
         } else {
