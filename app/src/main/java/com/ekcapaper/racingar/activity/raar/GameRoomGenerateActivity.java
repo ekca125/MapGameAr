@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 public class GameRoomGenerateActivity extends AppCompatActivity {
     private final int ACTIVITY_REQUEST_CODE = 0;
     // 상태
-    boolean checkAndUpdateStatus;
     private GameType gameType;
     private GameType[] gameTypeArray;
     // 관제
@@ -45,10 +44,6 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     private TextInputEditText text_input_time_limit;
     private AutoCompleteTextView dropdown_state;
     private Button button_generate_room;
-    // location checker
-    Timer checkTimer;
-    TimerTask endCheckTimerTask;
-    LocationRequestSpace locationRequestSpace;
 
     private void initToolbar(){
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -68,7 +63,6 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         // toolbar 초기화
         initToolbar();
         // 상태
-        checkAndUpdateStatus = false;
         gameType = GameType.GAME_TYPE_FLAG;
         gameTypeArray = GameType.values();
         // 관제
