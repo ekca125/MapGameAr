@@ -33,26 +33,24 @@ import java.util.stream.Collectors;
 
 public class GameRoomGenerateActivity extends AppCompatActivity {
     private final int ACTIVITY_REQUEST_CODE = 0;
-    // location checker
-    Timer checkTimer;
-    TimerTask endCheckTimerTask;
-    LocationRequestSpace locationRequestSpace;
+    // 상태
     boolean checkAndUpdateStatus;
+    private GameType gameType;
+    private GameType[] gameTypeArray;
+    // 관제
+    private ThisApplication thisApplication;
     // layout
     private TextInputEditText text_input_latitude;
     private TextInputEditText text_input_longitude;
     private TextInputEditText text_input_time_limit;
     private AutoCompleteTextView dropdown_state;
     private Button button_generate_room;
-    private ThisApplication thisApplication;
-    // GameType
-    private GameType gameType;
-    private GameType[] gameTypeArray;
+    // location checker
+    Timer checkTimer;
+    TimerTask endCheckTimerTask;
+    LocationRequestSpace locationRequestSpace;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_room_generate);
+    private void initToolbar(){
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_chevron_left);
         toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.grey_60), PorterDuff.Mode.SRC_ATOP);
@@ -61,19 +59,27 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Tools.setSystemBarColor(this, R.color.grey_5);
         Tools.setSystemBarLight(this);
+    }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_game_room_generate);
+        // toolbar 초기화
+        initToolbar();
         // 상태
         checkAndUpdateStatus = false;
         gameType = GameType.GAME_TYPE_FLAG;
-        // 액티비티
+        gameTypeArray = GameType.values();
+        // 관제
         thisApplication = (ThisApplication) getApplicationContext();
+        // 액티비티
         button_generate_room = findViewById(R.id.button_generate_room);
         text_input_latitude = findViewById(R.id.text_input_latitude);
         text_input_longitude = findViewById(R.id.text_input_longitude);
         text_input_time_limit = findViewById(R.id.text_input_time_limit);
         dropdown_state = findViewById(R.id.dropdown_state);
         // 게임 종류를 설정하는 텍스트 입력을 설정
-        gameTypeArray = GameType.values();
         ArrayAdapter adapter2 = new ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
@@ -87,18 +93,19 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 gameType = gameTypeArray[i];
             }
         });
-        // 기본 설정
-        // drop down
-        dropdown_state.setText(GameType.GAME_TYPE_FLAG.toString());
-        // 생성 버튼
-        button_generate_room.setEnabled(false);
-        button_generate_room.setText("위치를 가져오는 중..");
+        // 이벤트 설정
         button_generate_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 generateRoomAndMoveRoom();
             }
         });
+        // 기본 초기화
+        // drop down
+        dropdown_state.setText(GameType.GAME_TYPE_FLAG.toString());
+        // 생성 버튼
+        button_generate_room.setEnabled(false);
+        button_generate_room.setText("위치를 가져오는 중..");
         // time limit
         text_input_time_limit.setText("3600");
     }
@@ -125,7 +132,6 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                     button_generate_room.setEnabled(true);
                 });
             });
-            //boolean result = thisApplication.makeGameRoom(gameType, Duration.ofSeconds(Integer.parseInt(text_input_time_limit.getText().toString())), mapRange);
         });
     }
 

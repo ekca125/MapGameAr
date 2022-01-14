@@ -51,7 +51,7 @@ public class LobbyActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        // init
         initToolbar();
         initLobbyComponent();
     }
