@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpaceUpdater;
 import com.ekcapaper.racingar.data.ThisApplication;
+import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 import com.ekcapaper.racingar.utils.Tools;
@@ -22,13 +23,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class GameMapActivity extends AppCompatActivity {
     // location checker
     LocationRequestSpaceUpdater locationRequestSpaceUpdater;
     // marker
-    Marker playerMarker = null;
+    Optional<Marker> playerMarker;
     // map
     private GoogleMap mMap;
     private boolean mapReady;
@@ -59,6 +63,9 @@ public class GameMapActivity extends AppCompatActivity {
                 );
             }
         });
+        // markers
+        playerMarker = Optional.empty();
+        flagMarkers = new ArrayList<>();
     }
 
     private void initMapFragment() {
@@ -94,6 +101,8 @@ public class GameMapActivity extends AppCompatActivity {
         }
     }
 
+    List<Optional<Marker>> flagMarkers;
+
     private void syncGameMap() {
         if (!mapReady) {
             return;
@@ -101,11 +110,16 @@ public class GameMapActivity extends AppCompatActivity {
         if(gameRoomOperator instanceof FlagGameRoomOperator){
             gameRoomOperator.getCurrentPlayer().getLocation().ifPresent(location -> {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
-                if (playerMarker != null) {
-                    playerMarker.remove();
-                    playerMarker = null;
-                }
-                playerMarker = mMap.addMarker(MarkerFactory.createMarkerOption("flag",location));
+                playerMarker.ifPresent(Marker::remove);
+                playerMarker = Optional.empty();
+                playerMarker = Optional.ofNullable(mMap.addMarker(MarkerFactory.createMarkerOption("player",location)));
+                //
+                flagMarkers.stream().forEach((optionalMarker)-> optionalMarker.ifPresent(Marker::remove));
+                flagMarkers.clear();
+                List<GameFlag> gameFlagList = ((FlagGameRoomOperator) gameRoomOperator).getUnownedFlagList();
+                gameFlagList.stream().forEach((gameFlag -> {
+                    mMap.addMarker(MarkerFactory.createMarkerOption("flag",gameFlag.getLocation()));
+                }));
             });
         }
     }
@@ -129,6 +143,9 @@ public class GameMapActivity extends AppCompatActivity {
 
         public static MarkerOptions createMarkerOption(String type, LatLng latLng){
             if(type.equals("flag")){
+                return new MarkerOptions().position(latLng);
+            }
+            else if(type.equals("player")){
                 return new MarkerOptions().position(latLng);
             }
             else{
