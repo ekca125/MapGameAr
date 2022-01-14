@@ -106,13 +106,17 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     private void generateRoomAndMoveRoom() {
         locationRequestSpace.getCurrentLocation().ifPresent(location -> {
             button_generate_room.setEnabled(false);
+            // 작업
             CompletableFuture.supplyAsync(() -> {
                 MapRange mapRange = MapRange.calculateMapRange(location, 1);
                 return thisApplication.makeGameRoom(gameType, Duration.ofSeconds(100), mapRange);
             }).thenAccept(result -> {
                 GameRoomGenerateActivity.this.runOnUiThread(() -> {
                     if (result) {
+                        // 중지
                         stopCheckAndUpdate();
+                        // 게임 시작 선언
+                        thisApplication.getCurrentGameRoomOperator().declareGameStart();
                         Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
                         startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
                     } else {
