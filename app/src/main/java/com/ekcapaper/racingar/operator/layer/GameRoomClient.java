@@ -125,7 +125,9 @@ public class GameRoomClient extends RoomClient {
     }
 
     public void declareGameStart() {
-        sendMatchData(new GameMessageStart());
+        GameMessageStart gameMessageStart = new GameMessageStart();
+        sendMatchData(gameMessageStart);
+        onGameStart(gameMessageStart);
     }
 
     public void onGameStart(GameMessageStart gameMessageStart) {
@@ -135,6 +137,7 @@ public class GameRoomClient extends RoomClient {
     public void declareCurrentPlayerMove(Location location) {
         GameMessageMovePlayer gameMessageMovePlayer = new GameMessageMovePlayer(currentPlayer.getUserId(), location.getLatitude(), location.getLongitude());
         sendMatchData(gameMessageMovePlayer);
+        onMovePlayer(gameMessageMovePlayer);
     }
 
     public void onMovePlayer(GameMessageMovePlayer gameMessageMovePlayer) {
@@ -148,7 +151,9 @@ public class GameRoomClient extends RoomClient {
     }
 
     public void declareGameEnd() {
-        sendMatchData(new GameMessageEnd());
+        GameMessageEnd gameMessageEnd = new GameMessageEnd();
+        sendMatchData(gameMessageEnd);
+        onGameEnd(gameMessageEnd);
     }
 
     public void onGameEnd(GameMessageEnd gameMessageEnd) {
