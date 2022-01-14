@@ -11,15 +11,17 @@ public class LocationRequestSpaceUpdater extends LocationRequestSpace{
     private boolean running;
     private Timer timer;
     private TimerTask timerTask;
+    private Consumer<Location> runFunction;
 
-    public LocationRequestSpaceUpdater(Context context) {
+    public LocationRequestSpaceUpdater(Context context, Consumer<Location> runFunction) {
         super(context);
-        running = false;
-        timer = null;
-        timerTask = null;
+        this.running = false;
+        this.timer = null;
+        this.timerTask = null;
+        this.runFunction = runFunction;
     }
 
-    public void start(Consumer<Location> runFunction){
+    public void start(){
         if(!running){
             running = true;
             timer = new Timer();

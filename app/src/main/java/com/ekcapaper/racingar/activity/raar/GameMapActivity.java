@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpaceUpdater;
 import com.ekcapaper.racingar.data.ThisApplication;
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.gms.maps.CameraUpdate;
@@ -48,7 +49,16 @@ public class GameMapActivity extends AppCompatActivity {
         thisApplication = (ThisApplication) getApplicationContext();
         gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
 
-        locationRequestSpaceUpdater = new LocationRequestSpaceUpdater(this);
+        locationRequestSpaceUpdater = new LocationRequestSpaceUpdater(this, new Consumer<Location>() {
+            @Override
+            public void accept(Location location) {
+                runOnUiThread(() -> {
+                            gameRoomOperator.declareCurrentPlayerMove(location);
+                            syncGameMap();
+                        }
+                );
+            }
+        });
     }
 
     private void initMapFragment() {
@@ -88,36 +98,42 @@ public class GameMapActivity extends AppCompatActivity {
         if (!mapReady) {
             return;
         }
-        gameRoomOperator.getCurrentPlayer().getLocation().ifPresent(location -> {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
-            if (playerMarker != null) {
-                playerMarker.remove();
-                playerMarker = null;
-            }
-            playerMarker = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(location.getLatitude(), location.getLongitude()))
-                    .title("Marker in Sydney"));
-        });
+        if(gameRoomOperator instanceof FlagGameRoomOperator){
+            gameRoomOperator.getCurrentPlayer().getLocation().ifPresent(location -> {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+                if (playerMarker != null) {
+                    playerMarker.remove();
+                    playerMarker = null;
+                }
+                playerMarker = mMap.addMarker(MarkerFactory.createMarkerOption("flag",location));
+            });
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        locationRequestSpaceUpdater.start(new Consumer<Location>() {
-            @Override
-            public void accept(Location location) {
-                runOnUiThread(() -> {
-                            gameRoomOperator.declareCurrentPlayerMove(location);
-                            syncGameMap();
-                        }
-                );
-            }
-        });
+        locationRequestSpaceUpdater.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         locationRequestSpaceUpdater.stop();
+    }
+
+    static class MarkerFactory{
+        public static MarkerOptions createMarkerOption(String type, Location location){
+            return createMarkerOption(type,new LatLng(location.getLatitude(),location.getLongitude()));
+        }
+
+        public static MarkerOptions createMarkerOption(String type, LatLng latLng){
+            if(type.equals("flag")){
+                return new MarkerOptions().position(latLng);
+            }
+            else{
+                return new MarkerOptions().position(latLng);
+            }
+        }
     }
 }

@@ -108,7 +108,17 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         // time limit
         text_input_time_limit.setText("3600");
         // 위치 갱신 시작
-        locationRequestSpaceUpdater = new LocationRequestSpaceUpdater(this);
+        locationRequestSpaceUpdater = new LocationRequestSpaceUpdater(this, new Consumer<Location>() {
+            @Override
+            public void accept(Location location) {
+                runOnUiThread(() -> {
+                    text_input_latitude.setText(String.valueOf(Math.abs(location.getLatitude())));
+                    text_input_longitude.setText(String.valueOf(Math.abs(location.getLongitude())));
+                    button_generate_room.setEnabled(true);
+                    button_generate_room.setText("방을 생성하기");
+                });
+            }
+        });
     }
 
     private void generateRoomAndMoveRoom() {
@@ -169,16 +179,6 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        locationRequestSpaceUpdater.start(new Consumer<Location>() {
-            @Override
-            public void accept(Location location) {
-                runOnUiThread(() -> {
-                    text_input_latitude.setText(String.valueOf(Math.abs(location.getLatitude())));
-                    text_input_longitude.setText(String.valueOf(Math.abs(location.getLongitude())));
-                    button_generate_room.setEnabled(true);
-                    button_generate_room.setText("방을 생성하기");
-                });
-            }
-        });
+        locationRequestSpaceUpdater.start();
     }
 }
