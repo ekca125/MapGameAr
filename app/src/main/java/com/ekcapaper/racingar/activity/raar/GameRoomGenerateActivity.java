@@ -2,6 +2,7 @@ package com.ekcapaper.racingar.activity.raar;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
+import com.ekcapaper.racingar.data.LocationRequestSpaceUpdater;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.play.GameType;
@@ -29,6 +31,7 @@ import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class GameRoomGenerateActivity extends AppCompatActivity {
@@ -44,7 +47,9 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     private TextInputEditText text_input_time_limit;
     private AutoCompleteTextView dropdown_state;
     private Button button_generate_room;
-
+    // 위치 갱신
+    LocationRequestSpaceUpdater locationRequestSpaceUpdater;
+    
     private void initToolbar(){
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_chevron_left);
@@ -102,20 +107,23 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         button_generate_room.setText("위치를 가져오는 중..");
         // time limit
         text_input_time_limit.setText("3600");
+        // 위치 갱신 시작
+        locationRequestSpaceUpdater = new LocationRequestSpaceUpdater(this);
     }
 
     private void generateRoomAndMoveRoom() {
-        locationRequestSpace.getCurrentLocation().ifPresent(location -> {
+        locationRequestSpaceUpdater.getCurrentLocation().ifPresent(location -> {
             button_generate_room.setEnabled(false);
-            // 작업
             CompletableFuture.supplyAsync(() -> {
+                // 방 만들기
                 MapRange mapRange = MapRange.calculateMapRange(location, 1);
                 return thisApplication.makeGameRoom(gameType, Duration.ofSeconds(100), mapRange);
             }).thenAccept(result -> {
+                // 방을 만든 후에 진행
                 GameRoomGenerateActivity.this.runOnUiThread(() -> {
                     if (result) {
                         // 중지
-                        stopCheckAndUpdate();
+                        locationRequestSpaceUpdater.stop();
                         // 게임 시작 선언
                         thisApplication.getCurrentGameRoomOperator().declareGameStart();
                         Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
@@ -155,45 +163,22 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        stopCheckAndUpdate();
-    }
-
-    private void stopCheckAndUpdate() {
-        if (checkAndUpdateStatus) {
-            checkAndUpdateStatus = false;
-            this.checkTimer.cancel();
-            this.checkTimer = null;
-            this.locationRequestSpace.stopRequest();
-            this.locationRequestSpace = null;
-        }
-    }
-
-    private void startCheckAndUpdate() {
-        if (!checkAndUpdateStatus) {
-            checkAndUpdateStatus = true;
-            this.locationRequestSpace = new LocationRequestSpace(this);
-
-            this.checkTimer = new Timer();
-            this.endCheckTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    GameRoomGenerateActivity.this.runOnUiThread(() -> {
-                        locationRequestSpace.getCurrentLocation().ifPresent(location -> {
-                            text_input_latitude.setText(String.valueOf(Math.abs(location.getLatitude())));
-                            text_input_longitude.setText(String.valueOf(Math.abs(location.getLongitude())));
-                            button_generate_room.setEnabled(true);
-                            button_generate_room.setText("방을 생성하기");
-                        });
-                    });
-                }
-            };
-            this.checkTimer.schedule(endCheckTimerTask, 0, 1000);
-        }
+        locationRequestSpaceUpdater.stop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        startCheckAndUpdate();
+        locationRequestSpaceUpdater.start(new Consumer<Location>() {
+            @Override
+            public void accept(Location location) {
+                runOnUiThread(() -> {
+                    text_input_latitude.setText(String.valueOf(Math.abs(location.getLatitude())));
+                    text_input_longitude.setText(String.valueOf(Math.abs(location.getLongitude())));
+                    button_generate_room.setEnabled(true);
+                    button_generate_room.setText("방을 생성하기");
+                });
+            }
+        });
     }
 }
