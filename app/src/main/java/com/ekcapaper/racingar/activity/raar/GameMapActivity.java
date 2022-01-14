@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 public class GameMapActivity extends AppCompatActivity {
     // location checker
     LocationRequestSpaceUpdater locationRequestSpaceUpdater;
+    // marker
     Marker playerMarker = null;
     // map
     private GoogleMap mMap;

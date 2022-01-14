@@ -20,28 +20,26 @@ public class LocationRequestSpaceUpdater extends LocationRequestSpace{
     }
 
     public void start(Consumer<Location> runFunction){
-        if(running){
-            throw new IllegalStateException();
+        if(!running){
+            running = true;
+            timer = new Timer();
+            timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    getCurrentLocation().ifPresent(runFunction);
+                }
+            };
+            timer.schedule(timerTask, 0, 1000);
         }
-        running = true;
-        timer = new Timer();
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                getCurrentLocation().ifPresent(runFunction);
-            }
-        };
-        timer.schedule(timerTask, 0, 1000);
     }
 
     public void stop(){
-        if(!running){
-            throw new IllegalStateException();
+        if(running) {
+            running = false;
+            timerTask.cancel();
+            timerTask = null;
+            timer.cancel();
+            timer = null;
         }
-        running = false;
-        timerTask.cancel();
-        timerTask = null;
-        timer.cancel();
-        timer = null;
     }
 }
