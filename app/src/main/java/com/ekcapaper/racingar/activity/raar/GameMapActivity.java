@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.ThisApplication;
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.gms.maps.CameraUpdate;
@@ -131,16 +132,17 @@ public class GameMapActivity extends AppCompatActivity {
 
     Marker playerMarker = null;
     private void syncGameMap(Location location){
-        // 관제 시스템과 연동하는 방법을 만들어보기
-        
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 13));
-        if(playerMarker != null){
-            playerMarker.remove();
-            playerMarker = null;
+        if(gameRoomOperator instanceof FlagGameRoomOperator){
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 13));
+            if(playerMarker != null){
+                playerMarker.remove();
+                playerMarker = null;
+            }
+            playerMarker = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(location.getLatitude(),location.getLongitude()))
+                    .title("Marker in Sydney"));
+
         }
-        playerMarker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(location.getLatitude(),location.getLongitude()))
-                .title("Marker in Sydney"));
     }
 
     @Override
