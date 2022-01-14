@@ -43,6 +43,9 @@ public class GameRoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_room);
+        initToolbar();
+        initComponent();
+
         parent_view = findViewById(android.R.id.content);
 
         thisApplication = (ThisApplication) getApplicationContext();
@@ -56,9 +59,6 @@ public class GameRoomActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        initToolbar();
-        initComponent();
     }
 
     private void initToolbar() {
