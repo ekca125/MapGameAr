@@ -23,7 +23,7 @@ import com.ekcapaper.racingar.utils.Tools;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class LobbyActivity extends AppCompatActivity {
+public class LobbyActivity extends AppCompatActivity implements ActivityInitializer{
     // 관제
     private ThisApplication thisApplication;
     // activity component
@@ -38,20 +38,8 @@ public class LobbyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
-        // 관제
-        thisApplication = (ThisApplication) getApplicationContext();
-        // activity component
-        parent_view = findViewById(android.R.id.content);
-        button_new_room = findViewById(R.id.button_new_room);
-        // activity component 설정
-        button_new_room.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), GameRoomGenerateActivity.class);
-                startActivity(intent);
-            }
-        });
         // init
+        initActivity();
         initToolbar();
         initLobbyComponent();
     }
@@ -66,7 +54,6 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void initLobbyComponent() {
-        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         refreshLobby();
@@ -116,5 +103,28 @@ public class LobbyActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void initActivityField() {
+        thisApplication = (ThisApplication) getApplicationContext();
+    }
+
+    @Override
+    public void initActivityComponent() {
+        parent_view = findViewById(android.R.id.content);
+        button_new_room = findViewById(R.id.button_new_room);
+        recyclerView = findViewById(R.id.recyclerView);
+    }
+
+    @Override
+    public void initActivityEventTask() {
+        button_new_room.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), GameRoomGenerateActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
