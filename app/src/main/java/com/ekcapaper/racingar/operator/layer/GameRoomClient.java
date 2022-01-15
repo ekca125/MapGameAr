@@ -94,6 +94,10 @@ public class GameRoomClient implements SocketListener {
             match = socketClient.createMatch().get();
             channel = socketClient.joinChat(getChannelId(match.getMatchId()), ChannelType.ROOM).get();
 
+            List<UserPresence> userPresenceList = new ArrayList<>();
+            userPresenceList.add(match.getSelf());
+            onMatchJoinPresence(userPresenceList);
+
             activeGameRoom = true;
             return true;
         } catch (ExecutionException | InterruptedException e) {
@@ -112,6 +116,12 @@ public class GameRoomClient implements SocketListener {
         try {
             match = socketClient.joinMatch(matchId).get();
             channel = socketClient.joinChat(getChannelId(match.getMatchId()), ChannelType.ROOM).get();
+
+            List<UserPresence> userPresenceList = new ArrayList<>();
+            userPresenceList.add(match.getSelf());
+            userPresenceList.addAll(match.getPresences());
+            onMatchJoinPresence(userPresenceList);
+
             activeGameRoom = true;
             return true;
         } catch (ExecutionException | InterruptedException e) {
