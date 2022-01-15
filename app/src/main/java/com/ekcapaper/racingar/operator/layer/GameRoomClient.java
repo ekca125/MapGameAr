@@ -1,5 +1,7 @@
 package com.ekcapaper.racingar.operator.layer;
 
+import android.util.Log;
+
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.network.GameMessage;
@@ -80,7 +82,7 @@ public class GameRoomClient implements SocketListener {
     }
 
     public String getMatchId(){
-        return RoomDataSpace.normalizeMatchId(match.getMatchId());
+        return match.getMatchId();
     }
 
     public boolean createMatch() {

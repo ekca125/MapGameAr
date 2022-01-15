@@ -55,7 +55,7 @@ public class GameRoomClientTest {
     @Test
     public void createMatch() {
         GameRoomClient gameRoomClient = new GameRoomClient(client,session);
-        gameRoomClient.createMatch();
+        assertTrue(gameRoomClient.createMatch());
         gameRoomClient.leaveMatch();
     }
 
@@ -71,14 +71,22 @@ public class GameRoomClientTest {
     }
 
     @Test
-    public void matchJoinLeave() {
+    public void joinTest() {
         GameRoomClient gameRoomClient = new GameRoomClient(client,session);
-        gameRoomClient.createMatch();
+        assertTrue(gameRoomClient.createMatch());
         GameRoomClient gameRoomClient2 = new GameRoomClient(client2,session2);
-        gameRoomClient2.joinMatch(gameRoomClient.getMatchId());
+        assertTrue(gameRoomClient2.joinMatch(gameRoomClient.getMatchId()));
         gameRoomClient.leaveMatch();
         gameRoomClient2.leaveMatch();
     }
 
-
+    @Test
+    public void matchJoinLeave() {
+        GameRoomClient gameRoomClient = new GameRoomClient(client,session);
+        assertTrue(gameRoomClient.createMatch());
+        GameRoomClient gameRoomClient2 = new GameRoomClient(client2,session2);
+        assertTrue(gameRoomClient2.joinMatch(gameRoomClient.getMatchId()));
+        gameRoomClient.leaveMatch();
+        gameRoomClient2.leaveMatch();
+    }
 }
