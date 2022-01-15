@@ -23,7 +23,6 @@ import com.heroiclabs.nakama.api.NotificationList;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -34,13 +33,13 @@ public class GameRoomClient implements SocketListener {
     private final Client client;
     private final Session session;
     private final SocketClient socketClient;
+    private final Channel channel;
+    // 메시지 로그
+    private final List<String> chatLog;
     // 유저 프로필 (Realtime)
     private List<UserPresence> matchUserPresenceList;
     // 유저 프로필 (Chat Channel)
     private List<UserPresence> channelUserPresenceList;
-    private final Channel channel;
-    // 메시지 로그
-    private final List<String> chatLog;
     // 서버와의 연동을 의미하는 객체들(Realtime, Chat Channel)
     @Getter
     private Match match;
@@ -110,6 +109,20 @@ public class GameRoomClient implements SocketListener {
 
     }
 
+    /*
+        Code	Purpose	Source	Description
+    0	chat message	user	All messages sent by users.
+    1	chat update	user	A user updating a message they previously sent.
+    2	chat remove	user	A user removing a message they previously sent.
+    3	joined group	server	An event message for when a user joined the group.
+    4	added to group	server	An event message for when a user was added to the group.
+    5	left group	server	An event message for when a user left a group.
+    6	kicked from group	server	An event message for when an admin kicked a user from the group.
+    7  	promoted in group	server	An event message for when a user is promoted as a group admin.
+    8	banned in group	server	An event message for when a user got banned from a group.
+    9	demoted in group	server	An event message for when a user got demoted in group.
+
+     */
     @Override
     public void onChannelMessage(ChannelMessage message) {
         String chat;
