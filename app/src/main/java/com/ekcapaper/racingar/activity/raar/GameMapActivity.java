@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.data.LocationRequestSpaceUpdater;
+import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 
 public class GameMapActivity extends AppCompatActivity {
     // location checker
-    LocationRequestSpaceUpdater locationRequestSpaceUpdater;
+    LocationRequestSpace locationRequestSpace;
     // marker
     Optional<Marker> playerMarker;
     // map
@@ -53,7 +53,7 @@ public class GameMapActivity extends AppCompatActivity {
         thisApplication = (ThisApplication) getApplicationContext();
         gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
 
-        locationRequestSpaceUpdater = new LocationRequestSpaceUpdater(this, new Consumer<Location>() {
+        locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
             @Override
             public void accept(Location location) {
                 runOnUiThread(() -> {
@@ -127,13 +127,13 @@ public class GameMapActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        locationRequestSpaceUpdater.start();
+        locationRequestSpace.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        locationRequestSpaceUpdater.stop();
+        locationRequestSpace.stop();
     }
 
     static class MarkerFactory{

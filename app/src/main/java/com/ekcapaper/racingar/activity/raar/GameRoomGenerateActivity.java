@@ -19,7 +19,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
-import com.ekcapaper.racingar.data.LocationRequestSpaceUpdater;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.play.GameType;
@@ -28,8 +27,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -122,27 +120,32 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     }
 
     private void generateRoomAndMoveRoom() {
-        locationRequestSpace.getCurrentLocation().ifPresent(location -> {
-            button_generate_room.setEnabled(false);
-            CompletableFuture.supplyAsync(() -> {
-                // 방 만들기
-                MapRange mapRange = MapRange.calculateMapRange(location, 1);
-                return thisApplication.makeGameRoom(gameType, Duration.ofSeconds(100), mapRange);
-            }).thenAccept(result -> {
-                // 방을 만든 후에 진행
-                GameRoomGenerateActivity.this.runOnUiThread(() -> {
-                    if (result) {
-                        // 중지
-                        locationRequestSpaceUpdater.stop();
-                        // 게임 시작 선언
-                        thisApplication.getCurrentGameRoomOperator().declareGameStart();
-                        Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
-                        startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
-                    } else {
-                        Toast.makeText(this, "방 생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                    button_generate_room.setEnabled(true);
-                });
+        button_generate_room.setEnabled(false);
+        // 데이터 준비
+        double latitude = Double.parseDouble(Objects.requireNonNull(text_input_latitude.getText()).toString());
+        double longitude = Double.parseDouble(Objects.requireNonNull(text_input_longitude.getText()).toString());
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        // 방 생성 쓰레드 실행
+        CompletableFuture.supplyAsync(() -> {
+            // 방 만들기
+            MapRange mapRange = MapRange.calculateMapRange(location, 1);
+            return thisApplication.makeGameRoom(gameType, Duration.ofSeconds(100), mapRange);
+        }).thenAccept(result -> {
+            // 방을 만든 후에 진행
+            GameRoomGenerateActivity.this.runOnUiThread(() -> {
+                if (result) {
+                    // 중지
+                    locationRequestSpace.stop();
+                    // 게임 시작 선언
+                    thisApplication.getCurrentGameRoomOperator().declareGameStart();
+                    Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
+                    startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
+                } else {
+                    Toast.makeText(this, "방 생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                }
+                button_generate_room.setEnabled(true);
             });
         });
     }
@@ -173,12 +176,12 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        locationRequestSpaceUpdater.stop();
+        locationRequestSpace.stop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        locationRequestSpaceUpdater.start();
+        locationRequestSpace.start();
     }
 }
