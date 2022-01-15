@@ -72,17 +72,16 @@ public class ThisApplication extends Application {
     }
 
 
-    public MatchList getCurrentMatches() {
-        try {
-            return client.listMatches(session).get();
-        } catch (ExecutionException | InterruptedException | NullPointerException e) {
-            return null;
-        }
+    public MatchList getCurrentMatches() throws ExecutionException, InterruptedException {
+        return client.listMatches(session).get();
     }
 
     public List<RoomInfo> getCurrentRoomInfo() {
-        MatchList matchList = getCurrentMatches();
-        if (matchList == null) {
+        MatchList matchList = null;
+        try {
+            matchList = getCurrentMatches();
+        }
+        catch (ExecutionException | InterruptedException e) {
             return new ArrayList<>();
         }
         return matchList.getMatchesList().stream()

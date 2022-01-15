@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-public class LoginActivity extends AppCompatActivity implements ActivityInitializer{
+public class LoginActivity extends AppCompatActivity implements ActivityInitializer {
     // 관제
     private ThisApplication thisApplication;
     // activity component
@@ -62,13 +62,12 @@ public class LoginActivity extends AppCompatActivity implements ActivityInitiali
 
                 CompletableFuture.runAsync(() -> {
                     thisApplication.login(email, password);
-                }, thisApplication.getExecutorService())
-                        .thenRun(() -> {
-                            thisApplication.getSessionOptional().ifPresent(session -> {
-                                Intent intent = new Intent(LoginActivity.this, LobbyActivity.class);
-                                startActivity(intent);
-                            });
-                        });
+                }).thenRun(() -> {
+                    thisApplication.getSessionOptional().ifPresent(session -> {
+                        Intent intent = new Intent(LoginActivity.this, LobbyActivity.class);
+                        startActivity(intent);
+                    });
+                });
             }
         });
         findViewById(R.id.sign_up).setOnClickListener(new View.OnClickListener() {
