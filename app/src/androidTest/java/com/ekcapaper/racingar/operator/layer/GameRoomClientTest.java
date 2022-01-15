@@ -80,24 +80,5 @@ public class GameRoomClientTest {
         gameRoomClient2.leaveMatch();
     }
 
-    @Test
-    public void matchPlayerPresence() throws InterruptedException {
-        GameRoomClient gameRoomClient = new GameRoomClient(client,session);
-        gameRoomClient.createMatch();
-
-        List<UserPresence> userPresence = gameRoomClient.getMatchUserPresenceList();
-        userPresence.get(0).getUserId();
-
-        assertEquals(1,gameRoomClient.getMatchUserPresenceList().size());
-
-        GameRoomClient gameRoomClient2 = new GameRoomClient(client2,session2);
-        gameRoomClient2.joinMatch(gameRoomClient.getMatchId());
-
-        assertEquals(2,gameRoomClient2.getMatchUserPresenceList().size());
-
-        gameRoomClient.leaveMatch();
-
-
-    }
 
 }
