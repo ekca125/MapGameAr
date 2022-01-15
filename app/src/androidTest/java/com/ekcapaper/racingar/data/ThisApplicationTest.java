@@ -1,5 +1,6 @@
 package com.ekcapaper.racingar.data;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -49,6 +50,10 @@ public class ThisApplicationTest {
         GameRoomPlayClient gameRoomPlayClient = new GameRoomPlayClient(client,session);
         try{
             assertTrue(gameRoomPlayClient.createMatch());
+            assertNotNull(thisApplication.getCurrentMatches());
+            assertEquals(1,thisApplication.getCurrentMatches().getMatchesCount());
+            assertNotNull(thisApplication.getCurrentRoomInfo());
+            assertEquals(1,thisApplication.getCurrentRoomInfo().size());
         } finally {
             gameRoomPlayClient.leaveMatch();
         }

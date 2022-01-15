@@ -2,11 +2,13 @@ package com.ekcapaper.racingar.data;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.multidex.MultiDex;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.reader.RoomInfoReader;
 import com.ekcapaper.racingar.modelgame.play.GameType;
@@ -15,6 +17,7 @@ import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorNewMaker;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
+import com.heroiclabs.nakama.api.Match;
 import com.heroiclabs.nakama.api.MatchList;
 
 import java.time.Duration;
@@ -82,15 +85,17 @@ public class ThisApplication extends Application {
             matchList = getCurrentMatches();
         }
         catch (ExecutionException | InterruptedException e) {
-            return new ArrayList<>();
+            return null;
         }
-        return matchList.getMatchesList().stream()
-                .map((match) -> {
-                    RoomInfoReader roomInfoReader = new RoomInfoReader(client, session, match.getMatchId());
-                    return roomInfoReader.readRoomInfo();
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        List<Match> matches =  matchList.getMatchesList();
+        List<RoomInfo> roomInfoList = new ArrayList<>();
+        for(Match match:matches){
+            RoomInfoReader roomInfoReader = new RoomInfoReader(client, session, RoomDataSpace.normalizeMatchId(match.getMatchId()));
+            RoomInfo roomInfo = roomInfoReader.readRoomInfo();
+            roomInfoList.add(roomInfo);
+            Log.d("RoomINFO",roomInfo.getMatchId());
+        }
+        return roomInfoList;
     }
 
     public boolean makeGameRoom(GameType gameType, Duration timeLimit, MapRange mapRange) {

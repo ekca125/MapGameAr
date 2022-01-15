@@ -32,10 +32,12 @@ public class FlagGameRoomOperatorJoinMakerTest {
 
         matchId = "57db5c52-7e4e-4509-b4b2-b7c1a089deb7";
     }
+    /*
     @Test
     public void make() {
         FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
         FlagGameRoomPlayOperator flagGameRoomOperator = (FlagGameRoomPlayOperator) flagGameRoomOperatorJoinMaker.make();
         assertNotNull(flagGameRoomOperator);
     }
+    */
 }
