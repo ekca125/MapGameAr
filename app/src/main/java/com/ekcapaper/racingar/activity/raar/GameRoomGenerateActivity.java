@@ -149,7 +149,6 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         text_input_longitude = findViewById(R.id.text_input_longitude);
         text_input_time_limit = findViewById(R.id.text_input_time_limit);
         dropdown_state = findViewById(R.id.dropdown_state);
-
         // drop down
         dropdown_state.setText(GameType.GAME_TYPE_FLAG.toString());
         // 생성 버튼
@@ -180,7 +179,6 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
                 generateRoomAndMoveRoom();
             }
         });
-
         // 위치 갱신 시작
         locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
             @Override
