@@ -48,7 +48,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     private AutoCompleteTextView dropdown_state;
     private Button button_generate_room;
     // 위치 갱신
-    LocationRequestSpaceUpdater locationRequestSpaceUpdater;
+    LocationRequestSpace locationRequestSpace;
     
     private void initToolbar(){
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -108,7 +108,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         // time limit
         text_input_time_limit.setText("3600");
         // 위치 갱신 시작
-        locationRequestSpaceUpdater = new LocationRequestSpaceUpdater(this, new Consumer<Location>() {
+        locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
             @Override
             public void accept(Location location) {
                 runOnUiThread(() -> {
@@ -122,7 +122,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     }
 
     private void generateRoomAndMoveRoom() {
-        locationRequestSpaceUpdater.getCurrentLocation().ifPresent(location -> {
+        locationRequestSpace.getCurrentLocation().ifPresent(location -> {
             button_generate_room.setEnabled(false);
             CompletableFuture.supplyAsync(() -> {
                 // 방 만들기

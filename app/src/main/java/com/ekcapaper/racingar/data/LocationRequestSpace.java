@@ -12,36 +12,34 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import com.ekcapaper.racingar.stub.LocationStub;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.function.Consumer;
 
 import lombok.Getter;
 
 public class LocationRequestSpace {
+    // 정보
     private Context context;
-    @Getter
-    private Optional<Location> currentLocation;
- 
     // 위치 서비스
     LocationManager locationManager;
     LocationListener locationListener;
 
-    public LocationRequestSpace(Context context) {
+    public LocationRequestSpace(Context context, Consumer<Location> runFunction) {
         this.context = context;
-        currentLocation = Optional.empty();
 
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                currentLocation = Optional.ofNullable(location);
-            }
-        };
+        locationListener = runFunction::accept;
+    }
 
+    public void start(){
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -49,7 +47,7 @@ public class LocationRequestSpace {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
-    public void stopRequest(){
+    public void stop(){
         locationManager.removeUpdates(locationListener);
     }
 }
