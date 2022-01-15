@@ -28,7 +28,7 @@ public class GameRoomClient extends RoomClient {
     @Getter
     private final Player currentPlayer;
     @Getter
-    private List<Player> playerList;
+    private List<Player> playerList; 
     @Getter
     private GameStatus gameStatus;
 
