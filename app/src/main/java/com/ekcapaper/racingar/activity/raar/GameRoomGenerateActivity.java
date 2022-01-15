@@ -69,19 +69,18 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
 
     private void generateRoomAndMoveRoom() {
         button_generate_room.setEnabled(false);
-        // 데이터 준비
+        // latitude, longitude
         double latitude = Double.parseDouble(Objects.requireNonNull(text_input_latitude.getText()).toString());
         double longitude = Double.parseDouble(Objects.requireNonNull(text_input_longitude.getText()).toString());
+        // location
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
-        // 방 생성 쓰레드 실행
+        // 방 생성
         CompletableFuture.supplyAsync(() -> {
-            // 방 만들기
             MapRange mapRange = MapRange.calculateMapRange(location, 1);
             return thisApplication.makeGameRoom(gameType, Duration.ofSeconds(100), mapRange);
         }).thenAccept(result -> {
-            // 방을 만든 후에 진행
             GameRoomGenerateActivity.this.runOnUiThread(() -> {
                 if (result) {
                     // 중지
