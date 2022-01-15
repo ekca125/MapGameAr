@@ -75,7 +75,7 @@ public class ThisApplication extends Application {
     public MatchList getCurrentMatches() {
         try {
             return client.listMatches(session).get();
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (ExecutionException | InterruptedException | NullPointerException e) {
             return null;
         }
     }
