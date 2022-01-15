@@ -25,7 +25,7 @@ public class LocationRequestSpace {
     private Context context;
     @Getter
     private Optional<Location> currentLocation;
-
+ 
     // 위치 서비스
     LocationManager locationManager;
     LocationListener locationListener;
