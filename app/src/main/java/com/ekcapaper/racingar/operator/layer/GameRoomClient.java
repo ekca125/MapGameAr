@@ -93,6 +93,7 @@ public class GameRoomClient implements SocketListener {
         try {
             match = socketClient.createMatch().get();
             channel = socketClient.joinChat(getChannelId(match.getMatchId()), ChannelType.ROOM).get();
+
             activeGameRoom = true;
             return true;
         } catch (ExecutionException | InterruptedException e) {
@@ -192,19 +193,28 @@ public class GameRoomClient implements SocketListener {
         }
     }
 
+    // final 로 변경한다.
     @Override
     public void onChannelPresence(ChannelPresenceEvent presence) {
         // join 처리
         List<UserPresence> joinList = presence.getJoins();
         if (joinList != null) {
-            channelUserPresenceList.addAll(joinList);
+            onChannelJoinPresence(joinList);
         }
 
         // leave 처리
         List<UserPresence> leaveList = presence.getLeaves();
         if (leaveList != null) {
-            channelUserPresenceList.removeAll(leaveList);
+            onChannelLeavePresence(leaveList);
         }
+    }
+
+    public void onChannelJoinPresence(List<UserPresence> joinList) {
+        channelUserPresenceList.addAll(joinList);
+    }
+
+    public void onChannelLeavePresence(List<UserPresence> leaveList) {
+        channelUserPresenceList.removeAll(leaveList);
     }
 
     @Override
@@ -217,19 +227,28 @@ public class GameRoomClient implements SocketListener {
 
     }
 
+    // final로 변경한다.
     @Override
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
         // join 처리
         List<UserPresence> joinList = matchPresence.getJoins();
         if (joinList != null) {
-            channelUserPresenceList.addAll(joinList);
+            onMatchJoinPresence(joinList);
         }
 
         // leave 처리
         List<UserPresence> leaveList = matchPresence.getLeaves();
         if (leaveList != null) {
-            channelUserPresenceList.removeAll(leaveList);
+            onMatchLeavePresence(leaveList);
         }
+    }
+
+    public void onMatchJoinPresence(List<UserPresence> joinList) {
+        matchUserPresenceList.addAll(joinList);
+    }
+
+    public void onMatchLeavePresence(List<UserPresence> leaveList) {
+        matchUserPresenceList.removeAll(leaveList);
     }
 
     @Override

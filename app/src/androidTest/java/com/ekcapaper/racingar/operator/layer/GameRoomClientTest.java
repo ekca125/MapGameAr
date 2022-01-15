@@ -55,16 +55,19 @@ public class GameRoomClientTest {
     @Test
     public void createMatch() {
         GameRoomClient gameRoomClient = new GameRoomClient(client,session);
-        assertTrue(gameRoomClient.createMatch());
-        gameRoomClient.leaveMatch();
+        try{
+            assertTrue(gameRoomClient.createMatch());
+        } finally {
+            gameRoomClient.leaveMatch();
+        }
     }
 
     @Test(expected = IllegalStateException.class)
     public void createMatchRepeat() {
         GameRoomClient gameRoomClient = new GameRoomClient(client,session);
         try{
-            gameRoomClient.createMatch();
-            gameRoomClient.createMatch();
+            assertTrue(gameRoomClient.createMatch());
+            assertTrue(gameRoomClient.createMatch());
         } finally {
             gameRoomClient.leaveMatch();
         }
