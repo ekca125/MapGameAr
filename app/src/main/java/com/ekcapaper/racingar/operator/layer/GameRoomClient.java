@@ -1,175 +1,196 @@
 package com.ekcapaper.racingar.operator.layer;
 
-import android.location.Location;
-import android.util.Log;
-
-import com.ekcapaper.racingar.modelgame.play.GameStatus;
-import com.ekcapaper.racingar.modelgame.play.Player;
-import com.ekcapaper.racingar.network.GameMessageEnd;
-import com.ekcapaper.racingar.network.GameMessageStart;
-import com.ekcapaper.racingar.network.GameMessageMovePlayer;
-import com.ekcapaper.racingar.network.GameMessageOpCode;
-import com.google.gson.Gson;
+import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.network.GameMessage;
+import com.heroiclabs.nakama.Channel;
+import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Client;
+import com.heroiclabs.nakama.Error;
+import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.MatchData;
 import com.heroiclabs.nakama.MatchPresenceEvent;
+import com.heroiclabs.nakama.MatchmakerMatched;
 import com.heroiclabs.nakama.Session;
+import com.heroiclabs.nakama.SocketClient;
+import com.heroiclabs.nakama.SocketListener;
+import com.heroiclabs.nakama.StatusPresenceEvent;
+import com.heroiclabs.nakama.StreamData;
+import com.heroiclabs.nakama.StreamPresenceEvent;
 import com.heroiclabs.nakama.UserPresence;
+import com.heroiclabs.nakama.api.ChannelMessage;
+import com.heroiclabs.nakama.api.NotificationList;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
 
-public class GameRoomClient extends RoomClient {
+public class GameRoomClient implements SocketListener {
+    // 서버와의 연동에 필요한 객체
+    private final Client client;
+    private final Session session;
+    private final SocketClient socketClient;
+    // 유저 프로필 (Realtime)
+    private List<UserPresence> matchUserPresenceList;
+    // 유저 프로필 (Chat Channel)
+    private List<UserPresence> channelUserPresenceList;
+    private final Channel channel;
+    // 메시지 로그
+    private final List<String> chatLog;
+    // 서버와의 연동을 의미하는 객체들(Realtime, Chat Channel)
     @Getter
-    private final Player currentPlayer;
-    @Getter
-    private List<Player> playerList;
-    @Getter
-    private GameStatus gameStatus;
+    private Match match;
 
     public GameRoomClient(Client client, Session session) {
-        super(client, session);
-        this.currentPlayer = new Player(session.getUserId());
-
-        this.playerList = new ArrayList<>();
-        this.playerList.add(currentPlayer);
-
-        this.gameStatus = GameStatus.GAME_NOT_READY;
+        this.client = client;
+        this.session = session;
+        this.socketClient = client.createSocket(
+                KeyStorageNakama.getWebSocketAddress(),
+                KeyStorageNakama.getWebSocketPort(),
+                KeyStorageNakama.getWebSocketSSL()
+        );
+        this.matchUserPresenceList = new ArrayList<>();
+        this.channelUserPresenceList = new ArrayList<>();
+        this.chatLog = new ArrayList<>();
+        // null 초기화
+        match = null;
+        channel = null;
+        // 콜백 연동
+        this.socketClient.connect(session, this);
     }
 
-    public Optional<Player> getPlayer(String userId) {
-        try {
-            Player goalPlayer = playerList.stream()
-                    .filter(player -> player.getUserId().equals(userId))
-                    .collect(Collectors.toList()).get(0);
-            return Optional.ofNullable(goalPlayer);
-        } catch (IndexOutOfBoundsException e) {
-            return Optional.empty();
-        }
-    }
-
-    // create or join
-    @Override
     public boolean createMatch() {
-        boolean success = super.createMatch();
-        if (success) {
-            changeRoomStatus(GameStatus.GAME_READY);
+        try {
+            match = socketClient.createMatch().get();
+            return true;
+        } catch (ExecutionException | InterruptedException e) {
+            match = null;
+            return false;
         }
-        return success;
     }
 
-    @Override
     public boolean joinMatch(String matchId) {
-        boolean success = super.joinMatch(matchId);
-        if (success) {
-            changeRoomStatus(GameStatus.GAME_READY);
+        try {
+            match = socketClient.joinMatch(matchId).get();
+            return true;
+        } catch (ExecutionException | InterruptedException e) {
+            match = null;
+            return false;
         }
-        return success;
     }
 
-    // match presence
-    @Override
-    public void onMatchPresence(MatchPresenceEvent matchPresence) {
-        super.onMatchPresence(matchPresence);
-        // join 처리
-        List<UserPresence> joinList = matchPresence.getJoins();
-        if (joinList != null) {
-            List<Player> joinPlayerList = joinList.stream()
-                    .map((userPresence) -> new Player(userPresence.getUserId()))
-                    .collect(Collectors.toList());
-            playerList.addAll(joinPlayerList);
-        }
+    public void leaveMatch() {
+        String matchId = match.getMatchId();
+        String chatChannelId = channel.getId();
 
-        // leave 처리
-        List<UserPresence> leaveList = matchPresence.getLeaves();
-        if (leaveList != null) {
-            List<Player> leavePlayerList = leaveList.stream()
-                    .map((userPresence -> new Player(userPresence.getUserId())))
-                    .collect(Collectors.toList());
-            playerList.removeAll(leavePlayerList);
-        }
-        playerList = playerList.stream().distinct().collect(Collectors.toList());
+        socketClient.leaveMatch(matchId);
+        socketClient.leaveChat(chatChannelId);
     }
 
-    // match event
-    @Override
-    public void onMatchData(MatchData matchData) {
-        super.onMatchData(matchData);
-        Gson gson = new Gson();
-        long networkOpCode = matchData.getOpCode();
-        byte[] networkBytes = matchData.getData();
+    public final void sendMatchData(GameMessage gameMessage) {
+        socketClient.sendMatchData(
+                match.getMatchId(),
+                gameMessage.getOpCode().ordinal(),
+                gameMessage.getPayload().getBytes(StandardCharsets.UTF_8)
+        );
+    }
 
-        GameMessageOpCode gameMessageOpCode = GameMessageOpCode.values()[(int) networkOpCode];
-        String data = new String(networkBytes, StandardCharsets.UTF_8);
-        switch (gameMessageOpCode) {
-            case MOVE_PLAYER:
-                GameMessageMovePlayer gameMessageMovePlayer = gson.fromJson(data, GameMessageMovePlayer.class);
-                onMovePlayer(gameMessageMovePlayer);
+
+    @Override
+    public void onDisconnect(Throwable t) {
+        leaveMatch();
+    }
+
+    @Override
+    public void onError(Error error) {
+
+    }
+
+    @Override
+    public void onChannelMessage(ChannelMessage message) {
+        String chat;
+        int messageCode = message.getCode().getValue();
+        switch (messageCode) {
+            case 0:
+                chat = message.getUsername() + " : " + message.getContent();
+                chatLog.add(chat);
                 break;
-            case GAME_START:
-                GameMessageStart gameMessageStart = gson.fromJson(data, GameMessageStart.class);
-                onGameStart(gameMessageStart);
+            case 1:
+                chat = message.getUsername() + " 플레이어가 입장했습니다.";
+                chatLog.add(chat);
                 break;
-            case GAME_END:
-                GameMessageEnd gameMessageEnd = gson.fromJson(data, GameMessageEnd.class);
-                onGameEnd(gameMessageEnd);
+            case 2:
+                chat = message.getUsername() + " 플레이어가 퇴장했습니다.";
+                chatLog.add(chat);
                 break;
             default:
                 break;
         }
     }
 
-    public void declareGameStart() {
-        GameMessageStart gameMessageStart = new GameMessageStart();
-        sendMatchData(gameMessageStart);
-        onGameStart(gameMessageStart);
-    }
-
-    public void onGameStart(GameMessageStart gameMessageStart) {
-        changeRoomStatus(GameStatus.GAME_STARTED);
-    }
-
-    public void declareCurrentPlayerMove(Location location) {
-        GameMessageMovePlayer gameMessageMovePlayer = new GameMessageMovePlayer(currentPlayer.getUserId(), location.getLatitude(), location.getLongitude());
-        sendMatchData(gameMessageMovePlayer);
-        onMovePlayer(gameMessageMovePlayer);
-    }
-
-    public void onMovePlayer(GameMessageMovePlayer gameMessageMovePlayer) {
-        Optional<Player> optionalPlayer = getPlayer(gameMessageMovePlayer.getUserId());
-        optionalPlayer.ifPresent((player -> {
-            Location location = new Location("");
-            location.setLatitude(gameMessageMovePlayer.getLatitude());
-            location.setLongitude(gameMessageMovePlayer.getLongitude());
-            player.updateLocation(location);
-        }));
-    }
-
-    public void declareGameEnd() {
-        GameMessageEnd gameMessageEnd = new GameMessageEnd();
-        sendMatchData(gameMessageEnd);
-        onGameEnd(gameMessageEnd);
-    }
-
-    public void onGameEnd(GameMessageEnd gameMessageEnd) {
-        changeRoomStatus(GameStatus.GAME_END);
-    }
-
-    private void changeRoomStatus(GameStatus gameStatus) {
-        // not ready -> ready -> started -> end
-        if (this.gameStatus == GameStatus.GAME_NOT_READY && gameStatus == GameStatus.GAME_READY) {
-            this.gameStatus = gameStatus;
-        } else if (this.gameStatus == GameStatus.GAME_READY && gameStatus == GameStatus.GAME_STARTED) {
-            this.gameStatus = gameStatus;
-        } else if (this.gameStatus == GameStatus.GAME_STARTED && gameStatus == GameStatus.GAME_END) {
-            this.gameStatus = gameStatus;
-        } else {
-            throw new IllegalStateException();
+    @Override
+    public void onChannelPresence(ChannelPresenceEvent presence) {
+        // join 처리
+        List<UserPresence> joinList = presence.getJoins();
+        if (joinList != null) {
+            channelUserPresenceList.addAll(joinList);
         }
+
+        // leave 처리
+        List<UserPresence> leaveList = presence.getLeaves();
+        if (leaveList != null) {
+            channelUserPresenceList.removeAll(leaveList);
+        }
+        channelUserPresenceList = channelUserPresenceList.stream().distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public void onMatchmakerMatched(MatchmakerMatched matched) {
+
+    }
+
+    @Override
+    public void onMatchData(MatchData matchData) {
+
+    }
+
+    @Override
+    public void onMatchPresence(MatchPresenceEvent matchPresence) {
+        // join 처리
+        List<UserPresence> joinList = matchPresence.getJoins();
+        if (joinList != null) {
+            matchUserPresenceList.addAll(joinList);
+        }
+
+        // leave 처리
+        List<UserPresence> leaveList = matchPresence.getLeaves();
+        if (leaveList != null) {
+            matchUserPresenceList.removeAll(leaveList);
+        }
+        matchUserPresenceList = matchUserPresenceList.stream().distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public void onNotifications(NotificationList notifications) {
+
+    }
+
+    @Override
+    public void onStatusPresence(StatusPresenceEvent presence) {
+
+    }
+
+    @Override
+    public void onStreamPresence(StreamPresenceEvent presence) {
+
+    }
+
+    @Override
+    public void onStreamData(StreamData data) {
+
     }
 }

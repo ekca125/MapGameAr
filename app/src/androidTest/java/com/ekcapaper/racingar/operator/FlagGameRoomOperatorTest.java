@@ -2,12 +2,12 @@ package com.ekcapaper.racingar.operator;
 
 import static org.junit.Assert.*;
 
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.stub.LocationStub;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
-import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class FlagGameRoomOperatorTest {
-    public static FlagGameRoomOperator flagGameRoomOperator;
+    public static FlagGameRoomPlayOperator flagGameRoomOperator;
     public static Client client;
     public static Session session;
 
@@ -39,7 +39,7 @@ public class FlagGameRoomOperatorTest {
         List<GameFlag> gameFlagList = new ArrayList<>();
         gameFlagList.add(new GameFlag(LocationStub.location));
 
-        flagGameRoomOperator = new FlagGameRoomOperator(client,session, Duration.ofSeconds(360),gameFlagList);
+        flagGameRoomOperator = new FlagGameRoomPlayOperator(client,session, Duration.ofSeconds(360),gameFlagList);
     }
 
     @Test

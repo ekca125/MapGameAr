@@ -10,12 +10,11 @@ import com.ekcapaper.racingar.modelgame.gameroom.prepare.PrepareDataFlagGameRoom
 import com.ekcapaper.racingar.modelgame.gameroom.prepare.writer.PrepareDataFlagGameRoomWriter;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
-import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.heroiclabs.nakama.Client;
-import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 
 import java.io.IOException;
@@ -67,7 +66,7 @@ public class FlagGameRoomOperatorNewMaker implements GameRoomOperatorMaker{
     }
 
     @Override
-    public GameRoomOperator make() {
+    public GameRoomPlayOperator make() {
         boolean result;
 
         result = requestGameFlagList(mapRange);
@@ -75,7 +74,7 @@ public class FlagGameRoomOperatorNewMaker implements GameRoomOperatorMaker{
             return null;
         }
 
-        FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client,session,timeLimit,gameFlagList);
+        FlagGameRoomPlayOperator flagGameRoomOperator = new FlagGameRoomPlayOperator(client,session,timeLimit,gameFlagList);
         result = flagGameRoomOperator.createMatch();
         if(!result){
             return null;

@@ -18,9 +18,8 @@ import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterGameRoom;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.model.GameRoomInfo;
-import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
-import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
 
 public class GameRoomActivity extends AppCompatActivity {
     private ThisApplication thisApplication;
-    private GameRoomOperator gameRoomOperator;
+    private GameRoomPlayOperator gameRoomOperator;
 
     private View parent_view;
 

@@ -10,7 +10,7 @@ import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.reader.RoomInfoReader;
 import com.ekcapaper.racingar.modelgame.play.GameType;
-import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorNewMaker;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
@@ -34,7 +34,7 @@ public class ThisApplication extends Application {
     private Session session;
 
     @Getter
-    private GameRoomOperator currentGameRoomOperator;
+    private GameRoomPlayOperator currentGameRoomOperator;
 
     @Getter
     private ExecutorService executorService;

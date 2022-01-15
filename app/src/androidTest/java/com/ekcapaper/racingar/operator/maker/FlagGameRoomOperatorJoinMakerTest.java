@@ -3,7 +3,7 @@ package com.ekcapaper.racingar.operator.maker;
 import static org.junit.Assert.*;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
-import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
@@ -35,7 +35,7 @@ public class FlagGameRoomOperatorJoinMakerTest {
     @Test
     public void make() {
         FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client,session,matchId);
-        FlagGameRoomOperator flagGameRoomOperator = (FlagGameRoomOperator) flagGameRoomOperatorJoinMaker.make();
+        FlagGameRoomPlayOperator flagGameRoomOperator = (FlagGameRoomPlayOperator) flagGameRoomOperatorJoinMaker.make();
         assertNotNull(flagGameRoomOperator);
     }
 }

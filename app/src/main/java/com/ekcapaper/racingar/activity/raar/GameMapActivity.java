@@ -11,16 +11,14 @@ import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpaceUpdater;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
-import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -40,7 +38,7 @@ public class GameMapActivity extends AppCompatActivity {
     private boolean mapReady;
     // game room operator
     private ThisApplication thisApplication;
-    private GameRoomOperator gameRoomOperator;
+    private GameRoomPlayOperator gameRoomOperator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +107,7 @@ public class GameMapActivity extends AppCompatActivity {
         if (!mapReady) {
             return;
         }
-        if(gameRoomOperator instanceof FlagGameRoomOperator){
+        if(gameRoomOperator instanceof FlagGameRoomPlayOperator){
             gameRoomOperator.getCurrentPlayer().getLocation().ifPresent(location -> {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
                 playerMarker.ifPresent(Marker::remove);
@@ -118,7 +116,7 @@ public class GameMapActivity extends AppCompatActivity {
                 //
                 flagMarkers.stream().forEach((optionalMarker)-> optionalMarker.ifPresent(Marker::remove));
                 flagMarkers.clear();
-                List<GameFlag> gameFlagList = ((FlagGameRoomOperator) gameRoomOperator).getUnownedFlagList();
+                List<GameFlag> gameFlagList = ((FlagGameRoomPlayOperator) gameRoomOperator).getUnownedFlagList();
                 gameFlagList.stream().forEach((gameFlag -> {
                     mMap.addMarker(MarkerFactory.createMarkerOption("flag",gameFlag.getLocation()));
                 }));
