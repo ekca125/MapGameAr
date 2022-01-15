@@ -57,21 +57,17 @@ public class GameRoomClientTest {
         assertTrue(success);
         assertSame(gameRoomClient.getGameStatus(), GameStatus.GAME_READY);
     }
-
+/*
     @Test
-    public void sendGameStartMessage() {
+    public void sendGameStartEndMessage() {
         gameRoomClient.declareGameStart();
+        gameRoomClient.declareGameEnd();
     }
-
+*/
     @Test
     public void onGameStart() {
         gameRoomClient.onGameStart(new GameMessageStart());
         assertSame(gameRoomClient.getGameStatus(), GameStatus.GAME_STARTED);
-    }
-
-    @Test
-    public void sendGameEndMessage() {
-        gameRoomClient.declareGameEnd();
     }
 
     @Test
