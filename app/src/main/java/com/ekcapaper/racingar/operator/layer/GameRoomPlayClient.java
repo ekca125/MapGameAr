@@ -161,8 +161,6 @@ public class GameRoomPlayClient extends GameRoomClient {
             this.gameStatus = gameStatus;
         } else if (this.gameStatus == GameStatus.GAME_STARTED && gameStatus == GameStatus.GAME_END) {
             this.gameStatus = gameStatus;
-        } else {
-            throw new IllegalStateException();
         }
     }
 }
