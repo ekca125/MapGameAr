@@ -58,10 +58,41 @@ public class GameRoomPlayClientTest {
         GameRoomPlayClient gameRoomPlayClient2 = new GameRoomPlayClient(client2,session2);
         try{
             assertTrue(gameRoomPlayClient.createMatch());
-            assertTrue(gameRoomPlayClient2.joinMatch(gameRoomClient.getMatchId()));
+            assertTrue(gameRoomPlayClient2.joinMatch(gameRoomPlayClient.getMatchId()));
         } finally {
-            gameRoomClient.leaveMatch();
-            gameRoomClient2.leaveMatch();
+            gameRoomPlayClient.leaveMatch();
+            gameRoomPlayClient2.leaveMatch();
+        }
+    }
+
+    @Test
+    public void createMatchPlayer() {
+        GameRoomPlayClient gameRoomPlayClient = new GameRoomPlayClient(client,session);
+        try{
+            assertTrue(gameRoomPlayClient.createMatch());
+            assertEquals(gameRoomPlayClient.getCurrentPlayer().getUserId(),session.getUserId());
+            assertEquals(gameRoomPlayClient.getPlayerList().size(),1);
+        } finally {
+            gameRoomPlayClient.leaveMatch();
+        }
+    }
+
+    @Test
+    public void joinMatchPlayer() {
+        GameRoomPlayClient gameRoomPlayClient = new GameRoomPlayClient(client,session);
+        GameRoomPlayClient gameRoomPlayClient2 = new GameRoomPlayClient(client2,session2);
+        try{
+            assertTrue(gameRoomPlayClient.createMatch());
+            assertTrue(gameRoomPlayClient2.joinMatch(gameRoomPlayClient.getMatchId()));
+
+            assertEquals(gameRoomPlayClient.getCurrentPlayer().getUserId(),session.getUserId());
+            assertEquals(gameRoomPlayClient2.getCurrentPlayer().getUserId(),session2.getUserId());
+
+            assertEquals(gameRoomPlayClient.getPlayerList().size(),2);
+            assertEquals(gameRoomPlayClient2.getPlayerList().size(),2);
+        } finally {
+            gameRoomPlayClient.leaveMatch();
+            gameRoomPlayClient2.leaveMatch();
         }
     }
 }
