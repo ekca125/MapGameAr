@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements ActivityInitializer{
     // 관제
     private ThisApplication thisApplication;
     // activity component
@@ -30,15 +30,30 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        // 액티비티 초기화
+        initActivity();
+        // 시스템 바의 설정
+        Tools.setSystemBarColor(this);
+        // stub
+        text_input_text_email.setText(AccountStub.ID);
+        text_input_text_password.setText(AccountStub.PASSWORD);
+    }
 
-        // 관제
+    @Override
+    public void initActivityField() {
         thisApplication = (ThisApplication) getApplicationContext();
-        // activity component
+    }
+
+    @Override
+    public void initActivityComponent() {
         parent_view = findViewById(android.R.id.content);
         text_input_text_email = findViewById(R.id.text_input_text_email);
         text_input_text_password = findViewById(R.id.text_input_text_password);
         button_login = findViewById(R.id.button_login);
-        // activity component 설정
+    }
+
+    @Override
+    public void initActivityEventTask() {
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,11 +77,5 @@ public class LoginActivity extends AppCompatActivity {
                 Snackbar.make(parent_view, "Sign Up", Snackbar.LENGTH_SHORT).show();
             }
         });
-        // 시스템 바의 설정
-        Tools.setSystemBarColor(this);
-
-        // stub
-        text_input_text_email.setText(AccountStub.ID);
-        text_input_text_password.setText(AccountStub.PASSWORD);
     }
 }
