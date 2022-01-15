@@ -81,7 +81,7 @@ public class FlagGameRoomOperatorNewMaker implements GameRoomOperatorMaker{
         }
 
         try {
-            String matchId = RoomDataSpace.normalizeMatchId(flagGameRoomOperator.getMatch().getMatchId());
+            String matchId = RoomDataSpace.normalizeMatchId(flagGameRoomOperator.getMatchId());
 
             RoomInfoWriter roomInfoWriter = new RoomInfoWriter(client, session, matchId);
             PrepareDataFlagGameRoomWriter prepareDataFlagGameRoomWriter = new PrepareDataFlagGameRoomWriter(client,session,matchId);

@@ -1,6 +1,7 @@
 package com.ekcapaper.racingar.operator.layer;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.network.GameMessage;
 import com.heroiclabs.nakama.Channel;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
@@ -27,16 +28,21 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
+
 public class GameRoomClient implements SocketListener {
     // 서버와의 연동에 필요한 객체
     private final Client client;
     private final Session session;
     private final SocketClient socketClient;
     // 메시지 로그
+    @Getter
     private final List<String> chatLog;
     // 유저 프로필 (Realtime)
+    @Getter
     private List<UserPresence> matchUserPresenceList;
     // 유저 프로필 (Chat Channel)
+    @Getter
     private List<UserPresence> channelUserPresenceList;
     // 서버와의 연동을 의미하는 객체들(Realtime, Chat Channel)
     private Match match;
@@ -65,7 +71,11 @@ public class GameRoomClient implements SocketListener {
 
     private String getChannelId(String matchId) {
         // match id 로부터 channel id를 얻어낸다.
-        return "channel-" + matchId;
+        return "channel-" + RoomDataSpace.normalizeMatchId(matchId);
+    }
+
+    public String getMatchId(){
+        return RoomDataSpace.normalizeMatchId(match.getMatchId());
     }
 
     public boolean createMatch() {
