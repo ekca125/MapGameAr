@@ -7,6 +7,7 @@ import com.ekcapaper.racingar.stub.AccountStub;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
+import com.heroiclabs.nakama.UserPresence;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -90,6 +91,10 @@ public class GameRoomPlayClientTest {
 
             assertEquals(gameRoomPlayClient.getPlayerList().size(),2);
             assertEquals(gameRoomPlayClient2.getPlayerList().size(),2);
+
+            gameRoomPlayClient.getMatchUserPresenceList().stream().forEach((UserPresence userPresence)->{
+                assertTrue(gameRoomPlayClient2.getMatchUserPresenceList().contains(userPresence));
+            });
         } finally {
             gameRoomPlayClient.leaveMatch();
             gameRoomPlayClient2.leaveMatch();
