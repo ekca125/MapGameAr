@@ -26,8 +26,10 @@ public class ThisApplicationTest {
     public static Client client2;
     public static Session session2;
 
+    public static ThisApplication thisApplication;
+
     @BeforeClass
-    public static void init() throws ExecutionException, InterruptedException {
+    public static void init() throws Exception {
         client = new DefaultClient(
                 KeyStorageNakama.getServerKey(),
                 KeyStorageNakama.getGrpcAddress(),
@@ -37,26 +39,18 @@ public class ThisApplicationTest {
         session = client.authenticateEmail(AccountStub.ID, AccountStub.PASSWORD).get();
         assertNotNull(session);
 
-        client2 = new DefaultClient(
-                KeyStorageNakama.getServerKey(),
-                KeyStorageNakama.getGrpcAddress(),
-                KeyStorageNakama.getGrpcPort(),
-                KeyStorageNakama.getGrpcSSL()
-        );
-        session2 = client.authenticateEmail(AccountStub.ID2, AccountStub.PASSWORD2).get();
-        assertNotNull(session2);
+        thisApplication = (ThisApplication) ApplicationProvider.getApplicationContext();
+        thisApplication.login(AccountStub.ID2,AccountStub.PASSWORD2);
+        thisApplication.getSessionOptional().orElseThrow(() -> new Exception("Login Error"));
     }
 
     @Test
     public void getCurrentMatches() throws Exception {
         GameRoomPlayClient gameRoomPlayClient = new GameRoomPlayClient(client,session);
-        GameRoomPlayClient gameRoomPlayClient2 = new GameRoomPlayClient(client2,session2);
         try{
             assertTrue(gameRoomPlayClient.createMatch());
-            assertTrue(gameRoomPlayClient2.joinMatch(gameRoomPlayClient.getMatchId()));
         } finally {
             gameRoomPlayClient.leaveMatch();
-            gameRoomPlayClient2.leaveMatch();
         }
     }
 
