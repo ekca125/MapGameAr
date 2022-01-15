@@ -55,9 +55,9 @@ public class ThisApplicationTest {
         try{
             assertTrue(gameRoomPlayClient.createMatch());
             assertNotNull(thisApplication.getCurrentMatches());
-            assertEquals(1,thisApplication.getCurrentMatches().getMatchesCount());
+            assertTrue(1<=thisApplication.getCurrentMatches().getMatchesCount());
             assertNotNull(thisApplication.getCurrentRoomInfo());
-            assertEquals(1,thisApplication.getCurrentRoomInfo().size());
+            assertTrue(1<=thisApplication.getCurrentRoomInfo().size());
         } finally {
             gameRoomPlayClient.leaveMatch();
         }
