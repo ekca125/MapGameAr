@@ -74,14 +74,6 @@ public class GameRoomClient implements SocketListener {
         return RoomDataSpace.normalizeMatchId(match.getMatchId());
     }
 
-    public List<UserPresence> getMatchUserPresenceList(){
-        return match.getPresences();
-    }
-
-    public List<UserPresence> getChannelUserPresenceList(){
-        return channel.getPresences();
-    }
-
     public boolean createMatch() {
         if (activeGameRoom) {
             // 이미 활성화된 경우

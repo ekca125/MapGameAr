@@ -2,6 +2,8 @@ package com.ekcapaper.racingar.operator.layer;
 
 import static org.junit.Assert.*;
 
+import android.util.Log;
+
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.network.GameMessageStart;
@@ -11,6 +13,7 @@ import com.ekcapaper.racingar.stub.LocationStub;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
+import com.heroiclabs.nakama.UserPresence;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -82,6 +85,9 @@ public class GameRoomClientTest {
         GameRoomClient gameRoomClient = new GameRoomClient(client,session);
         gameRoomClient.createMatch();
 
+        List<UserPresence> userPresence = gameRoomClient.getMatchUserPresenceList();
+        userPresence.get(0).getUserId();
+
         assertEquals(1,gameRoomClient.getMatchUserPresenceList().size());
 
         GameRoomClient gameRoomClient2 = new GameRoomClient(client2,session2);
@@ -90,7 +96,8 @@ public class GameRoomClientTest {
         assertEquals(2,gameRoomClient2.getMatchUserPresenceList().size());
 
         gameRoomClient.leaveMatch();
-        gameRoomClient2.leaveMatch();
+
+
     }
 
 }
