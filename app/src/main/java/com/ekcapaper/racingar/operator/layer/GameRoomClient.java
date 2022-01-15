@@ -35,6 +35,7 @@ import lombok.Getter;
 public class GameRoomClient implements SocketListener {
     // 서버와의 연동에 필요한 객체
     private final Client client;
+    @Getter
     private final Session session;
     private final SocketClient socketClient;
     // 메시지 로그
@@ -195,7 +196,7 @@ public class GameRoomClient implements SocketListener {
 
     // final 로 변경한다.
     @Override
-    public void onChannelPresence(ChannelPresenceEvent presence) {
+    final public void onChannelPresence(ChannelPresenceEvent presence) {
         // join 처리
         List<UserPresence> joinList = presence.getJoins();
         if (joinList != null) {
@@ -229,7 +230,7 @@ public class GameRoomClient implements SocketListener {
 
     // final로 변경한다.
     @Override
-    public void onMatchPresence(MatchPresenceEvent matchPresence) {
+    final public void onMatchPresence(MatchPresenceEvent matchPresence) {
         // join 처리
         List<UserPresence> joinList = matchPresence.getJoins();
         if (joinList != null) {

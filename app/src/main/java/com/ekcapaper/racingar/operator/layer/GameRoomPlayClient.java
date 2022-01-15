@@ -25,19 +25,13 @@ import lombok.Getter;
 
 public class GameRoomPlayClient extends GameRoomClient {
     @Getter
-    private final Player currentPlayer;
-    @Getter
     private List<Player> playerList;
     @Getter
     private GameStatus gameStatus;
 
     public GameRoomPlayClient(Client client, Session session) {
         super(client, session);
-        this.currentPlayer = new Player(session.getUserId());
-
         this.playerList = new ArrayList<>();
-        this.playerList.add(currentPlayer);
-
         this.gameStatus = GameStatus.GAME_NOT_READY;
     }
 
@@ -50,6 +44,11 @@ public class GameRoomPlayClient extends GameRoomClient {
         } catch (IndexOutOfBoundsException e) {
             return Optional.empty();
         }
+    }
+
+    public Player getCurrentPlayer(){
+        String currentUserId = getSession().getUserId();
+        return getPlayer(currentUserId).get();
     }
 
     // create or join
@@ -71,28 +70,23 @@ public class GameRoomPlayClient extends GameRoomClient {
         return success;
     }
 
-    // match presence
+    // match
     @Override
-    public void onMatchPresence(MatchPresenceEvent matchPresence) {
-        super.onMatchPresence(matchPresence);
-        // join 처리
-        List<UserPresence> joinList = matchPresence.getJoins();
-        if (joinList != null) {
-            List<Player> joinPlayerList = joinList.stream()
-                    .map((userPresence) -> new Player(userPresence.getUserId()))
-                    .collect(Collectors.toList());
-            playerList.addAll(joinPlayerList);
-        }
+    public void onMatchJoinPresence(List<UserPresence> joinList) {
+        super.onMatchJoinPresence(joinList);
+        List<Player> joinPlayerList = joinList.stream()
+                .map((userPresence) -> new Player(userPresence.getUserId()))
+                .collect(Collectors.toList());
+        playerList.addAll(joinPlayerList);
+    }
 
-        // leave 처리
-        List<UserPresence> leaveList = matchPresence.getLeaves();
-        if (leaveList != null) {
-            List<Player> leavePlayerList = leaveList.stream()
-                    .map((userPresence -> new Player(userPresence.getUserId())))
-                    .collect(Collectors.toList());
-            playerList.removeAll(leavePlayerList);
-        }
-        playerList = playerList.stream().distinct().collect(Collectors.toList());
+    @Override
+    public void onMatchLeavePresence(List<UserPresence> leaveList) {
+        super.onMatchLeavePresence(leaveList);
+        List<Player> leavePlayerList = leaveList.stream()
+                .map((userPresence -> new Player(userPresence.getUserId())))
+                .collect(Collectors.toList());
+        playerList.removeAll(leavePlayerList);
     }
 
     // match event
@@ -134,7 +128,7 @@ public class GameRoomPlayClient extends GameRoomClient {
     }
 
     public void declareCurrentPlayerMove(Location location) {
-        GameMessageMovePlayer gameMessageMovePlayer = new GameMessageMovePlayer(currentPlayer.getUserId(), location.getLatitude(), location.getLongitude());
+        GameMessageMovePlayer gameMessageMovePlayer = new GameMessageMovePlayer(getCurrentPlayer().getUserId(), location.getLatitude(), location.getLongitude());
         sendMatchData(gameMessageMovePlayer);
         onMovePlayer(gameMessageMovePlayer);
     }
