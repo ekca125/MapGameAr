@@ -1,11 +1,16 @@
 package com.ekcapaper.racingar.activity.raar;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
@@ -90,18 +95,20 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
         if (!mapReady) {
             return;
         }
+        MarkerFactory markerFactory = new MarkerFactory(GameMapActivity.this);
+
         if (gameRoomOperator instanceof FlagGameRoomPlayOperator) {
             gameRoomOperator.getCurrentPlayer().getLocation().ifPresent(location -> {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
                 playerMarker.ifPresent(Marker::remove);
                 playerMarker = Optional.empty();
-                playerMarker = Optional.ofNullable(mMap.addMarker(MarkerFactory.createMarkerOption("player", location)));
+                playerMarker = Optional.ofNullable(mMap.addMarker(markerFactory.createMarkerOption("player", location)));
                 //
                 flagMarkers.stream().forEach((optionalMarker) -> optionalMarker.ifPresent(Marker::remove));
                 flagMarkers.clear();
                 List<GameFlag> gameFlagList = ((FlagGameRoomPlayOperator) gameRoomOperator).getUnownedFlagList();
                 gameFlagList.stream().forEach((gameFlag -> {
-                    mMap.addMarker(MarkerFactory.createMarkerOption("flag", gameFlag.getLocation()));
+                    mMap.addMarker(markerFactory.createMarkerOption("flag", gameFlag.getLocation()));
                 }));
             });
         }
@@ -149,19 +156,33 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
     }
 
     static class MarkerFactory {
-        public static MarkerOptions createMarkerOption(String type, Location location) {
+        Context context;
+        public MarkerFactory(Context context){
+            this.context = context;
+        }
+
+        private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+            Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+            vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+            Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            vectorDrawable.draw(canvas);
+            return BitmapDescriptorFactory.fromBitmap(bitmap);
+        }
+
+        public MarkerOptions createMarkerOption(String type, Location location) {
             return createMarkerOption(type, new LatLng(location.getLatitude(), location.getLongitude()));
         }
 
-        public static MarkerOptions createMarkerOption(String type, LatLng latLng) {
+        public MarkerOptions createMarkerOption(String type, LatLng latLng) {
             if (type.equals("flag")) {
-                return new MarkerOptions().position(latLng);
-                //BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_cake);
-                //return new MarkerOptions().position(latLng).icon(icon);
+                //return new MarkerOptions().position(latLng);
+                BitmapDescriptor icon = bitmapDescriptorFromVector(context,R.drawable.ic_cake);
+                return new MarkerOptions().position(latLng).icon(icon);
             } else if (type.equals("player")) {
                 return new MarkerOptions().position(latLng);
             } else {
-                return new MarkerOptions().position(latLng);
+                throw new IllegalArgumentException();
             }
         }
     }
