@@ -74,6 +74,14 @@ public class GameRoomClient implements SocketListener {
         return RoomDataSpace.normalizeMatchId(match.getMatchId());
     }
 
+    public List<UserPresence> getMatchUserPresenceList(){
+        return match.getPresences();
+    }
+
+    public List<UserPresence> getChannelUserPresenceList(){
+        return channel.getPresences();
+    }
+
     public boolean createMatch() {
         if (activeGameRoom) {
             // 이미 활성화된 경우
@@ -211,7 +219,7 @@ public class GameRoomClient implements SocketListener {
         // join 처리
         List<UserPresence> joinList = matchPresence.getJoins();
         if (joinList != null) {
-           
+
         }
 
         // leave 처리
