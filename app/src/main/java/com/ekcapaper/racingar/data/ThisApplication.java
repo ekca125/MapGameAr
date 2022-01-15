@@ -90,10 +90,11 @@ public class ThisApplication extends Application {
         List<Match> matches =  matchList.getMatchesList();
         List<RoomInfo> roomInfoList = new ArrayList<>();
         for(Match match:matches){
+            Log.d("RoomINFO",match.getMatchId());
             RoomInfoReader roomInfoReader = new RoomInfoReader(client, session, RoomDataSpace.normalizeMatchId(match.getMatchId()));
             RoomInfo roomInfo = roomInfoReader.readRoomInfo();
             roomInfoList.add(roomInfo);
-            Log.d("RoomINFO",roomInfo.getMatchId());
+
         }
         return roomInfoList;
     }
