@@ -2,8 +2,12 @@ package com.ekcapaper.racingar.operator.layer;
 
 import static org.junit.Assert.*;
 
+import android.location.Location;
+
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.modelgame.play.GameStatus;
 import com.ekcapaper.racingar.stub.AccountStub;
+import com.ekcapaper.racingar.stub.LocationStub;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
@@ -95,6 +99,63 @@ public class GameRoomPlayClientTest {
             gameRoomPlayClient.getMatchUserPresenceList().stream().forEach((UserPresence userPresence)->{
                 assertTrue(gameRoomPlayClient2.getMatchUserPresenceList().contains(userPresence));
             });
+        } finally {
+            gameRoomPlayClient.leaveMatch();
+            gameRoomPlayClient2.leaveMatch();
+        }
+    }
+
+    @Test
+    public void changeGameStatus() {
+        GameRoomPlayClient gameRoomPlayClient = new GameRoomPlayClient(client,session);
+        GameRoomPlayClient gameRoomPlayClient2 = new GameRoomPlayClient(client2,session2);
+        try{
+            assertEquals(gameRoomPlayClient.getGameStatus(),GameStatus.GAME_NOT_READY);
+            assertEquals(gameRoomPlayClient2.getGameStatus(),GameStatus.GAME_NOT_READY);
+
+            assertTrue(gameRoomPlayClient.createMatch());
+            assertEquals(gameRoomPlayClient.getGameStatus(),GameStatus.GAME_READY);
+            assertTrue(gameRoomPlayClient2.joinMatch(gameRoomPlayClient.getMatchId()));
+            assertEquals(gameRoomPlayClient2.getGameStatus(),GameStatus.GAME_READY);
+            
+            // 보내는 플레이어만 테스트
+            gameRoomPlayClient.declareGameStart();
+            assertEquals(gameRoomPlayClient.getGameStatus(),GameStatus.GAME_STARTED);
+
+            gameRoomPlayClient.declareGameEnd();
+            assertEquals(gameRoomPlayClient.getGameStatus(),GameStatus.GAME_END);
+        } finally {
+            gameRoomPlayClient.leaveMatch();
+            gameRoomPlayClient2.leaveMatch();
+        }
+    }
+
+    @Test
+    public void movePlayer() {
+        GameRoomPlayClient gameRoomPlayClient = new GameRoomPlayClient(client,session);
+        GameRoomPlayClient gameRoomPlayClient2 = new GameRoomPlayClient(client2,session2);
+        try{
+            assertEquals(gameRoomPlayClient.getGameStatus(),GameStatus.GAME_NOT_READY);
+            assertEquals(gameRoomPlayClient2.getGameStatus(),GameStatus.GAME_NOT_READY);
+
+            assertTrue(gameRoomPlayClient.createMatch());
+            assertEquals(gameRoomPlayClient.getGameStatus(),GameStatus.GAME_READY);
+            assertTrue(gameRoomPlayClient2.joinMatch(gameRoomPlayClient.getMatchId()));
+            assertEquals(gameRoomPlayClient2.getGameStatus(),GameStatus.GAME_READY);
+
+            // 보내는 플레이어만 테스트
+            gameRoomPlayClient.declareGameStart();
+            assertEquals(gameRoomPlayClient.getGameStatus(),GameStatus.GAME_STARTED);
+
+            // move player
+            gameRoomPlayClient.declareCurrentPlayerMove(LocationStub.location);
+            // null point 가능성
+            Location location = gameRoomPlayClient.getCurrentPlayer().getLocation().get();
+            assertEquals(location.getLatitude(),LocationStub.location.getLatitude(),1);
+            assertEquals(location.getLongitude(),LocationStub.location.getLongitude(),1);
+
+            gameRoomPlayClient.declareGameEnd();
+            assertEquals(gameRoomPlayClient.getGameStatus(),GameStatus.GAME_END);
         } finally {
             gameRoomPlayClient.leaveMatch();
             gameRoomPlayClient2.leaveMatch();
