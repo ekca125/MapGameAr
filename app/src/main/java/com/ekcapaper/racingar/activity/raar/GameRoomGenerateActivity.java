@@ -32,8 +32,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class GameRoomGenerateActivity extends AppCompatActivity implements ActivityInitializer{
+public class GameRoomGenerateActivity extends AppCompatActivity implements ActivityInitializer {
     private final int ACTIVITY_REQUEST_CODE = 0;
+    // 위치 갱신
+    LocationRequestSpace locationRequestSpace;
     // 상태
     private GameType gameType;
     private GameType[] gameTypeArray;
@@ -45,10 +47,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
     private TextInputEditText text_input_time_limit;
     private AutoCompleteTextView dropdown_state;
     private Button button_generate_room;
-    // 위치 갱신
-    LocationRequestSpace locationRequestSpace;
-    
-    private void initToolbar(){
+
+    private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_chevron_left);
         toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.grey_60), PorterDuff.Mode.SRC_ATOP);
@@ -135,11 +135,9 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
 
     @Override
     public void initActivityField() {
-        // 상태
+        thisApplication = (ThisApplication) getApplicationContext();
         gameType = GameType.GAME_TYPE_FLAG;
         gameTypeArray = GameType.values();
-        // 관제
-        thisApplication = (ThisApplication) getApplicationContext();
     }
 
     @Override
@@ -149,37 +147,32 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         text_input_longitude = findViewById(R.id.text_input_longitude);
         text_input_time_limit = findViewById(R.id.text_input_time_limit);
         dropdown_state = findViewById(R.id.dropdown_state);
-        // drop down
-        dropdown_state.setText(GameType.GAME_TYPE_FLAG.toString());
-        // 생성 버튼
+
         button_generate_room.setEnabled(false);
         button_generate_room.setText("위치를 가져오는 중..");
-        // time limit
         text_input_time_limit.setText("3600");
+        dropdown_state.setText(GameType.GAME_TYPE_FLAG.toString());
     }
 
     @Override
     public void initActivityEventTask() {
-        ArrayAdapter adapter2 = new ArrayAdapter(
+        dropdown_state.setAdapter(new ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
                 Arrays.stream(gameTypeArray).map(Enum::toString).collect(Collectors.toList())
-        );
-        dropdown_state.setAdapter(adapter2);
+        ));
         dropdown_state.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 gameType = gameTypeArray[i];
             }
         });
-        // 이벤트 설정
         button_generate_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 generateRoomAndMoveRoom();
             }
         });
-        // 위치 갱신 시작
         locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
             @Override
             public void accept(Location location) {
