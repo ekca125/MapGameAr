@@ -38,12 +38,6 @@ public class GameRoomClient implements SocketListener {
     // 메시지 로그
     @Getter
     private final List<String> chatLog;
-    // 유저 프로필 (Realtime)
-    @Getter
-    private List<UserPresence> matchUserPresenceList;
-    // 유저 프로필 (Chat Channel)
-    @Getter
-    private List<UserPresence> channelUserPresenceList;
     // 서버와의 연동을 의미하는 객체들(Realtime, Chat Channel)
     private Match match;
     private Channel channel;
@@ -58,8 +52,6 @@ public class GameRoomClient implements SocketListener {
                 KeyStorageNakama.getWebSocketPort(),
                 KeyStorageNakama.getWebSocketSSL()
         );
-        this.matchUserPresenceList = new ArrayList<>();
-        this.channelUserPresenceList = new ArrayList<>();
         this.chatLog = new ArrayList<>();
         // null 초기화
         match = null;
@@ -72,6 +64,10 @@ public class GameRoomClient implements SocketListener {
     private String getChannelId(String matchId) {
         // match id 로부터 channel id를 얻어낸다.
         return "channel-" + RoomDataSpace.normalizeMatchId(matchId);
+    }
+
+    public String getChannelId(){
+        return getChannelId(getMatchId());
     }
 
     public String getMatchId(){
@@ -190,13 +186,13 @@ public class GameRoomClient implements SocketListener {
         // join 처리
         List<UserPresence> joinList = presence.getJoins();
         if (joinList != null) {
-            channelUserPresenceList.addAll(joinList);
+
         }
 
         // leave 처리
         List<UserPresence> leaveList = presence.getLeaves();
         if (leaveList != null) {
-            channelUserPresenceList.removeAll(leaveList);
+
         }
     }
 
@@ -215,13 +211,13 @@ public class GameRoomClient implements SocketListener {
         // join 처리
         List<UserPresence> joinList = matchPresence.getJoins();
         if (joinList != null) {
-            matchUserPresenceList.addAll(joinList);
+           
         }
 
         // leave 처리
         List<UserPresence> leaveList = matchPresence.getLeaves();
         if (leaveList != null) {
-            matchUserPresenceList.removeAll(leaveList);
+
         }
     }
 
