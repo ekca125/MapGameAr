@@ -100,6 +100,19 @@ public class GameRoomClientTest {
             assertEquals(1,gameRoomClient.getMatchUserPresenceList().size());
             assertTrue(gameRoomClient2.joinMatch(gameRoomClient.getMatchId()));
             assertEquals(2,gameRoomClient2.getMatchUserPresenceList().size());
+
+            gameRoomClient.getMatchUserPresenceList().stream().forEach((UserPresence userPresence)->{
+                assertTrue(gameRoomClient2.getMatchUserPresenceList().contains(userPresence));
+            });
+            /*
+            gameRoomClient.getMatchUserPresenceList().stream().forEach((UserPresence userPresence)->{
+                Log.d("testPresence-player1",userPresence.getUserId());
+            });
+
+            gameRoomClient2.getMatchUserPresenceList().stream().forEach((UserPresence userPresence)->{
+                Log.d("testPresence-player2",userPresence.getUserId());
+            });
+            */
         } finally {
             gameRoomClient.leaveMatch();
             gameRoomClient2.leaveMatch();
