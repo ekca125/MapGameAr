@@ -37,5 +37,21 @@ public class GameRoomClientTest {
     }
 
 
+    @Test
+    public void createMatch() {
+        GameRoomClient gameRoomClient = new GameRoomClient(client,session);
 
+    }
+
+    @Test
+    public void joinMatch() {
+    }
+
+    @Test
+    public void leaveMatch() {
+    }
+
+    @Test
+    public void sendMatchData() {
+    }
 }
