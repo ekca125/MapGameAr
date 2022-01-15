@@ -76,20 +76,33 @@ public class GameRoomClientTest {
     @Test
     public void joinTest() {
         GameRoomClient gameRoomClient = new GameRoomClient(client,session);
-        assertTrue(gameRoomClient.createMatch());
         GameRoomClient gameRoomClient2 = new GameRoomClient(client2,session2);
-        assertTrue(gameRoomClient2.joinMatch(gameRoomClient.getMatchId()));
-        gameRoomClient.leaveMatch();
-        gameRoomClient2.leaveMatch();
+        try{
+            assertTrue(gameRoomClient.createMatch());
+            assertTrue(gameRoomClient2.joinMatch(gameRoomClient.getMatchId()));
+        } finally {
+            gameRoomClient.leaveMatch();
+            gameRoomClient2.leaveMatch();
+        }
     }
-
+    
+    /*
+        테스트 범위
+        1. 플레이어 1이 매치를 생성할 때에 방에 있는 플레이어의 숫자가 1인지
+        1. 플레이어 2가 매치에 입장할 때에 방에 있는 플레이어의 숫자가 2인지
+    */
     @Test
-    public void matchJoinLeave() {
+    public void joinPresenceTest() {
         GameRoomClient gameRoomClient = new GameRoomClient(client,session);
-        assertTrue(gameRoomClient.createMatch());
         GameRoomClient gameRoomClient2 = new GameRoomClient(client2,session2);
-        assertTrue(gameRoomClient2.joinMatch(gameRoomClient.getMatchId()));
-        gameRoomClient.leaveMatch();
-        gameRoomClient2.leaveMatch();
+        try{
+            assertTrue(gameRoomClient.createMatch());
+            assertEquals(1,gameRoomClient.getMatchUserPresenceList().size());
+            assertTrue(gameRoomClient2.joinMatch(gameRoomClient.getMatchId()));
+            assertEquals(2,gameRoomClient2.getMatchUserPresenceList().size());
+        } finally {
+            gameRoomClient.leaveMatch();
+            gameRoomClient2.leaveMatch();
+        }
     }
 }
