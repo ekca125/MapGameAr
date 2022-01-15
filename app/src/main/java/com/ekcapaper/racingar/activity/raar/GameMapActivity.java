@@ -19,6 +19,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -28,11 +30,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class GameMapActivity extends AppCompatActivity {
+public class GameMapActivity extends AppCompatActivity implements ActivityInitializer {
     // location checker
     LocationRequestSpace locationRequestSpace;
     // marker
     Optional<Marker> playerMarker;
+    List<Optional<Marker>> flagMarkers;
     // map
     private GoogleMap mMap;
     private boolean mapReady;
@@ -45,27 +48,9 @@ public class GameMapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_map);
 
+        initActivity();
         initMapFragment();
         Tools.setSystemBarColor(this, R.color.colorPrimary);
-
-        mapReady = false;
-
-        thisApplication = (ThisApplication) getApplicationContext();
-        gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
-
-        locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
-            @Override
-            public void accept(Location location) {
-                runOnUiThread(() -> {
-                            gameRoomOperator.declareCurrentPlayerMove(location);
-                            syncGameMap();
-                        }
-                );
-            }
-        });
-        // markers
-        playerMarker = Optional.empty();
-        flagMarkers = new ArrayList<>();
     }
 
     private void initMapFragment() {
@@ -101,24 +86,22 @@ public class GameMapActivity extends AppCompatActivity {
         }
     }
 
-    List<Optional<Marker>> flagMarkers;
-
     private void syncGameMap() {
         if (!mapReady) {
             return;
         }
-        if(gameRoomOperator instanceof FlagGameRoomPlayOperator){
+        if (gameRoomOperator instanceof FlagGameRoomPlayOperator) {
             gameRoomOperator.getCurrentPlayer().getLocation().ifPresent(location -> {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
                 playerMarker.ifPresent(Marker::remove);
                 playerMarker = Optional.empty();
-                playerMarker = Optional.ofNullable(mMap.addMarker(MarkerFactory.createMarkerOption("player",location)));
+                playerMarker = Optional.ofNullable(mMap.addMarker(MarkerFactory.createMarkerOption("player", location)));
                 //
-                flagMarkers.stream().forEach((optionalMarker)-> optionalMarker.ifPresent(Marker::remove));
+                flagMarkers.stream().forEach((optionalMarker) -> optionalMarker.ifPresent(Marker::remove));
                 flagMarkers.clear();
                 List<GameFlag> gameFlagList = ((FlagGameRoomPlayOperator) gameRoomOperator).getUnownedFlagList();
                 gameFlagList.stream().forEach((gameFlag -> {
-                    mMap.addMarker(MarkerFactory.createMarkerOption("flag",gameFlag.getLocation()));
+                    mMap.addMarker(MarkerFactory.createMarkerOption("flag", gameFlag.getLocation()));
                 }));
             });
         }
@@ -136,24 +119,48 @@ public class GameMapActivity extends AppCompatActivity {
         locationRequestSpace.stop();
     }
 
-    static class MarkerFactory{
-        public static MarkerOptions createMarkerOption(String type, Location location){
-            return createMarkerOption(type,new LatLng(location.getLatitude(),location.getLongitude()));
+    @Override
+    public void initActivityField() {
+        mapReady = false;
+        thisApplication = (ThisApplication) getApplicationContext();
+        gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
+        // markers
+        playerMarker = Optional.empty();
+        flagMarkers = new ArrayList<>();
+    }
+
+    @Override
+    public void initActivityComponent() {
+
+    }
+
+    @Override
+    public void initActivityEventTask() {
+        locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
+            @Override
+            public void accept(Location location) {
+                runOnUiThread(() -> {
+                            gameRoomOperator.declareCurrentPlayerMove(location);
+                            syncGameMap();
+                        }
+                );
+            }
+        });
+    }
+
+    static class MarkerFactory {
+        public static MarkerOptions createMarkerOption(String type, Location location) {
+            return createMarkerOption(type, new LatLng(location.getLatitude(), location.getLongitude()));
         }
 
-        public static MarkerOptions createMarkerOption(String type, LatLng latLng){
-            if(type.equals("flag")){
+        public static MarkerOptions createMarkerOption(String type, LatLng latLng) {
+            if (type.equals("flag")) {
                 return new MarkerOptions().position(latLng);
-                /*
-                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_cake);
-                return new MarkerOptions().position(latLng).icon(icon);
-
-                 */
-            }
-            else if(type.equals("player")){
+                //BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_cake);
+                //return new MarkerOptions().position(latLng).icon(icon);
+            } else if (type.equals("player")) {
                 return new MarkerOptions().position(latLng);
-            }
-            else{
+            } else {
                 return new MarkerOptions().position(latLng);
             }
         }
