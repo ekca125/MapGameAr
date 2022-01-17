@@ -134,7 +134,7 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
                     GameLobbyRoomInfo gameLobbyRoomInfo = new GameLobbyRoomInfo();
                     gameLobbyRoomInfo.gameType = roomInfo.getGameType();
                     // 위치 정보를 가져와서 설정
-                    gameLobbyRoomInfo.distanceCenter = ;
+                    gameLobbyRoomInfo.distanceCenter = String.valueOf(roomInfo.getMapRange().getMapCenter().distanceTo(location));
                     gameLobbyRoomInfo.name = roomInfo.getMatchId();
                     return gameLobbyRoomInfo;
                 })
@@ -146,6 +146,8 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
         mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
             @Override
             public void onItemClick(View view, GameLobbyRoomInfo obj, int position) {
+                // join room
+
                 Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
                 startActivity(intent);
                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();

@@ -66,4 +66,10 @@ public class MapRange {
 
         return new MapRange(startLatitude, startLongitude, endLatitude, endLongitude);
     }
+
+    public Location getMapCenter(){
+        Location location = new Location("");
+        
+
+    }
 }
