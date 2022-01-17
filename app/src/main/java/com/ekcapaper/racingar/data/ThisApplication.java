@@ -85,6 +85,7 @@ public class ThisApplication extends Application {
             matchList = getCurrentMatches();
         }
         catch (ExecutionException | InterruptedException e) {
+            Log.d("RoomINFO",e.toString());
             return null;
         }
         List<Match> matches =  matchList.getMatchesList();
@@ -93,8 +94,10 @@ public class ThisApplication extends Application {
             Log.d("RoomINFO",match.getMatchId());
             RoomInfoReader roomInfoReader = new RoomInfoReader(client, session, RoomDataSpace.normalizeMatchId(match.getMatchId()));
             RoomInfo roomInfo = roomInfoReader.readRoomInfo();
+            if(roomInfo == null){
+                Log.d("RoomINFO","roominfo is null");
+            }
             roomInfoList.add(roomInfo);
-
         }
         return roomInfoList;
     }
