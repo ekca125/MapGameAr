@@ -69,7 +69,12 @@ public class MapRange {
 
     public Location getMapCenter(){
         Location location = new Location("");
-        
+        double latitude = (Math.abs(startLatitude) + Math.abs(endLatitude)) / 2;
+        double longitude = (Math.abs(startLongitude) + Math.abs(endLongitude)) / 2;
 
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+
+        return location;
     }
 }
