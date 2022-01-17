@@ -13,6 +13,7 @@ import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.reader.RoomInfoReader;
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
+import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorJoinMaker;
 import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorNewMaker;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
@@ -107,6 +108,17 @@ public class ThisApplication extends Application {
             case GAME_TYPE_FLAG:
                 FlagGameRoomOperatorNewMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorNewMaker(client, session, timeLimit, mapRange);
                 currentGameRoomOperator = flagGameRoomOperatorNewMaker.make();
+                return currentGameRoomOperator != null;
+            default:
+                return false;
+        }
+    }
+
+    public boolean joinGameRoom(GameType gameType, String matchId) {
+        switch (gameType) {
+            case GAME_TYPE_FLAG:
+                FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client, session, matchId);
+                currentGameRoomOperator = flagGameRoomOperatorJoinMaker.make();
                 return currentGameRoomOperator != null;
             default:
                 return false;

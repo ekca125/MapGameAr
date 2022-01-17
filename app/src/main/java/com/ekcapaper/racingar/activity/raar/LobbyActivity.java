@@ -137,6 +137,7 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
                     // 위치 정보를 가져와서 설정
                     gameLobbyRoomInfo.distanceCenter = String.valueOf(roomInfo.getMapRange().getMapCenter().distanceTo(location)) + "m";
                     gameLobbyRoomInfo.name = roomInfo.getMatchId();
+                    gameLobbyRoomInfo.matchId = roomInfo.getMatchId();
                     return gameLobbyRoomInfo;
                 })
                 .collect(Collectors.toList());
@@ -148,7 +149,8 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
             @Override
             public void onItemClick(View view, GameLobbyRoomInfo obj, int position) {
                 // join room
-
+                thisApplication.joinGameRoom(obj.gameType,obj.matchId);
+                //
                 Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
                 startActivity(intent);
                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
