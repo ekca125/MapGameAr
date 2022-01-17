@@ -9,10 +9,12 @@ import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.StorageObjectId;
 import com.heroiclabs.nakama.api.StorageObject;
+import com.heroiclabs.nakama.api.StorageObjectList;
 import com.heroiclabs.nakama.api.StorageObjects;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class RoomInfoReader {
     private final Client client;
@@ -29,19 +31,24 @@ public class RoomInfoReader {
         Gson gson = new Gson();
         // 정보
         String collectionName = RoomDataSpace.getCollectionName(matchId);
-        String keyName = RoomDataSpace.getDataRoomInfoKey();
-        // 준비
-        StorageObjectId objectId = new StorageObjectId(collectionName);
-        objectId.setKey(keyName);
-        objectId.setUserId(session.getUserId());
-
         try {
-            // 가져오기
-            StorageObjects objects = client.readStorageObjects(session, objectId).get();
-            Log.d("InfoRead", String.valueOf(objects.getObjectsCount()));
+            int limit = 3;
+            String cursor = null;
 
-            StorageObject object = objects.getObjects(0);
-            String jsonData = object.getValue();
+            StorageObjectList objects = client.listUsersStorageObjects(
+                    session,
+                    RoomDataSpace.getCollectionName(matchId),
+                    cursor,
+                    limit
+            ).get();
+
+            String jsonData = objects.getObjectsList().stream()
+                    .filter(storageObject -> storageObject.getKey().equals(RoomDataSpace.getDataRoomInfoKey()))
+                    .collect(Collectors.toList())
+                    .get(0)
+                    .getValue();
+            Log.d("InfoRead",jsonData);
+
             // 변환
             return gson.fromJson(jsonData,RoomInfo.class);
         } catch (ExecutionException | InterruptedException | IndexOutOfBoundsException e) {
