@@ -92,6 +92,7 @@ public class ThisApplication extends Application {
         for(Match match:matches){
             String matchId = RoomDataSpace.normalizeMatchId(match.getMatchId());
             RoomInfoReader roomInfoReader = new RoomInfoReader(client, session, matchId);
+            Log.d("RoomINFO",matchId);
             RoomInfo roomInfo = roomInfoReader.readRoomInfo();
             if(roomInfo == null){
                 Log.d("RoomINFO","roominfo is null");

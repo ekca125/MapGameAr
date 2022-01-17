@@ -15,7 +15,7 @@ public class PrepareDataReader {
     public PrepareDataReader(Client client, Session session, String matchId) {
         this.client = client;
         this.session = session;
-        this.matchId = matchId;
+        this.matchId = RoomDataSpace.normalizeMatchId(matchId);
         this.collectionName = RoomDataSpace.getCollectionName(matchId);
         this.keyName = RoomDataSpace.getDataRoomPrepareKey();
     }

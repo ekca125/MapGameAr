@@ -20,17 +20,11 @@ public class RoomInfoWriter {
     private final Client client;
     private final Session session;
     private final String matchId;
-    //
-    private final String collectionName;
-    private final String keyName;
 
     public RoomInfoWriter(Client client, Session session, String matchId) {
         this.client = client;
         this.session = session;
-        this.matchId = matchId;
-        //
-        this.collectionName = RoomDataSpace.getCollectionName(matchId);
-        this.keyName = RoomDataSpace.getDataRoomInfoKey();
+        this.matchId = RoomDataSpace.normalizeMatchId(matchId);
     }
 
 
