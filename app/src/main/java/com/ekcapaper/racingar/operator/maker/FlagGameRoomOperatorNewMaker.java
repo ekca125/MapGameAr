@@ -3,18 +3,18 @@ package com.ekcapaper.racingar.operator.maker;
 import android.location.Location;
 
 import com.ekcapaper.racingar.modelgame.address.MapRange;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.writer.RoomInfoWriter;
 import com.ekcapaper.racingar.modelgame.gameroom.prepare.PrepareDataFlagGameRoom;
 import com.ekcapaper.racingar.modelgame.gameroom.prepare.writer.PrepareDataFlagGameRoomWriter;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
-import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.heroiclabs.nakama.Client;
-import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class FlagGameRoomOperatorNewMaker implements GameRoomOperatorMaker{
     }
 
     @Override
-    public GameRoomOperator make() {
+    public GameRoomPlayOperator make() {
         boolean result;
 
         result = requestGameFlagList(mapRange);
@@ -74,16 +74,18 @@ public class FlagGameRoomOperatorNewMaker implements GameRoomOperatorMaker{
             return null;
         }
 
-        FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client,session,timeLimit,gameFlagList);
+        FlagGameRoomPlayOperator flagGameRoomOperator = new FlagGameRoomPlayOperator(client,session,timeLimit,gameFlagList);
         result = flagGameRoomOperator.createMatch();
         if(!result){
             return null;
         }
 
         try {
-            RoomInfoWriter roomInfoWriter = new RoomInfoWriter(client, session, flagGameRoomOperator.getMatch().getMatchId());
-            PrepareDataFlagGameRoomWriter prepareDataFlagGameRoomWriter = new PrepareDataFlagGameRoomWriter(client,session,flagGameRoomOperator.getMatch().getMatchId());
-            result = roomInfoWriter.writeRoomInfo(new RoomInfo(timeLimit.getSeconds(), gameType, mapRange))
+            String matchId = RoomDataSpace.normalizeMatchId(flagGameRoomOperator.getMatchId());
+
+            RoomInfoWriter roomInfoWriter = new RoomInfoWriter(client, session, matchId);
+            PrepareDataFlagGameRoomWriter prepareDataFlagGameRoomWriter = new PrepareDataFlagGameRoomWriter(client,session,matchId);
+            result = roomInfoWriter.writeRoomInfo(new RoomInfo(timeLimit.getSeconds(), gameType, mapRange, matchId))
                     && prepareDataFlagGameRoomWriter.writePrepareData(new PrepareDataFlagGameRoom(gameFlagList));
         }
         catch (NullPointerException e){

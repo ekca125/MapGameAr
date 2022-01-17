@@ -9,6 +9,8 @@ public class GameLobbyRoomInfo {
     // map info
     public String distanceCenter;
     public GameType gameType;
+    //
+    public String matchId;
 
     public int getImage(){
         switch (gameType){

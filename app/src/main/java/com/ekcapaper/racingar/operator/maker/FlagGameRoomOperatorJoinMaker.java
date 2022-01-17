@@ -1,14 +1,15 @@
 package com.ekcapaper.racingar.operator.maker;
 
 import com.ekcapaper.racingar.modelgame.address.MapRange;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.reader.RoomInfoReader;
 import com.ekcapaper.racingar.modelgame.gameroom.prepare.PrepareDataFlagGameRoom;
 import com.ekcapaper.racingar.modelgame.gameroom.prepare.reader.PrepareDataFlagGameRoomReader;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
-import com.ekcapaper.racingar.operator.impl.FlagGameRoomOperator;
-import com.ekcapaper.racingar.operator.layer.GameRoomOperator;
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
@@ -29,11 +30,11 @@ public class FlagGameRoomOperatorJoinMaker implements GameRoomOperatorMaker{
     public FlagGameRoomOperatorJoinMaker(Client client, Session session, String matchId) {
         this.client = client;
         this.session = session;
-        this.matchId = matchId;
+        this.matchId = RoomDataSpace.normalizeMatchId(matchId);
     }
 
     @Override
-    public GameRoomOperator make() {
+    public GameRoomPlayOperator make() {
         RoomInfoReader roomInfoReader = new RoomInfoReader(client,session,matchId);
         RoomInfo roomInfo = roomInfoReader.readRoomInfo();
         if(roomInfo == null){
@@ -54,7 +55,7 @@ public class FlagGameRoomOperatorJoinMaker implements GameRoomOperatorMaker{
             gameFlagList = prepareDataFlagGameRoom.getGameFlagList();
         }
 
-        FlagGameRoomOperator flagGameRoomOperator = new FlagGameRoomOperator(client,session,timeLimit,gameFlagList);
+        FlagGameRoomPlayOperator flagGameRoomOperator = new FlagGameRoomPlayOperator(client,session,timeLimit,gameFlagList);
         // 개발이 완료된 후에 2개의 기기로 테스트한다.
         /*
         boolean result = flagGameRoomOperator.joinMatch(matchId);

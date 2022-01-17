@@ -16,15 +16,21 @@ import android.widget.Toast;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterGameRoom;
+import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.model.GameRoomInfo;
-import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.stream.Collectors;
 
-public class GameRoomActivity extends AppCompatActivity {
+public class GameRoomActivity extends AppCompatActivity implements ActivityInitializer{
+    private ThisApplication thisApplication;
+    private GameRoomPlayOperator gameRoomOperator;
 
     private View parent_view;
 
@@ -33,41 +39,41 @@ public class GameRoomActivity extends AppCompatActivity {
     private ItemTouchHelper mItemTouchHelper;
 
     private Button button_game_start;
+    private Timer refreshTimer;
+    private TimerTask refreshTimerTask;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_room);
-        parent_view = findViewById(android.R.id.content);
-
-        button_game_start = findViewById(R.id.button_game_start);
-        button_game_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),GameMapActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        initActivity();
         initToolbar();
-        initComponent();
+        refreshRoomComponent();
     }
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Swipe");
+        getSupportActionBar().setTitle("Game Room");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Tools.setSystemBarColor(this);
     }
 
-    private void initComponent() {
+    private void refreshRoomComponent() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        List<GameRoomInfo> items = DataGenerator.getGameRoomInfo(this);
+        //List<GameRoomInfo> items = DataGenerator.getGameRoomInfo(this);
+        List<GameRoomInfo> items = gameRoomOperator.getPlayerList().stream().map(player->{
+            GameRoomInfo obj = new GameRoomInfo();
+            obj.image = R.drawable.image_2;
+            obj.name = String.valueOf(player.getUserId());
+            obj.imageDrw = this.getResources().getDrawable(obj.image);
+            return obj;
+        }).collect(Collectors.toList());
 
         //set data and list adapter
         mAdapter = new AdapterGameRoom(this, items);
@@ -100,5 +106,39 @@ public class GameRoomActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void initActivityField() {
+        thisApplication = (ThisApplication) getApplicationContext();
+        gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
+        refreshTimer = new Timer();
+        refreshTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(()->{
+                    refreshRoomComponent();
+                });
+            }
+        };
+
+    }
+
+    @Override
+    public void initActivityComponent() {
+        parent_view = findViewById(android.R.id.content);
+        button_game_start = findViewById(R.id.button_game_start);
+    }
+
+    @Override
+    public void initActivityEventTask() {
+        button_game_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),GameMapActivity.class);
+                startActivity(intent);
+            }
+        });
+        refreshTimer.schedule(refreshTimerTask,0,100);
     }
 }

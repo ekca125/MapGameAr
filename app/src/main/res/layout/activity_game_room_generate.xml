@@ -43,50 +43,29 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Name"
-                app:endIconDrawable="@drawable/ic_person_outline"
-                app:endIconMode="custom"
-                app:endIconTint="@color/colorPrimaryLight">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="@dimen/spacing_smlarge" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Phone"
-                app:endIconDrawable="@drawable/ic_phone_outline"
-                app:endIconMode="custom"
-                app:endIconTint="@color/colorPrimaryLight">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="@dimen/spacing_smlarge" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Address"
+                android:hint="Latitude"
                 app:endIconDrawable="@drawable/ic_location_outline"
                 app:endIconMode="custom"
                 app:endIconTint="@color/colorPrimaryLight">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_input_latitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Longitude"
+                app:endIconDrawable="@drawable/ic_location_outline"
+                app:endIconMode="custom"
+                app:endIconTint="@color/colorPrimaryLight">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_input_longitude"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -99,18 +78,19 @@
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="City">
+                android:layout_height="match_parent"
+                android:hint="Time Limit"
+                app:endIconDrawable="@drawable/ic_timelapse"
+                app:endIconMode="custom"
+                app:endIconTint="@color/colorPrimaryLight">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_input_time_limit"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="@dimen/spacing_smlarge" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -132,62 +112,13 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <View
-                    android:layout_width="@dimen/spacing_large"
-                    android:layout_height="0dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Zip">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
             </LinearLayout>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="@dimen/spacing_smlarge" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <Button
+                android:id="@+id/button_generate_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
-                app:endIconDrawable="@drawable/ic_email_outline"
-                app:endIconMode="custom"
-                app:endIconTint="@color/colorPrimaryLight">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="@dimen/spacing_smlarge" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Birthday"
-                app:endIconDrawable="@drawable/ic_cake_outline"
-                app:endIconMode="custom"
-                app:endIconTint="@color/colorPrimaryLight">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:text="방 생성" />
 
         </LinearLayout>
 

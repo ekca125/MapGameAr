@@ -1,5 +1,6 @@
 # KeyStorage
 KeyStorage
+/.idea/
 
 *.iml
 .gradle

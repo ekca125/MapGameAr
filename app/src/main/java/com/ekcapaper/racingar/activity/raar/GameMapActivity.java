@@ -1,31 +1,59 @@
 package com.ekcapaper.racingar.activity.raar;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.ekcapaper.racingar.R;
+import com.ekcapaper.racingar.data.LocationRequestSpace;
+import com.ekcapaper.racingar.data.ThisApplication;
+import com.ekcapaper.racingar.modelgame.play.GameFlag;
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class GameMapActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
+public class GameMapActivity extends AppCompatActivity implements ActivityInitializer {
+    // location checker
+    LocationRequestSpace locationRequestSpace;
+    // marker
+    Optional<Marker> playerMarker;
+    List<Optional<Marker>> flagMarkers;
+    // map
     private GoogleMap mMap;
+    private boolean mapReady;
+    // game room operator
+    private ThisApplication thisApplication;
+    private GameRoomPlayOperator gameRoomOperator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_map);
 
+        initActivity();
         initMapFragment();
         Tools.setSystemBarColor(this, R.color.colorPrimary);
     }
@@ -39,16 +67,7 @@ public class GameMapActivity extends AppCompatActivity {
                 MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(37.7610237, -122.4217785));
                 mMap.addMarker(markerOptions);
                 mMap.moveCamera(zoomingLocation());
-                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-                        try {
-                            mMap.animateCamera(zoomingLocation());
-                        } catch (Exception e) {
-                        }
-                        return true;
-                    }
-                });
+                mapReady = true;
             }
         });
     }
@@ -56,7 +75,6 @@ public class GameMapActivity extends AppCompatActivity {
     private CameraUpdate zoomingLocation() {
         return CameraUpdateFactory.newLatLngZoom(new LatLng(37.76496792, -122.42206407), 13);
     }
-
 
     public void clickAction(View view) {
         int id = view.getId();
@@ -70,6 +88,102 @@ public class GameMapActivity extends AppCompatActivity {
             case R.id.add_button:
                 Toast.makeText(getApplicationContext(), "Add Clicked", Toast.LENGTH_SHORT).show();
                 break;
+        }
+    }
+
+    private void syncGameMap() {
+        if (!mapReady) {
+            return;
+        }
+        MarkerFactory markerFactory = new MarkerFactory(GameMapActivity.this);
+
+        if (gameRoomOperator instanceof FlagGameRoomPlayOperator) {
+            gameRoomOperator.getCurrentPlayer().getLocation().ifPresent(location -> {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+                playerMarker.ifPresent(Marker::remove);
+                playerMarker = Optional.empty();
+                playerMarker = Optional.ofNullable(mMap.addMarker(markerFactory.createMarkerOption("player", location)));
+                //
+                flagMarkers.stream().forEach((optionalMarker) -> optionalMarker.ifPresent(Marker::remove));
+                flagMarkers.clear();
+                List<GameFlag> gameFlagList = ((FlagGameRoomPlayOperator) gameRoomOperator).getUnownedFlagList();
+                gameFlagList.stream().forEach((gameFlag -> {
+                    mMap.addMarker(markerFactory.createMarkerOption("flag", gameFlag.getLocation()));
+                }));
+            });
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        locationRequestSpace.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationRequestSpace.stop();
+    }
+
+    @Override
+    public void initActivityField() {
+        mapReady = false;
+        thisApplication = (ThisApplication) getApplicationContext();
+        gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
+        // markers
+        playerMarker = Optional.empty();
+        flagMarkers = new ArrayList<>();
+    }
+
+    @Override
+    public void initActivityComponent() {
+
+    }
+
+    @Override
+    public void initActivityEventTask() {
+        locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
+            @Override
+            public void accept(Location location) {
+                runOnUiThread(() -> {
+                            gameRoomOperator.declareCurrentPlayerMove(location);
+                            syncGameMap();
+                        }
+                );
+            }
+        });
+    }
+
+    static class MarkerFactory {
+        Context context;
+        public MarkerFactory(Context context){
+            this.context = context;
+        }
+
+        private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+            Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+            vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+            Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            vectorDrawable.draw(canvas);
+            return BitmapDescriptorFactory.fromBitmap(bitmap);
+        }
+
+        public MarkerOptions createMarkerOption(String type, Location location) {
+            return createMarkerOption(type, new LatLng(location.getLatitude(), location.getLongitude()));
+        }
+
+        public MarkerOptions createMarkerOption(String type, LatLng latLng) {
+            if (type.equals("flag")) {
+                //return new MarkerOptions().position(latLng);
+                BitmapDescriptor icon = bitmapDescriptorFromVector(context,R.drawable.ic_cake);
+                return new MarkerOptions().position(latLng).icon(icon);
+            } else if (type.equals("player")) {
+                return new MarkerOptions().position(latLng);
+            } else {
+                throw new IllegalArgumentException();
+            }
         }
     }
 }

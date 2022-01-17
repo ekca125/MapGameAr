@@ -13,6 +13,12 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <Button
+        android:id="@+id/button_new_room"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="New Room" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

@@ -15,6 +15,7 @@ public class Player {
 
     public Player(String userId) {
         this.userId = userId;
+        this.location = Optional.empty();
     }
 
     public void updateLocation(Location location){
