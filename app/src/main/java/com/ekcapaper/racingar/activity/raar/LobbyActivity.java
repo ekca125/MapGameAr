@@ -149,11 +149,14 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
             @Override
             public void onItemClick(View view, GameLobbyRoomInfo obj, int position) {
                 // join room
-                thisApplication.joinGameRoom(obj.gameType,obj.matchId);
-                //
-                Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
-                startActivity(intent);
-                Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+                if(thisApplication.joinGameRoom(obj.gameType,obj.matchId)){
+                    Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
+                    startActivity(intent);
+                    Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"방의 입장에 실패했습니다.",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

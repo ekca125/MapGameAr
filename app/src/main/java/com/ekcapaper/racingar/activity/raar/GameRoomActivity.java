@@ -24,9 +24,11 @@ import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-public class GameRoomActivity extends AppCompatActivity {
+public class GameRoomActivity extends AppCompatActivity implements ActivityInitializer{
     private ThisApplication thisApplication;
     private GameRoomPlayOperator gameRoomOperator;
 
@@ -37,26 +39,17 @@ public class GameRoomActivity extends AppCompatActivity {
     private ItemTouchHelper mItemTouchHelper;
 
     private Button button_game_start;
+    private Timer refreshTimer;
+    private TimerTask refreshTimerTask;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_room);
-        parent_view = findViewById(android.R.id.content);
-
-        thisApplication = (ThisApplication) getApplicationContext();
-        gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
-
-        button_game_start = findViewById(R.id.button_game_start);
-        button_game_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),GameMapActivity.class);
-                startActivity(intent);
-            }
-        });
+        initActivity();
         initToolbar();
-        initComponent();
+        refreshRoomComponent();
     }
 
     private void initToolbar() {
@@ -68,7 +61,7 @@ public class GameRoomActivity extends AppCompatActivity {
         Tools.setSystemBarColor(this);
     }
 
-    private void initComponent() {
+    private void refreshRoomComponent() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -113,5 +106,39 @@ public class GameRoomActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void initActivityField() {
+        thisApplication = (ThisApplication) getApplicationContext();
+        gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
+        refreshTimer = new Timer();
+        refreshTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(()->{
+                    refreshRoomComponent();
+                });
+            }
+        };
+
+    }
+
+    @Override
+    public void initActivityComponent() {
+        parent_view = findViewById(android.R.id.content);
+        button_game_start = findViewById(R.id.button_game_start);
+    }
+
+    @Override
+    public void initActivityEventTask() {
+        button_game_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),GameMapActivity.class);
+                startActivity(intent);
+            }
+        });
+        refreshTimer.schedule(refreshTimerTask,0,100);
     }
 }

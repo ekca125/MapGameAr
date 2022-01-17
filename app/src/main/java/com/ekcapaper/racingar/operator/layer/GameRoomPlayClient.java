@@ -1,6 +1,7 @@
 package com.ekcapaper.racingar.operator.layer;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.ekcapaper.racingar.modelgame.play.GameStatus;
 import com.ekcapaper.racingar.modelgame.play.Player;
