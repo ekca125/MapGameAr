@@ -21,6 +21,8 @@ public class PrepareDataFlagGameRoomWriter extends PrepareDataWriter{
 
     public boolean writePrepareData(PrepareDataFlagGameRoom prepareDataFlagGameRoom){
         // 정보
+        String collectionName = RoomDataSpace.getCollectionName(matchId);
+        String keyName = RoomDataSpace.getDataRoomPrepareKey();
         String prepareDataFlagGameRoomJson = gson.toJson(prepareDataFlagGameRoom);
         try {
             // 쓰기

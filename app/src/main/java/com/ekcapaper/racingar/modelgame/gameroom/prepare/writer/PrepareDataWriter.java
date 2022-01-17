@@ -8,16 +8,10 @@ public class PrepareDataWriter {
     protected final Client client;
     protected final Session session;
     protected final String matchId;
-    //
-    protected final String collectionName;
-    protected final String keyName;
 
     public PrepareDataWriter(Client client, Session session, String matchId) {
         this.client = client;
         this.session = session;
         this.matchId = RoomDataSpace.normalizeMatchId(matchId);
-        //
-        this.collectionName = RoomDataSpace.getCollectionName(matchId);
-        this.keyName = RoomDataSpace.getDataRoomPrepareKey();
     }
 }
