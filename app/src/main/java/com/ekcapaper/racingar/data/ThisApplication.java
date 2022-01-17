@@ -91,8 +91,8 @@ public class ThisApplication extends Application {
         List<Match> matches =  matchList.getMatchesList();
         List<RoomInfo> roomInfoList = new ArrayList<>();
         for(Match match:matches){
-            Log.d("RoomINFO",match.getMatchId());
-            RoomInfoReader roomInfoReader = new RoomInfoReader(client, session, RoomDataSpace.normalizeMatchId(match.getMatchId()));
+            String matchId = match.getMatchId();
+            RoomInfoReader roomInfoReader = new RoomInfoReader(client, session, matchId);
             RoomInfo roomInfo = roomInfoReader.readRoomInfo();
             if(roomInfo == null){
                 Log.d("RoomINFO","roominfo is null");
