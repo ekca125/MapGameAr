@@ -85,13 +85,12 @@ public class ThisApplication extends Application {
             matchList = getCurrentMatches();
         }
         catch (ExecutionException | InterruptedException e) {
-            Log.d("RoomINFO",e.toString());
             return null;
         }
         List<Match> matches =  matchList.getMatchesList();
         List<RoomInfo> roomInfoList = new ArrayList<>();
         for(Match match:matches){
-            String matchId = match.getMatchId();
+            String matchId = RoomDataSpace.normalizeMatchId(match.getMatchId());
             RoomInfoReader roomInfoReader = new RoomInfoReader(client, session, matchId);
             RoomInfo roomInfo = roomInfoReader.readRoomInfo();
             if(roomInfo == null){

@@ -1,6 +1,7 @@
 package com.ekcapaper.racingar.operator.maker;
 
 import com.ekcapaper.racingar.modelgame.address.MapRange;
+import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.reader.RoomInfoReader;
 import com.ekcapaper.racingar.modelgame.gameroom.prepare.PrepareDataFlagGameRoom;
@@ -29,7 +30,7 @@ public class FlagGameRoomOperatorJoinMaker implements GameRoomOperatorMaker{
     public FlagGameRoomOperatorJoinMaker(Client client, Session session, String matchId) {
         this.client = client;
         this.session = session;
-        this.matchId = matchId;
+        this.matchId = RoomDataSpace.normalizeMatchId(matchId);
     }
 
     @Override
