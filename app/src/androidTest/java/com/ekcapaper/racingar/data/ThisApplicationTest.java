@@ -68,4 +68,10 @@ public class ThisApplicationTest {
         boolean result = thisApplication.makeGameRoom(GameType.GAME_TYPE_FLAG, Duration.ofSeconds(600), MapRange.calculateMapRange(LocationStub.location,1));
         assertTrue(result);
     }
+
+    @Test
+    public void createRoom() {
+        boolean result = thisApplication.createRoom("test","test");
+        assertTrue(result);
+    }
 }

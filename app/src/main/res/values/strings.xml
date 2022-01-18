@@ -28,4 +28,14 @@
 
     <!-- lobby -->
     <string name="lobby_title">게임로비</string>
+
+    <!-- room generate -->
+    <string name="room_name">방 이름</string>
+    <string name="latitude">현재 위도</string>
+    <string name="longitude">현재 경도</string>
+    <string name="time_limit">시간 제한(초)</string>
+    <string name="game_type">게임 타입</string>
+    <string name="generate_room">방 만들기</string>
+    <string name="generating_room">방을 만드는 중</string>
+
 </resources>

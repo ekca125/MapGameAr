@@ -42,11 +42,74 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
     // 관제
     private ThisApplication thisApplication;
     // layout
+    private TextInputEditText text_input_name;
     private TextInputEditText text_input_latitude;
     private TextInputEditText text_input_longitude;
     private TextInputEditText text_input_time_limit;
     private AutoCompleteTextView dropdown_state;
     private Button button_generate_room;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_game_room_generate);
+        initActivity();
+        initToolbar();
+    }
+
+    @Override
+    public void initActivityField() {
+        thisApplication = (ThisApplication) getApplicationContext();
+        gameType = GameType.GAME_TYPE_FLAG;
+        gameTypeArray = GameType.values();
+    }
+
+    @Override
+    public void initActivityComponent() {
+        button_generate_room = findViewById(R.id.button_generate_room);
+        text_input_name = findViewById(R.id.text_input_name);
+        text_input_latitude = findViewById(R.id.text_input_latitude);
+        text_input_longitude = findViewById(R.id.text_input_longitude);
+        text_input_time_limit = findViewById(R.id.text_input_time_limit);
+        dropdown_state = findViewById(R.id.dropdown_state);
+
+        button_generate_room.setEnabled(false);
+        button_generate_room.setText("위치를 가져오는 중..");
+        text_input_time_limit.setText("3600");
+        dropdown_state.setText(GameType.GAME_TYPE_FLAG.toString());
+    }
+
+    @Override
+    public void initActivityEventTask() {
+        dropdown_state.setAdapter(new ArrayAdapter(
+                this,
+                android.R.layout.simple_list_item_1,
+                Arrays.stream(gameTypeArray).map(Enum::toString).collect(Collectors.toList())
+        ));
+        dropdown_state.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                gameType = gameTypeArray[i];
+            }
+        });
+        button_generate_room.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generateRoomAndJoinRoom();
+            }
+        });
+        locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
+            @Override
+            public void accept(Location location) {
+                runOnUiThread(() -> {
+                    text_input_latitude.setText(String.valueOf(Math.abs(location.getLatitude())));
+                    text_input_longitude.setText(String.valueOf(Math.abs(location.getLongitude())));
+                    button_generate_room.setEnabled(true);
+                    button_generate_room.setText(R.string.generating_room);
+                });
+            }
+        });
+    }
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -59,15 +122,9 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         Tools.setSystemBarLight(this);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_room_generate);
-        initActivity();
-        initToolbar();
-    }
 
-    private void generateRoomAndMoveRoom() {
+
+    private void generateRoomAndJoinRoom() {
         button_generate_room.setEnabled(false);
         // latitude, longitude
         double latitude = Double.parseDouble(Objects.requireNonNull(text_input_latitude.getText()).toString());
@@ -130,58 +187,5 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
     protected void onResume() {
         super.onResume();
         locationRequestSpace.start();
-    }
-
-    @Override
-    public void initActivityField() {
-        thisApplication = (ThisApplication) getApplicationContext();
-        gameType = GameType.GAME_TYPE_FLAG;
-        gameTypeArray = GameType.values();
-    }
-
-    @Override
-    public void initActivityComponent() {
-        button_generate_room = findViewById(R.id.button_generate_room);
-        text_input_latitude = findViewById(R.id.text_input_latitude);
-        text_input_longitude = findViewById(R.id.text_input_longitude);
-        text_input_time_limit = findViewById(R.id.text_input_time_limit);
-        dropdown_state = findViewById(R.id.dropdown_state);
-
-        button_generate_room.setEnabled(false);
-        button_generate_room.setText("위치를 가져오는 중..");
-        text_input_time_limit.setText("3600");
-        dropdown_state.setText(GameType.GAME_TYPE_FLAG.toString());
-    }
-
-    @Override
-    public void initActivityEventTask() {
-        dropdown_state.setAdapter(new ArrayAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                Arrays.stream(gameTypeArray).map(Enum::toString).collect(Collectors.toList())
-        ));
-        dropdown_state.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                gameType = gameTypeArray[i];
-            }
-        });
-        button_generate_room.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                generateRoomAndMoveRoom();
-            }
-        });
-        locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
-            @Override
-            public void accept(Location location) {
-                runOnUiThread(() -> {
-                    text_input_latitude.setText(String.valueOf(Math.abs(location.getLatitude())));
-                    text_input_longitude.setText(String.valueOf(Math.abs(location.getLongitude())));
-                    button_generate_room.setEnabled(true);
-                    button_generate_room.setText("방을 생성하기");
-                });
-            }
-        });
     }
 }

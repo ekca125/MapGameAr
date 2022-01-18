@@ -43,7 +43,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="room_name"
+                android:hint="@string/room_name"
                 app:endIconDrawable="@drawable/ic_location_outline"
                 app:endIconMode="custom"
                 app:endIconTint="@color/colorPrimaryLight">
@@ -59,7 +59,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="latitude"
+                android:hint="@string/latitude"
                 app:endIconDrawable="@drawable/ic_location_outline"
                 app:endIconMode="custom"
                 app:endIconTint="@color/colorPrimaryLight">
@@ -75,7 +75,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="longitude"
+                android:hint="@string/longitude"
                 app:endIconDrawable="@drawable/ic_location_outline"
                 app:endIconMode="custom"
                 app:endIconTint="@color/colorPrimaryLight">
@@ -95,7 +95,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="time_limit"
+                android:hint="@string/time_limit"
                 app:endIconDrawable="@drawable/ic_timelapse"
                 app:endIconMode="custom"
                 app:endIconTint="@color/colorPrimaryLight">
@@ -119,7 +119,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="game_type">
+                    android:hint="@string/game_type">
 
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/dropdown_state"
@@ -134,7 +134,7 @@
                 android:id="@+id/button_generate_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="generate_room" />
+                android:text="@string/generate_room" />
 
         </LinearLayout>
 
