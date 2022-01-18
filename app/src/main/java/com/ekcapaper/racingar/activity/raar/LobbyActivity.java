@@ -33,7 +33,7 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
     private View parent_view;
     private RecyclerView recyclerView;
     private Button button_new_room;
-    // activity data
+    // data
     private AdapterLobby mAdapter;
     private List<GameLobbyRoomInfo> items;
     // location
@@ -43,13 +43,14 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
-        // init
         initActivity();
     }
 
     @Override
     public void initActivityField() {
         thisApplication = (ThisApplication) getApplicationContext();
+        mAdapter = null;
+        items = null;
     }
 
     @Override
@@ -57,9 +58,10 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
         parent_view = findViewById(android.R.id.content);
         button_new_room = findViewById(R.id.button_new_room);
         recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
 
         initToolbar();
-        initLobbyComponent();
     }
 
     @Override
@@ -75,9 +77,12 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
         refreshRequester = new LocationRequestSpace(this, new Consumer<Location>() {
             @Override
             public void accept(Location location) {
-                refreshLobby(location);
+                updateLobbyData(location);
+                updateLobby();
+                refreshRequester.stop();
             }
         });
+        refreshRequester.stop();
     }
 
 
@@ -90,10 +95,6 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
         Tools.setSystemBarColor(this);
     }
 
-    private void initLobbyComponent() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,31 +108,14 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
             finish();
         } else if (item.getItemId() == R.id.action_refresh) {
             Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
+            refreshRequester.start();
         } else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        refreshRequester.start();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        refreshRequester.stop();
-    }
-
-    private void refreshLobby(Location location) {
-        if(location == null){
-            // 잘못된 사용 방법
-            throw new IllegalStateException();
-        }
+    private void updateLobbyData(Location location){
         List<RoomInfo> roomInfoList = thisApplication.getCurrentRoomInfo();
         items = roomInfoList.stream()
                 .map((roomInfo) -> {
@@ -144,6 +128,9 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
                     return gameLobbyRoomInfo;
                 })
                 .collect(Collectors.toList());
+    }
+
+    private void updateLobby() {
         //set data and list adapter
         mAdapter = new AdapterLobby(this, items);
         recyclerView.setAdapter(mAdapter);
@@ -162,5 +149,17 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshRequester.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        refreshRequester.stop();
     }
 }
