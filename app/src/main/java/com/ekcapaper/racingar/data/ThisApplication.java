@@ -20,6 +20,7 @@ import com.google.common.util.concurrent.Futures;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
+import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.Match;
 import com.heroiclabs.nakama.api.MatchList;
 
@@ -35,6 +36,8 @@ import java.util.stream.Collectors;
 
 import lombok.Getter;
 import lombok.val;
+
+// group 가입으로 변경
 
 public class ThisApplication extends Application {
     private Client client;
@@ -70,6 +73,23 @@ public class ThisApplication extends Application {
         val future = client.authenticateEmail(email, password);
         Futures.addCallback(future,futureCallback,executorService);
     }
+
+    public void createRoom(String name, String desc, Runnable runnable){
+        val future = client.createGroup(session,name,desc);
+        future.addListener(runnable,executorService);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     public Optional<Session> getSessionOptional() {
         return Optional.ofNullable(session);

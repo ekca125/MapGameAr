@@ -22,6 +22,7 @@ import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.utils.Tools;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -116,6 +117,8 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
     }
 
     private void updateLobbyData(Location location){
+        items = new ArrayList<>();
+        /*
         List<RoomInfo> roomInfoList = thisApplication.getCurrentRoomInfo();
         items = roomInfoList.stream()
                 .map((roomInfo) -> {
@@ -127,7 +130,7 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
                     gameLobbyRoomInfo.matchId = roomInfo.getMatchId();
                     return gameLobbyRoomInfo;
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
     }
 
     private void updateLobby() {
