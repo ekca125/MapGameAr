@@ -15,6 +15,8 @@ import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorJoinMaker;
 import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorNewMaker;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
@@ -32,6 +34,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
+import lombok.val;
 
 public class ThisApplication extends Application {
     private Client client;
@@ -63,12 +66,9 @@ public class ThisApplication extends Application {
         executorService = Executors.newFixedThreadPool(4);
     }
 
-    public void login(String email, String password) {
-        try {
-            session = client.authenticateEmail(email, password).get();
-        } catch (ExecutionException | InterruptedException e) {
-            session = null;
-        }
+    public void loginEmail(String email, String password, FutureCallback<Session> futureCallback) {
+        val future = client.authenticateEmail(email, password);
+        Futures.addCallback(future,futureCallback,executorService);
     }
 
     public Optional<Session> getSessionOptional() {

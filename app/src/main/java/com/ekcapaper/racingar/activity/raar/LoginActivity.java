@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ekcapaper.racingar.R;
@@ -13,6 +14,8 @@ import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.common.util.concurrent.FutureCallback;
+import com.heroiclabs.nakama.Session;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -60,13 +63,17 @@ public class LoginActivity extends AppCompatActivity implements ActivityInitiali
                 String email = Objects.requireNonNull(text_input_text_email.getText()).toString();
                 String password = Objects.requireNonNull(text_input_text_password.getText()).toString();
 
-                CompletableFuture.runAsync(() -> {
-                    thisApplication.login(email, password);
-                }).thenRun(() -> {
-                    thisApplication.getSessionOptional().ifPresent(session -> {
+                thisApplication.loginEmail(email, password, new FutureCallback<Session>() {
+                    @Override
+                    public void onSuccess(@Nullable Session result) {
                         Intent intent = new Intent(LoginActivity.this, LobbyActivity.class);
                         startActivity(intent);
-                    });
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        
+                    }
                 });
             }
         });
