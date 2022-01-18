@@ -12,7 +12,7 @@ import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
-import com.ekcapaper.racingar.modelgame.gameroom.info.reader.RoomInfoReader;
+import com.ekcapaper.racingar.modelgame.gameroom.prepare.PrepareDataFlagGameRoom;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
@@ -49,8 +49,6 @@ import lombok.Getter;
 import lombok.val;
 import retrofit2.Call;
 import retrofit2.Response;
-
-// group 가입으로 변경
 
 public class ThisApplication extends Application {
     private Client client;
@@ -214,23 +212,31 @@ public class ThisApplication extends Application {
         return false;
     }
 
-    public boolean createFlagGameRoom(String name, String desc, MapRange mapRange, Duration timeLimit){
-        // 맵 받아오기
-        List<GameFlag> gameFlagList = null;
+    private List<GameFlag> requestFlagMap(MapRange mapRange){
         Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom10(mapRange);
         try {
             Response<List<AddressDto>> response = requester.execute();
             if (!response.isSuccessful()) {
-                return false;
+                return null;
             }
             List<AddressDto> addressDtoList = response.body();
-            gameFlagList = addressDtoList.stream().map(addressDto -> {
+            assert addressDtoList != null;
+            return addressDtoList.stream().map(addressDto -> {
                 Location location = new Location("");
                 location.setLatitude(addressDto.getLatitude());
                 location.setLongitude(addressDto.getLongitude());
                 return new GameFlag(location);
             }).collect(Collectors.toList());
         } catch (IOException e) {
+            return null;
+        }
+    }
+
+
+    public boolean createFlagGameRoom(String name, String desc, MapRange mapRange, Duration timeLimit){
+        // 맵 받아오기
+        List<GameFlag> gameFlagList = requestFlagMap(mapRange);
+        if(gameFlagList == null){
             return false;
         }
         // 진행자의 설정
@@ -240,16 +246,24 @@ public class ThisApplication extends Application {
                 timeLimit,
                 gameFlagList
         );
-        // 데이터 쓰기
-        boolean result = false;
-        result = createGameRoom(name,desc,currentGameRoomOperator);
-        if(!result){
+        // 방 만들기
+        if(!createGameRoom(name,desc,currentGameRoomOperator)){
+            currentGameRoomOperator = null;
             return false;
         }
+        // 방 데이터 준비
         Map<String, Object> payload = new HashMap<>();
-        payload.put("GroupId", currentGroup.getId());
-
-
+        RoomInfo roomInfo = new RoomInfo(
+                timeLimit.getSeconds(),
+                GameType.GAME_TYPE_FLAG,
+                mapRange,
+                currentMatch.getMatchId(),
+                currentGroup.getId()
+        );
+        PrepareDataFlagGameRoom prepareDataFlagGameRoom = new PrepareDataFlagGameRoom(gameFlagList);
+        // 방 데이터 입력
+        payload.put("info", roomInfo);
+        payload.put("prepare",prepareDataFlagGameRoom);
         try {
             Rpc rpcResult = client.rpc(session, "UpdateGroupMetadata", new Gson().toJson(payload, payload.getClass())).get();
         }
@@ -261,5 +275,4 @@ public class ThisApplication extends Application {
         }
         return true;
     }
-
 }

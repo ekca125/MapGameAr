@@ -11,11 +11,13 @@ public final class RoomInfo {
     GameType gameType;
     MapRange mapRange;
     String matchId;
+    String groupId;
 
-    public RoomInfo(long timeLimitSeconds, GameType gameType, MapRange mapRange, String matchId) {
+    public RoomInfo(long timeLimitSeconds, GameType gameType, MapRange mapRange, String matchId, String groupId) {
         this.timeLimitSeconds = timeLimitSeconds;
         this.gameType = gameType;
         this.mapRange = mapRange;
         this.matchId = matchId;
+        this.groupId = groupId;
     }
 }
