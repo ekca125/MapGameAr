@@ -3,7 +3,7 @@ package com.ekcapaper.racingar.operator.impl;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.Player;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
-import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperatorDeprecated;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Session;
 
@@ -14,9 +14,11 @@ import java.util.stream.Collectors;
 
 public class FlagGameRoomPlayOperator extends GameRoomPlayOperator {
     private final List<GameFlag> gameFlagList;
+    private final Duration timeLimit;
 
-    public FlagGameRoomPlayOperator(Client client, Session session, Duration timeLimit, List<GameFlag> gameFlagList) {
-        super(client, session, timeLimit);
+    public FlagGameRoomPlayOperator(Duration timeLimit, List<GameFlag> gameFlagList) {
+        super();
+        this.timeLimit = timeLimit;
         this.gameFlagList = gameFlagList;
     }
 

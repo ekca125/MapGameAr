@@ -17,7 +17,7 @@ import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
-import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperatorDeprecated;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -46,7 +46,7 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
     private boolean mapReady;
     // game room operator
     private ThisApplication thisApplication;
-    private GameRoomPlayOperator gameRoomOperator;
+    private GameRoomPlayOperatorDeprecated gameRoomOperator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

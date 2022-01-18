@@ -24,7 +24,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class FlagGameRoomPlayOperatorTest {
+public class FlagGameRoomPlayOperatorDeprecatedTest {
     public static Client client;
     public static Session session;
     public static String matchId;

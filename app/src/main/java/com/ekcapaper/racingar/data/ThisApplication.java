@@ -3,20 +3,18 @@ package com.ekcapaper.racingar.data;
 import android.app.Application;
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.multidex.MultiDex;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
-import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.prepare.PrepareDataFlagGameRoom;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
-import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperatorDeprecated;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.google.common.util.concurrent.FutureCallback;
@@ -30,16 +28,13 @@ import com.heroiclabs.nakama.SocketClient;
 import com.heroiclabs.nakama.SocketListener;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
-import com.heroiclabs.nakama.api.MatchList;
 import com.heroiclabs.nakama.api.Rpc;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -60,7 +55,7 @@ public class ThisApplication extends Application {
     @Getter
     private Match currentMatch;
     @Getter
-    private GameRoomPlayOperator currentGameRoomOperator;
+    private GameRoomPlayOperatorDeprecated currentGameRoomOperator;
     @Getter
     private ExecutorService executorService;
 
@@ -79,12 +74,14 @@ public class ThisApplication extends Application {
                 KeyStorageNakama.getGrpcPort(),
                 KeyStorageNakama.getGrpcSSL()
         );
+        session = null;
         socketClient = client.createSocket(
                 KeyStorageNakama.getWebSocketAddress(),
                 KeyStorageNakama.getWebSocketPort(),
                 KeyStorageNakama.getWebSocketSSL()
         );
-        session = null;
+        currentGroup = null;
+        currentMatch = null;
         currentGameRoomOperator = null;
         executorService = Executors.newFixedThreadPool(4);
     }
@@ -239,6 +236,10 @@ public class ThisApplication extends Application {
         if(gameFlagList == null){
             return false;
         }
+        // 방 만들기
+        if(!createGameRoom(name,desc,currentGameRoomOperator)){
+            return false;
+        }
         // 진행자의 설정
         currentGameRoomOperator = new FlagGameRoomPlayOperator(
                 client,
@@ -246,11 +247,6 @@ public class ThisApplication extends Application {
                 timeLimit,
                 gameFlagList
         );
-        // 방 만들기
-        if(!createGameRoom(name,desc,currentGameRoomOperator)){
-            currentGameRoomOperator = null;
-            return false;
-        }
         // 방 데이터 준비
         Map<String, Object> payload = new HashMap<>();
         RoomInfo roomInfo = new RoomInfo(

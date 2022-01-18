@@ -12,7 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-public class GameRoomPlayOperator extends GameRoomPlayClient {
+public class GameRoomPlayOperatorDeprecated extends GameRoomPlayClient {
     // checker
     Timer endCheckTimer;
     TimerTask endCheckTimerTask;
@@ -20,7 +20,7 @@ public class GameRoomPlayOperator extends GameRoomPlayClient {
     private final Duration timeLimit;
     private LocalDateTime endTime;
 
-    public GameRoomPlayOperator(Client client, Session session, Duration timeLimit) {
+    public GameRoomPlayOperatorDeprecated(Client client, Session session, Duration timeLimit) {
         super(client, session);
         this.timeLimit = timeLimit;
         this.endCheckTimer = new Timer();
