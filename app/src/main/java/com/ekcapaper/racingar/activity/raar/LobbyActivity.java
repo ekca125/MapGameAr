@@ -45,15 +45,47 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
         setContentView(R.layout.activity_lobby);
         // init
         initActivity();
+    }
+
+    @Override
+    public void initActivityField() {
+        thisApplication = (ThisApplication) getApplicationContext();
+    }
+
+    @Override
+    public void initActivityComponent() {
+        parent_view = findViewById(android.R.id.content);
+        button_new_room = findViewById(R.id.button_new_room);
+        recyclerView = findViewById(R.id.recyclerView);
+
         initToolbar();
         initLobbyComponent();
     }
+
+    @Override
+    public void initActivityEventTask() {
+        button_new_room.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                refreshRequester.stop();
+                Intent intent = new Intent(getApplicationContext(), GameRoomGenerateActivity.class);
+                startActivity(intent);
+            }
+        });
+        refreshRequester = new LocationRequestSpace(this, new Consumer<Location>() {
+            @Override
+            public void accept(Location location) {
+                refreshLobby(location);
+            }
+        });
+    }
+
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Game Lobby");
+        getSupportActionBar().setTitle(R.string.lobby_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Tools.setSystemBarColor(this);
     }
@@ -74,7 +106,6 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
         if (item.getItemId() == android.R.id.home) {
             finish();
         } else if (item.getItemId() == R.id.action_refresh) {
-            refreshRequester.start();
             Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
@@ -82,35 +113,7 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void initActivityField() {
-        thisApplication = (ThisApplication) getApplicationContext();
-    }
 
-    @Override
-    public void initActivityComponent() {
-        parent_view = findViewById(android.R.id.content);
-        button_new_room = findViewById(R.id.button_new_room);
-        recyclerView = findViewById(R.id.recyclerView);
-    }
-
-    @Override
-    public void initActivityEventTask() {
-        button_new_room.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                refreshRequester.stop();
-                Intent intent = new Intent(getApplicationContext(), GameRoomGenerateActivity.class);
-                startActivity(intent);
-            }
-        });
-        refreshRequester = new LocationRequestSpace(this, new Consumer<Location>() {
-            @Override
-            public void accept(Location location) {
-                refreshLobby(location);
-            }
-        });
-    }
 
     @Override
     protected void onResume() {

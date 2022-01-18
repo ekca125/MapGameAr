@@ -21,9 +21,11 @@
     <string name="default_notification_channel_id">Default</string>
     <string name="webview_loading">Load Content... </string>
 
-
+    <!-- login -->
     <string name="sign_in">가입 및 로그인</string>
     <string name="username">이메일</string>
     <string name="password">패스워드</string>
 
+    <!-- lobby -->
+    <string name="lobby_title">게임로비</string>
 </resources>
