@@ -69,9 +69,5 @@ public class ThisApplicationTest {
         assertTrue(result);
     }
 
-    @Test
-    public void createRoom() {
-        boolean result = thisApplication.createRoom("test","test");
-        assertTrue(result);
-    }
+
 }
