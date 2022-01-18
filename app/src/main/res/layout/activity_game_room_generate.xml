@@ -42,8 +42,24 @@
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="room_name"
+                app:endIconDrawable="@drawable/ic_location_outline"
+                app:endIconMode="custom"
+                app:endIconTint="@color/colorPrimaryLight">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_input_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Latitude"
+                android:hint="latitude"
                 app:endIconDrawable="@drawable/ic_location_outline"
                 app:endIconMode="custom"
                 app:endIconTint="@color/colorPrimaryLight">
@@ -59,7 +75,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Longitude"
+                android:hint="longitude"
                 app:endIconDrawable="@drawable/ic_location_outline"
                 app:endIconMode="custom"
                 app:endIconTint="@color/colorPrimaryLight">
@@ -79,7 +95,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Time Limit"
+                android:hint="time_limit"
                 app:endIconDrawable="@drawable/ic_timelapse"
                 app:endIconMode="custom"
                 app:endIconTint="@color/colorPrimaryLight">
@@ -103,7 +119,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="State">
+                    android:hint="game_type">
 
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/dropdown_state"
@@ -118,7 +134,7 @@
                 android:id="@+id/button_generate_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="방 생성" />
+                android:text="generate_room" />
 
         </LinearLayout>
 
