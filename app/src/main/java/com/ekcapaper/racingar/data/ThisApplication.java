@@ -17,8 +17,6 @@ import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
-import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorJoinMaker;
-import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorNewMaker;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.google.common.util.concurrent.FutureCallback;
@@ -249,7 +247,8 @@ public class ThisApplication extends Application {
             return false;
         }
         Map<String, Object> payload = new HashMap<>();
-        payload.put("GroupId", "<GroupId>");
+        payload.put("GroupId", currentGroup.getId());
+
 
         try {
             Rpc rpcResult = client.rpc(session, "UpdateGroupMetadata", new Gson().toJson(payload, payload.getClass())).get();
