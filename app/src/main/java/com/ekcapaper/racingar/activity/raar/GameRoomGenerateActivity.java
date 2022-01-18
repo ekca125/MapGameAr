@@ -74,7 +74,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         dropdown_state = findViewById(R.id.dropdown_state);
 
         button_generate_room.setEnabled(false);
-        button_generate_room.setText("위치를 가져오는 중..");
+        button_generate_room.setText(R.string.loading_location);
         text_input_time_limit.setText("3600");
         dropdown_state.setText(GameType.GAME_TYPE_FLAG.toString());
     }
@@ -105,7 +105,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
                     text_input_latitude.setText(String.valueOf(Math.abs(location.getLatitude())));
                     text_input_longitude.setText(String.valueOf(Math.abs(location.getLongitude())));
                     button_generate_room.setEnabled(true);
-                    button_generate_room.setText(R.string.generating_room);
+                    button_generate_room.setText(R.string.generate_room);
                 });
             }
         });
@@ -133,6 +133,9 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
+        // 방을 생성하는 코드를 다시 작성(group)
+
+
         // 방 생성
         CompletableFuture.supplyAsync(() -> {
             MapRange mapRange = MapRange.calculateMapRange(location, 1);

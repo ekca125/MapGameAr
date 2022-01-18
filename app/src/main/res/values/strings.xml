@@ -36,6 +36,6 @@
     <string name="time_limit">시간 제한(초)</string>
     <string name="game_type">게임 타입</string>
     <string name="generate_room">방 만들기</string>
-    <string name="generating_room">방을 만드는 중</string>
+    <string name="loading_location">위치를 가져오는 중..</string>
 
 </resources>

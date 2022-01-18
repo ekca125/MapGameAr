@@ -2,6 +2,7 @@ package com.ekcapaper.racingar.data;
 
 import android.app.Application;
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -12,28 +13,34 @@ import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.gameroom.RoomDataSpace;
 import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.modelgame.gameroom.info.reader.RoomInfoReader;
+import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorJoinMaker;
 import com.ekcapaper.racingar.operator.maker.FlagGameRoomOperatorNewMaker;
+import com.ekcapaper.racingar.retrofit.AddressMapClient;
+import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
+import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
+import com.heroiclabs.nakama.SocketClient;
+import com.heroiclabs.nakama.SocketListener;
 import com.heroiclabs.nakama.api.Group;
-import com.heroiclabs.nakama.api.Match;
+import com.heroiclabs.nakama.api.GroupList;
 import com.heroiclabs.nakama.api.MatchList;
 import com.heroiclabs.nakama.api.Rpc;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -42,19 +49,25 @@ import java.util.stream.Collectors;
 
 import lombok.Getter;
 import lombok.val;
+import retrofit2.Call;
+import retrofit2.Response;
 
 // group 가입으로 변경
 
 public class ThisApplication extends Application {
     private Client client;
     private Session session;
-    private Group group;
+    private SocketClient socketClient;
+    // group, match
+    @Getter
+    private Group currentGroup;
+    @Getter
+    private Match currentMatch;
     @Getter
     private GameRoomPlayOperator currentGameRoomOperator;
-
     @Getter
     private ExecutorService executorService;
-    //
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -70,12 +83,17 @@ public class ThisApplication extends Application {
                 KeyStorageNakama.getGrpcPort(),
                 KeyStorageNakama.getGrpcSSL()
         );
+        socketClient = client.createSocket(
+                KeyStorageNakama.getWebSocketAddress(),
+                KeyStorageNakama.getWebSocketPort(),
+                KeyStorageNakama.getWebSocketSSL()
+        );
         session = null;
         currentGameRoomOperator = null;
         executorService = Executors.newFixedThreadPool(4);
     }
 
-    public boolean login(String email, String password) {
+    public boolean loginEmailSync(String email, String password) {
         try {
             session = client.authenticateEmail(email, password).get();
             return true;
@@ -98,61 +116,151 @@ public class ThisApplication extends Application {
                 session = null;
             }
         }, executorService);
-        Futures.addCallback(future,futureCallback,executorService);
+        Futures.addCallback(future, futureCallback, executorService);
     }
 
-    public Optional<Session> getSessionOptional() {
-        return Optional.ofNullable(session);
-    }
-
-
-    public MatchList getCurrentMatches() throws ExecutionException, InterruptedException {
-        return client.listMatches(session).get();
-    }
-
-    public List<RoomInfo> getCurrentRoomInfo() {
-        MatchList matchList = null;
+    public boolean createGroupSync(String name, String desc){
         try {
-            matchList = getCurrentMatches();
+            currentGroup = client.createGroup(session,name,desc,null,null,true).get();
+            return true;
+        } catch (ExecutionException | InterruptedException e) {
+            currentGroup = null;
+            return false;
         }
-        catch (ExecutionException | InterruptedException e) {
-            return null;
+    }
+
+    public boolean joinGroupSync(String groupId){
+        try {
+            client.joinGroup(session,groupId).get();
+            GroupList groupList = client.listGroups(session, "%").get();
+            currentGroup = groupList.getGroupsList().stream()
+                    .filter((Group group) -> group.getId().equals(groupId))
+                    .collect(Collectors.toList()).get(0);
+            return true;
+        } catch (ExecutionException | InterruptedException e) {
+            currentGroup = null;
+            return false;
+        } catch(IndexOutOfBoundsException e){
+            client.leaveGroup(session,groupId);
+            currentGroup = null;
+            return false;
         }
-        List<Match> matches =  matchList.getMatchesList();
-        List<RoomInfo> roomInfoList = new ArrayList<>();
-        for(Match match:matches){
-            String matchId = RoomDataSpace.normalizeMatchId(match.getMatchId());
-            RoomInfoReader roomInfoReader = new RoomInfoReader(client, session, matchId);
-            Log.d("RoomINFO",matchId);
-            RoomInfo roomInfo = roomInfoReader.readRoomInfo();
-            if(roomInfo == null){
-                Log.d("RoomINFO","roominfo is null");
+    }
+
+    public boolean leaveGroupSync(String groupId){
+        try {
+            client.leaveGroup(session,groupId).get();
+            return true;
+        } catch (ExecutionException | InterruptedException e) {
+            return false;
+        }
+    }
+
+    public boolean leaveCurrentGroupSync(){
+        if(currentGroup != null){
+            return leaveGroupSync(currentGroup.getId());
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean createMatchSync(SocketListener socketListener){
+        try {
+            socketClient.connect(session,socketListener);
+            currentMatch = socketClient.createMatch().get();
+            return true;
+        } catch (ExecutionException | InterruptedException e) {
+            return false;
+        }
+    }
+
+    public boolean joinMatchSync(SocketListener socketListener, String matchId){
+        try {
+            socketClient.connect(session,socketListener);
+            currentMatch = socketClient.joinMatch(matchId).get();
+            return true;
+        } catch (ExecutionException | InterruptedException e) {
+            return false;
+        }
+    }
+
+    public boolean leaveMatchSync(String matchId){
+        try {
+            socketClient.leaveMatch(matchId).get();
+            return true;
+        } catch (ExecutionException | InterruptedException e) {
+            return false;
+        }
+    }
+
+    public boolean leaveCurrentMatchSync(){
+        if(currentMatch != null){
+            return leaveMatchSync(currentMatch.getMatchId());
+        }
+        else{
+            return false;
+        }
+    }
+
+    private boolean createGameRoom(String name, String desc, SocketListener socketListener){
+        boolean result = createGroupSync(name, desc) && createMatchSync(socketListener);
+        if(!result){
+            if(currentMatch != null){
+                leaveCurrentMatchSync();
             }
-            roomInfoList.add(roomInfo);
+            if(currentGroup != null){
+                leaveCurrentGroupSync();
+            }
         }
-        return roomInfoList;
+        return false;
     }
 
-    public boolean makeGameRoom(GameType gameType, Duration timeLimit, MapRange mapRange) {
-        switch (gameType) {
-            case GAME_TYPE_FLAG:
-                FlagGameRoomOperatorNewMaker flagGameRoomOperatorNewMaker = new FlagGameRoomOperatorNewMaker(client, session, timeLimit, mapRange);
-                currentGameRoomOperator = flagGameRoomOperatorNewMaker.make();
-                return currentGameRoomOperator != null;
-            default:
+    public boolean createFlagGameRoom(String name, String desc, MapRange mapRange, Duration timeLimit){
+        // 맵 받아오기
+        List<GameFlag> gameFlagList = null;
+        Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom10(mapRange);
+        try {
+            Response<List<AddressDto>> response = requester.execute();
+            if (!response.isSuccessful()) {
                 return false;
+            }
+            List<AddressDto> addressDtoList = response.body();
+            gameFlagList = addressDtoList.stream().map(addressDto -> {
+                Location location = new Location("");
+                location.setLatitude(addressDto.getLatitude());
+                location.setLongitude(addressDto.getLongitude());
+                return new GameFlag(location);
+            }).collect(Collectors.toList());
+        } catch (IOException e) {
+            return false;
         }
-    }
+        // 진행자의 설정
+        currentGameRoomOperator = new FlagGameRoomPlayOperator(
+                client,
+                session,
+                timeLimit,
+                gameFlagList
+        );
+        // 데이터 쓰기
+        boolean result = false;
+        result = createGameRoom(name,desc,currentGameRoomOperator);
+        if(!result){
+            return false;
+        }
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("GroupId", "<GroupId>");
 
-    public boolean joinGameRoom(GameType gameType, String matchId) {
-        switch (gameType) {
-            case GAME_TYPE_FLAG:
-                FlagGameRoomOperatorJoinMaker flagGameRoomOperatorJoinMaker = new FlagGameRoomOperatorJoinMaker(client, session, matchId);
-                currentGameRoomOperator = flagGameRoomOperatorJoinMaker.make();
-                return currentGameRoomOperator != null;
-            default:
-                return false;
+        try {
+            Rpc rpcResult = client.rpc(session, "UpdateGroupMetadata", new Gson().toJson(payload, payload.getClass())).get();
         }
+        catch (ExecutionException | InterruptedException ex) {
+            leaveCurrentGroupSync();
+            leaveCurrentMatchSync();
+            currentGameRoomOperator = null;
+            return false;
+        }
+        return true;
     }
 
 }

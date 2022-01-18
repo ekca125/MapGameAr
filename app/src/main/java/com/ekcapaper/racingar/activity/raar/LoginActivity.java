@@ -78,11 +78,5 @@ public class LoginActivity extends AppCompatActivity implements ActivityInitiali
                 });
             }
         });
-        findViewById(R.id.sign_up).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(parent_view, "Sign Up", Snackbar.LENGTH_SHORT).show();
-            }
-        });
     }
 }
