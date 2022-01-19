@@ -1,19 +1,25 @@
 package com.ekcapaper.racingar.operator.impl;
 
+import android.content.Context;
 import android.location.Location;
 
+import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameStatus;
 import com.ekcapaper.racingar.modelgame.play.Player;
+import com.ekcapaper.racingar.network.GameMessage;
 import com.ekcapaper.racingar.network.GameMessageEnd;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
 import com.ekcapaper.racingar.network.GameMessageOpCode;
 import com.ekcapaper.racingar.network.GameMessageStart;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
+import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Error;
 import com.heroiclabs.nakama.MatchData;
 import com.heroiclabs.nakama.MatchPresenceEvent;
 import com.heroiclabs.nakama.MatchmakerMatched;
+import com.heroiclabs.nakama.Session;
+import com.heroiclabs.nakama.SocketClient;
 import com.heroiclabs.nakama.SocketListener;
 import com.heroiclabs.nakama.StatusPresenceEvent;
 import com.heroiclabs.nakama.StreamData;
@@ -30,11 +36,13 @@ import java.util.Optional;
 import lombok.Getter;
 
 public class GameRoomPlayOperator implements SocketListener {
+    ThisApplication thisApplication;
     @Getter
     private List<UserPresence> matchUserPresenceList;
 
-    public GameRoomPlayOperator() {
+    public GameRoomPlayOperator(ThisApplication thisApplication) {
         matchUserPresenceList = new ArrayList<>();
+        this.thisApplication = thisApplication;
     }
 
     @Override
@@ -60,6 +68,15 @@ public class GameRoomPlayOperator implements SocketListener {
     @Override
     public void onMatchmakerMatched(MatchmakerMatched matched) {
 
+    }
+
+    public final void sendMatchData(GameMessage gameMessage) {
+        // match id가 정상적인가 체크하는 기능이 필요(라이브러리 오류)
+        thisApplication.getSocketClient().sendMatchData(
+                thisApplication.getCurrentMatch().getMatchId(),
+                gameMessage.getOpCode().ordinal(),
+                gameMessage.getPayload().getBytes(StandardCharsets.UTF_8)
+        );
     }
 
     @Override

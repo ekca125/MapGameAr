@@ -46,8 +46,11 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class ThisApplication extends Application {
+    @Getter
     private Client client;
+    @Getter
     private Session session;
+    @Getter
     private SocketClient socketClient;
     // group, match
     @Getter
