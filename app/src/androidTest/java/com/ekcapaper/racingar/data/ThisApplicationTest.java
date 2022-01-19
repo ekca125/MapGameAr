@@ -58,27 +58,6 @@ public class ThisApplicationTest {
         thisApplication = (ThisApplication) ApplicationProvider.getApplicationContext();
         thisApplication.loginEmailSync(AccountStub.ID2,AccountStub.PASSWORD2);
     }
-/*
-    @Test
-    public void getCurrentMatches() throws Exception {
-        GameRoomPlayClient gameRoomPlayClient = new GameRoomPlayClient(client,session);
-        try{
-            assertTrue(gameRoomPlayClient.createMatch());
-            assertNotNull(thisApplication.getCurrentMatches());
-            assertTrue(1<=thisApplication.getCurrentMatches().getMatchesCount());
-            assertNotNull(thisApplication.getCurrentRoomInfo());
-            assertTrue(1<=thisApplication.getCurrentRoomInfo().size());
-        } finally {
-            gameRoomPlayClient.leaveMatch();
-        }
-    }
-
-    @Test
-    public void makeGameRoom() {
-        boolean result = thisApplication.makeGameRoom(GameType.GAME_TYPE_FLAG, Duration.ofSeconds(600), MapRange.calculateMapRange(LocationStub.location,1));
-        assertTrue(result);
-    }
-*/
 
     @Test
     public void createGroupSync() {
