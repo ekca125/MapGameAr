@@ -14,6 +14,7 @@ import com.ekcapaper.racingar.modelgame.gameroom.prepare.PrepareDataFlagGameRoom
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperatorDeprecated;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
@@ -58,7 +59,7 @@ public class ThisApplication extends Application {
     @Getter
     private Match currentMatch;
     @Getter
-    private GameRoomPlayOperatorDeprecated currentGameRoomOperator;
+    private GameRoomPlayOperator currentGameRoomOperator;
     @Getter
     private ExecutorService executorService;
 

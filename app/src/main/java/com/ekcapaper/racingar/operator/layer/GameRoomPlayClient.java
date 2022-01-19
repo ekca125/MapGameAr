@@ -24,11 +24,11 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class GamePlayRoomClient extends GameRoomClient{
+public class GameRoomPlayClient extends GameRoomClient{
     GameStatus gameStatus;
     List<Player> playerList;
 
-    public GamePlayRoomClient(ThisApplication thisApplication) {
+    public GameRoomPlayClient(ThisApplication thisApplication) {
         super(thisApplication);
         gameStatus = GameStatus.GAME_READY;
         playerList = null;

@@ -1,11 +1,10 @@
 package com.ekcapaper.racingar.operator.impl;
 
+import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.Player;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
-import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperatorDeprecated;
-import com.heroiclabs.nakama.Client;
-import com.heroiclabs.nakama.Session;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 
 import java.time.Duration;
 import java.util.List;
@@ -14,11 +13,9 @@ import java.util.stream.Collectors;
 
 public class FlagGameRoomPlayOperator extends GameRoomPlayOperator {
     private final List<GameFlag> gameFlagList;
-    private final Duration timeLimit;
 
-    public FlagGameRoomPlayOperator(Duration timeLimit, List<GameFlag> gameFlagList) {
-        super();
-        this.timeLimit = timeLimit;
+    public FlagGameRoomPlayOperator(ThisApplication thisApplication, Duration timeLimit, List<GameFlag> gameFlagList) {
+        super(thisApplication,timeLimit);
         this.gameFlagList = gameFlagList;
     }
 
@@ -32,7 +29,7 @@ public class FlagGameRoomPlayOperator extends GameRoomPlayOperator {
     @Override
     public void onMovePlayer(GameMessageMovePlayer gameMessageMovePlayer) {
         super.onMovePlayer(gameMessageMovePlayer);
-        Optional<Player> optionalPlayer = getPlayer(gameMessageMovePlayer.getUserId());
+        Optional<Player> optionalPlayer = getPlayerOptional(gameMessageMovePlayer.getUserId());
         optionalPlayer.ifPresent((player -> {
             player.getLocation().ifPresent(location -> {
                 gameFlagList.forEach((gameFlag -> {
