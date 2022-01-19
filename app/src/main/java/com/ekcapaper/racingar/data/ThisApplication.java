@@ -202,6 +202,7 @@ public class ThisApplication extends Application {
     }
     //
 
+    // gameRoom
     boolean createGameRoom(String name, String desc, SocketListener socketListener) {
         boolean result = createGameRoomGroupSync(name, desc) && createGameRoomMatchSync(socketListener);
         if (!result) {
@@ -214,6 +215,11 @@ public class ThisApplication extends Application {
             return false;
         }
         return true;
+    }
+
+    // join
+    boolean joinGameRoom(String groupId, SocketListener socketListener) {
+
     }
 
     void leaveGameRoom(){
