@@ -90,26 +90,33 @@ public class ThisApplication extends Application {
         executorService = Executors.newFixedThreadPool(4);
     }
 
-    public String getCurrentMatchId(){
+    public String getCurrentMatchId() {
         return currentMatch.getMatchId();
     }
 
-    public String getCurrentGroupId(){
+    public String getCurrentGroupId() {
         return currentGroup.getId();
     }
 
-    public String getCurrentUserId(){
+    public String getCurrentUserId() {
         return session.getUserId();
     }
 
-    public GroupUserList getCurrentGroupUserList(){
+    public GroupUserList getCurrentGroupUserList() {
         try {
-            return client.listGroupUsers(session,currentGroup.getId()).get();
+            return client.listGroupUsers(session, currentGroup.getId()).get();
         } catch (ExecutionException | InterruptedException e) {
             return null;
         }
     }
 
+    public GroupList getCurrentGroupList() {
+        try {
+            return client.listGroups(session, "%").get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
+    }
 
     public boolean loginEmailSync(String email, String password) {
         try {
@@ -137,9 +144,9 @@ public class ThisApplication extends Application {
         Futures.addCallback(future, futureCallback, executorService);
     }
 
-    public boolean createGroupSync(String name, String desc){
+    public boolean createGroupSync(String name, String desc) {
         try {
-            currentGroup = client.createGroup(session,name,desc,null,null,true).get();
+            currentGroup = client.createGroup(session, name, desc, null, null, true).get();
             return true;
         } catch (ExecutionException | InterruptedException e) {
             currentGroup = null;
@@ -147,9 +154,9 @@ public class ThisApplication extends Application {
         }
     }
 
-    public boolean joinGroupSync(String groupId){
+    public boolean joinGroupSync(String groupId) {
         try {
-            client.joinGroup(session,groupId).get();
+            client.joinGroup(session, groupId).get();
             GroupList groupList = client.listGroups(session, "%").get();
             currentGroup = groupList.getGroupsList().stream()
                     .filter((Group group) -> group.getId().equals(groupId))
@@ -158,34 +165,33 @@ public class ThisApplication extends Application {
         } catch (ExecutionException | InterruptedException e) {
             currentGroup = null;
             return false;
-        } catch(IndexOutOfBoundsException e){
-            client.leaveGroup(session,groupId);
+        } catch (IndexOutOfBoundsException e) {
+            client.leaveGroup(session, groupId);
             currentGroup = null;
             return false;
         }
     }
 
-    public boolean leaveGroupSync(String groupId){
+    public boolean leaveGroupSync(String groupId) {
         try {
-            client.leaveGroup(session,groupId).get();
+            client.leaveGroup(session, groupId).get();
             return true;
         } catch (ExecutionException | InterruptedException e) {
             return false;
         }
     }
 
-    public boolean leaveCurrentGroupSync(){
-        if(currentGroup != null){
+    public boolean leaveCurrentGroupSync() {
+        if (currentGroup != null) {
             return leaveGroupSync(currentGroup.getId());
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    public boolean createMatchSync(SocketListener socketListener){
+    public boolean createMatchSync(SocketListener socketListener) {
         try {
-            socketClient.connect(session,socketListener);
+            socketClient.connect(session, socketListener);
             currentMatch = socketClient.createMatch().get();
             return true;
         } catch (ExecutionException | InterruptedException e) {
@@ -193,9 +199,9 @@ public class ThisApplication extends Application {
         }
     }
 
-    public boolean joinMatchSync(SocketListener socketListener, String matchId){
+    public boolean joinMatchSync(SocketListener socketListener, String matchId) {
         try {
-            socketClient.connect(session,socketListener);
+            socketClient.connect(session, socketListener);
             currentMatch = socketClient.joinMatch(matchId).get();
             return true;
         } catch (ExecutionException | InterruptedException e) {
@@ -203,7 +209,7 @@ public class ThisApplication extends Application {
         }
     }
 
-    public boolean leaveMatchSync(String matchId){
+    public boolean leaveMatchSync(String matchId) {
         try {
             socketClient.leaveMatch(matchId).get();
             return true;
@@ -212,29 +218,28 @@ public class ThisApplication extends Application {
         }
     }
 
-    public boolean leaveCurrentMatchSync(){
-        if(currentMatch != null){
+    public boolean leaveCurrentMatchSync() {
+        if (currentMatch != null) {
             return leaveMatchSync(currentMatch.getMatchId());
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    private boolean createGameRoom(String name, String desc, SocketListener socketListener){
+    private boolean createGameRoom(String name, String desc, SocketListener socketListener) {
         boolean result = createGroupSync(name, desc) && createMatchSync(socketListener);
-        if(!result){
-            if(currentMatch != null){
+        if (!result) {
+            if (currentMatch != null) {
                 leaveCurrentMatchSync();
             }
-            if(currentGroup != null){
+            if (currentGroup != null) {
                 leaveCurrentGroupSync();
             }
         }
         return false;
     }
 
-    private List<GameFlag> requestFlagMap(MapRange mapRange){
+    private List<GameFlag> requestFlagMap(MapRange mapRange) {
         Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom10(mapRange);
         try {
             Response<List<AddressDto>> response = requester.execute();
@@ -255,14 +260,14 @@ public class ThisApplication extends Application {
     }
 
 
-    public boolean createFlagGameRoom(String name, String desc, MapRange mapRange, Duration timeLimit){
+    public boolean createFlagGameRoom(String name, String desc, MapRange mapRange, Duration timeLimit) {
         // 맵 받아오기
         List<GameFlag> gameFlagList = requestFlagMap(mapRange);
-        if(gameFlagList == null){
+        if (gameFlagList == null) {
             return false;
         }
         // 방 만들기
-        if(!createGameRoom(name,desc,currentGameRoomOperator)){
+        if (!createGameRoom(name, desc, currentGameRoomOperator)) {
             return false;
         }
         // 진행자의 설정
@@ -283,11 +288,10 @@ public class ThisApplication extends Application {
         PrepareDataFlagGameRoom prepareDataFlagGameRoom = new PrepareDataFlagGameRoom(gameFlagList);
         // 방 데이터 입력
         payload.put("info", roomInfo);
-        payload.put("prepare",prepareDataFlagGameRoom);
+        payload.put("prepare", prepareDataFlagGameRoom);
         try {
             Rpc rpcResult = client.rpc(session, "UpdateGroupMetadata", new Gson().toJson(payload, payload.getClass())).get();
-        }
-        catch (ExecutionException | InterruptedException ex) {
+        } catch (ExecutionException | InterruptedException ex) {
             leaveCurrentGroupSync();
             leaveCurrentMatchSync();
             currentGameRoomOperator = null;
