@@ -150,10 +150,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         }).thenAccept(result -> {
             GameRoomGenerateActivity.this.runOnUiThread(() -> {
                 if (result) {
-                    // 중지
                     locationRequestSpace.stop();
-                    // 게임 시작 선언
-                    thisApplication.getCurrentGameRoomOperator().declareGameStart();
                     Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
                     startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
                 } else {

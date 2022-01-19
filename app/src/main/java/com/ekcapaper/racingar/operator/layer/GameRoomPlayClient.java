@@ -108,19 +108,14 @@ public class GameRoomPlayClient extends GameRoomClient{
     }
 
     public void onGameStart(GameMessageStart gameMessageStart) {
-        // 정보
-        Client client = thisApplication.getClient();
-        Session session = thisApplication.getSession();
-        String groupId = thisApplication.getCurrentGroupId();
-        // 게임 준비
         try {
-            GroupUserList groupUserList = client.listGroupUsers(session,groupId).get();
+            GroupUserList groupUserList = thisApplication.getCurrentGroupUserList();
             playerList = groupUserList.getGroupUsersList()
                     .stream()
                     .map(groupUser -> new Player(groupUser.getUser().getId()))
                     .collect(Collectors.toList());
             changeRoomStatus(GameStatus.GAME_RUNNING);
-        } catch (ExecutionException | InterruptedException ignored) {
+        } catch (NullPointerException ignored){
 
         }
     }

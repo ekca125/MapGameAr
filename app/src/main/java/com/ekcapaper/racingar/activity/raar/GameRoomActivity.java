@@ -19,10 +19,12 @@ import com.ekcapaper.racingar.adapter.AdapterGameRoom;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
-import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperatorDeprecated;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
+import com.heroiclabs.nakama.api.GroupUserList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class GameRoomActivity extends AppCompatActivity implements ActivityInitializer{
     private ThisApplication thisApplication;
-    private GameRoomPlayOperatorDeprecated gameRoomOperator;
+    private GameRoomPlayOperator gameRoomOperator;
 
     private View parent_view;
 
@@ -66,15 +68,27 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        //List<GameRoomInfo> items = DataGenerator.getGameRoomInfo(this);
-        List<GameRoomInfo> items = gameRoomOperator.getPlayerList().stream().map(player->{
+        List<GameRoomInfo> items = null;
+        try {
+            GroupUserList groupUserList = thisApplication.getCurrentGroupUserList();
+            items = groupUserList.getGroupUsersList()
+                    .stream()
+                    .map(groupUser -> {
+                        GameRoomInfo obj = new GameRoomInfo();
+                        obj.image = R.drawable.image_2;
+                        obj.name = String.valueOf(groupUser.getUser().getId());
+                        obj.imageDrw = this.getResources().getDrawable(obj.image);
+                        return obj;
+                    })
+                    .collect(Collectors.toList());
+        } catch (NullPointerException e){
+            items = new ArrayList<>();
             GameRoomInfo obj = new GameRoomInfo();
             obj.image = R.drawable.image_2;
-            obj.name = String.valueOf(player.getUserId());
+            obj.name = String.valueOf("ERROR NO DATA");
             obj.imageDrw = this.getResources().getDrawable(obj.image);
-            return obj;
-        }).collect(Collectors.toList());
-
+            items.add(obj);
+        }
         //set data and list adapter
         mAdapter = new AdapterGameRoom(this, items);
         recyclerView.setAdapter(mAdapter);
@@ -135,6 +149,7 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
         button_game_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                gameRoomOperator.declareGameStart();
                 Intent intent = new Intent(getApplicationContext(),GameMapActivity.class);
                 startActivity(intent);
             }

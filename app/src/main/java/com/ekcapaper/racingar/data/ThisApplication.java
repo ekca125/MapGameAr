@@ -28,6 +28,7 @@ import com.heroiclabs.nakama.SocketClient;
 import com.heroiclabs.nakama.SocketListener;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
+import com.heroiclabs.nakama.api.GroupUserList;
 import com.heroiclabs.nakama.api.Rpc;
 
 import java.io.IOException;
@@ -99,6 +100,14 @@ public class ThisApplication extends Application {
 
     public String getCurrentUserId(){
         return session.getUserId();
+    }
+
+    public GroupUserList getCurrentGroupUserList(){
+        try {
+            return client.listGroupUsers(session,currentGroup.getId()).get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
     }
 
 
