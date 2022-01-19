@@ -37,24 +37,11 @@ import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ThisApplicationTest {
-    public static Client client;
-    public static Session session;
-
     public static ThisApplication thisApplication;
 
     @BeforeClass
     public static void init() throws Exception {
-        client = new DefaultClient(
-                KeyStorageNakama.getServerKey(),
-                KeyStorageNakama.getGrpcAddress(),
-                KeyStorageNakama.getGrpcPort(),
-                KeyStorageNakama.getGrpcSSL()
-        );
-        session = client.authenticateEmail(AccountStub.ID, AccountStub.PASSWORD).get();
-        assertNotNull(session);
-
         thisApplication = (ThisApplication) ApplicationProvider.getApplicationContext();
-        thisApplication.loginEmailSync(AccountStub.ID2,AccountStub.PASSWORD2);
     }
 
     @Test
@@ -64,7 +51,20 @@ public class ThisApplicationTest {
         assertFalse(status);
         status = thisApplication.loginEmailSync(AccountStub.ID,AccountStub.PASSWORD);
         assertTrue(status);
-        status = thisApplication.logout();
+        status = thisApplication.isLogin();
+        assertTrue(status);
+        thisApplication.logout();
+        status = thisApplication.isLogin();
         assertFalse(status);
     }
+/*
+    @Test
+    public void groupSync(){
+        String groupName = "test_group"+String.valueOf(ThreadLocalRandom.current().nextInt());
+        String groupDesc = "";
+        thisApplication.createGroupSync(groupName,groupDesc);
+        thisApplication.leaveCurrentGroupSync();
+    }
+*/
+
 }
