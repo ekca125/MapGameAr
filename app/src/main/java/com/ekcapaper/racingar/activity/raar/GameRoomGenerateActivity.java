@@ -55,6 +55,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         setContentView(R.layout.activity_game_room_generate);
         initActivity();
         initToolbar();
+        // stub
+        text_input_name.setText("test");
     }
 
     @Override
@@ -122,27 +124,29 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         Tools.setSystemBarLight(this);
     }
 
-
-
     private void generateRoomAndJoinRoom() {
+        // 여기를 한 다음에 map까지 하고 테스트를 수정한 후에 변경을 마무리한다.
         button_generate_room.setEnabled(false);
-        // latitude, longitude
-        double latitude = Double.parseDouble(Objects.requireNonNull(text_input_latitude.getText()).toString());
-        double longitude = Double.parseDouble(Objects.requireNonNull(text_input_longitude.getText()).toString());
-        // location
+        // 정보 불러오기
+        String latitudeStr = Objects.requireNonNull(text_input_latitude.getText()).toString();
+        String longitudeStr = Objects.requireNonNull(text_input_longitude.getText()).toString();
+        String nameStr = Objects.requireNonNull(text_input_name.getText()).toString();
+        String timeLimitStr = Objects.requireNonNull(text_input_time_limit.getText()).toString();
+        // 정보 변환
         Location location = new Location("");
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
-        // 이름
-        String name = text_input_name.getText().toString();
-        String timeLimitStr = text_input_time_limit.getText().toString();
-        int timeLimitSecond = Integer.parseInt(timeLimitStr);
+        location.setLatitude(Double.parseDouble(latitudeStr));
+        location.setLongitude(Double.parseDouble(longitudeStr));
+        Duration timeLimit = Duration.ofSeconds(Integer.parseInt(timeLimitStr));
         String desc = "";
 
         // 방 생성
         CompletableFuture.supplyAsync(() -> {
             MapRange mapRange = MapRange.calculateMapRange(location, 1);
-            return thisApplication.createFlagGameRoom(name,desc,mapRange,Duration.ofSeconds(timeLimitSecond));
+            return thisApplication.createFlagGameRoom(
+                    nameStr,
+                    desc,
+                    MapRange.calculateMapRange(location,1),
+                    timeLimit);
         }).thenAccept(result -> {
             GameRoomGenerateActivity.this.runOnUiThread(() -> {
                 if (result) {
