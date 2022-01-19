@@ -62,10 +62,7 @@ public class ThisApplicationTest {
     @Test
     public void createGroupSync() {
         ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
-
-        boolean result = thisApplication.createGroupSync(String.valueOf(threadLocalRandom.nextInt()),"test desc");
-        assertTrue(result);
-        result = thisApplication.leaveCurrentGroupSync();
+        boolean result = thisApplication.createGroupSync("test_group"+String.valueOf(threadLocalRandom.nextInt()),"test desc");
         assertTrue(result);
     }
 
@@ -73,7 +70,33 @@ public class ThisApplicationTest {
     public void createMatchSync() {
         boolean result = thisApplication.createMatchSync(new AbstractSocketListener(){});
         assertTrue(result);
-        result = thisApplication.leaveCurrentMatchSync();
+    }
+
+    @Test
+    public void leaveGroupSync() {
+        ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
+        String groupName = "test_group"+String.valueOf(threadLocalRandom.nextInt());
+
+        boolean result;
+        result = thisApplication.createGroupSync(groupName,"test desc");
         assertTrue(result);
+        result = thisApplication.leaveGroupSync(groupName);
+        assertTrue(result);
+    }
+
+    @Test
+    public void leaveCurrentGroupSync() {
+    }
+
+    @Test
+    public void joinMatchSync() {
+    }
+
+    @Test
+    public void leaveMatchSync() {
+    }
+
+    @Test
+    public void leaveCurrentMatchSync() {
     }
 }

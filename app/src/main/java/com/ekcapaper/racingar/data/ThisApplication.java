@@ -3,6 +3,7 @@ package com.ekcapaper.racingar.data;
 import android.app.Application;
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.multidex.MultiDex;
@@ -299,4 +300,45 @@ public class ThisApplication extends Application {
         }
         return true;
     }
+
+    public boolean joinFlagGameRoom(String name, String desc, MapRange mapRange, Duration timeLimit) {
+        // 맵 받아오기
+        List<GameFlag> gameFlagList = requestFlagMap(mapRange);
+        if (gameFlagList == null) {
+            return false;
+        }
+        // 방 만들기
+        if (!createGameRoom(name, desc, currentGameRoomOperator)) {
+            return false;
+        }
+        // 진행자의 설정
+        currentGameRoomOperator = new FlagGameRoomPlayOperator(
+                this,
+                timeLimit,
+                gameFlagList
+        );
+        // 방 데이터 준비
+        Map<String, Object> payload = new HashMap<>();
+        RoomInfo roomInfo = new RoomInfo(
+                timeLimit.getSeconds(),
+                GameType.GAME_TYPE_FLAG,
+                mapRange,
+                currentMatch.getMatchId(),
+                currentGroup.getId()
+        );
+        PrepareDataFlagGameRoom prepareDataFlagGameRoom = new PrepareDataFlagGameRoom(gameFlagList);
+        // 방 데이터 입력
+        payload.put("info", roomInfo);
+        payload.put("prepare", prepareDataFlagGameRoom);
+        try {
+            Rpc rpcResult = client.rpc(session, "UpdateGroupMetadata", new Gson().toJson(payload, payload.getClass())).get();
+        } catch (ExecutionException | InterruptedException ex) {
+            leaveCurrentGroupSync();
+            leaveCurrentMatchSync();
+            currentGameRoomOperator = null;
+            return false;
+        }
+        return true;
+    }
+
 }

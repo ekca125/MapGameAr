@@ -19,11 +19,18 @@ import com.ekcapaper.racingar.adapter.AdapterLobby;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
+import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.utils.Tools;
+import com.google.gson.Gson;
+import com.heroiclabs.nakama.api.GroupList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import lombok.val;
 
 public class LobbyActivity extends AppCompatActivity implements ActivityInitializer {
     // 관제
@@ -77,7 +84,6 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
             @Override
             public void accept(Location location) {
                 updateLobbyData(location);
-                updateLobby();
                 refreshRequester.stop();
             }
         });
@@ -116,37 +122,46 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
 
     private void updateLobbyData(Location location) {
         items = new ArrayList<>();
-        /*
-        List<RoomInfo> roomInfoList = thisApplication.getCurrentRoomInfo();
-        items = roomInfoList.stream()
-                .map((roomInfo) -> {
-                    GameLobbyRoomInfo gameLobbyRoomInfo = new GameLobbyRoomInfo();
-                    gameLobbyRoomInfo.gameType = roomInfo.getGameType();
-                    // 위치 정보를 가져와서 설정
-                    gameLobbyRoomInfo.distanceCenter = String.valueOf(roomInfo.getMapRange().getMapCenter().distanceTo(location)) + "m";
-                    gameLobbyRoomInfo.name = roomInfo.getMatchId();
-                    gameLobbyRoomInfo.matchId = roomInfo.getMatchId();
-                    return gameLobbyRoomInfo;
-                })
-                .collect(Collectors.toList());*/
-    }
+        try{
+            GroupList groupList = thisApplication.getCurrentGroupList();
+            val insertItems = groupList.getGroupsList().stream()
+                    .map(group -> {
+                        Gson gson = new Gson();
+                        String metadataString = group.getMetadata();
+                        Map<String, Object> metadata = gson.fromJson(metadataString, Map.class);
+                        RoomInfo roomInfo = (RoomInfo) metadata.get("info");
+                        GameLobbyRoomInfo gameLobbyRoomInfo = new GameLobbyRoomInfo();
+                        gameLobbyRoomInfo.gameType = roomInfo.getGameType();
+                        gameLobbyRoomInfo.name = roomInfo.getMatchId();
+                        gameLobbyRoomInfo.matchId = roomInfo.getMatchId();
 
-    private void updateLobby() {
-        //set data and list adapter
+                        return gameLobbyRoomInfo;
+                    })
+                    .collect(Collectors.toList());
+        } catch (NullPointerException ignored){
+
+        }
+
         mAdapter = new AdapterLobby(this, items);
         recyclerView.setAdapter(mAdapter);
         // on item list clicked
         mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
             @Override
             public void onItemClick(View view, GameLobbyRoomInfo obj, int position) {
+                // 입장기능은 맵까지 완성시키고 나서 돌아와서 구현
+                Toast.makeText(getApplicationContext(), "미구현된 내용입니다.", Toast.LENGTH_SHORT).show();
+                /*
                 // join room
-                if (thisApplication.joinGameRoom(obj.gameType, obj.matchId)) {
+                // join group 을 한다.
+
+                if (thisApplication.(obj.gameType, obj.matchId)) {
                     Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
                     startActivity(intent);
                     Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "방의 입장에 실패했습니다.", Toast.LENGTH_SHORT).show();
                 }
+                 */
             }
         });
     }
