@@ -66,7 +66,7 @@ public class GameRoomPlayClient extends GameRoomClient{
 
     public final void sendMatchData(GameMessage gameMessage) {
         SocketClient socketClient = thisApplication.getSocketClient();
-        String matchId = thisApplication.getCurrentMatchId();
+        String matchId = thisApplication.getGameRoomMatchId();
         socketClient.sendMatchData(
                 matchId,
                 gameMessage.getOpCode().ordinal(),
@@ -109,7 +109,7 @@ public class GameRoomPlayClient extends GameRoomClient{
 
     public void onGameStart(GameMessageStart gameMessageStart) {
         try {
-            GroupUserList groupUserList = thisApplication.getCurrentGroupUserList();
+            GroupUserList groupUserList = thisApplication.getGameRoomGroupUserList();
             playerList = groupUserList.getGroupUsersList()
                     .stream()
                     .map(groupUser -> new Player(groupUser.getUser().getId()))

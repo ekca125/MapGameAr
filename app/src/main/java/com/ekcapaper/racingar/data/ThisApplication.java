@@ -34,8 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -88,7 +86,7 @@ public class ThisApplication extends Application {
     }
 
     // session
-    public boolean isLogin(){
+    public boolean isLogin() {
         return session != null;
     }
 
@@ -102,8 +100,8 @@ public class ThisApplication extends Application {
         }
     }
 
-    public void logout(){
-        if(session != null){
+    public void logout() {
+        if (session != null) {
             session = null;
         }
     }
@@ -113,12 +111,12 @@ public class ThisApplication extends Application {
         return client.createGroup(session, name, desc, null, null, true).get();
     }
 
-    public boolean createGameRoomGroupSync(String name, String desc){
-        if(currentGameRoomGroup != null){
+    public boolean createGameRoomGroupSync(String name, String desc) {
+        if (currentGameRoomGroup != null) {
             throw new IllegalStateException();
         }
         try {
-            currentGameRoomGroup = createGroupSync(name,desc);
+            currentGameRoomGroup = createGroupSync(name, desc);
             return true;
         } catch (ExecutionException | InterruptedException e) {
             currentGameRoomGroup = null;
@@ -129,13 +127,9 @@ public class ThisApplication extends Application {
     Group joinGroupSync(String groupId) throws ExecutionException, InterruptedException {
         client.joinGroup(session, groupId).get();
         GroupList groupList = client.listGroups(session, "%").get();
-        try {
-            return groupList.getGroupsList().stream()
-                    .filter((Group group) -> group.getId().equals(groupId))
-                    .collect(Collectors.toList()).get(0);
-        } catch (IndexOutOfBoundsException e){
-            return null;
-        }
+        return groupList.getGroupsList().stream()
+                .filter((Group group) -> group.getId().equals(groupId))
+                .collect(Collectors.toList()).get(0);
     }
 
     public boolean joinGameRoomGroupSync(String groupId) {
@@ -156,8 +150,9 @@ public class ThisApplication extends Application {
     }
 
     public void leaveGameRoomGroupSync() {
-        if(currentGameRoomGroup != null){
+        if (currentGameRoomGroup != null) {
             leaveGroupSync(currentGameRoomGroup.getId());
+            currentGameRoomGroup = null;
         }
     }
     //
@@ -168,7 +163,7 @@ public class ThisApplication extends Application {
         return socketClient.createMatch().get();
     }
 
-    public boolean createGameRoomMatchSync(SocketListener socketListener){
+    public boolean createGameRoomMatchSync(SocketListener socketListener) {
         try {
             currentGameRoomMatch = createMatchSync(socketListener);
             return true;
@@ -184,11 +179,12 @@ public class ThisApplication extends Application {
         return socketClient.joinMatch(matchId).get();
     }
 
-    public boolean joinGameRoomMatchSync(SocketListener socketListener, String matchId){
+    public boolean joinGameRoomMatchSync(SocketListener socketListener, String matchId) {
         try {
             currentGameRoomMatch = joinMatchSync(socketListener, matchId);
             return true;
         } catch (ExecutionException | InterruptedException e) {
+            currentGameRoomMatch = null;
             return false;
         }
     }
@@ -202,10 +198,11 @@ public class ThisApplication extends Application {
 
     public void leaveGameRoomMatchSync() {
         leaveMatchSync(currentGameRoomMatch.getMatchId());
+        currentGameRoomMatch = null;
     }
     //
 
-    private boolean createGameRoom(String name, String desc, SocketListener socketListener) {
+    boolean createGameRoom(String name, String desc, SocketListener socketListener) {
         boolean result = createGameRoomGroupSync(name, desc) && createGameRoomMatchSync(socketListener);
         if (!result) {
             if (currentGameRoomMatch != null) {
@@ -217,6 +214,11 @@ public class ThisApplication extends Application {
             return false;
         }
         return true;
+    }
+
+    void leaveGameRoom(){
+        leaveGameRoomMatchSync();
+        leaveGameRoomGroupSync();
     }
 
     private List<GameFlag> requestFlagMap(MapRange mapRange) {
@@ -272,8 +274,7 @@ public class ThisApplication extends Application {
         try {
             Rpc rpcResult = client.rpc(session, "UpdateGroupMetadata", new Gson().toJson(payload, payload.getClass())).get();
         } catch (ExecutionException | InterruptedException ex) {
-            leaveGameRoomMatchSync();
-            leaveGameRoomGroupSync();
+            leaveGameRoom();
             currentGameRoomOperator = null;
             return false;
         }
@@ -312,19 +313,18 @@ public class ThisApplication extends Application {
         try {
             Rpc rpcResult = client.rpc(session, "UpdateGroupMetadata", new Gson().toJson(payload, payload.getClass())).get();
         } catch (ExecutionException | InterruptedException ex) {
-            leaveGameRoomMatchSync();
-            leaveGameRoomGroupSync();
+            leaveGameRoom();
             currentGameRoomOperator = null;
             return false;
         }
         return true;
     }
 
-    public String getCurrentMatchId() {
+    public String getGameRoomMatchId() {
         return currentGameRoomMatch.getMatchId();
     }
 
-    public String getCurrentGroupId() {
+    public String getGameRoomGroupId() {
         return currentGameRoomGroup.getId();
     }
 
@@ -332,7 +332,7 @@ public class ThisApplication extends Application {
         return session.getUserId();
     }
 
-    public GroupUserList getCurrentGroupUserList() {
+    public GroupUserList getGameRoomGroupUserList() {
         try {
             return client.listGroupUsers(session, currentGameRoomGroup.getId()).get();
         } catch (ExecutionException | InterruptedException e) {
@@ -340,7 +340,7 @@ public class ThisApplication extends Application {
         }
     }
 
-    public GroupList getCurrentGroupList() {
+    public GroupList getGameRoomGroupList() {
         try {
             return client.listGroups(session, "%").get();
         } catch (ExecutionException | InterruptedException e) {

@@ -70,7 +70,7 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
 
         List<GameRoomInfo> items = null;
         try {
-            GroupUserList groupUserList = thisApplication.getCurrentGroupUserList();
+            GroupUserList groupUserList = thisApplication.getGameRoomGroupUserList();
             items = groupUserList.getGroupUsersList()
                     .stream()
                     .map(groupUser -> {

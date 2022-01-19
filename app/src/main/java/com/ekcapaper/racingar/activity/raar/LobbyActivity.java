@@ -123,7 +123,7 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
     private void updateLobbyData(Location location) {
         items = new ArrayList<>();
         try{
-            GroupList groupList = thisApplication.getCurrentGroupList();
+            GroupList groupList = thisApplication.getGameRoomGroupList();
             val insertItems = groupList.getGroupsList().stream()
                     .map(group -> {
                         Gson gson = new Gson();
