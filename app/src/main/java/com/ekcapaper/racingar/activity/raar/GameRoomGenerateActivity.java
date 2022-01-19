@@ -133,13 +133,16 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
-        // 방을 생성하는 코드를 다시 작성(group)
-
+        // 이름
+        String name = text_input_name.getText().toString();
+        String timeLimitStr = text_input_time_limit.getText().toString();
+        int timeLimitSecond = Integer.parseInt(timeLimitStr);
+        String desc = "";
 
         // 방 생성
         CompletableFuture.supplyAsync(() -> {
             MapRange mapRange = MapRange.calculateMapRange(location, 1);
-            return thisApplication.makeGameRoom(gameType, Duration.ofSeconds(100), mapRange);
+            return thisApplication.createFlagGameRoom(name,desc,mapRange,Duration.ofSeconds(timeLimitSecond));
         }).thenAccept(result -> {
             GameRoomGenerateActivity.this.runOnUiThread(() -> {
                 if (result) {
