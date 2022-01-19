@@ -62,18 +62,14 @@ public class LoginActivity extends AppCompatActivity implements ActivityInitiali
                 String email = Objects.requireNonNull(text_input_text_email.getText()).toString();
                 String password = Objects.requireNonNull(text_input_text_password.getText()).toString();
 
-                thisApplication.loginEmail(email, password, new FutureCallback<Session>() {
-                    @Override
-                    public void onSuccess(@Nullable Session result) {
-                        Intent intent = new Intent(LoginActivity.this, LobbyActivity.class);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                boolean result = thisApplication.loginEmailSync(email,password);
+                if(result){
+                    Intent intent = new Intent(LoginActivity.this, LobbyActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

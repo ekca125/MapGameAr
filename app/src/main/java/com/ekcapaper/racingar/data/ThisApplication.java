@@ -48,20 +48,14 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class ThisApplication extends Application {
-    @Getter
     private Client client;
-    @Getter
     private Session session;
-    @Getter
     private SocketClient socketClient;
     // group, match
-    @Getter
     private Group currentGroup;
-    @Getter
     private Match currentMatch;
-    @Getter
     private GameRoomPlayOperator currentGameRoomOperator;
-    @Getter
+    // executor service
     private ExecutorService executorService;
 
     @Override
@@ -91,34 +85,7 @@ public class ThisApplication extends Application {
         executorService = Executors.newFixedThreadPool(4);
     }
 
-    public String getCurrentMatchId() {
-        return currentMatch.getMatchId();
-    }
-
-    public String getCurrentGroupId() {
-        return currentGroup.getId();
-    }
-
-    public String getCurrentUserId() {
-        return session.getUserId();
-    }
-
-    public GroupUserList getCurrentGroupUserList() {
-        try {
-            return client.listGroupUsers(session, currentGroup.getId()).get();
-        } catch (ExecutionException | InterruptedException e) {
-            return null;
-        }
-    }
-
-    public GroupList getCurrentGroupList() {
-        try {
-            return client.listGroups(session, "%").get();
-        } catch (ExecutionException | InterruptedException e) {
-            return null;
-        }
-    }
-
+    // login logout(session)
     public boolean loginEmailSync(String email, String password) {
         try {
             session = client.authenticateEmail(email, password).get();
@@ -129,22 +96,18 @@ public class ThisApplication extends Application {
         }
     }
 
-    public void loginEmail(String email, String password, FutureCallback<Session> futureCallback) {
-        val future = client.authenticateEmail(email, password);
-        Futures.addCallback(future, new FutureCallback<Session>() {
-            @Override
-            public void onSuccess(@Nullable Session result) {
-                ThisApplication.this.session = result;
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                session = null;
-            }
-        }, executorService);
-        Futures.addCallback(future, futureCallback, executorService);
+    public boolean isLogin(){
+        return session != null;
     }
 
+    public boolean logout(){
+        session = null;
+        return true;
+    }
+    //
+
+
+    // group
     public boolean createGroupSync(String name, String desc) {
         try {
             currentGroup = client.createGroup(session, name, desc, null, null, true).get();
@@ -155,7 +118,7 @@ public class ThisApplication extends Application {
         }
     }
 
-    public boolean joinGroupSync(String groupId) {
+    private boolean joinGroupSync(String groupId) {
         try {
             client.joinGroup(session, groupId).get();
             GroupList groupList = client.listGroups(session, "%").get();
@@ -173,7 +136,7 @@ public class ThisApplication extends Application {
         }
     }
 
-    public boolean leaveGroupSync(String groupId) {
+    private boolean leaveGroupSync(String groupId) {
         try {
             client.leaveGroup(session, groupId).get();
             return true;
@@ -189,6 +152,7 @@ public class ThisApplication extends Application {
             return false;
         }
     }
+    //
 
     public boolean createMatchSync(SocketListener socketListener) {
         try {
@@ -341,4 +305,31 @@ public class ThisApplication extends Application {
         return true;
     }
 
+    public String getCurrentMatchId() {
+        return currentMatch.getMatchId();
+    }
+
+    public String getCurrentGroupId() {
+        return currentGroup.getId();
+    }
+
+    public String getCurrentUserId() {
+        return session.getUserId();
+    }
+
+    public GroupUserList getCurrentGroupUserList() {
+        try {
+            return client.listGroupUsers(session, currentGroup.getId()).get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
+    }
+
+    public GroupList getCurrentGroupList() {
+        try {
+            return client.listGroups(session, "%").get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
+    }
 }

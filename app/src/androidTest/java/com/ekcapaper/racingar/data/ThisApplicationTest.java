@@ -1,6 +1,7 @@
 package com.ekcapaper.racingar.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -39,9 +40,6 @@ public class ThisApplicationTest {
     public static Client client;
     public static Session session;
 
-    public static Client client2;
-    public static Session session2;
-
     public static ThisApplication thisApplication;
 
     @BeforeClass
@@ -60,43 +58,13 @@ public class ThisApplicationTest {
     }
 
     @Test
-    public void createGroupSync() {
-        ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
-        boolean result = thisApplication.createGroupSync("test_group"+String.valueOf(threadLocalRandom.nextInt()),"test desc");
-        assertTrue(result);
-    }
-
-    @Test
-    public void createMatchSync() {
-        boolean result = thisApplication.createMatchSync(new AbstractSocketListener(){});
-        assertTrue(result);
-    }
-
-    @Test
-    public void leaveGroupSync() {
-        ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
-        String groupName = "test_group"+String.valueOf(threadLocalRandom.nextInt());
-
-        boolean result;
-        result = thisApplication.createGroupSync(groupName,"test desc");
-        assertTrue(result);
-        result = thisApplication.leaveGroupSync(groupName);
-        assertTrue(result);
-    }
-
-    @Test
-    public void leaveCurrentGroupSync() {
-    }
-
-    @Test
-    public void joinMatchSync() {
-    }
-
-    @Test
-    public void leaveMatchSync() {
-    }
-
-    @Test
-    public void leaveCurrentMatchSync() {
+    public void loginEmailSync() {
+        boolean status;
+        status = thisApplication.isLogin();
+        assertFalse(status);
+        status = thisApplication.loginEmailSync(AccountStub.ID,AccountStub.PASSWORD);
+        assertTrue(status);
+        status = thisApplication.logout();
+        assertFalse(status);
     }
 }
