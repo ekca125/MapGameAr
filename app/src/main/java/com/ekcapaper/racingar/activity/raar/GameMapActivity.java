@@ -157,7 +157,8 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
 
     static class MarkerFactory {
         Context context;
-        public MarkerFactory(Context context){
+
+        public MarkerFactory(Context context) {
             this.context = context;
         }
 
@@ -177,7 +178,7 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
         public MarkerOptions createMarkerOption(String type, LatLng latLng) {
             if (type.equals("flag")) {
                 //return new MarkerOptions().position(latLng);
-                BitmapDescriptor icon = bitmapDescriptorFromVector(context,R.drawable.ic_cake);
+                BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_cake);
                 return new MarkerOptions().position(latLng).icon(icon);
             } else if (type.equals("player")) {
                 return new MarkerOptions().position(latLng);

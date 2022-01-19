@@ -1,11 +1,5 @@
 package com.ekcapaper.racingar.activity.raar;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,11 +8,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterGameRoom;
 import com.ekcapaper.racingar.data.ThisApplication;
-import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
+import com.ekcapaper.racingar.model.GameRoomInfo;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
@@ -30,7 +30,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-public class GameRoomActivity extends AppCompatActivity implements ActivityInitializer{
+public class GameRoomActivity extends AppCompatActivity implements ActivityInitializer {
     private ThisApplication thisApplication;
     private GameRoomPlayOperator gameRoomOperator;
 
@@ -55,7 +55,7 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Game Room");
@@ -64,7 +64,7 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
     }
 
     private void refreshRoomComponent() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
@@ -81,11 +81,11 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
                         return obj;
                     })
                     .collect(Collectors.toList());
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             items = new ArrayList<>();
             GameRoomInfo obj = new GameRoomInfo();
             obj.image = R.drawable.image_2;
-            obj.name = String.valueOf("ERROR NO DATA");
+            obj.name = "ERROR NO DATA";
             obj.imageDrw = this.getResources().getDrawable(obj.image);
             items.add(obj);
         }
@@ -130,7 +130,7 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
         refreshTimerTask = new TimerTask() {
             @Override
             public void run() {
-                runOnUiThread(()->{
+                runOnUiThread(() -> {
                     refreshRoomComponent();
                 });
             }
@@ -150,10 +150,10 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
             @Override
             public void onClick(View view) {
                 gameRoomOperator.declareGameStart();
-                Intent intent = new Intent(getApplicationContext(),GameMapActivity.class);
+                Intent intent = new Intent(getApplicationContext(), GameMapActivity.class);
                 startActivity(intent);
             }
         });
-        refreshTimer.schedule(refreshTimerTask,0,100);
+        refreshTimer.schedule(refreshTimerTask, 0, 100);
     }
 }

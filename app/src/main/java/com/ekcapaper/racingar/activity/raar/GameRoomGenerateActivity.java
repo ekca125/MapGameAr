@@ -145,7 +145,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
             return thisApplication.createFlagGameRoom(
                     nameStr,
                     desc,
-                    MapRange.calculateMapRange(location,1),
+                    MapRange.calculateMapRange(location, 1),
                     timeLimit);
         }).thenAccept(result -> {
             GameRoomGenerateActivity.this.runOnUiThread(() -> {

@@ -19,15 +19,13 @@ import com.ekcapaper.racingar.adapter.AdapterLobby;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
-import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
 import com.ekcapaper.racingar.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
-public class LobbyActivity extends AppCompatActivity implements ActivityInitializer{
+public class LobbyActivity extends AppCompatActivity implements ActivityInitializer {
     // 관제
     private ThisApplication thisApplication;
     // activity component
@@ -116,7 +114,7 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateLobbyData(Location location){
+    private void updateLobbyData(Location location) {
         items = new ArrayList<>();
         /*
         List<RoomInfo> roomInfoList = thisApplication.getCurrentRoomInfo();
@@ -142,13 +140,12 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
             @Override
             public void onItemClick(View view, GameLobbyRoomInfo obj, int position) {
                 // join room
-                if(thisApplication.joinGameRoom(obj.gameType,obj.matchId)){
+                if (thisApplication.joinGameRoom(obj.gameType, obj.matchId)) {
                     Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
                     startActivity(intent);
                     Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"방의 입장에 실패했습니다.",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "방의 입장에 실패했습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

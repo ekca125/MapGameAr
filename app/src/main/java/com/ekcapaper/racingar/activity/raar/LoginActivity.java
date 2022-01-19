@@ -13,13 +13,11 @@ import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.utils.Tools;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.common.util.concurrent.FutureCallback;
 import com.heroiclabs.nakama.Session;
 
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 public class LoginActivity extends AppCompatActivity implements ActivityInitializer {
     // 관제
@@ -73,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements ActivityInitiali
 
                     @Override
                     public void onFailure(Throwable t) {
-                        Toast.makeText(getApplicationContext(),"로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
