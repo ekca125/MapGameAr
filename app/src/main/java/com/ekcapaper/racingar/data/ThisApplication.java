@@ -89,6 +89,19 @@ public class ThisApplication extends Application {
         executorService = Executors.newFixedThreadPool(4);
     }
 
+    public String getCurrentMatchId(){
+        return currentMatch.getMatchId();
+    }
+
+    public String getCurrentGroupId(){
+        return currentGroup.getId();
+    }
+
+    public String getCurrentUserId(){
+        return session.getUserId();
+    }
+
+
     public boolean loginEmailSync(String email, String password) {
         try {
             session = client.authenticateEmail(email, password).get();
