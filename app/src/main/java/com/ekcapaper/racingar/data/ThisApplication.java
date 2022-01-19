@@ -15,7 +15,6 @@ import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
-import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperatorDeprecated;
 import com.ekcapaper.racingar.retrofit.AddressMapClient;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.google.common.util.concurrent.FutureCallback;
@@ -259,8 +258,7 @@ public class ThisApplication extends Application {
         }
         // 진행자의 설정
         currentGameRoomOperator = new FlagGameRoomPlayOperator(
-                client,
-                session,
+                this,
                 timeLimit,
                 gameFlagList
         );
