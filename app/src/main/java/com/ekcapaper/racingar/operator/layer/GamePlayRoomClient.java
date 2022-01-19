@@ -132,7 +132,7 @@ public class GamePlayRoomClient extends GameRoomClient{
     }
 
     public void onMovePlayer(GameMessageMovePlayer gameMessageMovePlayer) {
-        Optional<Player> optionalPlayer = getPlayer(gameMessageMovePlayer.getUserId());
+        Optional<Player> optionalPlayer = getPlayerOptional(gameMessageMovePlayer.getUserId());
         optionalPlayer.ifPresent((player -> {
             Location location = new Location("");
             location.setLatitude(gameMessageMovePlayer.getLatitude());
