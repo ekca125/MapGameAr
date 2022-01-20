@@ -13,10 +13,15 @@ import com.heroiclabs.nakama.api.GroupList;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
+
 public class NakamaNetworkManager {
     // info
+    @Getter
     private final Client client;
+    @Getter
     private final SocketClient socketClient;
+    @Getter
     private Session session;
 
     public NakamaNetworkManager() {

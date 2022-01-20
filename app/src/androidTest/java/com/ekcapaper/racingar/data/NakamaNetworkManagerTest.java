@@ -65,7 +65,15 @@ public class NakamaNetworkManagerTest {
         assertNotNull(group1);
         Group group2 = nakamaNetworkManager2.joinGroupSync(group1.getId());
         assertNotNull(group2);
-        nakamaNetworkManager1.leaveGroupSync(group2.getId());
+        assertEquals(group1.getId(), group2.getId());
+
+        assertTrue(nakamaNetworkManager1.getClient().
+                listGroupUsers(nakamaNetworkManager1.getSession(), group1.getId()).get()
+                .getGroupUsersCount()>1);
+
+        nakamaNetworkManager2.leaveGroupSync(group2.getId());
+        nakamaNetworkManager1.leaveGroupSync(group1.getId());
+        nakamaNetworkManager1.deleteGroupSync(group1.getId());
      }
 
     @Test
@@ -81,6 +89,8 @@ public class NakamaNetworkManagerTest {
         assertNotNull(match1);
         Match match2 = nakamaNetworkManager2.joinMatchSync(ListenerStub.socketListenerEmpty,match1.getMatchId());
         assertNotNull(match2);
+
+        assertEquals(match1.getMatchId(), match2.getMatchId());
 
         nakamaNetworkManager1.leaveMatchSync(match1.getMatchId());
         nakamaNetworkManager2.leaveMatchSync(match2.getMatchId());
