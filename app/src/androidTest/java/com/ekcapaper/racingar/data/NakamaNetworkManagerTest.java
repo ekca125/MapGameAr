@@ -51,22 +51,22 @@ public class NakamaNetworkManagerTest {
     public void createGroup() throws ExecutionException, InterruptedException {
         String groupName = RandomStringUtils.randomAlphabetic(10);
         String groupDesc = "";
-        Group group = nakamaNetworkManager1.createGroupSync(groupName,groupDesc);
-        assertNotNull(group);
-        nakamaNetworkManager1.leaveGroupSync(group.getId());
+        Group group1 = nakamaNetworkManager1.createGroupSync(groupName,groupDesc);
+        assertNotNull(group1);
+        nakamaNetworkManager1.leaveGroupSync(group1.getId());
+        nakamaNetworkManager1.deleteGroupSync(group1.getId());
     }
 
     @Test
     public void joinGroup() throws ExecutionException, InterruptedException{
         String groupName = RandomStringUtils.randomAlphabetic(10);
         String groupDesc = "";
-        Group group = nakamaNetworkManager1.createGroupSync(groupName,groupDesc);
-        assertNotNull(group);
-        nakamaNetworkManager2.joinGroupSync(group.getId());
-        assertNotNull(group);
-        nakamaNetworkManager1.leaveGroupSync(group.getId());
-        Log.d("Test", String.valueOf(nakamaNetworkManager1.getClient().listGroupUsers(nakamaNetworkManager1.getSession(),group.getId()).get().getGroupUsersList().size()));
-    }
+        Group group1 = nakamaNetworkManager1.createGroupSync(groupName,groupDesc);
+        assertNotNull(group1);
+        Group group2 = nakamaNetworkManager2.joinGroupSync(group1.getId());
+        assertNotNull(group2);
+        nakamaNetworkManager1.leaveGroupSync(group2.getId());
+     }
 
     @Test
     public void createMatch() throws ExecutionException, InterruptedException{

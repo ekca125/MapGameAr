@@ -1,7 +1,5 @@
 package com.ekcapaper.racingar.data;
 
-import android.util.Log;
-
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
@@ -15,15 +13,10 @@ import com.heroiclabs.nakama.api.GroupList;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import lombok.Getter;
-
 public class NakamaNetworkManager {
     // info
-    @Getter
-    private Client client;
-    @Getter
-    private SocketClient socketClient;
-    @Getter
+    private final Client client;
+    private final SocketClient socketClient;
     private Session session;
 
     public NakamaNetworkManager() {
@@ -63,16 +56,24 @@ public class NakamaNetworkManager {
     }
 
     // group
+    GroupList getAllGroupListSync() throws ExecutionException, InterruptedException {
+        return client.listGroups(session, "%", 100).get();
+    }
+
     Group createGroupSync(String name, String desc) throws ExecutionException, InterruptedException {
         return client.createGroup(session, name, desc, null, null, true).get();
     }
 
-    void joinGroupSync(String groupId) throws ExecutionException, InterruptedException {
-        Log.d("groupinsert",groupId);
+    Group joinGroupSync(String groupId) throws ExecutionException, InterruptedException {
         client.joinGroup(session, groupId).get();
-        Log.d("groups list size", String.valueOf(client.listGroups(session,"%",100).get().getGroupsList().size()));
-        client.listGroups(session,"%").get().getGroupsList().stream().forEach(group->Log.d("group",group.getId()));
+        return getAllGroupListSync().getGroupsList().stream()
+                .filter(group -> group.getId().equals(groupId))
+                .collect(Collectors.toList())
+                .get(0);
+    }
 
+    void deleteGroupSync(String groupId) throws ExecutionException, InterruptedException {
+        client.deleteGroup(session, groupId).get();
     }
 
     void leaveGroupSync(String groupId) {
@@ -81,7 +82,6 @@ public class NakamaNetworkManager {
         } catch (ExecutionException | InterruptedException ignored) {
         }
     }
-
     //
 
     // match
