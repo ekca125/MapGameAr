@@ -43,6 +43,9 @@ public class NakamaGameManager{
             }
             return false;
         }
+        // 그룹 메타 데이터 쓰기
+
+        
         // 객체에 반영
         this.roomOperator = socketListener;
         this.roomGroup = group;
@@ -63,5 +66,13 @@ public class NakamaGameManager{
         this.roomOperator = null;
     }
 
+    public boolean joinGameRoom(@NonNull String roomName, @NonNull SocketListener socketListener){
+        if(isActive()){
+            // 이미 활성화 된 상태라면 오류 발생
+            throw new IllegalStateException();
+        }
+        // 메타 데이터 받아오기
 
+        return false;
+    }
 }
