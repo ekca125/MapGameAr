@@ -17,6 +17,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class NakamaNetworkManagerTest {
@@ -79,7 +82,26 @@ public class NakamaNetworkManagerTest {
         groupUserList1 = nakamaNetworkManager1.getGroupUserList(groupName);
         assertEquals(groupUserList1.getGroupUsersCount(), 1);
         nakamaNetworkManager1.leaveGroupSync(groupName);
-     }
+    }
+
+    @Test
+    public void metadata(){
+        String groupName = RandomStringUtils.randomAlphabetic(10);
+        String groupDesc = "";
+
+        Group group1 = nakamaNetworkManager1.createGroupSync(groupName,groupDesc);
+        assertNotNull(group1);
+        nakamaNetworkManager1.leaveGroupSync(group1.getName());
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("GroupId", group1.getId());
+        payload.put("Interests", Arrays.asList("Deception", "Sabotage", "Cute Furry Bunnies"));
+        payload.put("ActiveTimes", Arrays.asList("9am-2pm Weekdays", "9am-10am Weekends"));
+        payload.put("Languages", Arrays.asList("English", "German"));
+
+        boolean result = nakamaNetworkManager1.addGroupMetaDataSync(payload);
+        assertTrue(result);
+    }
 
     @Test
     public void createMatch(){
@@ -100,5 +122,7 @@ public class NakamaNetworkManagerTest {
         nakamaNetworkManager1.leaveMatchSync(match1.getMatchId());
         nakamaNetworkManager2.leaveMatchSync(match2.getMatchId());
     }
+
+
 
 }

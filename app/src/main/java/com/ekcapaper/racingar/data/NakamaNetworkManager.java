@@ -1,6 +1,9 @@
 package com.ekcapaper.racingar.data;
 
+import android.util.Log;
+
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.google.gson.Gson;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Match;
@@ -10,7 +13,10 @@ import com.heroiclabs.nakama.SocketListener;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
 import com.heroiclabs.nakama.api.GroupUserList;
+import com.heroiclabs.nakama.api.Rpc;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -125,6 +131,21 @@ public class NakamaNetworkManager {
         } catch (ExecutionException | InterruptedException | IndexOutOfBoundsException ignored) {
         }
     }
+
+    boolean addGroupMetaDataSync(Map<String, Object> payload){
+        if(!payload.containsKey("GroupId")){
+            return false;
+        }
+        try {
+            Rpc rpcResult = client.rpc(session,"UpdateGroup", new Gson().toJson(payload, payload.getClass())).get();
+            return true;
+        }
+        catch (ExecutionException | InterruptedException ex) {
+            Log.d("testtest2",ex.toString());
+            return false;
+        }
+    }
+
     //
 
     // match
