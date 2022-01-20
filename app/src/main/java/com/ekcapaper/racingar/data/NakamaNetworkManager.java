@@ -9,6 +9,7 @@ import com.heroiclabs.nakama.SocketClient;
 import com.heroiclabs.nakama.SocketListener;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
+import com.heroiclabs.nakama.api.GroupUserList;
 
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -59,48 +60,94 @@ public class NakamaNetworkManager {
             session = null;
         }
     }
+    //
 
     // group
-    GroupList getAllGroupListSync() throws ExecutionException, InterruptedException {
-        return client.listGroups(session, "%", 100).get();
-    }
-
-    Group createGroupSync(String name, String desc) throws ExecutionException, InterruptedException {
-        return client.createGroup(session, name, desc, null, null, true).get();
-    }
-
-    Group joinGroupSync(String groupId) throws ExecutionException, InterruptedException {
-        client.joinGroup(session, groupId).get();
-        return getAllGroupListSync().getGroupsList().stream()
-                .filter(group -> group.getId().equals(groupId))
-                .collect(Collectors.toList())
-                .get(0);
-    }
-
-    void deleteGroupSync(String groupId) throws ExecutionException, InterruptedException {
-        client.deleteGroup(session, groupId).get();
-    }
-
-    void leaveGroupSync(String groupId) {
+    private Group findGroup(String groupName){
         try {
-            client.leaveGroup(session, groupId).get();
+            return client.listGroups(session, groupName, 100).get().getGroupsList().get(0);
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
+    }
+
+    public GroupUserList getGroupUserList(String groupName){
+        Group group = findGroup(groupName);
+        if(group == null){
+            return null;
+        }
+        try {
+            return client.listGroupUsers(session,group.getId()).get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
+    }
+
+    Group createGroupSync(String groupName, String groupDesc){
+        try {
+            return client.createGroup(session, groupName, groupDesc, null, null, true).get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
+    }
+
+    Group joinGroupSync(String groupName){
+        try {
+            Group group = findGroup(groupName);
+            if(group == null){
+                return null;
+            }
+            client.joinGroup(session, group.getId()).get();
+            return group;
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
+    }
+
+    private void deleteGroupSync(String groupName){
+        try {
+            Group group = findGroup(groupName);
+            if(group == null){
+                return;
+            }
+            client.deleteGroup(session, group.getId()).get();
         } catch (ExecutionException | InterruptedException ignored) {
+        }
+    }
+
+    void leaveGroupSync(String groupName) {
+        Group group = findGroup(groupName);
+        if(group == null){
+            return;
+        }
+        try {
+            if(group.getCreatorId().equals(session.getUserId())){
+                deleteGroupSync(groupName);
+            }
+            client.leaveGroup(session, group.getId()).get();
+        } catch (ExecutionException | InterruptedException | IndexOutOfBoundsException ignored) {
         }
     }
     //
 
     // match
-    Match createMatchSync(SocketListener socketListener) throws ExecutionException, InterruptedException {
-        socketClient.connect(session, socketListener);
-        return socketClient.createMatch().get();
+    Match createMatchSync(SocketListener socketListener){
+        try {
+            socketClient.connect(session, socketListener);
+            return socketClient.createMatch().get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
     }
 
-
-    Match joinMatchSync(SocketListener socketListener, String matchId) throws ExecutionException, InterruptedException {
-        socketClient.connect(session, socketListener);
-        return socketClient.joinMatch(matchId).get();
+    Match joinMatchSync(SocketListener socketListener, String matchId) {
+        try {
+            socketClient.connect(session, socketListener);
+            return socketClient.joinMatch(matchId).get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
     }
-
 
     void leaveMatchSync(String matchId) {
         try {

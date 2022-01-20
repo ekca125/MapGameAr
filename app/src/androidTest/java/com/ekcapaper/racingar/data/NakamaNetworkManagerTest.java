@@ -48,43 +48,48 @@ public class NakamaNetworkManagerTest {
     }
 
     @Test
-    public void createGroup() throws ExecutionException, InterruptedException {
+    public void createGroup(){
         String groupName = RandomStringUtils.randomAlphabetic(10);
         String groupDesc = "";
+
         Group group1 = nakamaNetworkManager1.createGroupSync(groupName,groupDesc);
         assertNotNull(group1);
-        nakamaNetworkManager1.leaveGroupSync(group1.getId());
-        nakamaNetworkManager1.deleteGroupSync(group1.getId());
+        nakamaNetworkManager1.leaveGroupSync(group1.getName());
     }
 
     @Test
     public void joinGroup() throws ExecutionException, InterruptedException{
         String groupName = RandomStringUtils.randomAlphabetic(10);
         String groupDesc = "";
+
         Group group1 = nakamaNetworkManager1.createGroupSync(groupName,groupDesc);
         assertNotNull(group1);
-        Group group2 = nakamaNetworkManager2.joinGroupSync(group1.getId());
+        Group group2 = nakamaNetworkManager2.joinGroupSync(groupName);
         assertNotNull(group2);
         assertEquals(group1.getId(), group2.getId());
 
-        assertTrue(nakamaNetworkManager1.getClient().
-                listGroupUsers(nakamaNetworkManager1.getSession(), group1.getId()).get()
-                .getGroupUsersCount()>1);
+        GroupUserList groupUserList1 = nakamaNetworkManager1.getGroupUserList(groupName);
+        GroupUserList groupUserList2 = nakamaNetworkManager2.getGroupUserList(groupName);
 
-        nakamaNetworkManager2.leaveGroupSync(group2.getId());
-        nakamaNetworkManager1.leaveGroupSync(group1.getId());
-        nakamaNetworkManager1.deleteGroupSync(group1.getId());
+        assertEquals(groupUserList1.getGroupUsersCount(), groupUserList2.getGroupUsersCount());
+        assertEquals(groupUserList1.getGroupUsersCount(), 2);
+        assertEquals(groupUserList2.getGroupUsersCount(), 2);
+
+        nakamaNetworkManager2.leaveGroupSync(groupName);
+        groupUserList1 = nakamaNetworkManager1.getGroupUserList(groupName);
+        assertEquals(groupUserList1.getGroupUsersCount(), 1);
+        nakamaNetworkManager1.leaveGroupSync(groupName);
      }
 
     @Test
-    public void createMatch() throws ExecutionException, InterruptedException{
+    public void createMatch(){
         Match match1 = nakamaNetworkManager1.createMatchSync(ListenerStub.socketListenerEmpty);
         assertNotNull(match1);
         nakamaNetworkManager1.leaveMatchSync(match1.getMatchId());
     }
 
     @Test
-    public void joinMatch() throws ExecutionException, InterruptedException{
+    public void joinMatch(){
         Match match1 = nakamaNetworkManager1.createMatchSync(ListenerStub.socketListenerEmpty);
         assertNotNull(match1);
         Match match2 = nakamaNetworkManager2.joinMatchSync(ListenerStub.socketListenerEmpty,match1.getMatchId());
