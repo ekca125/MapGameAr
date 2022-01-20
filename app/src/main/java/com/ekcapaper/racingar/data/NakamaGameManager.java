@@ -44,7 +44,19 @@ public class NakamaGameManager{
             return false;
         }
         // 그룹 메타 데이터 쓰기
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("GroupId", "<GroupId>");
+        payload.put("Interests", Arrays.asList("Deception", "Sabotage", "Cute Furry Bunnies"));
+        payload.put("ActiveTimes", Arrays.asList("9am-2pm Weekdays", "9am-10am Weekends"));
+        payload.put("Languages", Arrays.asList("English", "German"));
 
+        try {
+            Rpc rpcResult = client.rpc(session, "UpdateGroupMetadata", new Gson().toJson(payload, payload.getClass())).get();
+            logger.info("Successfully updated group metadata");
+        }
+        catch (ExecutionException ex) {
+            logger.error(ex.getMessage());
+        }
         
         // 객체에 반영
         this.roomOperator = socketListener;
