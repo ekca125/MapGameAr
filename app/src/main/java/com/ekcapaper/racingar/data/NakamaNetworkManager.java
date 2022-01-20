@@ -1,5 +1,7 @@
 package com.ekcapaper.racingar.data;
 
+import android.util.Log;
+
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
@@ -65,12 +67,12 @@ public class NakamaNetworkManager {
         return client.createGroup(session, name, desc, null, null, true).get();
     }
 
-    Group joinGroupSync(String groupId) throws ExecutionException, InterruptedException {
+    void joinGroupSync(String groupId) throws ExecutionException, InterruptedException {
+        Log.d("groupinsert",groupId);
         client.joinGroup(session, groupId).get();
-        GroupList groupList = client.listGroups(session, "%").get();
-        return groupList.getGroupsList().stream()
-                .filter((Group group) -> group.getId().equals(groupId))
-                .collect(Collectors.toList()).get(0);
+        Log.d("groups list size", String.valueOf(client.listGroups(session,"%",100).get().getGroupsList().size()));
+        client.listGroups(session,"%").get().getGroupsList().stream().forEach(group->Log.d("group",group.getId()));
+
     }
 
     void leaveGroupSync(String groupId) {
