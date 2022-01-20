@@ -18,11 +18,8 @@ import lombok.Getter;
 
 public class NakamaNetworkManager {
     // info
-    @Getter
     private final Client client;
-    @Getter
     private final SocketClient socketClient;
-    @Getter
     private Session session;
 
     public NakamaNetworkManager() {
