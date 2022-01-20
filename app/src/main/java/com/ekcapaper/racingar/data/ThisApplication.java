@@ -218,7 +218,7 @@ public class ThisApplication extends Application {
     }
 
     // join
-    boolean joinGameRoom(String groupId, SocketListener socketListener) {
+    void joinGameRoom(String groupId, SocketListener socketListener) {
 
     }
 
