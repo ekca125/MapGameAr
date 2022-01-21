@@ -23,6 +23,8 @@ public class NakamaGameManager{
     private Group roomGroup;
     private Match roomMatch;
     private SocketListener roomOperator;
+    //
+
 
     public NakamaGameManager(NakamaNetworkManager nakamaNetworkManager) {
         this.nakamaNetworkManager = nakamaNetworkManager;
@@ -63,24 +65,6 @@ public class NakamaGameManager{
         this.roomMatch = match;
         return true;
     }
-
-    /*
-    public boolean writeGameRoomMetaData(Map<String,Object> metaData){
-        Gson gson = new Gson();
-        String metaDataJson = gson.toJson(metaData);
-        //쓰기
-        StorageObjectWrite saveGameObject = new StorageObjectWrite(
-                "GameRoom",
-                "MetaData",
-                metaDataJson,
-                PermissionRead.PUBLIC_READ,
-                PermissionWrite.OWNER_WRITE);
-        StorageObjectAcks acks = this.nakamaNetworkManager..writeStorageObjects(session, saveGameObject, statsObject).get();
-        System.out.format("Stored objects %s", acks.getAcksList());
-    }
-
-     */
-
 
     public void leaveGameRoom(){
         if(!isActive()){
