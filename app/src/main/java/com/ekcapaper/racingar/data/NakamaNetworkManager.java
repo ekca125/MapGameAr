@@ -131,21 +131,6 @@ public class NakamaNetworkManager {
         } catch (ExecutionException | InterruptedException | IndexOutOfBoundsException ignored) {
         }
     }
-
-    boolean addGroupMetaDataSync(Map<String, Object> payload){
-        if(!payload.containsKey("GroupId")){
-            return false;
-        }
-        try {
-            Rpc rpcResult = client.rpc(session,"UpdateGroup", new Gson().toJson(payload, payload.getClass())).get();
-            return true;
-        }
-        catch (ExecutionException | InterruptedException ex) {
-            Log.d("testtest2",ex.toString());
-            return false;
-        }
-    }
-
     //
 
     // match

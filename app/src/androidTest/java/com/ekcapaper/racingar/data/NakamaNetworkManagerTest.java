@@ -85,25 +85,6 @@ public class NakamaNetworkManagerTest {
     }
 
     @Test
-    public void metadata(){
-        String groupName = RandomStringUtils.randomAlphabetic(10);
-        String groupDesc = "";
-
-        Group group1 = nakamaNetworkManager1.createGroupSync(groupName,groupDesc);
-        assertNotNull(group1);
-        nakamaNetworkManager1.leaveGroupSync(group1.getName());
-
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("GroupId", group1.getId());
-        payload.put("Interests", Arrays.asList("Deception", "Sabotage", "Cute Furry Bunnies"));
-        payload.put("ActiveTimes", Arrays.asList("9am-2pm Weekdays", "9am-10am Weekends"));
-        payload.put("Languages", Arrays.asList("English", "German"));
-
-        boolean result = nakamaNetworkManager1.addGroupMetaDataSync(payload);
-        assertTrue(result);
-    }
-
-    @Test
     public void createMatch(){
         Match match1 = nakamaNetworkManager1.createMatchSync(ListenerStub.socketListenerEmpty);
         assertNotNull(match1);
