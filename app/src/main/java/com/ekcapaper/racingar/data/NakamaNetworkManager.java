@@ -76,6 +76,22 @@ public class NakamaNetworkManager {
     //
 
     // group
+    public GroupList getAllGroupList(){
+        try {
+            return client.listGroups(session, "%", 100).get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
+    }
+
+    public GroupList getGroupList(String groupFilter){
+        try {
+            return client.listGroups(session, groupFilter, 100).get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
+    }
+
     private Group findGroup(String groupName){
         try {
             return client.listGroups(session, groupName, 100).get().getGroupsList().get(0);
@@ -84,8 +100,8 @@ public class NakamaNetworkManager {
         }
     }
 
-    public GroupUserList getGroupUserList(String groupNameFilter){
-        Group group = findGroup(groupNameFilter);
+    public GroupUserList getGroupUserList(String groupName){
+        Group group = findGroup(groupName);
         if(group == null){
             return null;
         }
