@@ -41,6 +41,8 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class ThisApplication extends Application {
+    NakamaNetworkManager nakamaNetworkManager;
+    NakamaGameManager nakamaGameManager;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -51,8 +53,8 @@ public class ThisApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-
+        nakamaNetworkManager = new NakamaNetworkManager();
+        nakamaGameManager = new NakamaGameManager(nakamaNetworkManager);
     }
 
 }
