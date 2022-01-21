@@ -139,4 +139,36 @@ public class NakamaNetworkManagerTest {
             assertEquals(data.get(mapKey), resultMap.get(mapKey));
         }
     }
+
+    @Test
+    public void rwPublicServerStorageSync2() throws IllegalAccessException {
+        // nakamaNetworkManager1 session
+        Class<NakamaNetworkManager> nakamaNetworkManagerClass = NakamaNetworkManager.class;
+        Field[] fields = nakamaNetworkManagerClass.getDeclaredFields();
+        Field sessionField = Arrays.stream(fields).filter(field->field.getName().equals("session")).collect(Collectors.toList()).get(0);
+        sessionField.setAccessible(true);
+        Session nakamaNetworkManager1Session = (Session) sessionField.get(nakamaNetworkManager2);
+
+        // info
+        String collectionName = "collectionTest";
+        String keyName = "keyTest";
+        // data
+        Map<String,Object> data = new HashMap<>();
+        data.put("test",RandomStringUtils.randomAlphabetic(10));
+        // write
+        boolean result = nakamaNetworkManager2.writePublicServerStorageSync(collectionName,keyName,data);
+        assertTrue(result);
+        // read
+        Map<String,Object> resultMap = nakamaNetworkManager1.readServerStorageSync(collectionName,keyName,nakamaNetworkManager1Session.getUserId());
+        assertNotNull(resultMap);
+        // 데이터 테스트
+        for(String mapKey:resultMap.keySet()){
+            assertTrue(data.containsKey(mapKey));
+            assertTrue(resultMap.containsKey(mapKey));
+        }
+        for(String mapKey:resultMap.keySet()){
+            assertEquals(data.get(mapKey), resultMap.get(mapKey));
+        }
+    }
+
 }
