@@ -7,6 +7,7 @@ import android.util.Log;
 import com.ekcapaper.racingar.stub.ListenerStub;
 import com.google.gson.JsonObject;
 import com.heroiclabs.nakama.Match;
+import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketListener;
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.heroiclabs.nakama.api.Group;
@@ -18,10 +19,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class NakamaNetworkManagerTest {
     public static NakamaNetworkManager nakamaNetworkManager1;
@@ -107,12 +110,33 @@ public class NakamaNetworkManagerTest {
 
 
     @Test
-    public void rwPublicServerStorageSync() {
-        
+    public void rwPublicServerStorageSync() throws IllegalAccessException {
+        // nakamaNetworkManager1 session
+        Class<NakamaNetworkManager> nakamaNetworkManagerClass = NakamaNetworkManager.class;
+        Field[] fields = nakamaNetworkManagerClass.getDeclaredFields();
+        Field sessionField = Arrays.stream(fields).filter(field->field.getName().equals("session")).collect(Collectors.toList()).get(0);
+        sessionField.setAccessible(true);
+        Session nakamaNetworkManager1Session = (Session) sessionField.get(nakamaNetworkManager1);
 
-        JsonObject jsonObject = new JsonObject();
-
-        nakamaNetworkManager1.writePublicServerStorageSync("collectionTest","keyTest",);
-
+        // info
+        String collectionName = "collectionTest";
+        String keyName = "keyTest";
+        // data
+        Map<String,Object> data = new HashMap<>();
+        data.put("test",RandomStringUtils.randomAlphabetic(10));
+        // write
+        boolean result = nakamaNetworkManager1.writePublicServerStorageSync(collectionName,keyName,data);
+        assertTrue(result);
+        // read
+        Map<String,Object> resultMap = nakamaNetworkManager2.readServerStorageSync(collectionName,keyName,nakamaNetworkManager1Session.getUserId());
+        assertNotNull(resultMap);
+        // 데이터 테스트
+        for(String mapKey:resultMap.keySet()){
+            assertTrue(data.containsKey(mapKey));
+            assertTrue(resultMap.containsKey(mapKey));
+        }
+        for(String mapKey:resultMap.keySet()){
+            assertEquals(data.get(mapKey), resultMap.get(mapKey));
+        }
     }
 }

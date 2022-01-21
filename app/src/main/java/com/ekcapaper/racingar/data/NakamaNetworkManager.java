@@ -20,6 +20,7 @@ import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
 import com.heroiclabs.nakama.api.GroupUserList;
 import com.heroiclabs.nakama.api.Rpc;
+import com.heroiclabs.nakama.api.StorageObject;
 import com.heroiclabs.nakama.api.StorageObjectAcks;
 import com.heroiclabs.nakama.api.StorageObjectList;
 import com.heroiclabs.nakama.api.StorageObjects;
@@ -195,8 +196,8 @@ public class NakamaNetworkManager {
             objectId.setKey(keyName);
             objectId.setUserId(storageOwnUserId);
             StorageObjects objects = client.readStorageObjects(session, objectId).get();
-            //System.out.format("Read objects %s", objects.getObjectsList().toString());
-            return gson.fromJson(objects.toString(), Map.class);
+            StorageObject object = objects.getObjects(0);
+            return gson.fromJson(object.getValue(), Map.class);
         } catch (ExecutionException | InterruptedException | IndexOutOfBoundsException e) {
             return null;
         }
