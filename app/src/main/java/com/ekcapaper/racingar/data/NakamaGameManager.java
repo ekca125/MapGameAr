@@ -11,6 +11,8 @@ import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.Rpc;
 import com.heroiclabs.nakama.api.StorageObjectAcks;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -24,7 +26,8 @@ public class NakamaGameManager{
     private Match roomMatch;
     private SocketListener roomOperator;
     //
-
+    private static String collectionName = "gameRoom";
+    private static String keyName = "metadata";
 
     public NakamaGameManager(NakamaNetworkManager nakamaNetworkManager) {
         this.nakamaNetworkManager = nakamaNetworkManager;
@@ -56,8 +59,10 @@ public class NakamaGameManager{
             return false;
         }
         // 그룹 메타 데이터 쓰기
-
-
+        Map<String,Object> metadata = new HashMap<>();
+        metadata.put("groupId", group.getId());
+        metadata.put("matchId", match.getMatchId());
+        nakamaNetworkManager.writePublicServerStorageSync(collectionName,keyName,metadata);
 
         // 객체에 반영
         this.roomOperator = socketListener;
@@ -84,8 +89,24 @@ public class NakamaGameManager{
             // 이미 활성화 된 상태라면 오류 발생
             throw new IllegalStateException();
         }
+        // 그룹 가입
+        Group group = nakamaNetworkManager.joinGroupSync(roomName);
+        if(group == null){
+            return false;
+        }
         // 메타 데이터 받아오기
-
-        return false;
+        Map<String,Object> metadata = nakamaNetworkManager.readServerStorageSync(collectionName,keyName,group.getCreatorId());
+        String groupId = (String) metadata.get("groupId");
+        String matchId = (String) metadata.get("matchId");
+        Match match = nakamaNetworkManager.joinMatchSync(socketListener,matchId);
+        if(match == null){
+            nakamaNetworkManager.leaveGroupSync(group.getName());
+            return false;
+        }
+        //
+        this.roomOperator = socketListener;
+        this.roomGroup = group;
+        this.roomMatch = match;
+        return true;
     }
 }

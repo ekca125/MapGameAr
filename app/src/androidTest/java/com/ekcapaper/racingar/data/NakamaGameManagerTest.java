@@ -48,11 +48,11 @@ public class NakamaGameManagerTest {
         boolean result;
         result = nakamaGameManager1.createGameRoom(roomName,roomDesc, ListenerStub.socketListenerEmpty);
         assertTrue(result);
-        
 
+        result = nakamaGameManager2.joinGameRoom(roomName,ListenerStub.socketListenerEmpty);
+        assertTrue(result);
 
         nakamaGameManager1.leaveGameRoom();
-
     }
 
 }
