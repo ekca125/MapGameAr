@@ -3,9 +3,13 @@ package com.ekcapaper.racingar.data;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Match;
+import com.heroiclabs.nakama.PermissionRead;
+import com.heroiclabs.nakama.PermissionWrite;
 import com.heroiclabs.nakama.SocketListener;
+import com.heroiclabs.nakama.StorageObjectWrite;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.Rpc;
+import com.heroiclabs.nakama.api.StorageObjectAcks;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,6 +63,24 @@ public class NakamaGameManager{
         this.roomMatch = match;
         return true;
     }
+
+    /*
+    public boolean writeGameRoomMetaData(Map<String,Object> metaData){
+        Gson gson = new Gson();
+        String metaDataJson = gson.toJson(metaData);
+        //쓰기
+        StorageObjectWrite saveGameObject = new StorageObjectWrite(
+                "GameRoom",
+                "MetaData",
+                metaDataJson,
+                PermissionRead.PUBLIC_READ,
+                PermissionWrite.OWNER_WRITE);
+        StorageObjectAcks acks = this.nakamaNetworkManager..writeStorageObjects(session, saveGameObject, statsObject).get();
+        System.out.format("Stored objects %s", acks.getAcksList());
+    }
+
+     */
+
 
     public void leaveGameRoom(){
         if(!isActive()){

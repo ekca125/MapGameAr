@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import android.util.Log;
 
 import com.ekcapaper.racingar.stub.ListenerStub;
+import com.google.gson.JsonObject;
 import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.SocketListener;
 import com.ekcapaper.racingar.stub.AccountStub;
@@ -105,5 +106,13 @@ public class NakamaNetworkManagerTest {
     }
 
 
+    @Test
+    public void rwPublicServerStorageSync() {
+        
 
+        JsonObject jsonObject = new JsonObject();
+
+        nakamaNetworkManager1.writePublicServerStorageSync("collectionTest","keyTest",);
+
+    }
 }
