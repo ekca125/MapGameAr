@@ -84,8 +84,8 @@ public class NakamaNetworkManager {
         }
     }
 
-    public GroupUserList getGroupUserList(String groupName){
-        Group group = findGroup(groupName);
+    public GroupUserList getGroupUserList(String groupNameFilter){
+        Group group = findGroup(groupNameFilter);
         if(group == null){
             return null;
         }
@@ -202,5 +202,6 @@ public class NakamaNetworkManager {
             return null;
         }
     }
+
 
 }

@@ -97,7 +97,7 @@ public class NakamaGameManager{
         // 메타 데이터 받아오기
         Map<String,Object> metadata = nakamaNetworkManager.readServerStorageSync(collectionName,keyName,group.getCreatorId());
         String matchId = (String) metadata.get("matchId");
-        
+
         Match match = nakamaNetworkManager.joinMatchSync(socketListener,matchId);
         if(match == null){
             nakamaNetworkManager.leaveGroupSync(group.getName());
