@@ -1,5 +1,6 @@
 package com.ekcapaper.racingar.data;
 
+import com.ekcapaper.racingar.network.GameMessage;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Match;
@@ -8,11 +9,14 @@ import com.heroiclabs.nakama.PermissionWrite;
 import com.heroiclabs.nakama.SocketListener;
 import com.heroiclabs.nakama.StorageObjectWrite;
 import com.heroiclabs.nakama.api.Group;
+import com.heroiclabs.nakama.api.GroupList;
+import com.heroiclabs.nakama.api.GroupUserList;
 import com.heroiclabs.nakama.api.Rpc;
 import com.heroiclabs.nakama.api.StorageObjectAcks;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -108,5 +112,17 @@ public class NakamaGameManager{
         this.roomGroup = group;
         this.roomMatch = match;
         return true;
+    }
+
+    public void sendGameRoomGameMessage(GameMessage gameMessage){
+        nakamaNetworkManager.socketClient.sendMatchData(
+                nakamaNetworkManager.getCurrentSessionUserId(),
+                gameMessage.getOpCode().ordinal(),
+                gameMessage.getPayload().getBytes(StandardCharsets.UTF_8)
+        );
+    }
+
+    public GroupUserList getGameRoomGroupUserList(){
+        return nakamaNetworkManager.getGroupUserList(roomGroup.getName());
     }
 }

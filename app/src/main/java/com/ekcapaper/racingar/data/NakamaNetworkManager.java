@@ -34,9 +34,9 @@ import lombok.Getter;
 
 public class NakamaNetworkManager {
     // info
-    private final Client client;
-    private final SocketClient socketClient;
-    private Session session;
+    final Client client;
+    final SocketClient socketClient;
+    Session session;
 
     public NakamaNetworkManager() {
         client = new DefaultClient(
@@ -72,6 +72,10 @@ public class NakamaNetworkManager {
         if (session != null) {
             session = null;
         }
+    }
+    // session info
+    public String getCurrentSessionUserId(){
+        return session.getUserId();
     }
     //
 

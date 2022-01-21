@@ -51,7 +51,7 @@ public class GameRoomPlayClient extends GameRoomClient{
     }
 
     public Player getCurrentPlayer(){
-        String userId = thisApplication.getCurrentUserId();
+        String userId = thisApplication.getNakamaNetworkManager().getCurrentSessionUserId();
         return getPlayer(userId);
     }
 
@@ -65,13 +65,7 @@ public class GameRoomPlayClient extends GameRoomClient{
     }
 
     public final void sendMatchData(GameMessage gameMessage) {
-        SocketClient socketClient = thisApplication.getSocketClient();
-        String matchId = thisApplication.getGameRoomMatchId();
-        socketClient.sendMatchData(
-                matchId,
-                gameMessage.getOpCode().ordinal(),
-                gameMessage.getPayload().getBytes(StandardCharsets.UTF_8)
-        );
+        thisApplication.getNakamaGameManager().sendGameRoomGameMessage(gameMessage);
     }
 
     @Override
@@ -109,7 +103,7 @@ public class GameRoomPlayClient extends GameRoomClient{
 
     public void onGameStart(GameMessageStart gameMessageStart) {
         try {
-            GroupUserList groupUserList = thisApplication.getGameRoomGroupUserList();
+            GroupUserList groupUserList = thisApplication.getNakamaGameManager().getGameRoomGroupUserList();
             playerList = groupUserList.getGroupUsersList()
                     .stream()
                     .map(groupUser -> new Player(groupUser.getUser().getId()))

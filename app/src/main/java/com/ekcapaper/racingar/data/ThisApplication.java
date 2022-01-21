@@ -5,9 +5,13 @@ import android.content.Context;
 
 import androidx.multidex.MultiDex;
 
+import lombok.Getter;
+
 
 public class ThisApplication extends Application {
+    @Getter
     NakamaNetworkManager nakamaNetworkManager;
+    @Getter
     NakamaGameManager nakamaGameManager;
 
     @Override

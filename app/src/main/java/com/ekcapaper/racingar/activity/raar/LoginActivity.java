@@ -20,7 +20,6 @@ import com.heroiclabs.nakama.Session;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity implements ActivityInitializer {
-    // 관제
     private ThisApplication thisApplication;
     // activity component
     private View parent_view;
@@ -62,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements ActivityInitiali
                 String email = Objects.requireNonNull(text_input_text_email.getText()).toString();
                 String password = Objects.requireNonNull(text_input_text_password.getText()).toString();
 
-                boolean result = thisApplication.loginEmailSync(email,password);
+                boolean result = thisApplication.getNakamaNetworkManager().loginEmailSync(email,password);
                 if(result){
                     Intent intent = new Intent(LoginActivity.this, LobbyActivity.class);
                     startActivity(intent);
