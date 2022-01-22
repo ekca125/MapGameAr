@@ -2,11 +2,15 @@ package com.ekcapaper.racingar.operator.layer;
 
 import static org.junit.Assert.*;
 
+import android.util.Log;
+
 import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.stub.AccountStub;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class GameRoomClientTest {
     public static NakamaNetworkManager nakamaNetworkManager1;
@@ -29,8 +33,26 @@ public class GameRoomClientTest {
         nakamaGameManager1 = new NakamaGameManager(nakamaNetworkManager1);
         nakamaGameManager2 = new NakamaGameManager(nakamaNetworkManager2);
 
+        gameRoomClient1 = new GameRoomClient(nakamaNetworkManager1,nakamaGameManager1);
+        gameRoomClient2 = new GameRoomClient(nakamaNetworkManager2,nakamaGameManager2);
     }
 
+    @Test
+    public void testJoinLeave(){
+        String roomName = RandomStringUtils.randomAlphabetic(10);
+        String roomDesc = "";
 
+        boolean result;
+        result = nakamaGameManager1.createGameRoom(roomName,roomDesc,gameRoomClient1);
+        assertTrue(result);
+
+        result = nakamaGameManager2.joinGameRoom(roomName,gameRoomClient2);
+        assertTrue(result);
+
+        assertEquals(nakamaGameManager1.getGameRoomGroupUserList().getGroupUsersList().size(), 2);
+        nakamaGameManager2.leaveGameRoom();
+        assertEquals(nakamaGameManager1.getGameRoomGroupUserList().getGroupUsersList().size(), 1);
+        nakamaGameManager1.leaveGameRoom();
+    }
 
 }

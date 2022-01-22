@@ -30,6 +30,7 @@ public class GameRoomClient implements SocketListener {
     public GameRoomClient(NakamaNetworkManager nakamaNetworkManager, NakamaGameManager nakamaGameManager){
         this.nakamaNetworkManager = nakamaNetworkManager;
         this.nakamaGameManager = nakamaGameManager;
+        this.matchUserPresenceList = new ArrayList<>();
         this.channelUserPresenceList = new ArrayList<>();
     }
 
