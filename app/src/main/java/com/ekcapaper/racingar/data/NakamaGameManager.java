@@ -29,9 +29,6 @@ public class NakamaGameManager{
     private Group roomGroup;
     private Match roomMatch;
     private SocketListener roomOperator;
-    //
-    private static String collectionName = "gameRoom";
-    private static String keyName = "metadata";
 
     public NakamaGameManager(NakamaNetworkManager nakamaNetworkManager) {
         this.nakamaNetworkManager = nakamaNetworkManager;
@@ -66,7 +63,8 @@ public class NakamaGameManager{
         Map<String,Object> metadata = new HashMap<>();
         metadata.put("groupId", group.getId());
         metadata.put("matchId", match.getMatchId());
-        nakamaNetworkManager.writePublicServerStorageSync(collectionName,keyName,metadata);
+        NakamaRoomMetaDataManager nakamaRoomMetaDataManager = new NakamaRoomMetaDataManager(nakamaNetworkManager);
+        nakamaRoomMetaDataManager.writeRoomMetaDataSync(group,metadata);
 
         // 객체에 반영
         this.roomOperator = socketListener;
@@ -99,7 +97,8 @@ public class NakamaGameManager{
             return false;
         }
         // 메타 데이터 받아오기
-        Map<String,Object> metadata = nakamaNetworkManager.readServerStorageSync(collectionName,keyName,group.getCreatorId());
+        NakamaRoomMetaDataManager nakamaRoomMetaDataManager = new NakamaRoomMetaDataManager(nakamaNetworkManager);
+        Map<String,Object> metadata = nakamaRoomMetaDataManager.readRoomMetaDataSync(group);
         String matchId = (String) metadata.get("matchId");
 
         Match match = nakamaNetworkManager.joinMatchSync(socketListener,matchId);

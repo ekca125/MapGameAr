@@ -15,11 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.adapter.AdapterLobby;
+import com.ekcapaper.racingar.adaptergame.AdapterLobby;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
-import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomInfo;
+import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.utils.Tools;
 import com.heroiclabs.nakama.api.Group;
@@ -42,7 +42,7 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
     private Button button_new_room;
     // data
     private AdapterLobby mAdapter;
-    private List<GameLobbyRoomInfo> items;
+    private List<GameLobbyRoomItem> items;
     // location
     private LocationRequestSpace refreshRequester;
 
@@ -128,12 +128,9 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
             GroupList groupList = nakamaNetworkManager.getAllGroupList();
             val groupItems = groupList.getGroupsList().stream()
                     .map((Group group) -> {
-                        GameLobbyRoomInfo gameLobbyRoomInfo = new GameLobbyRoomInfo();
-                        gameLobbyRoomInfo.matchId = "";
-                        gameLobbyRoomInfo.gameType = GameType.GAME_TYPE_FLAG;
-                        gameLobbyRoomInfo.name = group.getName();
-                        gameLobbyRoomInfo.distanceCenter = "-1";
-                        return gameLobbyRoomInfo;
+                        GameLobbyRoomItem gameLobbyRoomItem = new GameLobbyRoomItem();
+                        gameLobbyRoomItem.name = group.getName();
+                        return gameLobbyRoomItem;
                     })
                     .collect(Collectors.toList());
             items.addAll(groupItems);
@@ -146,7 +143,7 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
         // on item list clicked
         mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, GameLobbyRoomInfo obj, int position) {
+            public void onItemClick(View view, GameLobbyRoomItem obj, int position) {
                 // 입장기능은 맵까지 완성시키고 나서 돌아와서 구현
                 Toast.makeText(getApplicationContext(), "미구현된 내용입니다.", Toast.LENGTH_SHORT).show();
                 /*

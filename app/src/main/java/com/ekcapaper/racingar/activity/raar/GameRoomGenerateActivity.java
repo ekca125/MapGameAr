@@ -138,7 +138,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         location.setLongitude(Double.parseDouble(longitudeStr));
         Duration timeLimit = Duration.ofSeconds(Integer.parseInt(timeLimitStr));
         String desc = "";
-
+/*
         // 방 생성
         CompletableFuture.supplyAsync(() -> {
             MapRange mapRange = MapRange.calculateMapRange(location, 1);
@@ -159,7 +159,11 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
                 button_generate_room.setEnabled(true);
             });
         });
+
+
+ */
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

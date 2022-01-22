@@ -9,7 +9,7 @@ import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.modelgame.item.GameRoomInfo;
 import com.ekcapaper.racingar.model.CardViewImg;
-import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomInfo;
+import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.model.Image;
 import com.ekcapaper.racingar.model.Inbox;
 import com.ekcapaper.racingar.model.MusicAlbum;
@@ -124,13 +124,13 @@ public class DataGenerator {
      * @param ctx android context
      * @return list of object
      */
-    public static List<GameLobbyRoomInfo> getGameRoomInfoData(Context ctx) {
-        List<GameLobbyRoomInfo> items = new ArrayList<>();
+    public static List<GameLobbyRoomItem> getGameRoomInfoData(Context ctx) {
+        List<GameLobbyRoomItem> items = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            GameLobbyRoomInfo obj = new GameLobbyRoomInfo();
+            GameLobbyRoomItem obj = new GameLobbyRoomItem();
             obj.name = "game "+String.valueOf(i);
-            obj.distanceCenter = "1m";
-            obj.gameType = GameType.GAME_TYPE_FLAG;
+            //obj.distanceCenter = "1m";
+            //obj.gameType = GameType.GAME_TYPE_FLAG;
             items.add(obj);
         }
         return items;

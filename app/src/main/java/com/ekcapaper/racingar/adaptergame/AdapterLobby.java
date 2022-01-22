@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.adapter;
+package com.ekcapaper.racingar.adaptergame;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,27 +11,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomInfo;
+import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private List<GameLobbyRoomInfo> items = new ArrayList<>();
+    private List<GameLobbyRoomItem> items = new ArrayList<>();
 
     private Context ctx;
     private AdapterLobby.OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, GameLobbyRoomInfo obj, int position);
+        void onItemClick(View view, GameLobbyRoomItem obj, int position);
     }
 
     public void setOnItemClickListener(final AdapterLobby.OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public AdapterLobby(Context context, List<GameLobbyRoomInfo> items) {
+    public AdapterLobby(Context context, List<GameLobbyRoomItem> items) {
         this.items = items;
         ctx = context;
     }
@@ -67,11 +67,8 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         if (holder instanceof AdapterLobby.OriginalViewHolder) {
             AdapterLobby.OriginalViewHolder view = (AdapterLobby.OriginalViewHolder) holder;
 
-            GameLobbyRoomInfo gri = items.get(holder.getAdapterPosition());
+            GameLobbyRoomItem gri = items.get(holder.getAdapterPosition());
             view.name.setText(gri.name);
-            view.description.setText(gri.getGameTypeString());
-            view.distance_center.setText(gri.distanceCenter);
-            Tools.displayImageRound(ctx, view.image, gri.getImage());
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -30,7 +30,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-public class GameRoomActivity extends AppCompatActivity implements ActivityInitializer {
+public class GameRoomActivity extends AppCompatActivity {//implements ActivityInitializer {
+    /*
     private ThisApplication thisApplication;
     private GameRoomPlayOperator gameRoomOperator;
 
@@ -156,4 +157,6 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
         });
         refreshTimer.schedule(refreshTimerTask, 0, 100);
     }
+
+     */
 }

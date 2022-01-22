@@ -130,7 +130,7 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
     public void initActivityField() {
         mapReady = false;
         thisApplication = (ThisApplication) getApplicationContext();
-        gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
+        //gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
         // markers
         playerMarker = Optional.empty();
         flagMarkers = new ArrayList<>();
