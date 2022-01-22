@@ -67,14 +67,5 @@ public class GameRoomPlayOperatorTest {
         gameRoomPlayOperator2.onGameStart(new GameMessageStart());
     }
 
-    @Test
-    public void endCheck() throws InterruptedException {
-        gameRoomPlayOperator1.declareGameStart();
-        gameRoomPlayOperator2.onGameStart(new GameMessageStart());
-
-        Thread.sleep(4000);
-        assertSame(gameRoomPlayOperator1.getGameStatus(), GameStatus.GAME_END);
-        assertSame(gameRoomPlayOperator1.getGameStatus(), GameStatus.GAME_END);
-    }
 
 }
