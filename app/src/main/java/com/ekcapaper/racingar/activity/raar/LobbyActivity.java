@@ -17,11 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterLobby;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
+import com.ekcapaper.racingar.data.NakamaGameManager;
+import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
-import com.ekcapaper.racingar.modelgame.gameroom.info.RoomInfo;
+import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.gson.Gson;
+import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
 
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ import lombok.val;
 public class LobbyActivity extends AppCompatActivity implements ActivityInitializer {
     // 관제
     private ThisApplication thisApplication;
+    private NakamaNetworkManager nakamaNetworkManager;
     // activity component
     private View parent_view;
     private RecyclerView recyclerView;
@@ -55,6 +59,7 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
     @Override
     public void initActivityField() {
         thisApplication = (ThisApplication) getApplicationContext();
+        nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
         mAdapter = null;
         items = null;
     }
@@ -122,23 +127,20 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
 
     private void updateLobbyData(Location location) {
         items = new ArrayList<>();
-        try{
-            GroupList groupList = thisApplication.getGameRoomGroupList();
-            val insertItems = groupList.getGroupsList().stream()
-                    .map(group -> {
-                        Gson gson = new Gson();
-                        String metadataString = group.getMetadata();
-                        Map<String, Object> metadata = gson.fromJson(metadataString, Map.class);
-                        RoomInfo roomInfo = (RoomInfo) metadata.get("info");
+        try {
+            GroupList groupList = nakamaNetworkManager.getAllGroupList();
+            val groupItems = groupList.getGroupsList().stream()
+                    .map((Group group) -> {
                         GameLobbyRoomInfo gameLobbyRoomInfo = new GameLobbyRoomInfo();
-                        gameLobbyRoomInfo.gameType = roomInfo.getGameType();
-                        gameLobbyRoomInfo.name = roomInfo.getMatchId();
-                        gameLobbyRoomInfo.matchId = roomInfo.getMatchId();
-
+                        gameLobbyRoomInfo.matchId = "";
+                        gameLobbyRoomInfo.gameType = GameType.GAME_TYPE_FLAG;
+                        gameLobbyRoomInfo.name = group.getName();
+                        gameLobbyRoomInfo.distanceCenter = "-1";
                         return gameLobbyRoomInfo;
                     })
                     .collect(Collectors.toList());
-        } catch (NullPointerException ignored){
+            items.addAll(groupItems);
+        } catch (NullPointerException ignored) {
 
         }
 
