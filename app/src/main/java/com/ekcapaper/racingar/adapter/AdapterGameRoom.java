@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.model.GameRoomInfo;
+import com.ekcapaper.racingar.modelgame.item.GameRoomInfo;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
 import com.ekcapaper.racingar.utils.Tools;
 

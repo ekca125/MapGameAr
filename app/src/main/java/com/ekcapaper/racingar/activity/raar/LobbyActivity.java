@@ -17,19 +17,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterLobby;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
-import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
-import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
+import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomInfo;
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.utils.Tools;
-import com.google.gson.Gson;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 

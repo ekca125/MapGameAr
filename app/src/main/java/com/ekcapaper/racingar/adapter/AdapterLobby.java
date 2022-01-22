@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
+import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomInfo;
 import com.ekcapaper.racingar.utils.Tools;
 
 import java.util.ArrayList;
