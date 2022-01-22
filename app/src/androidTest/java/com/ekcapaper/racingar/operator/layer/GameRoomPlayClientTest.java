@@ -77,6 +77,8 @@ public class GameRoomPlayClientTest {
         assertEquals(gameRoomPlayClient2.getGameStatus(), GameStatus.GAME_READY);
         // start
         gameRoomPlayClient1.declareGameStart();
+        // mock
+        gameRoomPlayClient2.onGameStart(new GameMessageStart());
         // test
         gameRoomPlayClient1.getPlayerOptional(session1.getUserId()).orElseThrow(NullPointerException::new);
         gameRoomPlayClient1.getPlayerOptional(session2.getUserId()).orElseThrow(NullPointerException::new);
