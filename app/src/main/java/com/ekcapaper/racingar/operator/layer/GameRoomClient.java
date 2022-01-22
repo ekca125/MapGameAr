@@ -1,5 +1,7 @@
 package com.ekcapaper.racingar.operator.layer;
 
+import com.ekcapaper.racingar.data.NakamaGameManager;
+import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
@@ -20,12 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameRoomClient implements SocketListener {
-    ThisApplication thisApplication;
+    NakamaNetworkManager nakamaNetworkManager;
+    NakamaGameManager nakamaGameManager;
     List<UserPresence> channelUserPresenceList;
     List<UserPresence> matchUserPresenceList;
 
-    public GameRoomClient(ThisApplication thisApplication){
-        this.thisApplication = thisApplication;
+    public GameRoomClient(NakamaNetworkManager nakamaNetworkManager, NakamaGameManager nakamaGameManager){
+        this.nakamaNetworkManager = nakamaNetworkManager;
+        this.nakamaGameManager = nakamaGameManager;
         this.channelUserPresenceList = new ArrayList<>();
     }
 

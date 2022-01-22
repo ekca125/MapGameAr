@@ -1,5 +1,7 @@
 package com.ekcapaper.racingar.operator.layer;
 
+import com.ekcapaper.racingar.data.NakamaGameManager;
+import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameStatus;
 import com.ekcapaper.racingar.network.GameMessageEnd;
@@ -18,15 +20,17 @@ public class GameRoomPlayOperator extends GameRoomPlayClient{
     private final Duration timeLimit;
     private LocalDateTime endTime;
 
-    public GameRoomPlayOperator(ThisApplication thisApplication, Duration timeLimit) {
-        super(thisApplication);
+    public GameRoomPlayOperator(NakamaNetworkManager nakamaNetworkManager, NakamaGameManager nakamaGameManager, Duration timeLimit) {
+        super(nakamaNetworkManager, nakamaGameManager);
         this.timeLimit = timeLimit;
     }
+
 
     @Override
     public void onGameStart(GameMessageStart gameMessageStart) {
         super.onGameStart(gameMessageStart);
         endCheckTimer = new Timer();
+        endTime = LocalDateTime.now().plusSeconds(timeLimit.getSeconds());
         endCheckTimerTask = new TimerTask() {
             @Override
             public void run() {

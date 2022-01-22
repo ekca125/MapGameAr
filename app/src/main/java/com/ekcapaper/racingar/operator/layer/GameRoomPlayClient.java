@@ -2,6 +2,8 @@ package com.ekcapaper.racingar.operator.layer;
 
 import android.location.Location;
 
+import com.ekcapaper.racingar.data.NakamaGameManager;
+import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameStatus;
 import com.ekcapaper.racingar.modelgame.play.Player;
@@ -28,8 +30,8 @@ public class GameRoomPlayClient extends GameRoomClient{
     GameStatus gameStatus;
     List<Player> playerList;
 
-    public GameRoomPlayClient(ThisApplication thisApplication) {
-        super(thisApplication);
+    public GameRoomPlayClient(NakamaNetworkManager nakamaNetworkManager, NakamaGameManager nakamaGameManager) {
+        super(nakamaNetworkManager, nakamaGameManager);
         gameStatus = GameStatus.GAME_READY;
         playerList = null;
     }
@@ -51,7 +53,7 @@ public class GameRoomPlayClient extends GameRoomClient{
     }
 
     public Player getCurrentPlayer(){
-        String userId = thisApplication.getNakamaNetworkManager().getCurrentSessionUserId();
+        String userId = nakamaNetworkManager.getCurrentSessionUserId();
         return getPlayer(userId);
     }
 
@@ -65,7 +67,7 @@ public class GameRoomPlayClient extends GameRoomClient{
     }
 
     public final void sendMatchData(GameMessage gameMessage) {
-        thisApplication.getNakamaGameManager().sendGameRoomGameMessage(gameMessage);
+        nakamaGameManager.sendGameRoomGameMessage(gameMessage);
     }
 
     @Override
@@ -103,7 +105,7 @@ public class GameRoomPlayClient extends GameRoomClient{
 
     public void onGameStart(GameMessageStart gameMessageStart) {
         try {
-            GroupUserList groupUserList = thisApplication.getNakamaGameManager().getGameRoomGroupUserList();
+            GroupUserList groupUserList = nakamaGameManager.getGameRoomGroupUserList();
             playerList = groupUserList.getGroupUsersList()
                     .stream()
                     .map(groupUser -> new Player(groupUser.getUser().getId()))

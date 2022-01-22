@@ -25,13 +25,15 @@ import lombok.Getter;
 import lombok.NonNull;
 
 public class NakamaGameManager{
-    private NakamaNetworkManager nakamaNetworkManager;
+    private final NakamaNetworkManager nakamaNetworkManager;
+    private final NakamaRoomMetaDataManager nakamaRoomMetaDataManager;
     private Group roomGroup;
     private Match roomMatch;
     private SocketListener roomOperator;
 
     public NakamaGameManager(NakamaNetworkManager nakamaNetworkManager) {
         this.nakamaNetworkManager = nakamaNetworkManager;
+        this.nakamaRoomMetaDataManager = new NakamaRoomMetaDataManager(nakamaNetworkManager);
         this.roomGroup = null;
         this.roomMatch = null;
         this.roomOperator = null;
@@ -63,7 +65,6 @@ public class NakamaGameManager{
         Map<String,Object> metadata = new HashMap<>();
         metadata.put("groupId", group.getId());
         metadata.put("matchId", match.getMatchId());
-        NakamaRoomMetaDataManager nakamaRoomMetaDataManager = new NakamaRoomMetaDataManager(nakamaNetworkManager);
         nakamaRoomMetaDataManager.writeRoomMetaDataSync(group,metadata);
 
         // 객체에 반영
@@ -97,7 +98,6 @@ public class NakamaGameManager{
             return false;
         }
         // 메타 데이터 받아오기
-        NakamaRoomMetaDataManager nakamaRoomMetaDataManager = new NakamaRoomMetaDataManager(nakamaNetworkManager);
         Map<String,Object> metadata = nakamaRoomMetaDataManager.readRoomMetaDataSync(group);
         String matchId = (String) metadata.get("matchId");
 

@@ -1,5 +1,7 @@
 package com.ekcapaper.racingar.operator.impl;
 
+import com.ekcapaper.racingar.data.NakamaGameManager;
+import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.Player;
@@ -14,8 +16,11 @@ import java.util.stream.Collectors;
 public class FlagGameRoomPlayOperator extends GameRoomPlayOperator {
     private final List<GameFlag> gameFlagList;
 
-    public FlagGameRoomPlayOperator(ThisApplication thisApplication, Duration timeLimit, List<GameFlag> gameFlagList) {
-        super(thisApplication,timeLimit);
+    public FlagGameRoomPlayOperator(NakamaNetworkManager nakamaNetworkManager,
+                                    NakamaGameManager nakamaGameManager,
+                                    Duration timeLimit,
+                                    List<GameFlag> gameFlagList) {
+        super(nakamaNetworkManager, nakamaGameManager, timeLimit);
         this.gameFlagList = gameFlagList;
     }
 
