@@ -26,7 +26,10 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
+
 public class GameRoomPlayClient extends GameRoomClient{
+    @Getter
     GameStatus gameStatus;
     List<Player> playerList;
 
@@ -57,12 +60,17 @@ public class GameRoomPlayClient extends GameRoomClient{
         return getPlayer(userId);
     }
 
-    private void changeRoomStatus(GameStatus gameStatus) {
+    private boolean changeRoomStatus(GameStatus gameStatus) {
         // ready -> running -> end
         if (this.gameStatus == GameStatus.GAME_READY && gameStatus == GameStatus.GAME_RUNNING) {
             this.gameStatus = gameStatus;
+            return true;
         } else if (this.gameStatus == GameStatus.GAME_RUNNING && gameStatus == GameStatus.GAME_END) {
             this.gameStatus = gameStatus;
+            return true;
+        }
+        else{
+            return false;
         }
     }
 

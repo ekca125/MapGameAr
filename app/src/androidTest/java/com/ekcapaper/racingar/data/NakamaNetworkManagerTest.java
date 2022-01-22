@@ -147,7 +147,7 @@ public class NakamaNetworkManagerTest {
         Field[] fields = nakamaNetworkManagerClass.getDeclaredFields();
         Field sessionField = Arrays.stream(fields).filter(field->field.getName().equals("session")).collect(Collectors.toList()).get(0);
         sessionField.setAccessible(true);
-        Session nakamaNetworkManager1Session = (Session) sessionField.get(nakamaNetworkManager2);
+        Session nakamaNetworkManager2Session = (Session) sessionField.get(nakamaNetworkManager2);
 
         // info
         String collectionName = "collectionTest";
@@ -159,7 +159,7 @@ public class NakamaNetworkManagerTest {
         boolean result = nakamaNetworkManager2.writePublicServerStorageSync(collectionName,keyName,data);
         assertTrue(result);
         // read
-        Map<String,Object> resultMap = nakamaNetworkManager1.readServerStorageSync(collectionName,keyName,nakamaNetworkManager1Session.getUserId());
+        Map<String,Object> resultMap = nakamaNetworkManager1.readServerStorageSync(collectionName,keyName,nakamaNetworkManager2Session.getUserId());
         assertNotNull(resultMap);
         // 데이터 테스트
         for(String mapKey:resultMap.keySet()){
