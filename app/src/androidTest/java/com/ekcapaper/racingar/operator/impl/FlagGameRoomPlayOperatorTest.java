@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import lombok.val;
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class FlagGameRoomPlayOperatorTest {
     public static NakamaNetworkManager nakamaNetworkManager1;
@@ -60,10 +61,10 @@ public class FlagGameRoomPlayOperatorTest {
 
         MapRange mapRange = new MapRange(startLatitude, startLongitude, endLatitude, endLongitude);
         Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom10(mapRange);
-        val response = requester.execute();
+        Response<List<AddressDto>> response = requester.execute();
         assertTrue(response.isSuccessful());
 
-        val mapList = response.body().stream().map(addressDto -> {
+        List<GameFlag> mapList = response.body().stream().map(addressDto -> {
             Location location = new Location("");
             location.setLatitude(addressDto.getLatitude());
             location.setLongitude(addressDto.getLongitude());
@@ -114,5 +115,5 @@ public class FlagGameRoomPlayOperatorTest {
         currentPoint = gameRoomPlayOperator1.getPoint(session1.getUserId());
         assertEquals(maxPoint,currentPoint);
     }
-    
+
 }
