@@ -31,6 +31,11 @@ import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 public class GameRoomActivity extends AppCompatActivity {//implements ActivityInitializer {
+    // game room
+
+
+
+
     /*
     private ThisApplication thisApplication;
     private GameRoomPlayOperator gameRoomOperator;
