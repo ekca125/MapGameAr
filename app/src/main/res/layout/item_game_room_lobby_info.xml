@@ -12,15 +12,6 @@
         android:minHeight="?attr/actionBarSize"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="@dimen/spacing_large"
-            android:layout_marginRight="@dimen/spacing_large"
-            android:layout_marginTop="@dimen/spacing_middle"
-            android:src="@drawable/photo_female_1" />
-
         <View
             android:layout_width="@dimen/spacing_medium"
             android:layout_height="0dp" />
@@ -38,7 +29,7 @@
                 android:paddingTop="@dimen/spacing_middle">
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/group_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/spacing_middle"
@@ -48,7 +39,7 @@
                     android:textColor="@color/grey_90" />
 
                 <TextView
-                    android:id="@+id/distance_center"
+                    android:id="@+id/match_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/spacing_middle"
@@ -60,18 +51,6 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/grey_40" />
 
-                <TextView
-                    android:id="@+id/description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/spacing_middle"
-                    android:layout_marginRight="@dimen/spacing_middle"
-                    android:layout_marginTop="@dimen/spacing_medium"
-                    android:maxLines="2"
-                    android:text="@string/middle_lorem_ipsum"
-
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@color/grey_40" />
 
             </LinearLayout>
 
