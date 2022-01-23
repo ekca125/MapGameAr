@@ -1,5 +1,6 @@
 package com.ekcapaper.racingar.data;
 
+import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.network.GameMessage;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.google.gson.Gson;
@@ -124,4 +125,6 @@ public class NakamaGameManager{
     public GroupUserList getGameRoomGroupUserList(){
         return nakamaNetworkManager.getGroupUserList(roomGroup.getName());
     }
+
+
 }

@@ -19,20 +19,31 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
+import com.ekcapaper.racingar.data.NakamaGameManager;
+import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
+import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
+import com.ekcapaper.racingar.retrofit.AddressMapClient;
+import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GameRoomGenerateActivity extends AppCompatActivity implements ActivityInitializer {
     private final int ACTIVITY_REQUEST_CODE = 0;
@@ -43,6 +54,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
     private GameType[] gameTypeArray;
     // 관제
     private ThisApplication thisApplication;
+    private NakamaNetworkManager nakamaNetworkManager;
+    private NakamaGameManager nakamaGameManager;
     // layout
     private TextInputEditText text_input_name;
     private TextInputEditText text_input_latitude;
@@ -66,6 +79,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
     @Override
     public void initActivityField() {
         thisApplication = (ThisApplication) getApplicationContext();
+        nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
+        nakamaGameManager = thisApplication.getNakamaGameManager();
         gameType = GameType.GAME_TYPE_FLAG;
         gameTypeArray = GameType.values();
     }
@@ -128,8 +143,49 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         Tools.setSystemBarLight(this);
     }
 
+    private void generateFlagGameRoom(String roomName, String roomDesc, Location mapCenterLocation, Duration timeLimit){
+        CompletableFuture.supplyAsync(()-> {
+            MapRange mapRange = MapRange.calculateMapRange(mapCenterLocation, 1);
+            Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom10(mapRange);
+            try {
+                Response<List<AddressDto>> response = requester.execute();
+                if (response.isSuccessful()) {
+                    return false;
+                }
+                List<AddressDto> addressDtoList = response.body();
+                List<GameFlag> gameFlagList = addressDtoList.stream()
+                        .map(addressDto -> {
+                            Location flagLocation = new Location("");
+                            flagLocation.setLatitude(addressDto.getLatitude());
+                            flagLocation.setLongitude(addressDto.getLongitude());
+                            return new GameFlag(flagLocation);
+                        })
+                        .collect(Collectors.toList());
+                FlagGameRoomPlayOperator flagGameRoomPlayOperator = new FlagGameRoomPlayOperator(
+                        nakamaNetworkManager,
+                        nakamaGameManager,
+                        timeLimit,
+                        gameFlagList);
+                nakamaGameManager.createGameRoom(roomName, roomDesc, flagGameRoomPlayOperator);
+            } catch (IOException e) {
+                return false;
+            }
+            return true;
+        }).thenAccept(result ->{
+            GameRoomGenerateActivity.this.runOnUiThread(() -> {
+                if (result) {
+                    locationRequestSpace.stop();
+                    Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
+                    startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
+                } else {
+                    Toast.makeText(this, "방 생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                }
+                button_generate_room.setEnabled(true);
+            });
+        });
+    }
+
     private void generateRoomAndJoinRoom() {
-        // 여기를 한 다음에 map까지 하고 테스트를 수정한 후에 변경을 마무리한다.
         button_generate_room.setEnabled(false);
         // 정보 불러오기
         String latitudeStr = Objects.requireNonNull(text_input_latitude.getText()).toString();
@@ -143,36 +199,11 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         location.setLongitude(Double.parseDouble(longitudeStr));
         Duration timeLimit = Duration.ofSeconds(Integer.parseInt(timeLimitStr));
         String desc = "";
-        
 
-
-
-/*
-        // 방 생성
-        CompletableFuture.supplyAsync(() -> {
-            MapRange mapRange = MapRange.calculateMapRange(location, 1);
-            return thisApplication.createFlagGameRoom(
-                    nameStr,
-                    desc,
-                    MapRange.calculateMapRange(location, 1),
-                    timeLimit);
-        }).thenAccept(result -> {
-            GameRoomGenerateActivity.this.runOnUiThread(() -> {
-                if (result) {
-                    locationRequestSpace.stop();
-                    Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
-                    startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
-                } else {
-                    Toast.makeText(this, "방 생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                }
-                button_generate_room.setEnabled(true);
-            });
-        });
-
-
- */
+        if(selectGameType.equals(GameType.GAME_TYPE_FLAG.toString())){
+           generateFlagGameRoom(nameStr,desc,location,timeLimit);
+        }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
