@@ -2,6 +2,8 @@ package com.ekcapaper.racingar.data;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -109,6 +111,14 @@ public class NakamaNetworkManager {
         if(group == null){
             return null;
         }
+        try {
+            return client.listGroupUsers(session,group.getId()).get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
+    }
+
+    public GroupUserList getGroupUserList(@NonNull Group group){
         try {
             return client.listGroupUsers(session,group.getId()).get();
         } catch (ExecutionException | InterruptedException e) {
