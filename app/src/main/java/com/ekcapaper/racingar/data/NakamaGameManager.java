@@ -30,6 +30,7 @@ public class NakamaGameManager{
     private final NakamaRoomMetaDataManager nakamaRoomMetaDataManager;
     private Group roomGroup;
     private Match roomMatch;
+    @Getter
     private SocketListener roomOperator;
 
     public NakamaGameManager(NakamaNetworkManager nakamaNetworkManager) {

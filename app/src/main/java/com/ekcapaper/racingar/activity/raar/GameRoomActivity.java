@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adapter.AdapterGameRoom;
+import com.ekcapaper.racingar.data.NakamaGameManager;
+import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
 import com.ekcapaper.racingar.modelgame.item.GameRoomInfo;
@@ -30,15 +32,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-public class GameRoomActivity extends AppCompatActivity {//implements ActivityInitializer {
-    // game room
-
-
-
-
-    /*
+public class GameRoomActivity extends AppCompatActivity implements ActivityInitializer {
     private ThisApplication thisApplication;
-    private GameRoomPlayOperator gameRoomOperator;
+    private NakamaNetworkManager nakamaNetworkManager;
+    private NakamaGameManager nakamaGameManager;
+    private GameRoomPlayOperator gameRoomPlayOperator;
 
     private View parent_view;
 
@@ -50,14 +48,39 @@ public class GameRoomActivity extends AppCompatActivity {//implements ActivityIn
     private Timer refreshTimer;
     private TimerTask refreshTimerTask;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_room);
         initActivity();
         initToolbar();
-        refreshRoomComponent();
+    }
+
+    @Override
+    public void initActivityField() {
+        thisApplication = (ThisApplication) getApplicationContext();
+        nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
+        nakamaGameManager = thisApplication.getNakamaGameManager();
+        // 향후 수정 - gameRoomPlayOperator을 인자로 받도록
+        gameRoomPlayOperator = (GameRoomPlayOperator) nakamaGameManager.getRoomOperator();
+    }
+
+    @Override
+    public void initActivityComponent() {
+        parent_view = findViewById(android.R.id.content);
+        button_game_start = findViewById(R.id.button_game_start);
+    }
+
+    @Override
+    public void initActivityEventTask() {
+        button_game_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gameRoomPlayOperator.declareGameStart();
+                Intent intent = new Intent(getApplicationContext(), GameMapActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initToolbar() {
@@ -68,6 +91,28 @@ public class GameRoomActivity extends AppCompatActivity {//implements ActivityIn
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Tools.setSystemBarColor(this);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search_setting, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        } else {
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    /*
+
+
+
 
     private void refreshRoomComponent() {
         recyclerView = findViewById(R.id.recyclerView);
@@ -112,21 +157,7 @@ public class GameRoomActivity extends AppCompatActivity {//implements ActivityIn
         mItemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search_setting, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        } else {
-            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void initActivityField() {
@@ -146,8 +177,7 @@ public class GameRoomActivity extends AppCompatActivity {//implements ActivityIn
 
     @Override
     public void initActivityComponent() {
-        parent_view = findViewById(android.R.id.content);
-        button_game_start = findViewById(R.id.button_game_start);
+
     }
 
     @Override
