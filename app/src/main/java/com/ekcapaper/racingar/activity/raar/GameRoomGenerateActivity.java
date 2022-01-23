@@ -25,6 +25,8 @@ import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.textfield.TextInputEditText;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Objects;
@@ -56,7 +58,9 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         initActivity();
         initToolbar();
         // stub
-        text_input_name.setText("test");
+        String roomName = RandomStringUtils.randomAlphabetic(10);
+        String roomDesc = "";
+        text_input_name.setText(roomName);
     }
 
     @Override
@@ -132,12 +136,17 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
         String longitudeStr = Objects.requireNonNull(text_input_longitude.getText()).toString();
         String nameStr = Objects.requireNonNull(text_input_name.getText()).toString();
         String timeLimitStr = Objects.requireNonNull(text_input_time_limit.getText()).toString();
+        String selectGameType = dropdown_state.getText().toString();
         // 정보 변환
         Location location = new Location("");
         location.setLatitude(Double.parseDouble(latitudeStr));
         location.setLongitude(Double.parseDouble(longitudeStr));
         Duration timeLimit = Duration.ofSeconds(Integer.parseInt(timeLimitStr));
         String desc = "";
+        
+
+
+
 /*
         // 방 생성
         CompletableFuture.supplyAsync(() -> {
