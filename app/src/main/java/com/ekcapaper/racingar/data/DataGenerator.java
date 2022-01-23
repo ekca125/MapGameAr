@@ -127,10 +127,10 @@ public class DataGenerator {
     public static List<GameLobbyRoomItem> getGameRoomInfoData(Context ctx) {
         List<GameLobbyRoomItem> items = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            GameLobbyRoomItem obj = new GameLobbyRoomItem();
-            obj.name = "game "+String.valueOf(i);
-            //obj.distanceCenter = "1m";
-            //obj.gameType = GameType.GAME_TYPE_FLAG;
+            GameLobbyRoomItem obj = GameLobbyRoomItem.builder()
+                    .groupId("testGroupId")
+                    .matchId("testMatchId")
+                    .build();
             items.add(obj);
         }
         return items;

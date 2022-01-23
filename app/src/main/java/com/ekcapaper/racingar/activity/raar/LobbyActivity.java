@@ -18,6 +18,7 @@ import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adaptergame.AdapterLobby;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.NakamaNetworkManager;
+import com.ekcapaper.racingar.data.NakamaRoomMetaDataManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.modelgame.play.GameType;
@@ -27,6 +28,7 @@ import com.heroiclabs.nakama.api.GroupList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -126,11 +128,14 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
         items = new ArrayList<>();
         try {
             GroupList groupList = nakamaNetworkManager.getAllGroupList();
-            val groupItems = groupList.getGroupsList().stream()
+            List<GameLobbyRoomItem> groupItems = groupList.getGroupsList().stream()
                     .map((Group group) -> {
-                        GameLobbyRoomItem gameLobbyRoomItem = new GameLobbyRoomItem();
-                        gameLobbyRoomItem.name = group.getName();
-                        return gameLobbyRoomItem;
+                        NakamaRoomMetaDataManager nakamaRoomMetaDataManager = new NakamaRoomMetaDataManager(nakamaNetworkManager);
+                        Map<String,Object> roomMetaData = nakamaRoomMetaDataManager.readRoomMetaDataSync(group);
+                        return GameLobbyRoomItem.builder()
+                                .groupId((String) roomMetaData.get("groupId"))
+                                .matchId((String) roomMetaData.get("matchId"))
+                                .build();
                     })
                     .collect(Collectors.toList());
             items.addAll(groupItems);
