@@ -5,6 +5,9 @@ import android.content.Context;
 
 import androidx.multidex.MultiDex;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import lombok.Getter;
 
 
@@ -13,6 +16,8 @@ public class ThisApplication extends Application {
     NakamaNetworkManager nakamaNetworkManager;
     @Getter
     NakamaGameManager nakamaGameManager;
+    @Getter
+    ExecutorService executorService;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -25,6 +30,7 @@ public class ThisApplication extends Application {
         super.onCreate();
         nakamaNetworkManager = new NakamaNetworkManager();
         nakamaGameManager = new NakamaGameManager(nakamaNetworkManager);
+        executorService = Executors.newFixedThreadPool(4);
     }
 
 }

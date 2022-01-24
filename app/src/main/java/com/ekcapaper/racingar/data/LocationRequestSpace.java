@@ -31,23 +31,38 @@ public class LocationRequestSpace {
     // 위치 서비스
     LocationManager locationManager;
     LocationListener locationListener;
-
+    // running 여부
+    @Getter
+    boolean running;
+    
     public LocationRequestSpace(Context context, Consumer<Location> runFunction) {
         this.context = context;
 
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        locationListener = runFunction::accept;
+        this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        this.locationListener = runFunction::accept;
+
+        this.running = false;
     }
 
     public void start(){
+        if(running){
+            // 이미 실행되고 있는 경우
+            return;
+        }
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener, Looper.getMainLooper());
+        running = true;
     }
 
     public void stop(){
+        if(!running){
+            // 실행되지 않은 경우
+            return;
+        }
         locationManager.removeUpdates(locationListener);
+        running = false;
     }
 }
