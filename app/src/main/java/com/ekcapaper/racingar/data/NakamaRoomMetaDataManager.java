@@ -4,7 +4,7 @@ import com.heroiclabs.nakama.api.Group;
 
 import java.util.Map;
 
-public class NakamaRoomMetaDataManager {
+public class NakamaRoomMetaDataManager { 
     private final NakamaNetworkManager nakamaNetworkManager;
     //
     private static final String collectionName = "gameRoom";
