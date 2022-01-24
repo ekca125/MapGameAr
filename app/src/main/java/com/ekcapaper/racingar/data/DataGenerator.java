@@ -191,8 +191,7 @@ public class DataGenerator {
         List<GameRoomInfo> items = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
-            GameRoomInfo obj = new GameRoomInfo();
-            obj.name = String.valueOf(i);
+            GameRoomInfo obj = new GameRoomInfo(String.valueOf(i));
             items.add(obj);
         }
         return items;

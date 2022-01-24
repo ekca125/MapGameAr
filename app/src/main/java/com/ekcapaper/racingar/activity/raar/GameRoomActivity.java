@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adaptergame.AdapterGameRoom;
+import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
@@ -42,11 +43,8 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
 
     private RecyclerView recyclerView;
     private AdapterGameRoom mAdapter;
-    private ItemTouchHelper mItemTouchHelper;
 
     private Button button_game_start;
-    private Timer refreshTimer;
-    private TimerTask refreshTimerTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,15 +60,7 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
         nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
         nakamaGameManager = thisApplication.getNakamaGameManager();
         gameRoomPlayOperator = (GameRoomPlayOperator) nakamaGameManager.getRoomOperator();
-        refreshTimer = new Timer();
-        refreshTimerTask = new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(() -> {
-                    refreshRoomComponent();
-                });
-            }
-        };
+
     }
 
     @Override
@@ -89,7 +79,7 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
                 startActivity(intent);
             }
         });
-        refreshTimer.schedule(refreshTimerTask, 0, 1000);
+        refreshRoomComponent();
     }
 
     private void initToolbar() {
@@ -122,9 +112,14 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        List<GameRoomInfo> items = null;
+        List<GameRoomInfo> items = DataGenerator.getGameRoomInfo(this);
+
+
+        /*
         try {
             GroupUserList groupUserList = nakamaGameManager.getGameRoomGroupUserList();
+
+
             items = groupUserList.getGroupUsersList()
                     .stream()
                     .map(groupUser -> {
@@ -139,19 +134,17 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
             obj.name = "ERROR NO DATA";
             items.add(obj);
         }
-        List<GameRoomInfo> finalItems = items;
-        runOnUiThread(() -> {
-            //set data and list adapter
-            mAdapter = new AdapterGameRoom(this, finalItems);
-            recyclerView.setAdapter(mAdapter);
 
-            // on item list clicked
-            mAdapter.setOnItemClickListener(new AdapterGameRoom.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, GameRoomInfo obj, int position) {
-                    Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
-                }
-            });
+         */
+        mAdapter = new AdapterGameRoom(this, items);
+        recyclerView.setAdapter(mAdapter);
+
+        // on item list clicked
+        mAdapter.setOnItemClickListener(new AdapterGameRoom.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, GameRoomInfo obj, int position) {
+                Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
+            }
         });
     }
 }
