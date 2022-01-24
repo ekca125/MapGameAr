@@ -91,7 +91,7 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
                 refreshRequester.stop();
             }
         });
-        refreshRequester.stop();
+        refreshRequester.start();
     }
 
 
