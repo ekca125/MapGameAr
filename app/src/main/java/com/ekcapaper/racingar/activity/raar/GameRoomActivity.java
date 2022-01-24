@@ -129,18 +129,14 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
                     .stream()
                     .map(groupUser -> {
                         GameRoomInfo obj = new GameRoomInfo();
-                        obj.image = R.drawable.image_2;
                         obj.name = String.valueOf(groupUser.getUser().getId());
-                        obj.imageDrw = this.getResources().getDrawable(obj.image);
                         return obj;
                     })
                     .collect(Collectors.toList());
         } catch (NullPointerException e) {
             items = new ArrayList<>();
             GameRoomInfo obj = new GameRoomInfo();
-            obj.image = R.drawable.image_2;
             obj.name = "ERROR NO DATA";
-            obj.imageDrw = this.getResources().getDrawable(obj.image);
             items.add(obj);
         }
         //set data and list adapter

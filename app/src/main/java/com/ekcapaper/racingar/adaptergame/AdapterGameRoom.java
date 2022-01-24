@@ -41,13 +41,11 @@ public class AdapterGameRoom extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
-        public ImageView image;
         public TextView name;
         public View lyt_parent;
 
         public OriginalViewHolder(View v) {
             super(v);
-            image = (ImageView) v.findViewById(R.id.image);
             name = (TextView) v.findViewById(R.id.name);
             lyt_parent = (View) v.findViewById(R.id.lyt_parent);
         }
@@ -69,7 +67,6 @@ public class AdapterGameRoom extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             GameRoomInfo p = items.get(holder.getAdapterPosition());
             view.name.setText(p.name);
-            Tools.displayImageRound(ctx, view.image, p.image);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

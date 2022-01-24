@@ -192,9 +192,7 @@ public class DataGenerator {
 
         for (int i = 0; i < 10; i++) {
             GameRoomInfo obj = new GameRoomInfo();
-            obj.image = R.drawable.image_2;
             obj.name = String.valueOf(i);
-            obj.imageDrw = ctx.getResources().getDrawable(obj.image);
             items.add(obj);
         }
         return items;

@@ -149,7 +149,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
             Call<List<AddressDto>> requester = AddressMapClient.getMapAddressService().drawMapRangeRandom10(mapRange);
             try {
                 Response<List<AddressDto>> response = requester.execute();
-                if (response.isSuccessful()) {
+                if (!response.isSuccessful()) {
                     return false;
                 }
                 List<AddressDto> addressDtoList = response.body();
