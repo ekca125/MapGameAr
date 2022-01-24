@@ -46,9 +46,6 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
 
     private Button button_game_start;
 
-    private Timer refreshTimer;
-    private TimerTask refreshTimerTask;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,15 +60,6 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
         nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
         nakamaGameManager = thisApplication.getNakamaGameManager();
         gameRoomPlayOperator = (GameRoomPlayOperator) nakamaGameManager.getRoomOperator();
-        refreshTimer = new Timer();
-        refreshTimerTask = new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(() -> {
-                    refreshRoomComponent();
-                });
-            }
-        };
     }
 
     @Override
@@ -91,7 +79,6 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
             }
         });
         refreshRoomComponent();
-        refreshTimer.schedule(refreshTimerTask, 0, 1000);
     }
 
     private void initToolbar() {
