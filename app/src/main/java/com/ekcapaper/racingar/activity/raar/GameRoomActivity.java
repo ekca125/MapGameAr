@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.adapter.AdapterGameRoom;
+import com.ekcapaper.racingar.adaptergame.AdapterGameRoom;
 import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
@@ -62,6 +62,15 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
         nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
         nakamaGameManager = thisApplication.getNakamaGameManager();
         gameRoomPlayOperator = (GameRoomPlayOperator) nakamaGameManager.getRoomOperator();
+        refreshTimer = new Timer();
+        refreshTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(() -> {
+                    refreshRoomComponent();
+                });
+            }
+        };
     }
 
     @Override
@@ -80,6 +89,7 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
                 startActivity(intent);
             }
         });
+        refreshTimer.schedule(refreshTimerTask, 0, 1000);
     }
 
     private void initToolbar() {
@@ -107,8 +117,6 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
         return super.onOptionsItemSelected(item);
     }
 
-
-    /*
     private void refreshRoomComponent() {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -116,7 +124,7 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
 
         List<GameRoomInfo> items = null;
         try {
-            GroupUserList groupUserList = thisApplication.getGameRoomGroupUserList();
+            GroupUserList groupUserList = nakamaGameManager.getGameRoomGroupUserList();
             items = groupUserList.getGroupUsersList()
                     .stream()
                     .map(groupUser -> {
@@ -146,47 +154,5 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
                 Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
-
-        ItemTouchHelper.Callback callback = new SwipeItemTouchHelper(mAdapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
     }
-
-
-
-    @Override
-    public void initActivityField() {
-        thisApplication = (ThisApplication) getApplicationContext();
-        gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
-        refreshTimer = new Timer();
-        refreshTimerTask = new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(() -> {
-                    refreshRoomComponent();
-                });
-            }
-        };
-
-    }
-
-    @Override
-    public void initActivityComponent() {
-
-    }
-
-    @Override
-    public void initActivityEventTask() {
-        button_game_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gameRoomOperator.declareGameStart();
-                Intent intent = new Intent(getApplicationContext(), GameMapActivity.class);
-                startActivity(intent);
-            }
-        });
-        refreshTimer.schedule(refreshTimerTask, 0, 100);
-    }
-
-     */
 }
