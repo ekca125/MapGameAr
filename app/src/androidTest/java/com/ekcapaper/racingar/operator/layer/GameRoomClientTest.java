@@ -60,4 +60,20 @@ public class GameRoomClientTest {
         nakamaGameManager1.leaveGameRoom();
     }
 
+    @Test
+    public void testJoinMetadata(){
+        String roomName = RandomStringUtils.randomAlphabetic(10);
+        String roomDesc = "";
+
+        boolean result;
+        result = nakamaGameManager1.createGameRoom(roomName,roomDesc,gameRoomClient1);
+        assertTrue(result);
+
+        assertEquals(nakamaGameManager1.getGameRoomGroupUserList().getGroupUsersList().size(), 1);
+        assertEquals(gameRoomClient1.matchUserPresenceList.size(),1);
+
+        assertEquals(nakamaGameManager1.getGameRoomGroupUserList().getGroupUsersList().size(), 1);
+        nakamaGameManager1.leaveGameRoom();
+    }
+
 }

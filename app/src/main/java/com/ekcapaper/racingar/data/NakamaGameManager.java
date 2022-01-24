@@ -29,7 +29,9 @@ import lombok.NonNull;
 public class NakamaGameManager{
     private final NakamaNetworkManager nakamaNetworkManager;
     private final NakamaRoomMetaDataManager nakamaRoomMetaDataManager;
+    @Getter
     private Group roomGroup;
+    @Getter
     private Match roomMatch;
     @Getter
     private GameRoomClient roomOperator;

@@ -3,6 +3,7 @@ package com.ekcapaper.racingar.activity.raar;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,12 +20,14 @@ import com.ekcapaper.racingar.adaptergame.AdapterLobby;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.data.NakamaNetworkManager;
+import com.ekcapaper.racingar.data.NakamaRoomMetaDataManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -115,11 +118,19 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
             throw new IllegalStateException();
         }
         List<GameLobbyRoomItem> items = new ArrayList<>();
-        items = nakamaNetworkManager.getAllGroupList().getGroupsList().stream()
-                .map(group->{
-                    return new GameLobbyRoomItem("test",group.getId(),"test");
-                })
-                .collect(Collectors.toList());
+        try {
+            items = nakamaNetworkManager.getAllGroupList().getGroupsList().stream()
+                    .limit(1)
+                    .map(group -> {
+                        NakamaRoomMetaDataManager nakamaRoomMetaDataManager = new NakamaRoomMetaDataManager(nakamaNetworkManager);
+                        Map<String, Object> metaData = nakamaRoomMetaDataManager.readRoomMetaDataSync(group);
+                        return new GameLobbyRoomItem("test", (String) metaData.get("groupId"), (String) metaData.get("matchId"));
+                    })
+                    .collect(Collectors.toList());
+        }catch (Exception e){
+            Log.d("testtest",e.toString());
+        }
+
         updateLobbyView(items);
     }
 
