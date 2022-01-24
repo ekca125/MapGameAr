@@ -62,12 +62,11 @@ public class AdapterGameRoom extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof AdapterListBasic.OriginalViewHolder) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof AdapterGameRoom.OriginalViewHolder) {
             AdapterGameRoom.OriginalViewHolder view = (AdapterGameRoom.OriginalViewHolder) holder;
 
             GameRoomInfo p = items.get(holder.getAdapterPosition());
-            Log.d("gameroominfo",p.name);
             view.name.setText(p.name);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
