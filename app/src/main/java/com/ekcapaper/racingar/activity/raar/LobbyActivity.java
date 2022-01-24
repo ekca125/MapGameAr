@@ -33,7 +33,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class LobbyActivity extends AppCompatActivity implements ActivityInitializer {
-    // 관제
     private ThisApplication thisApplication;
     private NakamaNetworkManager nakamaNetworkManager;
     // activity component
