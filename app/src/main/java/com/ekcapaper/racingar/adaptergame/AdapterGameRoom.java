@@ -1,6 +1,7 @@
 package com.ekcapaper.racingar.adaptergame;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,7 @@ public class AdapterGameRoom extends RecyclerView.Adapter<RecyclerView.ViewHolde
             AdapterGameRoom.OriginalViewHolder view = (AdapterGameRoom.OriginalViewHolder) holder;
 
             GameRoomInfo p = items.get(holder.getAdapterPosition());
+            Log.d("gameroominfo",p.name);
             view.name.setText(p.name);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
