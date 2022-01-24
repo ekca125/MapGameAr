@@ -3,6 +3,7 @@ package com.ekcapaper.racingar.activity.raar;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,6 @@ import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.NakamaRoomMetaDataManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
-import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.utils.Tools;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import lombok.val;
 
 public class LobbyActivity extends AppCompatActivity implements ActivityInitializer {
     // 관제
@@ -125,45 +123,38 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
     }
 
     private void updateLobbyData(Location location) {
-        items = new ArrayList<>();
+        List<GameLobbyRoomItem> items = new ArrayList<>();
         try {
             GroupList groupList = nakamaNetworkManager.getAllGroupList();
-            List<GameLobbyRoomItem> groupItems = groupList.getGroupsList().stream()
+            groupList.getGroupsList().stream().forEach((group -> {
+                Log.d("group",group.getId());
+            }));
+
+            items = groupList.getGroupsList().stream()
                     .map((Group group) -> {
                         NakamaRoomMetaDataManager nakamaRoomMetaDataManager = new NakamaRoomMetaDataManager(nakamaNetworkManager);
                         Map<String,Object> roomMetaData = nakamaRoomMetaDataManager.readRoomMetaDataSync(group);
                         return GameLobbyRoomItem.builder()
+                                .name((String) roomMetaData.get("groupId"))
                                 .groupId((String) roomMetaData.get("groupId"))
                                 .matchId((String) roomMetaData.get("matchId"))
                                 .build();
                     })
                     .collect(Collectors.toList());
-            items.addAll(groupItems);
         } catch (NullPointerException ignored) {
-
+            items.add(new GameLobbyRoomItem("현재 열려있는 방이 없습니다.", "",""));
         }
-
-        mAdapter = new AdapterLobby(this, items);
-        recyclerView.setAdapter(mAdapter);
-        // on item list clicked
-        mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, GameLobbyRoomItem obj, int position) {
-                // 입장기능은 맵까지 완성시키고 나서 돌아와서 구현
-                Toast.makeText(getApplicationContext(), "미구현된 내용입니다.", Toast.LENGTH_SHORT).show();
-                /*
-                // join room
-                // join group 을 한다.
-
-                if (thisApplication.(obj.gameType, obj.matchId)) {
-                    Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
-                    startActivity(intent);
-                    Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "방의 입장에 실패했습니다.", Toast.LENGTH_SHORT).show();
+        this.items = items;
+        runOnUiThread(()->{
+            mAdapter = new AdapterLobby(this, this.items);
+            recyclerView.setAdapter(mAdapter);
+            // on item list clicked
+            mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, GameLobbyRoomItem obj, int position) {
+                    Toast.makeText(getApplicationContext(), "미구현된 내용입니다.", Toast.LENGTH_SHORT).show();
                 }
-                 */
-            }
+            });
         });
     }
 

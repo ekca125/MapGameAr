@@ -39,6 +39,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
         public TextView group_id;
         public TextView match_id;
+        public TextView name;
         public View lyt_parent;
 
         public OriginalViewHolder(View v) {
@@ -46,6 +47,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             lyt_parent = (View) v.findViewById(R.id.lyt_parent);
             group_id = (TextView) v.findViewById(R.id.group_id);
             match_id = (TextView) v.findViewById(R.id.match_id);
+            name = (TextView) v.findViewById(R.id.name);
         }
     }
 
@@ -64,6 +66,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             AdapterLobby.OriginalViewHolder view = (AdapterLobby.OriginalViewHolder) holder;
 
             GameLobbyRoomItem gri = items.get(holder.getAdapterPosition());
+            view.name.setText(items.get(holder.getAdapterPosition()).name);
             view.group_id.setText(items.get(holder.getAdapterPosition()).groupId);
             view.match_id.setText(items.get(holder.getAdapterPosition()).matchId);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {

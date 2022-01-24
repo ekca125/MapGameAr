@@ -139,16 +139,19 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
             obj.name = "ERROR NO DATA";
             items.add(obj);
         }
-        //set data and list adapter
-        mAdapter = new AdapterGameRoom(this, items);
-        recyclerView.setAdapter(mAdapter);
+        List<GameRoomInfo> finalItems = items;
+        runOnUiThread(() -> {
+            //set data and list adapter
+            mAdapter = new AdapterGameRoom(this, finalItems);
+            recyclerView.setAdapter(mAdapter);
 
-        // on item list clicked
-        mAdapter.setOnItemClickListener(new AdapterGameRoom.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, GameRoomInfo obj, int position) {
-                Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
-            }
+            // on item list clicked
+            mAdapter.setOnItemClickListener(new AdapterGameRoom.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, GameRoomInfo obj, int position) {
+                    Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 }
