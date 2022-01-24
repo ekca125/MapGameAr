@@ -28,31 +28,4 @@ public class NakamaGameManagerTest {
         nakamaGameManager2 = new NakamaGameManager(nakamaNetworkManager2);
     }
 
-    @Test
-    public void createGameRoom() {
-        String roomName = RandomStringUtils.randomAlphabetic(10);
-        String roomDesc = "";
-
-        boolean result;
-        result = nakamaGameManager1.createGameRoom(roomName,roomDesc, ListenerStub.socketListenerEmpty);
-        assertTrue(result);
-
-        nakamaGameManager1.leaveGameRoom();
-    }
-
-    @Test
-    public void joinGameRoom(){
-        String roomName = RandomStringUtils.randomAlphabetic(10);
-        String roomDesc = "";
-
-        boolean result;
-        result = nakamaGameManager1.createGameRoom(roomName,roomDesc, ListenerStub.socketListenerEmpty);
-        assertTrue(result);
-
-        result = nakamaGameManager2.joinGameRoom(roomName,ListenerStub.socketListenerEmpty);
-        assertTrue(result);
-
-        nakamaGameManager1.leaveGameRoom();
-    }
-
 }

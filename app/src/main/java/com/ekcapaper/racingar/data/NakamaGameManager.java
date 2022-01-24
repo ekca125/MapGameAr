@@ -2,6 +2,7 @@ package com.ekcapaper.racingar.data;
 
 import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.network.GameMessage;
+import com.ekcapaper.racingar.operator.layer.GameRoomClient;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.Match;
@@ -31,7 +32,7 @@ public class NakamaGameManager{
     private Group roomGroup;
     private Match roomMatch;
     @Getter
-    private SocketListener roomOperator;
+    private GameRoomClient roomOperator;
 
     public NakamaGameManager(NakamaNetworkManager nakamaNetworkManager) {
         this.nakamaNetworkManager = nakamaNetworkManager;
@@ -45,14 +46,14 @@ public class NakamaGameManager{
         return roomOperator != null || roomGroup != null || roomMatch != null;
     }
 
-    public boolean createGameRoom(@NonNull String roomName, @NonNull String roomDesc, @NonNull SocketListener socketListener){
+    public boolean createGameRoom(@NonNull String roomName, @NonNull String roomDesc, @NonNull GameRoomClient roomOperator){
         if(isActive()){
             // 이미 활성화 된 상태라면 오류 발생
             throw new IllegalStateException();
         }
         // 그룹과 매치를 받아오기
         Group group = nakamaNetworkManager.createGroupSync(roomName,roomDesc);
-        Match match = nakamaNetworkManager.createMatchSync(socketListener);
+        Match match = nakamaNetworkManager.createMatchSync(roomOperator);
         // 정상 여부의 확인
         if(group == null || match == null){
             if(group != null){
@@ -70,7 +71,7 @@ public class NakamaGameManager{
         nakamaRoomMetaDataManager.writeRoomMetaDataSync(group,metadata);
 
         // 객체에 반영
-        this.roomOperator = socketListener;
+        this.roomOperator = roomOperator;
         this.roomGroup = group;
         this.roomMatch = match;
         return true;
@@ -89,7 +90,7 @@ public class NakamaGameManager{
         this.roomOperator = null;
     }
 
-    public boolean joinGameRoom(@NonNull String roomName, @NonNull SocketListener socketListener){
+    public boolean joinGameRoom(@NonNull String roomName, @NonNull GameRoomClient roomOperator){
         if(isActive()){
             // 이미 활성화 된 상태라면 오류 발생
             throw new IllegalStateException();
@@ -103,13 +104,15 @@ public class NakamaGameManager{
         Map<String,Object> metadata = nakamaRoomMetaDataManager.readRoomMetaDataSync(group);
         String matchId = (String) metadata.get("matchId");
 
-        Match match = nakamaNetworkManager.joinMatchSync(socketListener,matchId);
+        Match match = nakamaNetworkManager.joinMatchSync(roomOperator,matchId);
         if(match == null){
             nakamaNetworkManager.leaveGroupSync(group.getName());
             return false;
         }
-        //
-        this.roomOperator = socketListener;
+        // 이미 존재하는 사용자들을 등록
+        roomOperator.onMatchLeavePresence(match.getPresences());
+
+        this.roomOperator = roomOperator;
         this.roomGroup = group;
         this.roomMatch = match;
         return true;

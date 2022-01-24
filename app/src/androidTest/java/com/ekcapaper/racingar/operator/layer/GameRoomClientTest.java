@@ -46,11 +46,16 @@ public class GameRoomClientTest {
         result = nakamaGameManager1.createGameRoom(roomName,roomDesc,gameRoomClient1);
         assertTrue(result);
 
+        assertEquals(nakamaGameManager1.getGameRoomGroupUserList().getGroupUsersList().size(), 1);
+        assertEquals(gameRoomClient1.matchUserPresenceList.size(),1);
+
         result = nakamaGameManager2.joinGameRoom(roomName,gameRoomClient2);
         assertTrue(result);
 
         assertEquals(nakamaGameManager1.getGameRoomGroupUserList().getGroupUsersList().size(), 2);
+        assertEquals(nakamaGameManager2.getGameRoomGroupUserList().getGroupUsersList().size(), 2);
         nakamaGameManager2.leaveGameRoom();
+
         assertEquals(nakamaGameManager1.getGameRoomGroupUserList().getGroupUsersList().size(), 1);
         nakamaGameManager1.leaveGameRoom();
     }
