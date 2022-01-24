@@ -37,5 +37,6 @@
     <string name="game_type">게임 타입</string>
     <string name="generate_room">방 만들기</string>
     <string name="loading_location">위치를 가져오는 중..</string>
+    <string name="new_room">새로운 방</string>
 
 </resources>

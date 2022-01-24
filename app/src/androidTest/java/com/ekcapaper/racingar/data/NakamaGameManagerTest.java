@@ -2,6 +2,8 @@ package com.ekcapaper.racingar.data;
 
 import static org.junit.Assert.*;
 
+import android.util.Log;
+
 import com.ekcapaper.racingar.operator.layer.GameRoomClient;
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.stub.ListenerStub;
@@ -11,6 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import lombok.val;
@@ -43,7 +46,7 @@ public class NakamaGameManagerTest {
     @Test
     public void groupMetaTest(){
         String roomName = RandomStringUtils.randomAlphabetic(10);
-        String roomDesc = "test";
+        String roomDesc = RandomStringUtils.randomAlphabetic(10);
 
         boolean result;
         result = nakamaGameManager1.createGameRoom(roomName,roomDesc,gameRoomClient1);
@@ -51,8 +54,17 @@ public class NakamaGameManagerTest {
 
         Group group = nakamaGameManager1.getRoomGroup();
         NakamaRoomMetaDataManager nakamaRoomMetaDataManager = new NakamaRoomMetaDataManager(nakamaNetworkManager1);
-        Map<String,Object> metaData = nakamaRoomMetaDataManager.readRoomMetaDataSync(group);
-        assertNotNull(metaData);
+        Map<String,Object> metadata = new HashMap<>();
+        metadata.put("test",RandomStringUtils.randomAlphabetic(10));
+
+        result = nakamaRoomMetaDataManager.writeRoomMetaDataSync(group,metadata);
+        assertTrue(result);
+
+        Map<String,Object> metaData2 = nakamaRoomMetaDataManager.readRoomMetaDataSync(group);
+        assertNotNull(metaData2);
+
+        Log.d("test",group.getDescription());
+        metaData2.forEach((a,b)->Log.d("test",a.toString() +"  "+ b));
     }
 
 }

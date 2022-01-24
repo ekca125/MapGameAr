@@ -24,10 +24,12 @@ import com.ekcapaper.racingar.data.NakamaRoomMetaDataManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.utils.Tools;
+import com.heroiclabs.nakama.api.GroupList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -95,14 +97,13 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
         locationRefresher = new LocationRequestSpace(this, new Consumer<Location>() {
             @Override
             public void accept(Location location) {
+                locationRefresher.stop();
                 currentLocation = location;
                 thisApplication.getExecutorService().submit(()->{
                     updateLobbyData();
                 });
-                locationRefresher.stop();
             }
         });
-        locationRefresher.start();
     }
 
     private void setLobbyItemLocationMessage(){
@@ -118,19 +119,29 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
             throw new IllegalStateException();
         }
         List<GameLobbyRoomItem> items = new ArrayList<>();
-        try {
-            items = nakamaNetworkManager.getAllGroupList().getGroupsList().stream()
-                    .limit(1)
-                    .map(group -> {
-                        NakamaRoomMetaDataManager nakamaRoomMetaDataManager = new NakamaRoomMetaDataManager(nakamaNetworkManager);
-                        Map<String, Object> metaData = nakamaRoomMetaDataManager.readRoomMetaDataSync(group);
-                        return new GameLobbyRoomItem("test", (String) metaData.get("groupId"), (String) metaData.get("matchId"));
-                    })
-                    .collect(Collectors.toList());
-        }catch (Exception e){
-            Log.d("testtest",e.toString());
+        GroupList groupList = nakamaNetworkManager.getAllGroupList();
+        if(groupList == null){
+            items.add(new GameLobbyRoomItem("열려있는 방이 없습니다.","",""));
         }
+        else{
+            items = groupList.getGroupsList().stream()
+                    .map(group->{
+                        try{
+                            NakamaRoomMetaDataManager nakamaRoomMetaDataManager = new NakamaRoomMetaDataManager(nakamaNetworkManager);
+                            Map<String, Object> metadata = nakamaRoomMetaDataManager.readRoomMetaDataSync(group);
+                            String groupId =(String) metadata.get("groupId");
+                            String matchId = (String) metadata.get("matchId");
+                            return new GameLobbyRoomItem(group.getName(),groupId,matchId);
+                        }
+                        catch (Exception e){
+                            Log.d("testtest",e.toString());
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
 
+        }
         updateLobbyView(items);
     }
 

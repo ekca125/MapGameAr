@@ -66,6 +66,7 @@ public class NakamaGameManager{
             }
             return false;
         }
+
         // 그룹 메타 데이터 쓰기
         Map<String,Object> metadata = new HashMap<>();
         metadata.put("groupId", group.getId());

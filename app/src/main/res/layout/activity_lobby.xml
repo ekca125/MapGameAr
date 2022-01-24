@@ -17,7 +17,7 @@
         android:id="@+id/button_new_room"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Room" />
+        android:text="@string/new_room" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
