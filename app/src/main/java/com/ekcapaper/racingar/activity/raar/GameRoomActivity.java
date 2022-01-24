@@ -112,30 +112,23 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        List<GameRoomInfo> items = DataGenerator.getGameRoomInfo(this);
-
-
-        /*
+        List<GameRoomInfo> items = new ArrayList<>();
         try {
             GroupUserList groupUserList = nakamaGameManager.getGameRoomGroupUserList();
-
-
             items = groupUserList.getGroupUsersList()
                     .stream()
                     .map(groupUser -> {
-                        GameRoomInfo obj = new GameRoomInfo();
-                        obj.name = String.valueOf(groupUser.getUser().getId());
-                        return obj;
+                        return GameRoomInfo.builder()
+                                .name(String.valueOf(groupUser.getUser().getId()))
+                                .build();
                     })
                     .collect(Collectors.toList());
         } catch (NullPointerException e) {
             items = new ArrayList<>();
-            GameRoomInfo obj = new GameRoomInfo();
-            obj.name = "ERROR NO DATA";
+            GameRoomInfo obj = new GameRoomInfo("ERROR NO DATA");
             items.add(obj);
         }
 
-         */
         mAdapter = new AdapterGameRoom(this, items);
         recyclerView.setAdapter(mAdapter);
 
