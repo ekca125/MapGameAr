@@ -61,7 +61,6 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
         thisApplication = (ThisApplication) getApplicationContext();
         nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
         nakamaGameManager = thisApplication.getNakamaGameManager();
-        // 향후 수정 - gameRoomPlayOperator을 인자로 받도록
         gameRoomPlayOperator = (GameRoomPlayOperator) nakamaGameManager.getRoomOperator();
     }
 
@@ -110,10 +109,6 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
 
 
     /*
-
-
-
-
     private void refreshRoomComponent() {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
