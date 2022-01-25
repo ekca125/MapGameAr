@@ -1,25 +1,26 @@
-package com.ekcapaper.racingar.operator.impl;
+package com.ekcapaper.racingar.operator.layer;
 
-import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.data.NakamaNetworkManager;
-import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
-import com.ekcapaper.racingar.modelgame.play.Player;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
-import com.ekcapaper.racingar.operator.layer.GameRoomPlayClient;
-import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 
-import java.time.Duration;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-public class FlagGameRoomPlayOperator extends GameRoomPlayClient {
+public class FlagGameRoomClient extends GameRoomClient{
     private List<GameFlag> gameFlagList;
-
-    public FlagGameRoomPlayOperator(NakamaNetworkManager nakamaNetworkManager) {
+    public FlagGameRoomClient(NakamaNetworkManager nakamaNetworkManager) {
         super(nakamaNetworkManager);
     }
+
+    @Override
+    public void onMovePlayer(GameMessageMovePlayer gameMessageMovePlayer) {
+        super.onMovePlayer(gameMessageMovePlayer);
+        
+
+    }
+
+    /*
+
 
     @Override
     public void onMovePlayer(GameMessageMovePlayer gameMessageMovePlayer) {
@@ -45,4 +46,5 @@ public class FlagGameRoomPlayOperator extends GameRoomPlayClient {
                 .filter(gameFlag -> !gameFlag.isOwned())
                 .collect(Collectors.toList());
     }
+*/
 }
