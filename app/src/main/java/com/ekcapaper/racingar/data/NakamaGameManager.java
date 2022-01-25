@@ -84,6 +84,7 @@ public class NakamaGameManager{
         if(!isActive()){
             return;
         }
+
         // 떠나기
         this.nakamaNetworkManager.leaveMatchSync(roomMatch.getMatchId());
         this.nakamaNetworkManager.leaveGroupSync(roomGroup.getName());
