@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.network.GameMessage;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -27,6 +28,7 @@ import com.heroiclabs.nakama.api.StorageObjectAcks;
 import com.heroiclabs.nakama.api.StorageObjectList;
 import com.heroiclabs.nakama.api.StorageObjects;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -190,6 +192,14 @@ public class NakamaNetworkManager {
         } catch (ExecutionException | InterruptedException e) {
             return null;
         }
+    }
+
+    public void sendMatchData(String matchId, GameMessage gameMessage){
+        socketClient.sendMatchData(
+                matchId,
+                gameMessage.getOpCode().ordinal(),
+                gameMessage.getPayload().getBytes(StandardCharsets.UTF_8)
+        );
     }
 
     public void leaveMatchSync(String matchId) {
