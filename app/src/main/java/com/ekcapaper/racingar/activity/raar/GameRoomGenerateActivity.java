@@ -21,6 +21,7 @@ import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.data.NakamaNetworkManager;
+import com.ekcapaper.racingar.data.NakamaRoomPreparedDataManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
@@ -36,7 +37,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -166,7 +169,14 @@ public class GameRoomGenerateActivity extends AppCompatActivity implements Activ
                         nakamaGameManager,
                         timeLimit,
                         gameFlagList);
-                nakamaGameManager.createGameRoom(roomName, roomDesc, flagGameRoomPlayOperator);
+                boolean result = nakamaGameManager.createGameRoom(roomName, roomDesc, flagGameRoomPlayOperator);
+                if(result == false){
+                    return false;
+                }
+                Map<String,Object> prepareData = new HashMap<>();
+                prepareData.put("gameFlagList",gameFlagList);
+                NakamaRoomPreparedDataManager nakamaRoomPreparedDataManager = new NakamaRoomPreparedDataManager(nakamaNetworkManager);
+                nakamaRoomPreparedDataManager.writeRoomPrepareDataSync(nakamaGameManager.getRoomGroup(),prepareData);
             } catch (IOException e) {
                 return false;
             }

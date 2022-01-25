@@ -21,12 +21,16 @@ import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.NakamaRoomMetaDataManager;
+import com.ekcapaper.racingar.data.NakamaRoomPreparedDataManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
+import com.ekcapaper.racingar.modelgame.play.GameFlag;
+import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.heroiclabs.nakama.api.GroupList;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -154,7 +158,15 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
             mAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, GameLobbyRoomItem obj, int position) {
-
+                    NakamaRoomPreparedDataManager nakamaRoomPreparedDataManager = new NakamaRoomPreparedDataManager(nakamaNetworkManager);
+                    Map<String,Object> prepareData = nakamaRoomPreparedDataManager.readRoomPrepareDataSync(obj.name);
+                    // 변경예정
+                    FlagGameRoomPlayOperator flagGameRoomPlayOperator = new FlagGameRoomPlayOperator(nakamaNetworkManager,nakamaGameManager,
+                            Duration.ofSeconds(3600)
+                            ,(List<GameFlag>) prepareData.get("gameFlagList"));
+                    nakamaGameManager.joinGameRoom(obj.name, flagGameRoomPlayOperator);
+                    Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
+                    startActivity(intent);
                 }
             });
         });
