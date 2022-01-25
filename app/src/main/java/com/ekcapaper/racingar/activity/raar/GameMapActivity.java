@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
+import com.ekcapaper.racingar.data.NakamaGameManager;
+import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
@@ -40,12 +42,14 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
     LocationRequestSpace locationRequestSpace;
     // marker
     Optional<Marker> playerMarker;
-    List<Optional<Marker>> flagMarkers;
+    List<Marker> flagMarkers;
     // map
     private GoogleMap mMap;
     private boolean mapReady;
     // game room operator
     private ThisApplication thisApplication;
+    private NakamaNetworkManager nakamaNetworkManager;
+    private NakamaGameManager nakamaGameManager;
     private GameRoomPlayOperator gameRoomOperator;
 
     @Override
@@ -104,11 +108,11 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
                 playerMarker = Optional.empty();
                 playerMarker = Optional.ofNullable(mMap.addMarker(markerFactory.createMarkerOption("player", location)));
                 //
-                flagMarkers.stream().forEach((optionalMarker) -> optionalMarker.ifPresent(Marker::remove));
+                flagMarkers.forEach(Marker::remove);
                 flagMarkers.clear();
                 List<GameFlag> gameFlagList = ((FlagGameRoomPlayOperator) gameRoomOperator).getUnownedFlagList();
-                gameFlagList.stream().forEach((gameFlag -> {
-                    mMap.addMarker(markerFactory.createMarkerOption("flag", gameFlag.getLocation()));
+                gameFlagList.forEach((gameFlag -> {
+                    flagMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("flag", gameFlag.getLocation())));
                 }));
             });
         }
@@ -130,7 +134,9 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
     public void initActivityField() {
         mapReady = false;
         thisApplication = (ThisApplication) getApplicationContext();
-        //gameRoomOperator = thisApplication.getCurrentGameRoomOperator();
+        nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
+        nakamaGameManager = thisApplication.getNakamaGameManager();
+        gameRoomOperator = (GameRoomPlayOperator) nakamaGameManager.getRoomOperator();
         // markers
         playerMarker = Optional.empty();
         flagMarkers = new ArrayList<>();
