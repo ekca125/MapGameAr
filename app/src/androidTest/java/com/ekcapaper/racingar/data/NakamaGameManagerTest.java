@@ -4,9 +4,8 @@ import static org.junit.Assert.*;
 
 import android.util.Log;
 
-import com.ekcapaper.racingar.operator.layer.GameRoomClient;
+import com.ekcapaper.racingar.operator.GameRoomClient;
 import com.ekcapaper.racingar.stub.AccountStub;
-import com.ekcapaper.racingar.stub.ListenerStub;
 import com.heroiclabs.nakama.api.Group;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -15,8 +14,6 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import lombok.val;
 
 public class NakamaGameManagerTest {
     public static NakamaNetworkManager nakamaNetworkManager1;

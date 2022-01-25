@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ekcapaper.racingar.R;
+import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.utils.Tools;
@@ -16,9 +17,11 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
 
-public class LoginActivity extends AppCompatActivity implements ActivityInitializer {
+public class LoginActivity extends AppCompatActivity{
+    // manager
     private ThisApplication thisApplication;
-    // activity component
+    private NakamaNetworkManager nakamaNetworkManager;
+    // activity
     private View parent_view;
     private TextInputEditText text_input_text_email;
     private TextInputEditText text_input_text_password;
@@ -28,30 +31,18 @@ public class LoginActivity extends AppCompatActivity implements ActivityInitiali
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // 액티비티 초기화
-        initActivity();
-        // 시스템 바의 설정
-        Tools.setSystemBarColor(this);
-        // stub
-        text_input_text_email.setText(AccountStub.ID);
-        text_input_text_password.setText(AccountStub.PASSWORD);
-    }
 
-    @Override
-    public void initActivityField() {
-        thisApplication = (ThisApplication) getApplicationContext();
-    }
+        // field
+        this.thisApplication = (ThisApplication) getApplicationContext();
+        this.nakamaNetworkManager = this.thisApplication.getNakamaNetworkManager();
 
-    @Override
-    public void initActivityComponent() {
-        parent_view = findViewById(android.R.id.content);
-        text_input_text_email = findViewById(R.id.text_input_text_email);
-        text_input_text_password = findViewById(R.id.text_input_text_password);
-        button_login = findViewById(R.id.button_login);
-    }
+        // activity
+        this.parent_view = findViewById(android.R.id.content);
+        this.text_input_text_email = findViewById(R.id.text_input_text_email);
+        this.text_input_text_password = findViewById(R.id.text_input_text_password);
+        this.button_login = findViewById(R.id.button_login);
 
-    @Override
-    public void initActivityEventTask() {
+        // activity setting
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,5 +58,11 @@ public class LoginActivity extends AppCompatActivity implements ActivityInitiali
                 }
             }
         });
+        Tools.setSystemBarColor(this);
+
+        // stub
+        text_input_text_email.setText(AccountStub.ID);
+        text_input_text_password.setText(AccountStub.PASSWORD);
     }
+
 }

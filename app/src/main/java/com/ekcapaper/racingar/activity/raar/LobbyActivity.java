@@ -21,12 +21,9 @@ import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.NakamaRoomMetaDataManager;
-import com.ekcapaper.racingar.data.NakamaRoomPreparedDataManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
-import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
-import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.heroiclabs.nakama.api.GroupList;
 
@@ -39,55 +36,45 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class LobbyActivity extends AppCompatActivity implements ActivityInitializer {
+public class LobbyActivity extends AppCompatActivity {
+    // manager
     private ThisApplication thisApplication;
-    // managers
     private NakamaNetworkManager nakamaNetworkManager;
-    private NakamaGameManager nakamaGameManager;
-    // activity component
+    // activity
     private View parent_view;
     private RecyclerView recyclerView;
     private Button button_new_room;
+    // activity adapter
+    private AdapterLobby mLobbyAdapter;
+    private List<GameLobbyRoomItem> mLobbyItems;
     // data
-    private AdapterLobby mAdapter;
-    private List<GameLobbyRoomItem> items;
-    // location service
-    private LocationRequestSpace locationRefresher;
     private Location currentLocation;
+    // refresh service
+    private LocationRequestSpace locationRefresher;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
-        initActivity();
-    }
 
-    @Override
-    public void initActivityField() {
-        // managers
-        thisApplication = (ThisApplication) getApplicationContext();
-        nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
-        nakamaGameManager = thisApplication.getNakamaGameManager();
-        // location
-        currentLocation = null;
-    }
+        // field
+        this.thisApplication = (ThisApplication) getApplicationContext();
+        this.nakamaNetworkManager = this.thisApplication.getNakamaNetworkManager();
 
-    @Override
-    public void initActivityComponent() {
+        this.currentLocation = null;
+
+        // activity
         parent_view = findViewById(android.R.id.content);
         button_new_room = findViewById(R.id.button_new_room);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        mAdapter = null;
-        items = null;
+        mLobbyAdapter = null;
+        mLobbyItems = null;
 
-        initToolbar();
-    }
-
-    @Override
-    public void initActivityEventTask() {
+        // activity setting
         button_new_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,7 +83,6 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
                 startActivity(intent);
             }
         });
-        setLobbyItemLocationMessage();
         // 위치 갱신
         locationRefresher = new LocationRequestSpace(this, new Consumer<Location>() {
             @Override
@@ -108,12 +94,8 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
                 });
             }
         });
-    }
 
-    private void setLobbyItemLocationMessage(){
-        List<GameLobbyRoomItem> items = new ArrayList<>();
-        items.add(new GameLobbyRoomItem("위치를 불러오는 중..","",""));
-        updateLobbyView(items);
+        initToolbar();
     }
 
 

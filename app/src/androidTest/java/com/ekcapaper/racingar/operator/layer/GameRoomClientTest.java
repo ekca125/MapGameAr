@@ -2,10 +2,9 @@ package com.ekcapaper.racingar.operator.layer;
 
 import static org.junit.Assert.*;
 
-import android.util.Log;
-
 import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.data.NakamaNetworkManager;
+import com.ekcapaper.racingar.operator.GameRoomClient;
 import com.ekcapaper.racingar.stub.AccountStub;
 
 import org.apache.commons.lang3.RandomStringUtils;

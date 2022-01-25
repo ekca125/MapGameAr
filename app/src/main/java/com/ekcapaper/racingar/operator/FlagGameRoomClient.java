@@ -1,4 +1,4 @@
-package com.ekcapaper.racingar.operator.layer;
+package com.ekcapaper.racingar.operator;
 
 import android.location.Location;
 
@@ -9,8 +9,9 @@ import com.ekcapaper.racingar.network.GameMessageMovePlayer;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FlagGameRoomClient extends GameRoomClient{
+public class FlagGameRoomClient extends GameRoomClient {
     private List<GameFlag> gameFlagList;
+
     public FlagGameRoomClient(NakamaNetworkManager nakamaNetworkManager) {
         super(nakamaNetworkManager);
     }

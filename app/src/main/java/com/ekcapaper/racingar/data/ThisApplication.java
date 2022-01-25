@@ -15,8 +15,6 @@ public class ThisApplication extends Application {
     @Getter
     NakamaNetworkManager nakamaNetworkManager;
     @Getter
-    NakamaGameManager nakamaGameManager;
-    @Getter
     ExecutorService executorService;
 
     @Override
@@ -29,7 +27,6 @@ public class ThisApplication extends Application {
     public void onCreate() {
         super.onCreate();
         nakamaNetworkManager = new NakamaNetworkManager();
-        nakamaGameManager = new NakamaGameManager(nakamaNetworkManager);
         executorService = Executors.newFixedThreadPool(4);
     }
 
