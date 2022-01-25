@@ -37,9 +37,8 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 
 public class NakamaNetworkManager {
-    // info
-    final Client client;
-    final SocketClient socketClient;
+    private final Client client;
+    private final SocketClient socketClient;
     Session session;
 
     public NakamaNetworkManager() {

@@ -48,10 +48,10 @@ public class GameRoomClient implements SocketListener {
     private List<UserPresence> matchUserPresenceList;
     // 게임 상태
     @Getter
-    GameStatus gameStatus;
+    GameStatus currentGameStatus;
     // 게임을 진행하는 플레이어의 리스트
     @Getter
-    List<Player> playerList;
+    List<Player> gamePlayerList;
     // 메시지를 처리한 후에 진행될 내용
     @Setter
     Runnable afterGameStartMessage;
@@ -68,8 +68,8 @@ public class GameRoomClient implements SocketListener {
         // nakama 서버와 연동된 정보
         this.match = null;
         // 게임 정보
-        gameStatus = GameStatus.GAME_NOT_INIT;
-        playerList = new ArrayList<>();
+        currentGameStatus = GameStatus.GAME_NOT_INIT;
+        gamePlayerList = new ArrayList<>();
         // after callback
         afterGameStartMessage = ()->{};
         afterMovePlayerMessage = () -> {};
@@ -78,13 +78,47 @@ public class GameRoomClient implements SocketListener {
 
     public boolean createMatch(){
         match = nakamaNetworkManager.createMatchSync(this);
-        return match != null;
+        if(match == null){
+            return false;
+        }
+        else{
+            goGameStatus(GameStatus.GAME_READY);
+            return true;
+        }
     }
 
     public boolean joinMatch(String matchId){
         match = nakamaNetworkManager.joinMatchSync(this, matchId);
         onMatchJoinPresence(match.getPresences());
-        return match != null;
+        if(match == null){
+            return false;
+        }
+        else{
+            goGameStatus(GameStatus.GAME_READY);
+            return true;
+        }
+    }
+
+    private boolean goGameStatus(GameStatus goGameStatus){
+        // not init -> ready -> running -> end
+        if(GameStatus.GAME_NOT_INIT == currentGameStatus && GameStatus.GAME_READY == goGameStatus){
+            // not init -> ready
+            this.currentGameStatus = GameStatus.GAME_READY;
+            return true;
+        }
+        else if(GameStatus.GAME_READY == currentGameStatus && GameStatus.GAME_RUNNING == goGameStatus){
+            // ready -> running
+            this.currentGameStatus = GameStatus.GAME_RUNNING;
+            return true;
+        }
+        else if(GameStatus.GAME_RUNNING == currentGameStatus && GameStatus.GAME_END == goGameStatus){
+            // running -> end
+            this.currentGameStatus = GameStatus.GAME_END;
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public final void sendMatchData(GameMessage gameMessage) {
@@ -134,9 +168,9 @@ public class GameRoomClient implements SocketListener {
 
     }
 
+
     @Override
     public void onMatchData(MatchData matchData) {
-        super.onMatchData(matchData);
         Gson gson = new Gson();
         long networkOpCode = matchData.getOpCode();
         byte[] networkBytes = matchData.getData();
@@ -160,6 +194,77 @@ public class GameRoomClient implements SocketListener {
                 break;
         }
     }
+
+    // game event
+    public void declareGameStart() {
+        if(currentGameStatus != GameStatus.GAME_READY){
+            // ready 상태에서만 시작을 선언할 수 있다.
+            throw new IllegalStateException();
+        }
+        GameMessageStart gameMessageStart = new GameMessageStart();
+        sendMatchData(gameMessageStart);
+        onGameStart(gameMessageStart);
+    }
+
+    public void onGameStart(GameMessageStart gameMessageStart) {
+        if(currentGameStatus == GameStatus.GAME_READY){
+            // ready 상태에서만 메시지를 처리한다.
+            List<Player> matchPlayers = matchUserPresenceList.stream()
+                    .map(userPresence -> new Player(userPresence.getUserId()))
+                    .collect(Collectors.toList());
+            gamePlayerList.addAll(matchPlayers);
+            goGameStatus(GameStatus.GAME_RUNNING);
+            afterGameStartMessage.run();
+        }
+    }
+
+    public void declareCurrentPlayerMove(Location location) {
+        if(currentGameStatus != GameStatus.GAME_RUNNING){
+            // running 상태에서만 이동을 선언할 수 있다.
+            throw new IllegalStateException();
+        }
+        GameMessageMovePlayer gameMessageMovePlayer = new GameMessageMovePlayer(
+                nakamaNetworkManager.getCurrentSessionUserId(),
+                location.getLatitude(),
+                location.getLongitude()
+        );
+        sendMatchData(gameMessageMovePlayer);
+        onMovePlayer(gameMessageMovePlayer);
+    }
+
+    public void onMovePlayer(GameMessageMovePlayer gameMessageMovePlayer) {
+        if(currentGameStatus == GameStatus.GAME_RUNNING){
+            // running 상태에서만 메시지를 처리한다.
+            gamePlayerList.stream()
+                    .filter(player -> player.getUserId().equals(gameMessageMovePlayer.getUserId()))
+                    .forEach(player -> {
+                        Location location = new Location("");
+                        location.setLatitude(gameMessageMovePlayer.getLatitude());
+                        location.setLongitude(gameMessageMovePlayer.getLongitude());
+                        player.updateLocation(location);
+                    });
+            afterMovePlayerMessage.run();
+        }
+    }
+
+    public void declareGameEnd() {
+        if(currentGameStatus != GameStatus.GAME_RUNNING){
+            // running 상태에서만 종료를 선언할 수 있다.
+            throw new IllegalStateException();
+        }
+        GameMessageEnd gameMessageEnd = new GameMessageEnd();
+        sendMatchData(gameMessageEnd);
+        onGameEnd(gameMessageEnd);
+    }
+
+    public void onGameEnd(GameMessageEnd gameMessageEnd) {
+        if(currentGameStatus == GameStatus.GAME_RUNNING){
+            // running 상태에서만 메시지를 처리한다.
+            goGameStatus(GameStatus.GAME_END);
+            afterGameEndMessage.run();
+        }
+    }
+    //
 
     @Override
     public void onMatchPresence(MatchPresenceEvent matchPresence) {
@@ -202,53 +307,5 @@ public class GameRoomClient implements SocketListener {
     @Override
     public void onStreamData(StreamData data) {
 
-    }
-
-    public void declareGameStart() {
-        GameMessageStart gameMessageStart = new GameMessageStart();
-        sendMatchData(gameMessageStart);
-        onGameStart(gameMessageStart);
-    }
-
-    public void onGameStart(GameMessageStart gameMessageStart) {
-        try {
-            GroupUserList groupUserList = nakamaGameManager.getGameRoomGroupUserList();
-            playerList = groupUserList.getGroupUsersList()
-                    .stream()
-                    .map(groupUser -> new Player(groupUser.getUser().getId()))
-                    .collect(Collectors.toList());
-            changeRoomStatus(GameStatus.GAME_RUNNING);
-        } catch (NullPointerException ignored){
-
-        }
-        afterGameStartMessage.run();
-    }
-
-    public void declareCurrentPlayerMove(Location location) {
-        GameMessageMovePlayer gameMessageMovePlayer = new GameMessageMovePlayer(getCurrentPlayer().getUserId(), location.getLatitude(), location.getLongitude());
-        sendMatchData(gameMessageMovePlayer);
-        onMovePlayer(gameMessageMovePlayer);
-    }
-
-    public void onMovePlayer(GameMessageMovePlayer gameMessageMovePlayer) {
-        Optional<Player> optionalPlayer = getPlayerOptional(gameMessageMovePlayer.getUserId());
-        optionalPlayer.ifPresent((player -> {
-            Location location = new Location("");
-            location.setLatitude(gameMessageMovePlayer.getLatitude());
-            location.setLongitude(gameMessageMovePlayer.getLongitude());
-            player.updateLocation(location);
-        }));
-        afterMovePlayer.run();
-    }
-
-    public void declareGameEnd() {
-        GameMessageEnd gameMessageEnd = new GameMessageEnd();
-        sendMatchData(gameMessageEnd);
-        onGameEnd(gameMessageEnd);
-    }
-
-    public void onGameEnd(GameMessageEnd gameMessageEnd) {
-        changeRoomStatus(GameStatus.GAME_END);
-        afterGameEnd.run();
     }
 }
