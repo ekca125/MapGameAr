@@ -6,6 +6,7 @@ import com.ekcapaper.racingar.data.ThisApplication;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Error;
+import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.MatchData;
 import com.heroiclabs.nakama.MatchPresenceEvent;
 import com.heroiclabs.nakama.MatchmakerMatched;
@@ -21,17 +22,33 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+
 public class GameRoomClient implements SocketListener {
     NakamaNetworkManager nakamaNetworkManager;
-    NakamaGameManager nakamaGameManager;
-    List<UserPresence> channelUserPresenceList;
-    List<UserPresence> matchUserPresenceList;
+    @Getter
+    private List<UserPresence> channelUserPresenceList;
+    @Getter
+    private List<UserPresence> matchUserPresenceList;
+    @Getter
+    private Match match;
 
-    public GameRoomClient(NakamaNetworkManager nakamaNetworkManager, NakamaGameManager nakamaGameManager){
+    public GameRoomClient(NakamaNetworkManager nakamaNetworkManager){
         this.nakamaNetworkManager = nakamaNetworkManager;
-        this.nakamaGameManager = nakamaGameManager;
         this.matchUserPresenceList = new ArrayList<>();
         this.channelUserPresenceList = new ArrayList<>();
+        this.match = null;
+    }
+
+    public boolean createMatch(){
+        match = nakamaNetworkManager.createMatchSync(this);
+        return match != null;
+    }
+
+    public boolean joinMatch(String matchId){
+        match = nakamaNetworkManager.joinMatchSync(this, matchId);
+        onMatchJoinPresence(match.getPresences());
+        return match != null;
     }
 
     @Override

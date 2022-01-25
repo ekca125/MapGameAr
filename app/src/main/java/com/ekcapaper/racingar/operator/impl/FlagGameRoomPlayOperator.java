@@ -6,6 +6,7 @@ import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.Player;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayClient;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 
 import java.time.Duration;
@@ -13,22 +14,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class FlagGameRoomPlayOperator extends GameRoomPlayOperator {
-    private final List<GameFlag> gameFlagList;
+public class FlagGameRoomPlayOperator extends GameRoomPlayClient {
+    private List<GameFlag> gameFlagList;
 
-    public FlagGameRoomPlayOperator(NakamaNetworkManager nakamaNetworkManager,
-                                    NakamaGameManager nakamaGameManager,
-                                    Duration timeLimit,
-                                    List<GameFlag> gameFlagList) {
-        super(nakamaNetworkManager, nakamaGameManager, timeLimit);
-        this.gameFlagList = gameFlagList;
-    }
-
-    @Override
-    public boolean isEnd() {
-        if (super.isEnd()) {
-            return true;
-        } else return getUnownedFlagList().size() <= 0;
+    public FlagGameRoomPlayOperator(NakamaNetworkManager nakamaNetworkManager) {
+        super(nakamaNetworkManager);
     }
 
     @Override

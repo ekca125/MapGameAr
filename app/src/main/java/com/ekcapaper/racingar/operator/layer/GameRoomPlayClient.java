@@ -17,10 +17,12 @@ import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.MatchData;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketClient;
+import com.heroiclabs.nakama.UserPresence;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupUserList;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -32,17 +34,24 @@ import lombok.Setter;
 public class GameRoomPlayClient extends GameRoomClient{
     @Getter
     GameStatus gameStatus;
+    @Getter
     List<Player> playerList;
-
     @Setter
     Runnable afterGameStartMessage;
-
-    public GameRoomPlayClient(NakamaNetworkManager nakamaNetworkManager, NakamaGameManager nakamaGameManager) {
-        super(nakamaNetworkManager, nakamaGameManager);
+    @Setter
+    Runnable afterMovePlayer;
+    @Setter
+    Runnable afterGameEnd;
+    public GameRoomPlayClient(NakamaNetworkManager nakamaNetworkManager) {
+        super(nakamaNetworkManager);
         gameStatus = GameStatus.GAME_READY;
-        playerList = null;
+        playerList = new ArrayList<>();
+        // after callback
         afterGameStartMessage = ()->{};
+        afterMovePlayer = () -> {};
+        afterGameEnd = () -> {};
     }
+
 
     private Player getPlayer(String userId){
         try{
@@ -55,31 +64,11 @@ public class GameRoomPlayClient extends GameRoomClient{
             return null;
         }
     }
-
-    public Optional<Player> getPlayerOptional(String userId){
-        return Optional.ofNullable(getPlayer(userId));
-    }
-
-    public Player getCurrentPlayer(){
-        String userId = nakamaNetworkManager.getCurrentSessionUserId();
-        return getPlayer(userId);
-    }
-
-    private boolean changeRoomStatus(GameStatus gameStatus) {
-        // ready -> running -> end
-        if (this.gameStatus == GameStatus.GAME_READY && gameStatus == GameStatus.GAME_RUNNING) {
-            this.gameStatus = gameStatus;
-            return true;
-        } else if (this.gameStatus == GameStatus.GAME_RUNNING && gameStatus == GameStatus.GAME_END) {
-            this.gameStatus = gameStatus;
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
+    
+    // message 처리
     public final void sendMatchData(GameMessage gameMessage) {
+        
+
         nakamaGameManager.sendGameRoomGameMessage(gameMessage);
     }
 
@@ -144,6 +133,7 @@ public class GameRoomPlayClient extends GameRoomClient{
             location.setLongitude(gameMessageMovePlayer.getLongitude());
             player.updateLocation(location);
         }));
+        afterMovePlayer.run();
     }
 
     public void declareGameEnd() {
@@ -154,6 +144,7 @@ public class GameRoomPlayClient extends GameRoomClient{
 
     public void onGameEnd(GameMessageEnd gameMessageEnd) {
         changeRoomStatus(GameStatus.GAME_END);
+        afterGameEnd.run();;
     }
 
 }

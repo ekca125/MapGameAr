@@ -174,7 +174,7 @@ public class NakamaNetworkManager {
     //
 
     // match
-    Match createMatchSync(SocketListener socketListener){
+    public Match createMatchSync(SocketListener socketListener){
         try {
             socketClient.connect(session, socketListener);
             return socketClient.createMatch().get();
@@ -183,7 +183,7 @@ public class NakamaNetworkManager {
         }
     }
 
-    Match joinMatchSync(SocketListener socketListener, String matchId) {
+    public Match joinMatchSync(SocketListener socketListener, String matchId) {
         try {
             socketClient.connect(session, socketListener);
             return socketClient.joinMatch(matchId).get();
@@ -192,7 +192,7 @@ public class NakamaNetworkManager {
         }
     }
 
-    void leaveMatchSync(String matchId) {
+    public void leaveMatchSync(String matchId) {
         try {
             socketClient.leaveMatch(matchId).get();
         } catch (ExecutionException | InterruptedException ignored) {
