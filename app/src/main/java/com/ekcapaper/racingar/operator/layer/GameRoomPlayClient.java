@@ -27,16 +27,21 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class GameRoomPlayClient extends GameRoomClient{
     @Getter
     GameStatus gameStatus;
     List<Player> playerList;
 
+    @Setter
+    Runnable afterGameStartMessage;
+
     public GameRoomPlayClient(NakamaNetworkManager nakamaNetworkManager, NakamaGameManager nakamaGameManager) {
         super(nakamaNetworkManager, nakamaGameManager);
         gameStatus = GameStatus.GAME_READY;
         playerList = null;
+        afterGameStartMessage = ()->{};
     }
 
     private Player getPlayer(String userId){
@@ -122,6 +127,7 @@ public class GameRoomPlayClient extends GameRoomClient{
         } catch (NullPointerException ignored){
 
         }
+        afterGameStartMessage.run();
     }
 
     public void declareCurrentPlayerMove(Location location) {

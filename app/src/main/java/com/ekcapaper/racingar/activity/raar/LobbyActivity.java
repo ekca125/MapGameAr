@@ -23,6 +23,7 @@ import com.ekcapaper.racingar.data.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.NakamaRoomMetaDataManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
+import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.heroiclabs.nakama.api.GroupList;
 
@@ -91,7 +92,6 @@ public class LobbyActivity extends AppCompatActivity implements ActivityInitiali
                 startActivity(intent);
             }
         });
-
         setLobbyItemLocationMessage();
         // 위치 갱신
         locationRefresher = new LocationRequestSpace(this, new Consumer<Location>() {

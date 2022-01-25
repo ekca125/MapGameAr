@@ -74,11 +74,13 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
             @Override
             public void onClick(View view) {
                 gameRoomPlayOperator.declareGameStart();
-                Intent intent = new Intent(getApplicationContext(), GameMapActivity.class);
-                startActivity(intent);
             }
         });
         refreshRoomComponent();
+        gameRoomPlayOperator.setAfterGameStartMessage(()->{
+            Intent intent = new Intent(getApplicationContext(), GameMapActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void initToolbar() {
