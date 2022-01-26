@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.data.NakamaNetworkManager;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.utils.Tools;

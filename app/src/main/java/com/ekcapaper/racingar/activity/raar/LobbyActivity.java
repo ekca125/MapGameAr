@@ -19,7 +19,7 @@ import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adaptergame.AdapterLobby;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.NakamaGameManager;
-import com.ekcapaper.racingar.data.NakamaNetworkManager;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.NakamaRoomMetaDataManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 

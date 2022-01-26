@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import android.util.Log;
 
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.operator.GameRoomClient;
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.heroiclabs.nakama.api.Group;

@@ -5,6 +5,8 @@ import android.content.Context;
 
 import androidx.multidex.MultiDex;
 
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import android.location.Location;
 
 import com.ekcapaper.racingar.data.NakamaGameManager;
-import com.ekcapaper.racingar.data.NakamaNetworkManager;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.modelgame.play.GameStatus;
 import com.ekcapaper.racingar.network.GameMessageEnd;
 import com.ekcapaper.racingar.network.GameMessageStart;

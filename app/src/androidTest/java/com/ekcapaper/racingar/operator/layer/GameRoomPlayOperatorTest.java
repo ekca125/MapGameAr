@@ -3,15 +3,13 @@ package com.ekcapaper.racingar.operator.layer;
 import static org.junit.Assert.*;
 
 import com.ekcapaper.racingar.data.NakamaGameManager;
-import com.ekcapaper.racingar.data.NakamaNetworkManager;
-import com.ekcapaper.racingar.modelgame.play.GameStatus;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.network.GameMessageStart;
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.heroiclabs.nakama.Session;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.time.Duration;

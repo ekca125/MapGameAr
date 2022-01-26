@@ -2,7 +2,7 @@ package com.ekcapaper.racingar.operator;
 
 import android.location.Location;
 
-import com.ekcapaper.racingar.data.NakamaNetworkManager;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
 

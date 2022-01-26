@@ -2,13 +2,10 @@ package com.ekcapaper.racingar.data;
 
 import static org.junit.Assert.*;
 
-import android.util.Log;
-
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.stub.ListenerStub;
-import com.google.gson.JsonObject;
 import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
-import com.heroiclabs.nakama.SocketListener;
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupUserList;

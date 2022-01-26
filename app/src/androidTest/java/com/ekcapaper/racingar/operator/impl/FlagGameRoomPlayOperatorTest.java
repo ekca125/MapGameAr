@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import android.location.Location;
 
 import com.ekcapaper.racingar.data.NakamaGameManager;
-import com.ekcapaper.racingar.data.NakamaNetworkManager;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.network.GameMessageStart;
@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.val;
 import retrofit2.Call;
 import retrofit2.Response;
 

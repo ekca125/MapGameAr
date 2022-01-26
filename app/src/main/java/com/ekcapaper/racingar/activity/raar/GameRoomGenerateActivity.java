@@ -20,7 +20,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.NakamaGameManager;
-import com.ekcapaper.racingar.data.NakamaNetworkManager;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.NakamaRoomPreparedDataManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.address.MapRange;

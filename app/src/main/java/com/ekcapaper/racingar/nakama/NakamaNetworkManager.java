@@ -1,14 +1,10 @@
-package com.ekcapaper.racingar.data;
-
-import android.util.Log;
+package com.ekcapaper.racingar.nakama;
 
 import androidx.annotation.NonNull;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.GameMessage;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Match;
@@ -22,19 +18,13 @@ import com.heroiclabs.nakama.StorageObjectWrite;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
 import com.heroiclabs.nakama.api.GroupUserList;
-import com.heroiclabs.nakama.api.Rpc;
 import com.heroiclabs.nakama.api.StorageObject;
 import com.heroiclabs.nakama.api.StorageObjectAcks;
-import com.heroiclabs.nakama.api.StorageObjectList;
 import com.heroiclabs.nakama.api.StorageObjects;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-
-import lombok.Getter;
 
 public class NakamaNetworkManager {
     private final Client client;
@@ -76,14 +66,15 @@ public class NakamaNetworkManager {
             session = null;
         }
     }
+
     // session info
-    public String getCurrentSessionUserId(){
+    public String getCurrentSessionUserId() {
         return session.getUserId();
     }
     //
 
     // group
-    public GroupList getAllGroupList(){
+    public GroupList getAllGroupList() {
         try {
             return client.listGroups(session, "%", 99).get();
         } catch (ExecutionException | InterruptedException e) {
@@ -91,7 +82,7 @@ public class NakamaNetworkManager {
         }
     }
 
-    public GroupList getGroupList(String groupFilter){
+    public GroupList getGroupList(String groupFilter) {
         try {
             return client.listGroups(session, groupFilter, 99).get();
         } catch (ExecutionException | InterruptedException e) {
@@ -99,7 +90,7 @@ public class NakamaNetworkManager {
         }
     }
 
-    private Group findGroup(String groupName){
+    private Group findGroup(String groupName) {
         try {
             return client.listGroups(session, groupName, 99).get().getGroupsList().get(0);
         } catch (ExecutionException | InterruptedException e) {
@@ -107,27 +98,27 @@ public class NakamaNetworkManager {
         }
     }
 
-    public GroupUserList getGroupUserList(String groupName){
+    public GroupUserList getGroupUserList(String groupName) {
         Group group = findGroup(groupName);
-        if(group == null){
+        if (group == null) {
             return null;
         }
         try {
-            return client.listGroupUsers(session,group.getId()).get();
+            return client.listGroupUsers(session, group.getId()).get();
         } catch (ExecutionException | InterruptedException e) {
             return null;
         }
     }
 
-    public GroupUserList getGroupUserList(@NonNull Group group){
+    public GroupUserList getGroupUserList(@NonNull Group group) {
         try {
-            return client.listGroupUsers(session,group.getId()).get();
+            return client.listGroupUsers(session, group.getId()).get();
         } catch (ExecutionException | InterruptedException e) {
             return null;
         }
     }
 
-    Group createGroupSync(String groupName, String groupDesc){
+    public Group createGroupSync(String groupName, String groupDesc) {
         try {
             return client.createGroup(session, groupName, groupDesc, null, null, true).get();
         } catch (ExecutionException | InterruptedException e) {
@@ -135,10 +126,10 @@ public class NakamaNetworkManager {
         }
     }
 
-    Group joinGroupSync(String groupName){
+    public Group joinGroupSync(String groupName) {
         try {
             Group group = findGroup(groupName);
-            if(group == null){
+            if (group == null) {
                 return null;
             }
             client.joinGroup(session, group.getId()).get();
@@ -148,10 +139,10 @@ public class NakamaNetworkManager {
         }
     }
 
-    private void deleteGroupSync(String groupName){
+    private void deleteGroupSync(String groupName) {
         try {
             Group group = findGroup(groupName);
-            if(group == null){
+            if (group == null) {
                 return;
             }
             client.deleteGroup(session, group.getId()).get();
@@ -159,13 +150,13 @@ public class NakamaNetworkManager {
         }
     }
 
-    void leaveGroupSync(String groupName) {
+    public void leaveGroupSync(String groupName) {
         Group group = findGroup(groupName);
-        if(group == null){
+        if (group == null) {
             return;
         }
         try {
-            if(group.getCreatorId().equals(session.getUserId())){
+            if (group.getCreatorId().equals(session.getUserId())) {
                 deleteGroupSync(groupName);
             }
             client.leaveGroup(session, group.getId()).get();
@@ -175,7 +166,7 @@ public class NakamaNetworkManager {
     //
 
     // match
-    public Match createMatchSync(SocketListener socketListener){
+    public Match createMatchSync(SocketListener socketListener) {
         try {
             socketClient.connect(session, socketListener);
             return socketClient.createMatch().get();
@@ -193,7 +184,7 @@ public class NakamaNetworkManager {
         }
     }
 
-    public void sendMatchData(String matchId, GameMessage gameMessage){
+    public void sendMatchData(String matchId, GameMessage gameMessage) {
         socketClient.sendMatchData(
                 matchId,
                 gameMessage.getOpCode().ordinal(),
@@ -211,7 +202,7 @@ public class NakamaNetworkManager {
 
 
     // collection - key - userId로 저장된다.
-    boolean writePublicServerStorageSync(String collectionName, String keyName, Map<String,Object> data){
+    public boolean writePublicServerStorageSync(String collectionName, String keyName, Map<String, Object> data) {
         Gson gson = new Gson();
         String jsonData = gson.toJson(data);
         try {
@@ -228,7 +219,7 @@ public class NakamaNetworkManager {
         }
     }
 
-    Map<String,Object> readServerStorageSync(String collectionName, String keyName, String storageOwnUserId){
+    public Map<String, Object> readServerStorageSync(String collectionName, String keyName, String storageOwnUserId) {
         Gson gson = new Gson();
         try {
             StorageObjectId objectId = new StorageObjectId(collectionName);

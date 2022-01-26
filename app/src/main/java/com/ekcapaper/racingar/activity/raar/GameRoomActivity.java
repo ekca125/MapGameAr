@@ -10,17 +10,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adaptergame.AdapterGameRoom;
-import com.ekcapaper.racingar.data.DataGenerator;
 import com.ekcapaper.racingar.data.NakamaGameManager;
-import com.ekcapaper.racingar.data.NakamaNetworkManager;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
-import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
 import com.ekcapaper.racingar.modelgame.item.GameRoomInfo;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.utils.Tools;
@@ -29,8 +26,6 @@ import com.heroiclabs.nakama.api.GroupUserList;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 public class GameRoomActivity extends AppCompatActivity implements ActivityInitializer {
