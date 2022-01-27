@@ -27,10 +27,7 @@ public class GameRoomClientFactory {
             return null;
         }
 
-        Map<String,String> payload = new HashMap<>();
-        payload.put("label",label);
-
-        boolean result = gameRoomClient.createMatch(gson.toJson(payload));
+        boolean result = gameRoomClient.createMatch(label);
         if(result){
             return gameRoomClient;
         }

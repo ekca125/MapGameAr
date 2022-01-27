@@ -25,6 +25,7 @@ import com.heroiclabs.nakama.api.StorageObjectAcks;
 import com.heroiclabs.nakama.api.StorageObjects;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -171,13 +172,24 @@ public class NakamaNetworkManager {
     }
     //
 
+    // rpc
+    public JsonObject rpcFunctionCallSync(String rpcFunctionName, String rpcFunctionPayload) throws ExecutionException, InterruptedException {
+        Rpc rpcResult = socketClient.rpc(rpcFunctionName,rpcFunctionPayload).get();
+        return gson.fromJson(rpcResult.getPayload(),JsonObject.class);
+    }
+
+    //
+
+
     // match
-    public Match createMatchSync(SocketListener socketListener, String payload) {
+    public Match createMatchSync(SocketListener socketListener, String label) {
         try {
             String rpcFunctionName = "create_match_racingar";
-            Rpc result = socketClient.rpc(rpcFunctionName,payload).get();
-            String resultPayload = result.getPayload();
-            JsonObject jsonObject = gson.fromJson(resultPayload,JsonObject.class);
+
+            Map<String,String> payload = new HashMap<>();
+            payload.put("label",label);
+
+            JsonObject jsonObject = rpcFunctionCallSync(rpcFunctionName,gson.toJson(payload));
             String matchId = jsonObject.get("matchId").toString();
             return joinMatchSync(socketListener ,matchId);
         } catch (ExecutionException | InterruptedException e) {
