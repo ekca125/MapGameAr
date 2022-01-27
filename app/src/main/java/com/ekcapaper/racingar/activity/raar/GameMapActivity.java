@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class GameMapActivity extends AppCompatActivity {
     // field
@@ -47,7 +48,7 @@ public class GameMapActivity extends AppCompatActivity {
     private GoogleMap mMap;
     private boolean mapReady;
     // map marker
-    Marker playerMarker;
+    List<Marker> playerMarkers;
     List<Marker> flagMarkers;
 
     // location checker
@@ -69,7 +70,7 @@ public class GameMapActivity extends AppCompatActivity {
 
         // field
         mapReady = false;
-        playerMarker = null;
+        playerMarkers = new ArrayList<>();
         flagMarkers = new ArrayList<>();
 
         // activity
@@ -86,12 +87,21 @@ public class GameMapActivity extends AppCompatActivity {
                 );
             }
         });
-        locationRequestSpace.start();
         //
         Tools.setSystemBarColor(this, R.color.colorPrimary);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        locationRequestSpace.start();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationRequestSpace.stop();
+    }
 
     private void initMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -103,7 +113,6 @@ public class GameMapActivity extends AppCompatActivity {
             }
         });
     }
-
 
     public void clickAction(View view) {
         int id = view.getId();
@@ -125,39 +134,22 @@ public class GameMapActivity extends AppCompatActivity {
             return;
         }
         MarkerFactory markerFactory = new MarkerFactory(GameMapActivity.this);
-/*
-        if (gameRoomClient instanceof FlagGameRoomClient) {
-            gameRoomClient.getGamePlayerList().stream()
-                    .filter(player)
-
-                    .getCurrentPlayer().getLocation().ifPresent(location -> {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
-                playerMarker.ifPresent(Marker::remove);
-                playerMarker = Optional.empty();
-                playerMarker = Optional.ofNullable(mMap.addMarker(markerFactory.createMarkerOption("player", location)));
-                //
-                flagMarkers.forEach(Marker::remove);
-                flagMarkers.clear();
-                List<GameFlag> gameFlagList = ((FlagGameRoomPlayOperator) gameRoomOperator).getUnownedFlagList();
-                gameFlagList.forEach((gameFlag -> {
-                    flagMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("flag", gameFlag.getLocation())));
-                }));
-            });
+        // 플레이어들의 위치 마커 변경
+        playerMarkers.stream().forEach(Marker::remove);
+        playerMarkers.clear();
+        gameRoomClient.getGamePlayerList().stream()
+                .forEach(player -> {
+                    player.getLocation().ifPresent(location ->{
+                        playerMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("player",location)));
+                    });
+                });
+        if(gameRoomClient instanceof FlagGameRoomClient){
+            flagMarkers.forEach(Marker::remove);
+            List<GameFlag> gameFlagList = ((FlagGameRoomClient) gameRoomClient).getUnownedFlagList();
+            gameFlagList.forEach((gameFlag -> {
+                flagMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("flag", gameFlag.getLocation())));
+            }));
         }
-
- */
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        locationRequestSpace.start();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        locationRequestSpace.stop();
     }
 
     static class MarkerFactory {
