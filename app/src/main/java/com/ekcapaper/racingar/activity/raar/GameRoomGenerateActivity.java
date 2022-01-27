@@ -59,6 +59,16 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     private Button button_generate_room;
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode != ACTIVITY_REQUEST_CODE){
+            // 잘못 코딩한 경우에 발생하는 예외
+            throw new IllegalStateException();
+        }
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_room_generate);
@@ -112,24 +122,6 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         button_generate_room.setEnabled(false);
         button_generate_room.setText(R.string.loading_location);
         dropdown_state.setText(GameType.GAME_TYPE_FLAG.toString());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        locationRequestSpace.stop();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        locationRequestSpace.start();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        finish();
     }
 
     @Override
