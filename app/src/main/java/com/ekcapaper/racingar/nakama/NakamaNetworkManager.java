@@ -174,9 +174,9 @@ public class NakamaNetworkManager {
     }
     //
 
-    // rpc
-    public JsonObject rpcFunctionCallSync(String rpcFunctionName, String rpcFunctionPayload) throws ExecutionException, InterruptedException {
-        Rpc rpcResult = socketClient.rpc(rpcFunctionName,rpcFunctionPayload).get();
+    // rpc (client)
+    public JsonObject clientRpcSync(String rpcFunctionName, String rpcFunctionPayload) throws ExecutionException, InterruptedException{
+        Rpc rpcResult = client.rpc(session,rpcFunctionName,rpcFunctionPayload).get();
         return gson.fromJson(rpcResult.getPayload(),JsonObject.class);
     }
     //
@@ -188,11 +188,10 @@ public class NakamaNetworkManager {
             Map<String,String> payload = new HashMap<>();
             payload.put("label",label);
 
-            JsonObject jsonObject = rpcFunctionCallSync(rpcFunctionName,gson.toJson(payload));
-            String matchId = jsonObject.get("matchid").toString();
+            JsonObject jsonObject = clientRpcSync(rpcFunctionName,gson.toJson(payload));
+            String matchId = jsonObject.get("matchid").toString().replace("\"","");
             return joinMatchSync(socketListener ,matchId);
         } catch (ExecutionException | InterruptedException e) {
-
             return null;
         }
     }

@@ -9,15 +9,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
 
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
     // manager
     private ThisApplication thisApplication;
     private NakamaNetworkManager nakamaNetworkManager;
@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-/*
+
         // field
         this.thisApplication = (ThisApplication) getApplicationContext();
         this.nakamaNetworkManager = this.thisApplication.getNakamaNetworkManager();
@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity{
                 String email = Objects.requireNonNull(text_input_text_email.getText()).toString();
                 String password = Objects.requireNonNull(text_input_text_password.getText()).toString();
 
-                boolean result = thisApplication.getNakamaNetworkManager().loginEmailSync(email, password);
+                boolean result = nakamaNetworkManager.loginEmailSync(email, password);
                 if (result) {
                     Intent intent = new Intent(LoginActivity.this, LobbyActivity.class);
                     startActivity(intent);
@@ -60,12 +60,8 @@ public class LoginActivity extends AppCompatActivity{
         });
         Tools.setSystemBarColor(this);
 
-
-
         // stub
         text_input_text_email.setText(AccountStub.ID);
         text_input_text_password.setText(AccountStub.PASSWORD);
-         */
     }
-
 }

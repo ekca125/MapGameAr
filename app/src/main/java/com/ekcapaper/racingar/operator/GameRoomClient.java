@@ -50,6 +50,7 @@ public class GameRoomClient implements SocketListener {
     @Setter
     Runnable afterGameEndMessage;
     // nakama 서버와 연동된 정보
+    @Getter
     private Match match;
     private final List<UserPresence> channelUserPresenceList;
     private final List<UserPresence> matchUserPresenceList;

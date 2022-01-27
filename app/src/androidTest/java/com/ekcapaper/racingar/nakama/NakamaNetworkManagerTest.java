@@ -2,6 +2,8 @@ package com.ekcapaper.racingar.nakama;
 
 import static org.junit.Assert.*;
 
+import android.util.Log;
+
 import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.stub.ListenerStub;
 import com.google.gson.JsonObject;
@@ -150,25 +152,25 @@ public class NakamaNetworkManagerTest {
     }
 
     @Test
-    public void createMatchRPCTest() {
-        
-
-        nakamaNetworkManager1.rpcFunctionCallSync("create_match_racingar",);
-
-        Rpc rpcResult = socketClient.rpc(rpcFunctionName,rpcFunctionPayload).get();
-        return gson.fromJson(rpcResult.getPayload(), JsonObject.class);
+    public void createMatchRPCTest() throws ExecutionException, InterruptedException {
+        String rpcFunctionName = "create_match_racingar";
+        String payload = "{\n" +
+                "    \"label\":\"label\"\n" +
+                "}";
+        JsonObject jsonObject = nakamaNetworkManager1.clientRpcSync(rpcFunctionName,payload);
+        assertTrue(jsonObject.toString().contains("matchid"));
     }
 
     @Test
     public void createMatchSync() {
-        Match match = nakamaNetworkManager1.createMatchSync(ListenerStub.socketListenerEmpty,"createMatchSyncTest");
+        Match match = nakamaNetworkManager1.createMatchSync(ListenerStub.socketListenerEmpty,"createMatchSyncTestLabel");
         assertNotNull(match);
         nakamaNetworkManager1.leaveMatchSync(match.getMatchId());
     }
 
     @Test
     public void joinMatchSync() {
-        Match match1 = nakamaNetworkManager1.createMatchSync(ListenerStub.socketListenerEmpty,"joinMatchSyncLabel");
+        Match match1 = nakamaNetworkManager1.createMatchSync(ListenerStub.socketListenerEmpty,"joinMatchSyncTestLabel");
         assertNotNull(match1);
         Match match2 = nakamaNetworkManager2.joinMatchSync(ListenerStub.socketListenerEmpty, match1.getMatchId());
         assertNotNull(match2);

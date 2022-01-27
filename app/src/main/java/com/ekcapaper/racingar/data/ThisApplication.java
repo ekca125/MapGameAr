@@ -16,6 +16,7 @@ import lombok.Getter;
 
 
 public class ThisApplication extends Application {
+    @Getter
     NakamaNetworkManager nakamaNetworkManager;
     @Getter
     GameRoomClient gameRoomClient;
