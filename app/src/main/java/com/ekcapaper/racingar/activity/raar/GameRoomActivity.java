@@ -15,11 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adaptergame.AdapterGameRoom;
-import com.ekcapaper.racingar.data.NakamaGameManager;
-import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.item.GameRoomInfo;
-import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
+import com.ekcapaper.racingar.operator.GameRoomClient;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
 import com.heroiclabs.nakama.api.GroupUserList;
@@ -28,11 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GameRoomActivity extends AppCompatActivity implements ActivityInitializer {
+public class GameRoomActivity extends AppCompatActivity {
     private ThisApplication thisApplication;
-    private NakamaNetworkManager nakamaNetworkManager;
-    private NakamaGameManager nakamaGameManager;
-    private GameRoomPlayOperator gameRoomPlayOperator;
+    private GameRoomClient gameRoomClient;
 
     private View parent_view;
 
@@ -45,37 +41,26 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_room);
-        initActivity();
-        initToolbar();
-    }
-
-    @Override
-    public void initActivityField() {
+        // field
         thisApplication = (ThisApplication) getApplicationContext();
-        nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
-        nakamaGameManager = thisApplication.getNakamaGameManager();
-        gameRoomPlayOperator = (GameRoomPlayOperator) nakamaGameManager.getRoomOperator();
-    }
-
-    @Override
-    public void initActivityComponent() {
+        gameRoomClient = thisApplication.getGameRoomClient();
+        // activity
         parent_view = findViewById(android.R.id.content);
         button_game_start = findViewById(R.id.button_game_start);
-    }
-
-    @Override
-    public void initActivityEventTask() {
+        // activity setting
         button_game_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gameRoomPlayOperator.declareGameStart();
+                gameRoomClient.declareGameStart();
             }
         });
-        refreshRoomComponent();
-        gameRoomPlayOperator.setAfterGameStartMessage(()->{
+        gameRoomClient.setAfterGameStartMessage(()->{
             Intent intent = new Intent(getApplicationContext(), GameMapActivity.class);
             startActivity(intent);
         });
+
+        //
+        initToolbar();
     }
 
     private void initToolbar() {
@@ -110,12 +95,10 @@ public class GameRoomActivity extends AppCompatActivity implements ActivityIniti
 
         List<GameRoomInfo> items = new ArrayList<>();
         try {
-            GroupUserList groupUserList = nakamaGameManager.getGameRoomGroupUserList();
-            items = groupUserList.getGroupUsersList()
-                    .stream()
-                    .map(groupUser -> {
+            items = gameRoomClient.getGamePlayerList().stream()
+                    .map(player -> {
                         return GameRoomInfo.builder()
-                                .name(String.valueOf(groupUser.getUser().getId()))
+                                .name(player.getUserId())
                                 .build();
                     })
                     .collect(Collectors.toList());

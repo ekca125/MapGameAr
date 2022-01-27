@@ -18,6 +18,7 @@ import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
+import com.ekcapaper.racingar.operator.GameRoomClient;
 import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
 import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.utils.Tools;
@@ -48,19 +49,40 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
     private boolean mapReady;
     // game room operator
     private ThisApplication thisApplication;
-    private NakamaNetworkManager nakamaNetworkManager;
-    private NakamaGameManager nakamaGameManager;
-    private GameRoomPlayOperator gameRoomOperator;
+    private GameRoomClient gameRoomClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_map);
+        // field
+        mapReady = false;
+        playerMarker = Optional.empty();
+        flagMarkers = new ArrayList<>();
+
+        thisApplication = (ThisApplication) getApplicationContext();
+        gameRoomClient = thisApplication.getGameRoomClient();
+        // activity
+        locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
+            @Override
+            public void accept(Location location) {
+                runOnUiThread(() -> {
+                            gameRoomClient.declareCurrentPlayerMove(location);
+                            syncGameMap();
+                        }
+                );
+            }
+        });
+
+        // activity setting
+
 
         initActivity();
         initMapFragment();
         Tools.setSystemBarColor(this, R.color.colorPrimary);
     }
+
+
 
     private void initMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -128,37 +150,6 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
     protected void onPause() {
         super.onPause();
         locationRequestSpace.stop();
-    }
-
-    @Override
-    public void initActivityField() {
-        mapReady = false;
-        thisApplication = (ThisApplication) getApplicationContext();
-        nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
-        nakamaGameManager = thisApplication.getNakamaGameManager();
-        gameRoomOperator = (GameRoomPlayOperator) nakamaGameManager.getRoomOperator();
-        // markers
-        playerMarker = Optional.empty();
-        flagMarkers = new ArrayList<>();
-    }
-
-    @Override
-    public void initActivityComponent() {
-
-    }
-
-    @Override
-    public void initActivityEventTask() {
-        locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
-            @Override
-            public void accept(Location location) {
-                runOnUiThread(() -> {
-                            gameRoomOperator.declareCurrentPlayerMove(location);
-                            syncGameMap();
-                        }
-                );
-            }
-        });
     }
 
     static class MarkerFactory {

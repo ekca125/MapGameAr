@@ -195,7 +195,6 @@ public class GameRoomClient implements SocketListener {
         }
         GameMessageStart gameMessageStart = new GameMessageStart();
         sendMatchData(gameMessageStart);
-        onGameStart(gameMessageStart);
     }
 
     public void onGameStart(GameMessageStart gameMessageStart) {
@@ -221,7 +220,6 @@ public class GameRoomClient implements SocketListener {
                 location.getLongitude()
         );
         sendMatchData(gameMessageMovePlayer);
-        onMovePlayer(gameMessageMovePlayer);
     }
 
     public void onMovePlayer(GameMessageMovePlayer gameMessageMovePlayer) {
@@ -246,7 +244,6 @@ public class GameRoomClient implements SocketListener {
         }
         GameMessageEnd gameMessageEnd = new GameMessageEnd();
         sendMatchData(gameMessageEnd);
-        onGameEnd(gameMessageEnd);
     }
 
     public void onGameEnd(GameMessageEnd gameMessageEnd) {
