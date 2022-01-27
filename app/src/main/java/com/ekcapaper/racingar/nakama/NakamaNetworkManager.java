@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.network.GameMessage;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Match;
@@ -18,6 +19,7 @@ import com.heroiclabs.nakama.StorageObjectWrite;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
 import com.heroiclabs.nakama.api.GroupUserList;
+import com.heroiclabs.nakama.api.Rpc;
 import com.heroiclabs.nakama.api.StorageObject;
 import com.heroiclabs.nakama.api.StorageObjectAcks;
 import com.heroiclabs.nakama.api.StorageObjects;
@@ -30,6 +32,8 @@ public class NakamaNetworkManager {
     private final Client client;
     private final SocketClient socketClient;
     Session session;
+
+    private Gson gson;
 
     public NakamaNetworkManager() {
         client = new DefaultClient(
@@ -44,6 +48,8 @@ public class NakamaNetworkManager {
                 KeyStorageNakama.getWebSocketSSL()
         );
         session = null;
+        //
+        gson = new Gson();
     }
 
     // session
@@ -168,8 +174,16 @@ public class NakamaNetworkManager {
     // match
     public Match createMatchSync(SocketListener socketListener) {
         try {
-            socketClient.connect(session, socketListener);
-            return socketClient.createMatch().get();
+            String rpcFunctionName = "create_match_racingar";
+            String payload = "{\n" +
+                    "    \"label\":\"label\"\n" +
+                    "}";
+
+            Rpc result = socketClient.rpc(rpcFunctionName,payload).get();
+            String resultPayload = result.getPayload();
+            JsonObject jsonObject = gson.fromJson(resultPayload,JsonObject.class);
+            String matchId = jsonObject.get("matchId").toString();
+            return joinMatchSync(socketListener ,matchId);
         } catch (ExecutionException | InterruptedException e) {
             return null;
         }
