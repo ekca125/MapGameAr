@@ -7,10 +7,12 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
@@ -37,30 +39,43 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class GameMapActivity extends AppCompatActivity {
-    // location checker
-    LocationRequestSpace locationRequestSpace;
-    // marker
-    Optional<Marker> playerMarker;
-    List<Marker> flagMarkers;
+    // field
+    private ThisApplication thisApplication;
+    private NakamaNetworkManager nakamaNetworkManager;
+    private GameRoomClient gameRoomClient;
     // map
     private GoogleMap mMap;
     private boolean mapReady;
-    // game room operator
-    private ThisApplication thisApplication;
-    private GameRoomClient gameRoomClient;
+    // map marker
+    Marker playerMarker;
+    List<Marker> flagMarkers;
+
+    // location checker
+    LocationRequestSpace locationRequestSpace;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_map);
+
+        // field
+        thisApplication = (ThisApplication) getApplicationContext();
+        nakamaNetworkManager= thisApplication.getNakamaNetworkManager();
+        gameRoomClient = thisApplication.getGameRoomClient();
+        if(gameRoomClient == null){
+            throw new IllegalStateException();
+        }
+
         // field
         mapReady = false;
-        playerMarker = Optional.empty();
+        playerMarker = null;
         flagMarkers = new ArrayList<>();
 
-        thisApplication = (ThisApplication) getApplicationContext();
-        gameRoomClient = thisApplication.getGameRoomClient();
         // activity
+        initMapFragment();
+
+        // location refresh
         locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
             @Override
             public void accept(Location location) {
@@ -71,7 +86,8 @@ public class GameMapActivity extends AppCompatActivity {
                 );
             }
         });
-        initMapFragment();
+        locationRequestSpace.start();
+        //
         Tools.setSystemBarColor(this, R.color.colorPrimary);
     }
 
@@ -83,17 +99,11 @@ public class GameMapActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = Tools.configActivityMaps(googleMap);
-                MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(37.7610237, -122.4217785));
-                mMap.addMarker(markerOptions);
-                mMap.moveCamera(zoomingLocation());
                 mapReady = true;
             }
         });
     }
 
-    private CameraUpdate zoomingLocation() {
-        return CameraUpdateFactory.newLatLngZoom(new LatLng(37.76496792, -122.42206407), 13);
-    }
 
     public void clickAction(View view) {
         int id = view.getId();
