@@ -23,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class GameRoomActivity extends AppCompatActivity {
@@ -62,10 +63,16 @@ public class GameRoomActivity extends AppCompatActivity {
         button_game_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gameRoomClient.setAfterOnMatchPresence(()->{});
-                
-
-                gameRoomClient.declareGameStart();
+                button_game_start.setEnabled(false);
+                CompletableFuture.runAsync(() -> {
+                            gameRoomClient.declareGameStart();
+                        }
+                )
+                        .thenRun(() -> {
+                            gameRoomClient.setAfterOnMatchPresence(() -> {
+                            });
+                            button_game_start.setEnabled(true);
+                        });
             }
         });
         gameRoomClient.setAfterGameStartMessage(() -> {
