@@ -15,12 +15,12 @@ public class GameRoomClientFactory {
     }
 
 
-    static public GameRoomClient createGameRoomClientNewMatch(String clientTypeName, NakamaNetworkManager nakamaNetworkManager){
+    static public GameRoomClient createGameRoomClientNewMatch(String clientTypeName, NakamaNetworkManager nakamaNetworkManager, String payload){
         GameRoomClient gameRoomClient = createGameRoomClient(clientTypeName,nakamaNetworkManager);
         if(gameRoomClient == null){
             return null;
         }
-        boolean result = gameRoomClient.createMatch();
+        boolean result = gameRoomClient.createMatch(payload);
         if(result){
             return gameRoomClient;
         }

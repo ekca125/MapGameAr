@@ -172,13 +172,9 @@ public class NakamaNetworkManager {
     //
 
     // match
-    public Match createMatchSync(SocketListener socketListener) {
+    public Match createMatchSync(SocketListener socketListener, String payload) {
         try {
             String rpcFunctionName = "create_match_racingar";
-            String payload = "{\n" +
-                    "    \"label\":\"label\"\n" +
-                    "}";
-
             Rpc result = socketClient.rpc(rpcFunctionName,payload).get();
             String resultPayload = result.getPayload();
             JsonObject jsonObject = gson.fromJson(resultPayload,JsonObject.class);

@@ -73,8 +73,8 @@ public class GameRoomClient implements SocketListener {
         };
     }
 
-    public boolean createMatch() {
-        match = nakamaNetworkManager.createMatchSync(this);
+    public boolean createMatch(String payload) {
+        match = nakamaNetworkManager.createMatchSync(this, payload);
         if (match == null) {
             return false;
         } else {
