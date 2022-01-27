@@ -69,7 +69,7 @@ public class LobbyActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-
+        // activity adapter
         mLobbyAdapter = null;
         mLobbyItems = null;
 
