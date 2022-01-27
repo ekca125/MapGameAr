@@ -55,9 +55,9 @@ public class GameRoomClient implements SocketListener {
     @Getter
     private Match match;
     @Getter
-    private final List<UserPresence> channelUserPresenceList;
+    protected final List<UserPresence> channelUserPresenceList;
     @Getter
-    private final List<UserPresence> matchUserPresenceList;
+    protected final List<UserPresence> matchUserPresenceList;
 
     public GameRoomClient(NakamaNetworkManager nakamaNetworkManager) {
         // nakama 서버와의 연동을 진행하는 클래스
@@ -101,7 +101,7 @@ public class GameRoomClient implements SocketListener {
         }
     }
 
-    private boolean goGameStatus(GameStatus goGameStatus) {
+    protected boolean goGameStatus(GameStatus goGameStatus) {
         // not init -> ready -> running -> end
         if (GameStatus.GAME_NOT_INIT == currentGameStatus && GameStatus.GAME_READY == goGameStatus) {
             // not init -> ready
