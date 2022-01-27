@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+/*
         // field
         this.thisApplication = (ThisApplication) getApplicationContext();
         this.nakamaNetworkManager = this.thisApplication.getNakamaNetworkManager();
@@ -60,9 +60,12 @@ public class LoginActivity extends AppCompatActivity{
         });
         Tools.setSystemBarColor(this);
 
+
+
         // stub
         text_input_text_email.setText(AccountStub.ID);
         text_input_text_password.setText(AccountStub.PASSWORD);
+         */
     }
 
 }
