@@ -1,5 +1,7 @@
 package com.ekcapaper.racingar.nakama;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
@@ -177,22 +179,20 @@ public class NakamaNetworkManager {
         Rpc rpcResult = socketClient.rpc(rpcFunctionName,rpcFunctionPayload).get();
         return gson.fromJson(rpcResult.getPayload(),JsonObject.class);
     }
-
     //
-
 
     // match
     public Match createMatchSync(SocketListener socketListener, String label) {
         try {
             String rpcFunctionName = "create_match_racingar";
-
             Map<String,String> payload = new HashMap<>();
             payload.put("label",label);
 
             JsonObject jsonObject = rpcFunctionCallSync(rpcFunctionName,gson.toJson(payload));
-            String matchId = jsonObject.get("matchId").toString();
+            String matchId = jsonObject.get("matchid").toString();
             return joinMatchSync(socketListener ,matchId);
         } catch (ExecutionException | InterruptedException e) {
+
             return null;
         }
     }

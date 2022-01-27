@@ -20,8 +20,6 @@ public class GameRoomClientFactory {
 
 
     static public GameRoomClient createGameRoomClientNewMatch(String clientTypeName, NakamaNetworkManager nakamaNetworkManager, String label){
-        Gson gson = new Gson();
-        //
         GameRoomClient gameRoomClient = createGameRoomClient(clientTypeName,nakamaNetworkManager);
         if(gameRoomClient == null){
             return null;

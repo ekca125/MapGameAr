@@ -1,14 +1,15 @@
-package com.ekcapaper.racingar.data;
+package com.ekcapaper.racingar.nakama;
 
 import static org.junit.Assert.*;
 
-import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
+import com.ekcapaper.racingar.stub.AccountStub;
 import com.ekcapaper.racingar.stub.ListenerStub;
+import com.google.gson.JsonObject;
 import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
-import com.ekcapaper.racingar.stub.AccountStub;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupUserList;
+import com.heroiclabs.nakama.api.Rpc;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
@@ -148,6 +149,31 @@ public class NakamaNetworkManagerTest {
         }
     }
 
+    @Test
+    public void createMatchRPCTest() {
+        
 
+        nakamaNetworkManager1.rpcFunctionCallSync("create_match_racingar",);
 
+        Rpc rpcResult = socketClient.rpc(rpcFunctionName,rpcFunctionPayload).get();
+        return gson.fromJson(rpcResult.getPayload(), JsonObject.class);
+    }
+
+    @Test
+    public void createMatchSync() {
+        Match match = nakamaNetworkManager1.createMatchSync(ListenerStub.socketListenerEmpty,"createMatchSyncTest");
+        assertNotNull(match);
+        nakamaNetworkManager1.leaveMatchSync(match.getMatchId());
+    }
+
+    @Test
+    public void joinMatchSync() {
+        Match match1 = nakamaNetworkManager1.createMatchSync(ListenerStub.socketListenerEmpty,"joinMatchSyncLabel");
+        assertNotNull(match1);
+        Match match2 = nakamaNetworkManager2.joinMatchSync(ListenerStub.socketListenerEmpty, match1.getMatchId());
+        assertNotNull(match2);
+
+        nakamaNetworkManager1.leaveMatchSync(match1.getMatchId());
+        nakamaNetworkManager2.leaveMatchSync(match2.getMatchId());
+    }
 }
