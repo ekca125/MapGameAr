@@ -25,6 +25,7 @@ import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.utils.Tools;
 import com.heroiclabs.nakama.api.GroupList;
+import com.heroiclabs.nakama.api.MatchList;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -45,7 +46,6 @@ public class LobbyActivity extends AppCompatActivity {
     // adapter
     private AdapterLobby mLobbyAdapter;
     private List<GameLobbyRoomItem> mLobbyItems;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,15 +76,30 @@ public class LobbyActivity extends AppCompatActivity {
         // adapter
         mLobbyItems = new ArrayList<>();
         mLobbyAdapter = new AdapterLobby(this,mLobbyItems);
+        recyclerView.setAdapter(mLobbyAdapter);
 
+        //
         initToolbar();
+        //
+        refreshLobbyData();
     }
 
     private void refreshLobbyData() {
-        List<GameLobbyRoomItem> items = new ArrayList<>();
-        this.mLobbyItems.clear();
-        this.mLobbyItems.addAll(items);
-        mLobbyAdapter.notifyDataSetChanged();
+        MatchList matchList = nakamaNetworkManager.getAllMatchListSync();
+        if(matchList != null){
+            List<GameLobbyRoomItem> items = matchList.getMatchesList().stream()
+                    .map(match -> {
+                        GameLobbyRoomItem gameLobbyRoomItem = new GameLobbyRoomItem(
+                                match.getMatchId(),
+                                match.getMatchId(),
+                                match.getMatchId()
+                        );
+                        return gameLobbyRoomItem;
+                    }).collect(Collectors.toList());
+            this.mLobbyItems.clear();
+            this.mLobbyItems.addAll(items);
+            mLobbyAdapter.notifyDataSetChanged();
+        }
     }
 
     private void initToolbar() {
@@ -108,16 +123,8 @@ public class LobbyActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             finish();
         } else if (item.getItemId() == R.id.action_refresh) {
-            /*
-            if(locationRefresher.isRunning()){
-                Toast.makeText(getApplicationContext(), "이미 방의 정보를 가져오는 중입니다.", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
-
-            }
-
-             */
+            Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
+            refreshLobbyData();
         } else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }

@@ -1,7 +1,5 @@
 package com.ekcapaper.racingar.nakama;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
@@ -21,6 +19,7 @@ import com.heroiclabs.nakama.StorageObjectWrite;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
 import com.heroiclabs.nakama.api.GroupUserList;
+import com.heroiclabs.nakama.api.MatchList;
 import com.heroiclabs.nakama.api.Rpc;
 import com.heroiclabs.nakama.api.StorageObject;
 import com.heroiclabs.nakama.api.StorageObjectAcks;
@@ -36,7 +35,7 @@ public class NakamaNetworkManager {
     private final SocketClient socketClient;
     Session session;
 
-    private Gson gson;
+    private final Gson gson;
 
     public NakamaNetworkManager() {
         client = new DefaultClient(
@@ -175,9 +174,9 @@ public class NakamaNetworkManager {
     //
 
     // rpc (client)
-    public JsonObject clientRpcSync(String rpcFunctionName, String rpcFunctionPayload) throws ExecutionException, InterruptedException{
-        Rpc rpcResult = client.rpc(session,rpcFunctionName,rpcFunctionPayload).get();
-        return gson.fromJson(rpcResult.getPayload(),JsonObject.class);
+    public JsonObject clientRpcSync(String rpcFunctionName, String rpcFunctionPayload) throws ExecutionException, InterruptedException {
+        Rpc rpcResult = client.rpc(session, rpcFunctionName, rpcFunctionPayload).get();
+        return gson.fromJson(rpcResult.getPayload(), JsonObject.class);
     }
     //
 
@@ -185,12 +184,12 @@ public class NakamaNetworkManager {
     public Match createMatchSync(SocketListener socketListener, String label) {
         try {
             String rpcFunctionName = "create_match_racingar";
-            Map<String,String> payload = new HashMap<>();
-            payload.put("label",label);
+            Map<String, String> payload = new HashMap<>();
+            payload.put("label", label);
 
-            JsonObject jsonObject = clientRpcSync(rpcFunctionName,gson.toJson(payload));
-            String matchId = jsonObject.get("matchid").toString().replace("\"","");
-            return joinMatchSync(socketListener ,matchId);
+            JsonObject jsonObject = clientRpcSync(rpcFunctionName, gson.toJson(payload));
+            String matchId = jsonObject.get("matchid").toString().replace("\"", "");
+            return joinMatchSync(socketListener, matchId);
         } catch (ExecutionException | InterruptedException e) {
             return null;
         }
@@ -217,6 +216,14 @@ public class NakamaNetworkManager {
         try {
             socketClient.leaveMatch(matchId).get();
         } catch (ExecutionException | InterruptedException ignored) {
+        }
+    }
+
+    public MatchList getAllMatchListSync() {
+        try {
+            return client.listMatches(session).get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
         }
     }
     //
