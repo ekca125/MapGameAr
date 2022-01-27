@@ -20,6 +20,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.ThisApplication;
+import com.ekcapaper.racingar.modelgame.GameRoomLabel;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
@@ -29,6 +30,7 @@ import com.ekcapaper.racingar.operator.GameRoomClientFactory;
 import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -99,12 +101,57 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         button_generate_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                generateRoomAndJoinRoom();
+                button_generate_room.setEnabled(false);
+                // 방 이름
+                String roomName = Objects.requireNonNull(text_input_name.getText()).toString();
+                String roomDesc = "";
+
+                // 위치 정보 가져오기
+                String latitudeStr = Objects.requireNonNull(text_input_latitude.getText()).toString();
+                String longitudeStr = Objects.requireNonNull(text_input_longitude.getText()).toString();
+                // 변환
+                double latitude = Double.parseDouble(latitudeStr);
+                double longitude = Double.parseDouble(longitudeStr);
+                // 변환 2
+                Location location = new Location("");
+                location.setLatitude(latitude);
+                location.setLongitude(longitude);
+
+                // 게임 선택
+                String selectGameType = dropdown_state.getText().toString();
+                
+                // label 정보 준비
+                Gson gson = new Gson();
+                GameRoomLabel gameRoomLabel = new GameRoomLabel(
+                        roomName,
+                        roomDesc,
+                        MapRange.calculateMapRange(location,1)
+                );
+                String label = gson.toJson(gameRoomLabel);
+                
+                // 진행
+                button_generate_room.setEnabled(false);
+                if(selectGameType.equals(GameType.GAME_TYPE_FLAG.toString())){
+                  boolean result = thisApplication.createGameRoom(FlagGameRoomClient.class.getName(),label);
+                    if (result) {
+                        locationRequestSpace.stop();
+                        Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
+                        startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
+                    } else {
+                        Toast.makeText(GameRoomGenerateActivity.this, "방 생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+                }
+                button_generate_room.setEnabled(true);
+
             }
         });
         locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
             @Override
             public void accept(Location location) {
+                locationRequestSpace.stop();
                 runOnUiThread(() -> {
                     text_input_latitude.setText(String.valueOf(Math.abs(location.getLatitude())));
                     text_input_longitude.setText(String.valueOf(Math.abs(location.getLongitude())));
@@ -113,7 +160,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 });
             }
         });
-
+        locationRequestSpace.start();
+        //
         initToolbar();
         // stub
         String roomName = RandomStringUtils.randomAlphabetic(10);
@@ -152,35 +200,4 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         Tools.setSystemBarLight(this);
     }
 
-    private void generateFlagGameRoom(String roomName, String roomDesc, Location mapCenterLocation){
-        button_generate_room.setEnabled(false);
-        String label = "test";
-        boolean result = thisApplication.createGameRoom(FlagGameRoomClient.class.getName(),label);
-        if (result) {
-            locationRequestSpace.stop();
-            Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
-            startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
-        } else {
-            Toast.makeText(this, "방 생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
-        }
-        button_generate_room.setEnabled(true);
-    }
-
-    private void generateRoomAndJoinRoom() {
-        button_generate_room.setEnabled(false);
-        // 정보 불러오기
-        String latitudeStr = Objects.requireNonNull(text_input_latitude.getText()).toString();
-        String longitudeStr = Objects.requireNonNull(text_input_longitude.getText()).toString();
-        String nameStr = Objects.requireNonNull(text_input_name.getText()).toString();
-        String selectGameTypeStr = dropdown_state.getText().toString();
-        // 정보 변환
-        Location location = new Location("");
-        location.setLatitude(Double.parseDouble(latitudeStr));
-        location.setLongitude(Double.parseDouble(longitudeStr));
-        String desc = "";
-
-        if(selectGameTypeStr.equals(GameType.GAME_TYPE_FLAG.toString())){
-           generateFlagGameRoom(nameStr,desc,location);
-        }
-    }
 }
