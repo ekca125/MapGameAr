@@ -85,26 +85,6 @@ public class NakamaNetworkManagerTest {
         nakamaNetworkManager1.leaveGroupSync(groupName);
     }
 
-    @Test
-    public void createMatch(){
-        Match match1 = nakamaNetworkManager1.createMatchSync(ListenerStub.socketListenerEmpty);
-        assertNotNull(match1);
-        nakamaNetworkManager1.leaveMatchSync(match1.getMatchId());
-    }
-
-    @Test
-    public void joinMatch(){
-        Match match1 = nakamaNetworkManager1.createMatchSync(ListenerStub.socketListenerEmpty);
-        assertNotNull(match1);
-        Match match2 = nakamaNetworkManager2.joinMatchSync(ListenerStub.socketListenerEmpty,match1.getMatchId());
-        assertNotNull(match2);
-
-        assertEquals(match1.getMatchId(), match2.getMatchId());
-
-        nakamaNetworkManager1.leaveMatchSync(match1.getMatchId());
-        nakamaNetworkManager2.leaveMatchSync(match2.getMatchId());
-    }
-
 
     @Test
     public void rwPublicServerStorageSync() throws IllegalAccessException {

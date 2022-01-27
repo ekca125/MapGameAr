@@ -14,13 +14,11 @@ import androidx.core.content.ContextCompat;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
-import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
+import com.ekcapaper.racingar.operator.FlagGameRoomClient;
 import com.ekcapaper.racingar.operator.GameRoomClient;
-import com.ekcapaper.racingar.operator.impl.FlagGameRoomPlayOperator;
-import com.ekcapaper.racingar.operator.layer.GameRoomPlayOperator;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,7 +36,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class GameMapActivity extends AppCompatActivity implements ActivityInitializer {
+public class GameMapActivity extends AppCompatActivity {
     // location checker
     LocationRequestSpace locationRequestSpace;
     // marker
@@ -73,11 +71,6 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
                 );
             }
         });
-
-        // activity setting
-
-
-        initActivity();
         initMapFragment();
         Tools.setSystemBarColor(this, R.color.colorPrimary);
     }
@@ -122,9 +115,12 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
             return;
         }
         MarkerFactory markerFactory = new MarkerFactory(GameMapActivity.this);
+/*
+        if (gameRoomClient instanceof FlagGameRoomClient) {
+            gameRoomClient.getGamePlayerList().stream()
+                    .filter(player)
 
-        if (gameRoomOperator instanceof FlagGameRoomPlayOperator) {
-            gameRoomOperator.getCurrentPlayer().getLocation().ifPresent(location -> {
+                    .getCurrentPlayer().getLocation().ifPresent(location -> {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
                 playerMarker.ifPresent(Marker::remove);
                 playerMarker = Optional.empty();
@@ -138,6 +134,8 @@ public class GameMapActivity extends AppCompatActivity implements ActivityInitia
                 }));
             });
         }
+
+ */
     }
 
     @Override

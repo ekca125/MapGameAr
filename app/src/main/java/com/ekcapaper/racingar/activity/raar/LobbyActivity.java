@@ -18,9 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adaptergame.AdapterLobby;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
-import com.ekcapaper.racingar.data.NakamaGameManager;
 import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
-import com.ekcapaper.racingar.data.NakamaRoomMetaDataManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
@@ -59,8 +57,6 @@ public class LobbyActivity extends AppCompatActivity {
 
         // field
         this.thisApplication = (ThisApplication) getApplicationContext();
-        this.nakamaNetworkManager = this.thisApplication.getNakamaNetworkManager();
-
         this.currentLocation = null;
 
         // activity
@@ -89,7 +85,7 @@ public class LobbyActivity extends AppCompatActivity {
                 locationRefresher.stop();
                 currentLocation = location;
                 thisApplication.getExecutorService().submit(()->{
-                    updateLobbyData();
+                    //updateLobbyData();
                 });
             }
         });
@@ -97,8 +93,9 @@ public class LobbyActivity extends AppCompatActivity {
         initToolbar();
     }
 
-
+/*
     private void updateLobbyData(){
+
         if(currentLocation == null){
             // 반드시 위치를 가져온 이후에 업데이트의 용도로 접근되어야 한다.
             throw new IllegalStateException();
@@ -152,7 +149,7 @@ public class LobbyActivity extends AppCompatActivity {
             });
         });
     }
-
+*/
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
