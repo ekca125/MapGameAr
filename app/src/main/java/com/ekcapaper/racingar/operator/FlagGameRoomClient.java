@@ -2,6 +2,8 @@ package com.ekcapaper.racingar.operator;
 
 import android.location.Location;
 
+import com.ekcapaper.racingar.modelgame.GameRoomLabel;
+import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.play.GameStatus;
 import com.ekcapaper.racingar.modelgame.play.Player;
 import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
@@ -9,9 +11,15 @@ import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.network.GameMessageFlagGameStart;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
 import com.ekcapaper.racingar.network.GameMessageStart;
+import com.ekcapaper.racingar.retrofit.AddressMapClient;
+import com.ekcapaper.racingar.retrofit.dto.AddressDto;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import lombok.Setter;
 
 public class FlagGameRoomClient extends GameRoomClient {
     private List<GameFlag> gameFlagList;
@@ -40,12 +48,26 @@ public class FlagGameRoomClient extends GameRoomClient {
             // ready 상태에서만 시작을 선언할 수 있다.
             throw new IllegalStateException();
         }
+        //
+        Gson gson = new Gson();
+        String label = getMatch().getLabel();
+        GameRoomLabel gameRoomLabel = gson.fromJson(label,GameRoomLabel.class);
         // 깃발 가져오기
-        
-        
-        // 메시지 전송
-        GameMessageFlagGameStart gameMessageStart = new GameMessageFlagGameStart();
-        sendMatchData(gameMessageStart);
+        try {
+            List<AddressDto> addressDtoList = AddressMapClient.getMapAddressService()
+                    .drawMapRangeRandom10((MapRange) gameRoomLabel).execute().body();
+            List<GameFlag> gameFlagList = addressDtoList.stream().map(addressDto -> {
+                Location location = new Location("");
+                location.setLatitude(addressDto.getLatitude());
+                location.setLongitude(addressDto.getLongitude());
+                return new GameFlag(location);
+            }).collect(Collectors.toList());
+            // 메시지 전송
+            GameMessageFlagGameStart gameMessageStart = new GameMessageFlagGameStart(gameFlagList);
+            sendMatchData(gameMessageStart);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -63,6 +63,8 @@ public class GameRoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 gameRoomClient.setAfterOnMatchPresence(()->{});
+                
+
                 gameRoomClient.declareGameStart();
             }
         });
