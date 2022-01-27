@@ -20,45 +20,71 @@ import com.ekcapaper.racingar.modelgame.item.GameRoomInfo;
 import com.ekcapaper.racingar.operator.GameRoomClient;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
-import com.heroiclabs.nakama.api.GroupUserList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameRoomActivity extends AppCompatActivity {
+    // field
     private ThisApplication thisApplication;
     private GameRoomClient gameRoomClient;
-
+    // activity
     private View parent_view;
-
     private RecyclerView recyclerView;
-    private AdapterGameRoom mAdapter;
-
     private Button button_game_start;
+    // adapter
+    private List<GameRoomInfo> mGameRoomItems;
+    private AdapterGameRoom mGameRoomAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_room);
+
         // field
         thisApplication = (ThisApplication) getApplicationContext();
         gameRoomClient = thisApplication.getGameRoomClient();
+        if (gameRoomClient == null) {
+            throw new IllegalStateException();
+        }
+
         // activity
         parent_view = findViewById(android.R.id.content);
         button_game_start = findViewById(R.id.button_game_start);
+
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+
         // activity setting
         button_game_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                gameRoomClient.setAfterOnMatchPresence(()->{});
                 gameRoomClient.declareGameStart();
             }
         });
-        gameRoomClient.setAfterGameStartMessage(()->{
+        gameRoomClient.setAfterGameStartMessage(() -> {
             Intent intent = new Intent(getApplicationContext(), GameMapActivity.class);
             startActivity(intent);
         });
 
+        // adapter
+        mGameRoomItems = new ArrayList<>();
+        mGameRoomAdapter = new AdapterGameRoom(this, mGameRoomItems);
+        mGameRoomAdapter.setOnItemClickListener(new AdapterGameRoom.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, GameRoomInfo obj, int position) {
+                Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+        recyclerView.setAdapter(mGameRoomAdapter);
+        // get player data
+        refreshRoomPlayerList();
+        //
+        gameRoomClient.setAfterOnMatchPresence(this::refreshRoomPlayerList);
         //
         initToolbar();
     }
@@ -88,35 +114,16 @@ public class GameRoomActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshRoomComponent() {
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-
-        List<GameRoomInfo> items = new ArrayList<>();
-        try {
-            items = gameRoomClient.getGamePlayerList().stream()
-                    .map(player -> {
-                        return GameRoomInfo.builder()
-                                .name(player.getUserId())
-                                .build();
-                    })
-                    .collect(Collectors.toList());
-        } catch (NullPointerException e) {
-            items = new ArrayList<>();
-            GameRoomInfo obj = new GameRoomInfo("ERROR NO DATA");
-            items.add(obj);
-        }
-
-        mAdapter = new AdapterGameRoom(this, items);
-        recyclerView.setAdapter(mAdapter);
-
-        // on item list clicked
-        mAdapter.setOnItemClickListener(new AdapterGameRoom.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, GameRoomInfo obj, int position) {
-                Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
-            }
-        });
+    private void refreshRoomPlayerList() {
+        List<GameRoomInfo> items = gameRoomClient.getMatchUserPresenceList().stream()
+                .map(player -> {
+                    return GameRoomInfo.builder()
+                            .name(player.getUserId())
+                            .build();
+                })
+                .collect(Collectors.toList());
+        this.mGameRoomItems.clear();
+        this.mGameRoomItems.addAll(items);
+        mGameRoomAdapter.notifyDataSetChanged();
     }
 }
