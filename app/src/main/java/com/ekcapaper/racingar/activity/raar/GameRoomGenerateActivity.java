@@ -22,37 +22,24 @@ import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.GameRoomLabel;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
-import com.ekcapaper.racingar.modelgame.play.GameFlag;
 import com.ekcapaper.racingar.modelgame.play.GameType;
 import com.ekcapaper.racingar.operator.FlagGameRoomClient;
-import com.ekcapaper.racingar.operator.GameRoomClient;
-import com.ekcapaper.racingar.operator.GameRoomClientFactory;
-import com.ekcapaper.racingar.retrofit.dto.AddressDto;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.io.IOException;
-import java.time.Duration;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import retrofit2.Call;
-import retrofit2.Response;
-
 public class GameRoomGenerateActivity extends AppCompatActivity {
     private final int ACTIVITY_REQUEST_CODE = 0;
+    LocationRequestSpace locationRequestSpace;
     // field
     private ThisApplication thisApplication;
-    LocationRequestSpace locationRequestSpace;
     // activity
     private TextInputEditText text_input_name;
     private TextInputEditText text_input_latitude;
@@ -63,7 +50,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode != ACTIVITY_REQUEST_CODE){
+        if (requestCode != ACTIVITY_REQUEST_CODE) {
             // 잘못 코딩한 경우에 발생하는 예외
             throw new IllegalStateException();
         }
@@ -119,20 +106,20 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
 
                 // 게임 선택
                 String selectGameType = dropdown_state.getText().toString();
-                
+
                 // label 정보 준비
                 Gson gson = new Gson();
                 GameRoomLabel gameRoomLabel = new GameRoomLabel(
                         roomName,
                         roomDesc,
-                        MapRange.calculateMapRange(location,1)
+                        MapRange.calculateMapRange(location, 1)
                 );
                 String label = gson.toJson(gameRoomLabel);
-                
+
                 // 진행
                 button_generate_room.setEnabled(false);
-                if(selectGameType.equals(GameType.GAME_TYPE_FLAG.toString())){
-                  boolean result = thisApplication.createGameRoom(FlagGameRoomClient.class.getName(),label);
+                if (selectGameType.equals(GameType.GAME_TYPE_FLAG.toString())) {
+                    boolean result = thisApplication.createGameRoom(FlagGameRoomClient.class.getName(), label);
                     if (result) {
                         locationRequestSpace.stop();
                         Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
@@ -140,12 +127,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(GameRoomGenerateActivity.this, "방 생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
                     }
-
-
-
                 }
                 button_generate_room.setEnabled(true);
-
             }
         });
         locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
@@ -160,6 +143,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 });
             }
         });
+        button_generate_room.setEnabled(false);
         locationRequestSpace.start();
         //
         initToolbar();
