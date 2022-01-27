@@ -58,8 +58,6 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     private AutoCompleteTextView dropdown_state;
     private Button button_generate_room;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +82,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         dropdown_state.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //
+                // 현재에는 게임타입의 값을 그대로 사용하고 있기 때문에 비어있는 상태이며
+                // 게임타입의 값 대신에 다른 문자열을 사용할때 클릭하면 현재의 게임타입을 변화시키도록 만들면 된다.
             }
         });
         button_generate_room.setOnClickListener(new View.OnClickListener() {
