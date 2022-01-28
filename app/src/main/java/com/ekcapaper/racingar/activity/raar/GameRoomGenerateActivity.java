@@ -23,6 +23,7 @@ import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.GameRoomLabel;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.play.GameType;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.operator.FlagGameRoomClient;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.textfield.TextInputEditText;
@@ -40,6 +41,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     LocationRequestSpace locationRequestSpace;
     // field
     private ThisApplication thisApplication;
+    private NakamaNetworkManager nakamaNetworkManager;
     // activity
     private TextInputEditText text_input_name;
     private TextInputEditText text_input_latitude;
@@ -64,6 +66,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
 
         // field
         thisApplication = (ThisApplication) getApplicationContext();
+        nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
 
         // activity
         button_generate_room = findViewById(R.id.button_generate_room);
@@ -112,7 +115,9 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 GameRoomLabel gameRoomLabel = new GameRoomLabel(
                         roomName,
                         roomDesc,
-                        MapRange.calculateMapRange(location, 1)
+                        MapRange.calculateMapRange(location, 1),
+                        nakamaNetworkManager.getCurrentSessionUserId(),
+                        GameType.valueOf(selectGameType)
                 );
                 String label = gson.toJson(gameRoomLabel);
 
