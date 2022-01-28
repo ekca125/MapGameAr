@@ -28,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -110,9 +111,12 @@ public class GameMapActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = Tools.configActivityMaps(googleMap);
+                mMap.getUiSettings().setZoomControlsEnabled(true);
                 mapReady = true;
+                //
                 Location mapCenter = gameRoomClient.getGameRoomLabel().getMapCenter();
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapCenter.getLatitude(), mapCenter.getLongitude()), 13));
+                syncGameMap();
             }
         });
     }
@@ -150,7 +154,6 @@ public class GameMapActivity extends AppCompatActivity {
             flagMarkers.forEach(Marker::remove);
             List<GameFlag> gameFlagList = ((FlagGameRoomClient) gameRoomClient).getUnownedFlagList();
             gameFlagList.forEach((gameFlag -> {
-                Log.d("gameFlag",gameFlag.getLocation().toString());
                 flagMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("flag", gameFlag.getLocation())));
             }));
         }
