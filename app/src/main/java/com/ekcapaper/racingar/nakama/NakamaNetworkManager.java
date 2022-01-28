@@ -226,6 +226,14 @@ public class NakamaNetworkManager {
             return null;
         }
     }
+
+    public MatchList getMinPlayerAllMatchListSync() {
+        try {
+            return client.listMatches(session,1).get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
+        }
+    }
     //
 
 

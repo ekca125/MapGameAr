@@ -152,12 +152,14 @@ public class GameRoomClient implements SocketListener {
         List<UserPresence> joinList = presence.getJoins();
         if (joinList != null) {
             onChannelJoinPresence(joinList);
+            afterOnMatchPresence.run();
         }
 
         // leave 처리
         List<UserPresence> leaveList = presence.getLeaves();
         if (leaveList != null) {
             onChannelLeavePresence(leaveList);
+            afterOnMatchPresence.run();
         }
     }
 
