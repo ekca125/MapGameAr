@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,6 +47,11 @@ public class GameMapActivity extends AppCompatActivity {
     private ThisApplication thisApplication;
     private NakamaNetworkManager nakamaNetworkManager;
     private GameRoomClient gameRoomClient;
+    // activity
+    private ImageButton list_button;
+    private ImageButton map_button;
+    private ImageButton add_button;
+
     // map
     private GoogleMap mMap;
     private boolean mapReady;
@@ -70,6 +76,11 @@ public class GameMapActivity extends AppCompatActivity {
             throw new IllegalStateException();
         }
 
+        // activity
+        list_button = findViewById(R.id.list_button);
+        map_button = findViewById(R.id.map_button);
+        add_button = findViewById(R.id.add_button);
+
         // field
         mapReady = false;
         playerMarkers = new ArrayList<>();
@@ -77,6 +88,27 @@ public class GameMapActivity extends AppCompatActivity {
 
         // activity
         initMapFragment();
+
+        // activity setting
+        list_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "List Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+        map_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Map Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+        add_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Add Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         // location refresh
         locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
@@ -112,6 +144,7 @@ public class GameMapActivity extends AppCompatActivity {
             public void onMapReady(GoogleMap googleMap) {
                 mMap = Tools.configActivityMaps(googleMap);
                 mMap.getUiSettings().setZoomControlsEnabled(true);
+                mMap.setPadding(0,0,0,100);
                 mapReady = true;
                 //
                 Location mapCenter = gameRoomClient.getGameRoomLabel().getMapCenter();
@@ -119,21 +152,6 @@ public class GameMapActivity extends AppCompatActivity {
                 syncGameMap();
             }
         });
-    }
-
-    public void clickAction(View view) {
-        int id = view.getId();
-        switch (id) {
-            case R.id.map_button:
-                Toast.makeText(getApplicationContext(), "Map Clicked", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.list_button:
-                Toast.makeText(getApplicationContext(), "List Clicked", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.add_button:
-                Toast.makeText(getApplicationContext(), "Add Clicked", Toast.LENGTH_SHORT).show();
-                break;
-        }
     }
 
     private void syncGameMap() {
