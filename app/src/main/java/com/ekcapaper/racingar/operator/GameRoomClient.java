@@ -178,7 +178,6 @@ public class GameRoomClient implements SocketListener {
 
         GameMessageOpCode gameMessageOpCode = GameMessageOpCode.values()[(int) networkOpCode];
         String data = new String(networkBytes, StandardCharsets.UTF_8);
-        data = data.substring(1,data.length()-2);
 
         switch (gameMessageOpCode) {
             case MOVE_PLAYER:
