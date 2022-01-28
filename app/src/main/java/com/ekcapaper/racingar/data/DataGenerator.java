@@ -118,23 +118,6 @@ public class DataGenerator {
         return items;
     }
 
-    /**
-     * Generate dummy data people
-     *
-     * @param ctx android context
-     * @return list of object
-     */
-    public static List<GameLobbyRoomItem> getGameRoomInfoData(Context ctx) {
-        List<GameLobbyRoomItem> items = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            GameLobbyRoomItem obj = GameLobbyRoomItem.builder()
-                    .groupId("testGroupId")
-                    .matchId("testMatchId")
-                    .build();
-            items.add(obj);
-        }
-        return items;
-    }
 
     /**
      * Generate dummy data people

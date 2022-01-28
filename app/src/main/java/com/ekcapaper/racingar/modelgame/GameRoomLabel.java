@@ -2,8 +2,12 @@ package com.ekcapaper.racingar.modelgame;
 
 import com.ekcapaper.racingar.modelgame.address.MapRange;
 
+import lombok.Getter;
+
 public class GameRoomLabel extends MapRange {
+    @Getter
     String roomName;
+    @Getter
     String roomDesc;
 
     public GameRoomLabel(

@@ -4,13 +4,14 @@ import lombok.Builder;
 
 @Builder
 public class GameLobbyRoomItem {
-    // info
-    public final String name;
-    public final String groupId;
-    public final String matchId;
-    public GameLobbyRoomItem(String name, String groupId, String matchId) {
-        this.name = name;
-        this.groupId = groupId;
-        this.matchId = matchId;
+    public String roomName;
+    public String roomDesc;
+    public String distanceCenter;
+
+    @Builder
+    public GameLobbyRoomItem(String roomName, String roomDesc, String distanceCenter) {
+        this.roomName = roomName;
+        this.roomDesc = roomDesc;
+        this.distanceCenter = distanceCenter;
     }
 }
