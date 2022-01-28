@@ -5,9 +5,12 @@ import android.graphics.drawable.Drawable;
 import lombok.Builder;
 
 public class GameRoomInfo {
-    public String name;
+    public String userName;
+    public String userId;
+
     @Builder
-    public GameRoomInfo(String name) {
-        this.name = name;
+    public GameRoomInfo(String userName, String userId) {
+        this.userName = userName;
+        this.userId = userId;
     }
 }

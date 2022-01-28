@@ -164,21 +164,6 @@ public class DataGenerator {
         return items;
     }
 
-    /**
-     * Generate dummy data game room info
-     *
-     * @param ctx android context
-     * @return list of object
-     */
-    public static List<GameRoomInfo> getGameRoomInfo(Context ctx) {
-        List<GameRoomInfo> items = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            GameRoomInfo obj = new GameRoomInfo(String.valueOf(i));
-            items.add(obj);
-        }
-        return items;
-    }
 
     /**
      * Generate dummy data inbox

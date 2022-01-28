@@ -87,7 +87,8 @@ public class LobbyActivity extends AppCompatActivity {
         mLobbyAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
             @Override
             public void onItemClick(View view, GameLobbyRoomItem obj, int position) {
-
+                // 입장 처리
+                Toast.makeText(LobbyActivity.this,obj.matchId + "clicked",Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -42,12 +42,14 @@ public class AdapterGameRoom extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
-        public TextView name;
+        public TextView user_name;
+        public TextView user_id;
         public View lyt_parent;
 
         public OriginalViewHolder(View v) {
             super(v);
-            name = (TextView) v.findViewById(R.id.name);
+            user_name = (TextView) v.findViewById(R.id.user_name);
+            user_id = (TextView) v.findViewById(R.id.user_id);
             lyt_parent = (View) v.findViewById(R.id.lyt_parent);
         }
     }
@@ -67,7 +69,8 @@ public class AdapterGameRoom extends RecyclerView.Adapter<RecyclerView.ViewHolde
             AdapterGameRoom.OriginalViewHolder view = (AdapterGameRoom.OriginalViewHolder) holder;
 
             GameRoomInfo p = items.get(holder.getAdapterPosition());
-            view.name.setText(p.name);
+            view.user_id.setText(p.userId);
+            view.user_name.setText(p.userName);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

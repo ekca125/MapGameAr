@@ -86,7 +86,7 @@ public class GameRoomActivity extends AppCompatActivity {
         mGameRoomAdapter.setOnItemClickListener(new AdapterGameRoom.OnItemClickListener() {
             @Override
             public void onItemClick(View view, GameRoomInfo obj, int position) {
-                Snackbar.make(parent_view, "Item " + obj.name + " clicked", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(parent_view, "Item " + obj.userName + " clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
         recyclerView.setAdapter(mGameRoomAdapter);
@@ -127,7 +127,8 @@ public class GameRoomActivity extends AppCompatActivity {
         List<GameRoomInfo> items = gameRoomClient.getMatchUserPresenceList().stream()
                 .map(player -> {
                     return GameRoomInfo.builder()
-                            .name(player.getUserId())
+                            .userName(player.getUsername())
+                            .userId(player.getUserId())
                             .build();
                 })
                 .collect(Collectors.toList());
