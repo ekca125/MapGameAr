@@ -128,7 +128,6 @@ public class LobbyActivity extends AppCompatActivity {
         MatchList matchList = nakamaNetworkManager.getAllMatchListSync();
         if(matchList != null){
             List<GameLobbyRoomItem> items = matchList.getMatchesList().stream()
-
                     .map(match -> {
                         String label = match.getLabel().getValue();
                         GameRoomLabel gameRoomLabel = gson.fromJson(label,GameRoomLabel.class);
