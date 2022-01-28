@@ -24,6 +24,7 @@ import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
+import com.ekcapaper.racingar.operator.FlagGameRoomClient;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.api.GroupList;
@@ -88,7 +89,14 @@ public class LobbyActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, GameLobbyRoomItem obj, int position) {
                 // 입장 처리
-                Toast.makeText(LobbyActivity.this,obj.matchId + "clicked",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(LobbyActivity.this,obj.matchId + "clicked",Toast.LENGTH_SHORT).show();
+                boolean result = thisApplication.joinGameRoom(FlagGameRoomClient.class.getName(), obj.matchId);
+                if (result) {
+                    Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(LobbyActivity.this, "방 입장에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
