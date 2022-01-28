@@ -93,7 +93,11 @@ public class GameRoomActivity extends AppCompatActivity {
         // get player data
         refreshRoomPlayerList();
         //
-        gameRoomClient.setAfterOnMatchPresence(this::refreshRoomPlayerList);
+        gameRoomClient.setAfterOnMatchPresence(()->{
+            runOnUiThread(()->{
+                refreshRoomPlayerList();
+            });
+        });
         //
         initToolbar();
     }
