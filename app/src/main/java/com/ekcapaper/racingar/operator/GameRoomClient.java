@@ -7,6 +7,7 @@ import com.ekcapaper.racingar.modelgame.play.GameStatus;
 import com.ekcapaper.racingar.modelgame.play.Player;
 import com.ekcapaper.racingar.network.GameMessage;
 import com.ekcapaper.racingar.network.GameMessageEnd;
+import com.ekcapaper.racingar.network.GameMessageFlagGameStart;
 import com.ekcapaper.racingar.network.GameMessageMovePlayer;
 import com.ekcapaper.racingar.network.GameMessageOpCode;
 import com.ekcapaper.racingar.network.GameMessageStart;
@@ -184,6 +185,10 @@ public class GameRoomClient implements SocketListener {
             case GAME_START:
                 GameMessageStart gameMessageStart = gson.fromJson(data, GameMessageStart.class);
                 onGameStart(gameMessageStart);
+                break;
+            case FLAG_GAME_START:
+                GameMessageFlagGameStart gameMessageFlagGameStart = gson.fromJson(data, GameMessageFlagGameStart.class);
+                onGameStart(gameMessageFlagGameStart);
                 break;
             case GAME_END:
                 GameMessageEnd gameMessageEnd = gson.fromJson(data, GameMessageEnd.class);
