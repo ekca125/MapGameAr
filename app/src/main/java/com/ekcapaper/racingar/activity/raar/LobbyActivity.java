@@ -138,6 +138,7 @@ public class LobbyActivity extends AppCompatActivity {
                                 .roomDesc(gameRoomLabel.getRoomDesc())
                                 .distanceCenter(distanceMeter + "m")
                                 .matchId(match.getMatchId())
+                                .gameTypeDesc(gameRoomLabel.getGameType().name())
                                 .build();
                     }).collect(Collectors.toList());
             this.mLobbyItems.clear();

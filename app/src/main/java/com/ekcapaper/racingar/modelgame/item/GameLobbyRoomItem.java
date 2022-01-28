@@ -8,12 +8,14 @@ public class GameLobbyRoomItem {
     public String roomDesc;
     public String distanceCenter;
     public String matchId;
+    public String gameTypeDesc;
 
     @Builder
-    public GameLobbyRoomItem(String roomName, String roomDesc, String distanceCenter, String matchId) {
+    public GameLobbyRoomItem(String roomName, String roomDesc, String distanceCenter, String matchId, String gameTypeDesc) {
         this.roomName = roomName;
         this.roomDesc = roomDesc;
         this.distanceCenter = distanceCenter;
         this.matchId = matchId;
+        this.gameTypeDesc = gameTypeDesc;
     }
 }

@@ -41,6 +41,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         public TextView room_desc;
         public TextView distance_center;
         public TextView match_id;
+        public TextView game_type_desc;
         public View lyt_parent;
 
         public OriginalViewHolder(View v) {
@@ -50,6 +51,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             room_desc = (TextView) v.findViewById(R.id.room_desc);
             distance_center = (TextView) v.findViewById(R.id.distance_center);
             match_id = (TextView) v.findViewById(R.id.match_id);
+            game_type_desc = (TextView) v.findViewById(R.id.game_type_desc);
         }
     }
 
@@ -72,6 +74,7 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             view.room_desc.setText(items.get(holder.getAdapterPosition()).roomDesc);
             view.distance_center.setText(items.get(holder.getAdapterPosition()).distanceCenter);
             view.match_id.setText(items.get(holder.getAdapterPosition()).matchId);
+            view.game_type_desc.setText(items.get(holder.getAdapterPosition()).gameTypeDesc);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
