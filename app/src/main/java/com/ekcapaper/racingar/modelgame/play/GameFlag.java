@@ -7,12 +7,16 @@ public class GameFlag {
     boolean owned;
     String userId;
     // 위치
-    Location location;
+    double latitude;
+    double longitude;
+
     // 소유권을 주장하는 플레이어 위치와의 거리 (50m)
     private final double ownMeter = 50;
     
     public GameFlag(Location location) {
-        this.location = location;
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
+
         this.owned = false;
         this.userId = "";
     }
@@ -27,7 +31,7 @@ public class GameFlag {
 
     public void reflectPlayerLocation(Location playerLocation, String userId){
         if(!owned){
-            double distance = playerLocation.distanceTo(location);
+            double distance = playerLocation.distanceTo(getLocation());
             if(distance <= ownMeter){
                 this.owned = true;
                 this.userId = userId;
@@ -36,6 +40,9 @@ public class GameFlag {
     }
 
     public Location getLocation() {
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
         return location;
     }
 }

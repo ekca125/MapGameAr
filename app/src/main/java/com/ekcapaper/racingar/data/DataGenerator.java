@@ -7,9 +7,9 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.modelgame.play.GameType;
-import com.ekcapaper.racingar.model.GameRoomInfo;
+import com.ekcapaper.racingar.modelgame.item.GameRoomInfo;
 import com.ekcapaper.racingar.model.CardViewImg;
-import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
+import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.model.Image;
 import com.ekcapaper.racingar.model.Inbox;
 import com.ekcapaper.racingar.model.MusicAlbum;
@@ -124,13 +124,13 @@ public class DataGenerator {
      * @param ctx android context
      * @return list of object
      */
-    public static List<GameLobbyRoomInfo> getGameRoomInfoData(Context ctx) {
-        List<GameLobbyRoomInfo> items = new ArrayList<>();
+    public static List<GameLobbyRoomItem> getGameRoomInfoData(Context ctx) {
+        List<GameLobbyRoomItem> items = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            GameLobbyRoomInfo obj = new GameLobbyRoomInfo();
-            obj.name = "game "+String.valueOf(i);
-            obj.distanceCenter = "1m";
-            obj.gameType = GameType.GAME_TYPE_FLAG;
+            GameLobbyRoomItem obj = GameLobbyRoomItem.builder()
+                    .groupId("testGroupId")
+                    .matchId("testMatchId")
+                    .build();
             items.add(obj);
         }
         return items;
@@ -191,10 +191,7 @@ public class DataGenerator {
         List<GameRoomInfo> items = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
-            GameRoomInfo obj = new GameRoomInfo();
-            obj.image = R.drawable.image_2;
-            obj.name = String.valueOf(i);
-            obj.imageDrw = ctx.getResources().getDrawable(obj.image);
+            GameRoomInfo obj = new GameRoomInfo(String.valueOf(i));
             items.add(obj);
         }
         return items;

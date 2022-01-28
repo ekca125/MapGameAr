@@ -1,8 +1,8 @@
 package com.ekcapaper.racingar.modelgame.play;
 
 public enum GameStatus {
-    GAME_NOT_READY,
+    GAME_NOT_INIT,
     GAME_READY,
-    GAME_STARTED,
+    GAME_RUNNING,
     GAME_END
 }

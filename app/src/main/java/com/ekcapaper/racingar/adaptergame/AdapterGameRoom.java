@@ -1,54 +1,53 @@
-package com.ekcapaper.racingar.adapter;
+package com.ekcapaper.racingar.adaptergame;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
-import com.ekcapaper.racingar.model.GameLobbyRoomInfo;
+import com.ekcapaper.racingar.adapter.AdapterListBasic;
+import com.ekcapaper.racingar.model.People;
+import com.ekcapaper.racingar.modelgame.item.GameRoomInfo;
+import com.ekcapaper.racingar.helper.SwipeItemTouchHelper;
 import com.ekcapaper.racingar.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private List<GameLobbyRoomInfo> items = new ArrayList<>();
+public class AdapterGameRoom extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    private List<GameRoomInfo> items = new ArrayList<>();
 
     private Context ctx;
-    private AdapterLobby.OnItemClickListener mOnItemClickListener;
+    private AdapterGameRoom.OnItemClickListener mOnItemClickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(View view, GameLobbyRoomInfo obj, int position);
+        void onItemClick(View view, GameRoomInfo obj, int position);
     }
 
-    public void setOnItemClickListener(final AdapterLobby.OnItemClickListener mItemClickListener) {
+    public void setOnItemClickListener(final AdapterGameRoom.OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public AdapterLobby(Context context, List<GameLobbyRoomInfo> items) {
+    public AdapterGameRoom(Context context, List<GameRoomInfo> items) {
         this.items = items;
         ctx = context;
     }
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
-        public ImageView image;
         public TextView name;
-        public TextView distance_center;
-        public TextView description;
         public View lyt_parent;
 
         public OriginalViewHolder(View v) {
             super(v);
-            image = (ImageView) v.findViewById(R.id.image);
             name = (TextView) v.findViewById(R.id.name);
-            distance_center = (TextView) v.findViewById(R.id.distance_center);
-            description = (TextView) v.findViewById(R.id.description);
             lyt_parent = (View) v.findViewById(R.id.lyt_parent);
         }
     }
@@ -56,22 +55,19 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh;
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_game_room_lobby_info, parent, false);
-        vh = new AdapterLobby.OriginalViewHolder(v);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_game_room, parent, false);
+        vh = new AdapterGameRoom.OriginalViewHolder(v);
         return vh;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof AdapterLobby.OriginalViewHolder) {
-            AdapterLobby.OriginalViewHolder view = (AdapterLobby.OriginalViewHolder) holder;
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof AdapterGameRoom.OriginalViewHolder) {
+            AdapterGameRoom.OriginalViewHolder view = (AdapterGameRoom.OriginalViewHolder) holder;
 
-            GameLobbyRoomInfo gri = items.get(holder.getAdapterPosition());
-            view.name.setText(gri.name);
-            view.description.setText(gri.getGameTypeString());
-            view.distance_center.setText(gri.distanceCenter);
-            Tools.displayImageRound(ctx, view.image, gri.getImage());
+            GameRoomInfo p = items.get(holder.getAdapterPosition());
+            view.name.setText(p.name);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -87,5 +83,4 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public int getItemCount() {
         return items.size();
     }
-
 }
