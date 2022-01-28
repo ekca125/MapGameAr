@@ -77,6 +77,13 @@ public class LobbyActivity extends AppCompatActivity {
         mLobbyItems = new ArrayList<>();
         mLobbyAdapter = new AdapterLobby(this,mLobbyItems);
         recyclerView.setAdapter(mLobbyAdapter);
+        mLobbyAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, GameLobbyRoomItem obj, int position) {
+
+
+            }
+        });
 
         //
         initToolbar();
