@@ -124,9 +124,11 @@ public class LobbyActivity extends AppCompatActivity {
             throw new IllegalStateException();
         }
 
+        // 필터링 및 변환 작업
         MatchList matchList = nakamaNetworkManager.getAllMatchListSync();
         if(matchList != null){
             List<GameLobbyRoomItem> items = matchList.getMatchesList().stream()
+
                     .map(match -> {
                         String label = match.getLabel().getValue();
                         GameRoomLabel gameRoomLabel = gson.fromJson(label,GameRoomLabel.class);
