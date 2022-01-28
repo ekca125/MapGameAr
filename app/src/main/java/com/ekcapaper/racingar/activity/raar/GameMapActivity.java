@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -110,6 +111,8 @@ public class GameMapActivity extends AppCompatActivity {
             public void onMapReady(GoogleMap googleMap) {
                 mMap = Tools.configActivityMaps(googleMap);
                 mapReady = true;
+                Location mapCenter = gameRoomClient.getGameRoomLabel().getMapCenter();
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapCenter.getLatitude(), mapCenter.getLongitude()), 13));
             }
         });
     }
@@ -147,6 +150,7 @@ public class GameMapActivity extends AppCompatActivity {
             flagMarkers.forEach(Marker::remove);
             List<GameFlag> gameFlagList = ((FlagGameRoomClient) gameRoomClient).getUnownedFlagList();
             gameFlagList.forEach((gameFlag -> {
+                Log.d("gameFlag",gameFlag.getLocation().toString());
                 flagMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("flag", gameFlag.getLocation())));
             }));
         }

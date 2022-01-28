@@ -1,6 +1,7 @@
 package com.ekcapaper.racingar;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
@@ -46,6 +47,8 @@ public class MessageParseTest {
             GameMessageFlagGameStart gameMessageStart = new GameMessageFlagGameStart(gameFlagList);
             String gameMessageStartJson = gson.toJson(gameMessageStart);
             GameMessageStart gameMessageStartResult = gson.fromJson(gameMessageStartJson,GameMessageFlagGameStart.class);
+            Log.d("gamestart",gameMessageStartJson);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

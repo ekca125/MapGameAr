@@ -3,6 +3,7 @@ package com.ekcapaper.racingar.operator;
 import android.location.Location;
 import android.util.Log;
 
+import com.ekcapaper.racingar.modelgame.GameRoomLabel;
 import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.modelgame.play.GameStatus;
 import com.ekcapaper.racingar.modelgame.play.Player;
@@ -57,6 +58,8 @@ public class GameRoomClient implements SocketListener {
     @Getter
     private Match match;
     @Getter
+    private GameRoomLabel gameRoomLabel;
+    @Getter
     protected final List<UserPresence> channelUserPresenceList;
     @Getter
     protected final List<UserPresence> matchUserPresenceList;
@@ -87,6 +90,7 @@ public class GameRoomClient implements SocketListener {
         if (match == null) {
             return false;
         } else {
+            gameRoomLabel = new Gson().fromJson(label,GameRoomLabel.class);
             goGameStatus(GameStatus.GAME_READY);
             return true;
         }
@@ -98,6 +102,7 @@ public class GameRoomClient implements SocketListener {
         if (match == null) {
             return false;
         } else {
+            gameRoomLabel = new Gson().fromJson(match.getLabel(),GameRoomLabel.class);
             goGameStatus(GameStatus.GAME_READY);
             return true;
         }
