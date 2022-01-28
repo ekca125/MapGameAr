@@ -127,6 +127,7 @@ public class LobbyActivity extends AppCompatActivity {
                                 .roomName(gameRoomLabel.getRoomName())
                                 .roomDesc(gameRoomLabel.getRoomDesc())
                                 .distanceCenter(distanceMeter + "m")
+                                .matchId(match.getMatchId())
                                 .build();
                     }).collect(Collectors.toList());
             this.mLobbyItems.clear();
