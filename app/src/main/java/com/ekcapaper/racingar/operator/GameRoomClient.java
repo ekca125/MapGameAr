@@ -1,6 +1,7 @@
 package com.ekcapaper.racingar.operator;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.modelgame.play.GameStatus;
@@ -177,6 +178,8 @@ public class GameRoomClient implements SocketListener {
 
         GameMessageOpCode gameMessageOpCode = GameMessageOpCode.values()[(int) networkOpCode];
         String data = new String(networkBytes, StandardCharsets.UTF_8);
+        data = data.substring(1,data.length()-2);
+
         switch (gameMessageOpCode) {
             case MOVE_PLAYER:
                 GameMessageMovePlayer gameMessageMovePlayer = gson.fromJson(data, GameMessageMovePlayer.class);
