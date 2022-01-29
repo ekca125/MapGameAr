@@ -235,7 +235,7 @@ public class GameMapActivity extends AppCompatActivity {
         public MarkerOptions createMarkerOption(String type, LatLng latLng) {
             if (type.equals("flag")) {
                 //return new MarkerOptions().position(latLng);
-                BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_cake);
+                BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_cake_outline);
                 return new MarkerOptions().position(latLng).icon(icon);
             } else if (type.equals("player")) {
                 return new MarkerOptions().position(latLng);
