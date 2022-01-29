@@ -101,6 +101,7 @@ public class GameRoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 button_game_start.setEnabled(false);
+                Toast.makeText(GameRoomActivity.this, "게임을 시작합니다.", Toast.LENGTH_SHORT).show();
                 CompletableFuture.runAsync(() -> {
                             gameRoomClient.declareGameStart();
                         }

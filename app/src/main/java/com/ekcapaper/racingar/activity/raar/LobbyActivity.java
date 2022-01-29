@@ -121,6 +121,7 @@ public class LobbyActivity extends AppCompatActivity {
         locationRequestSpace.start();
         //
 
+        Toast.makeText(LobbyActivity.this, "방의 목록을 가져오는 중입니다.", Toast.LENGTH_SHORT).show();
         //util
         gson = new Gson();
     }
