@@ -20,6 +20,7 @@ import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.GameRoomLabel;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
+import com.ekcapaper.racingar.modelgame.play.GameTypeTextConverter;
 import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.operator.FlagGameRoomClient;
 import com.ekcapaper.racingar.utils.Tools;
@@ -148,7 +149,7 @@ public class LobbyActivity extends AppCompatActivity {
                                 .roomDesc(gameRoomLabel.getRoomDesc())
                                 .distanceCenter(distanceMeter + "m")
                                 .matchId(match.getMatchId())
-                                .gameTypeDesc(gameRoomLabel.getGameType().name())
+                                .gameTypeDesc(GameTypeTextConverter.convertGameTypeToText(gameRoomLabel.getGameType()))
                                 .build();
                     })
                     .collect(Collectors.toList());

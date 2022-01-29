@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
 import com.ekcapaper.racingar.modelgame.GameRoomLabel;
+import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.network.GameMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -30,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class NakamaNetworkManager {
     private final Client client;
@@ -183,14 +185,23 @@ public class NakamaNetworkManager {
 
     // match
     public GameRoomLabel getGameRoomLabel(String matchId){
-        Map<String,String> payloadMap = new HashMap<>();
-        payloadMap.put("matchid",matchId);
-
-        String payload = gson.toJson(payloadMap);
+        MatchList matchList = getMinPlayerAllMatchListSync();
+        if(matchList == null){
+            return null;
+        }
         try {
-            JsonObject result = clientRpcSync("get_match_data",payload);
-            return gson.fromJson(result.get("label"),GameRoomLabel.class);
-        } catch (Exception e) {
+            return matchList.getMatchesList().stream()
+                    .filter(match -> {
+                        return match.getMatchId().equals(matchId);
+                    })
+                    .map(match -> {
+                        String label = match.getLabel().getValue();
+                        return gson.fromJson(label, GameRoomLabel.class);
+                    })
+                    .collect(Collectors.toList())
+                    .get(0);
+        }
+        catch (Exception e){
             return null;
         }
     }
