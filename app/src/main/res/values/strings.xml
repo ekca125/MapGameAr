@@ -40,4 +40,5 @@
     <string name="new_room">새로운 방</string>
     <string name="game_start">게임 시작</string>
     <string name="game_room">게임 방</string>
+    <string name="room_desc">방 설명</string>
 </resources>

@@ -46,6 +46,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     private NakamaNetworkManager nakamaNetworkManager;
     // activity
     private TextInputEditText text_input_name;
+    private TextInputEditText text_input_room_desc;
     private TextInputEditText text_input_latitude;
     private TextInputEditText text_input_longitude;
     private Spinner game_type_spinner;
@@ -77,6 +78,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         // activity
         button_generate_room = findViewById(R.id.button_generate_room);
         text_input_name = findViewById(R.id.text_input_name);
+        text_input_room_desc = findViewById(R.id.text_input_room_desc);
         text_input_latitude = findViewById(R.id.text_input_latitude);
         text_input_longitude = findViewById(R.id.text_input_longitude);
         game_type_spinner = findViewById(R.id.game_type_spinner);
@@ -111,7 +113,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 button_generate_room.setEnabled(false);
                 // 방 이름
                 String roomName = Objects.requireNonNull(text_input_name.getText()).toString();
-                String roomDesc = "";
+                String roomDesc = Objects.requireNonNull(text_input_room_desc.getText()).toString();
 
                 // 위치 정보 가져오기
                 String latitudeStr = Objects.requireNonNull(text_input_latitude.getText()).toString();
