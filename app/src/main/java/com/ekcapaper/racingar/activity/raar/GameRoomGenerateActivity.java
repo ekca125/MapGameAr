@@ -134,7 +134,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 GameRoomLabel gameRoomLabel = new GameRoomLabel(
                         roomName,
                         roomDesc,
-                        MapRange.calculateMapRange(location, 0.7),
+                        MapRange.calculateMapRange(location, 0.5),
                         nakamaNetworkManager.getCurrentSessionUserId(),
                         gameType,
                         true
