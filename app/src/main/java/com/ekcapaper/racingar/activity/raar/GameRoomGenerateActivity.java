@@ -23,6 +23,7 @@ import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.GameRoomLabel;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.play.GameType;
+import com.ekcapaper.racingar.modelgame.play.GameTypeTextConverter;
 import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.operator.FlagGameRoomClient;
 import com.ekcapaper.racingar.utils.Tools;
@@ -48,6 +49,9 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     private TextInputEditText text_input_longitude;
     private AutoCompleteTextView dropdown_state;
     private Button button_generate_room;
+    // GameType
+    GameType[] gameTypes;
+    GameType currentGameType;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -75,17 +79,22 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         text_input_longitude = findViewById(R.id.text_input_longitude);
         dropdown_state = findViewById(R.id.dropdown_state);
 
+        // game type
+        gameTypes = GameType.values();
+        currentGameType = GameType.GAME_TYPE_FLAG;
+
         // activity setting
         dropdown_state.setAdapter(new ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
-                Arrays.stream(GameType.values()).map(Enum::toString).collect(Collectors.toList())
+                Arrays.stream(GameType.values())
+                        .map(GameTypeTextConverter::convertGameTypeToText)
+                        .collect(Collectors.toList())
         ));
         dropdown_state.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // 현재에는 게임타입의 값을 그대로 사용하고 있기 때문에 비어있는 상태이며
-                // 게임타입의 값 대신에 다른 문자열을 사용할때 클릭하면 현재의 게임타입을 변화시키도록 만들면 된다.
+                currentGameType = gameTypes[i];
             }
         });
         button_generate_room.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +117,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 location.setLongitude(longitude);
 
                 // 게임 선택
-                String selectGameType = dropdown_state.getText().toString();
+                GameType gameType = currentGameType;
 
                 // label 정보 준비
                 Gson gson = new Gson();
@@ -117,13 +126,13 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                         roomDesc,
                         MapRange.calculateMapRange(location, 1),
                         nakamaNetworkManager.getCurrentSessionUserId(),
-                        GameType.valueOf(selectGameType)
+                        gameType
                 );
                 String label = gson.toJson(gameRoomLabel);
 
                 // 진행
                 button_generate_room.setEnabled(false);
-                if (selectGameType.equals(GameType.GAME_TYPE_FLAG.toString())) {
+                if (gameType.equals(GameType.GAME_TYPE_FLAG)) {
                     boolean result = thisApplication.createGameRoom(FlagGameRoomClient.class.getName(), label);
                     if (result) {
                         locationRequestSpace.stop();
