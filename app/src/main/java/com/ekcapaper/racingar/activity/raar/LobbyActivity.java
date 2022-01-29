@@ -132,7 +132,6 @@ public class LobbyActivity extends AppCompatActivity {
                         String label = match.getLabel().getValue();
                         GameRoomLabel gameRoomLabel = gson.fromJson(label,GameRoomLabel.class);
                         double distanceMeter = gameRoomLabel.getMapCenter().distanceTo(currentLocation);
-
                         return GameLobbyRoomItem.builder()
                                 .roomName(gameRoomLabel.getRoomName())
                                 .roomDesc(gameRoomLabel.getRoomDesc())
