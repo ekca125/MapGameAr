@@ -22,7 +22,7 @@
         android:layout_marginRight="@dimen/spacing_middle"
         android:layout_marginBottom="@dimen/spacing_medium"
         android:visibility="visible"
-        app:cardBackgroundColor="@color/blue_700"
+        app:cardBackgroundColor="@color/quantum_white_100"
         app:cardCornerRadius="2dp"
         app:cardElevation="2dp">
 
@@ -37,7 +37,7 @@
                 android:layout_margin="@dimen/spacing_large"
                 android:text="Quisque Sapien Lorem"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -47,30 +47,18 @@
                 android:layout_marginBottom="@dimen/spacing_large"
                 android:text="@string/short_lorem_ipsum"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/grey_10" />
+                android:textColor="@android:color/black" />
 
-            <LinearLayout
+            <Button
+                android:id="@+id/button_game_start"
+                style="@style/Button.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    style="@style/Button.Accent.Borderless.WhiteText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="LISTEN NOW" />
-
-            </LinearLayout>
+                android:gravity="center"
+                android:text="@string/game_start" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-    <Button
-        android:id="@+id/button_game_start"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/game_start" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
