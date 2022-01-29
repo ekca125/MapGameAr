@@ -6,30 +6,25 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
-import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.operator.FlagGameRoomClient;
 import com.ekcapaper.racingar.operator.GameRoomClient;
 import com.ekcapaper.racingar.utils.Tools;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -38,11 +33,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class GameMapActivity extends AppCompatActivity {
+    // map marker
+    List<Marker> playerMarkers;
+    List<Marker> flagMarkers;
+    // location checker
+    LocationRequestSpace locationRequestSpace;
     // field
     private ThisApplication thisApplication;
     private NakamaNetworkManager nakamaNetworkManager;
@@ -51,17 +49,9 @@ public class GameMapActivity extends AppCompatActivity {
     private ImageButton list_button;
     private ImageButton map_button;
     private ImageButton add_button;
-
     // map
     private GoogleMap mMap;
     private boolean mapReady;
-    // map marker
-    List<Marker> playerMarkers;
-    List<Marker> flagMarkers;
-
-    // location checker
-    LocationRequestSpace locationRequestSpace;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +60,9 @@ public class GameMapActivity extends AppCompatActivity {
 
         // field
         thisApplication = (ThisApplication) getApplicationContext();
-        nakamaNetworkManager= thisApplication.getNakamaNetworkManager();
+        nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
         gameRoomClient = thisApplication.getGameRoomClient();
-        if(gameRoomClient == null){
+        if (gameRoomClient == null) {
             throw new IllegalStateException();
         }
 
@@ -117,10 +107,38 @@ public class GameMapActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                             gameRoomClient.declareCurrentPlayerMove(location);
                             syncGameMap();
+                            endCheckSequence();
                         }
                 );
             }
         });
+        //
+        gameRoomClient.setAfterGameEndMessage(() -> {
+            runOnUiThread(() -> {
+                if (gameRoomClient instanceof FlagGameRoomClient) {
+                    FlagGameRoomClient flagGameRoomClient = (FlagGameRoomClient) gameRoomClient;
+                    flagGameRoomClient.getGamePlayerList().stream()
+                            .reduce((playerA, playerB) -> {
+                                int playerAPoint = flagGameRoomClient.getPoint(playerA.getUserId());
+                                int playerBPoint = flagGameRoomClient.getPoint(playerB.getUserId());
+                                if (playerAPoint < playerBPoint) {
+                                    return playerB;
+                                } else {
+                                    return playerA;
+                                }
+                            })
+                            .ifPresent(player -> {
+                                if (player.getUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())) {
+                                    Toast.makeText(getApplicationContext(), "승리했습니다.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "패배했습니다..", Toast.LENGTH_SHORT).show();
+                                }
+                                finish();
+                            });
+                }
+            });
+        });
+
         //
         Tools.setSystemBarColor(this, R.color.colorPrimary);
     }
@@ -144,7 +162,7 @@ public class GameMapActivity extends AppCompatActivity {
             public void onMapReady(GoogleMap googleMap) {
                 mMap = Tools.configActivityMaps(googleMap);
                 mMap.getUiSettings().setZoomControlsEnabled(true);
-                mMap.setPadding(0,0,0,100);
+                mMap.setPadding(0, 0, 0, 100);
                 mapReady = true;
                 //
                 Location mapCenter = gameRoomClient.getGameRoomLabel().getMapCenter();
@@ -164,16 +182,25 @@ public class GameMapActivity extends AppCompatActivity {
         playerMarkers.clear();
         gameRoomClient.getGamePlayerList().stream()
                 .forEach(player -> {
-                    player.getLocation().ifPresent(location ->{
-                        playerMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("player",location)));
+                    player.getLocation().ifPresent(location -> {
+                        playerMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("player", location)));
                     });
                 });
-        if(gameRoomClient instanceof FlagGameRoomClient){
+        if (gameRoomClient instanceof FlagGameRoomClient) {
             flagMarkers.forEach(Marker::remove);
             List<GameFlag> gameFlagList = ((FlagGameRoomClient) gameRoomClient).getUnownedFlagList();
             gameFlagList.forEach((gameFlag -> {
                 flagMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("flag", gameFlag.getLocation())));
             }));
+        }
+    }
+
+    private void endCheckSequence() {
+        if (gameRoomClient instanceof FlagGameRoomClient) {
+            FlagGameRoomClient flagGameRoomClient = (FlagGameRoomClient) gameRoomClient;
+            if (flagGameRoomClient.getUnownedFlagList().size() == 0) {
+                gameRoomClient.declareGameEnd();
+            }
         }
     }
 
