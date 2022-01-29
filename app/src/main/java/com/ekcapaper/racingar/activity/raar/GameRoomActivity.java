@@ -2,6 +2,7 @@ package com.ekcapaper.racingar.activity.raar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,6 +64,9 @@ public class GameRoomActivity extends AppCompatActivity {
             throw new IllegalStateException();
         }
 
+        Log.d("gameLabel",gameRoomClient.getGameRoomLabel().getRoomName());
+        Log.d("gameLabel", String.valueOf(gameRoomClient.getMatchUserPresenceList().size()));
+
         // activity
         parent_view = findViewById(android.R.id.content);
         button_game_start = findViewById(R.id.button_game_start);
@@ -106,9 +110,7 @@ public class GameRoomActivity extends AppCompatActivity {
         refreshRoomPlayerList();
         //
         gameRoomClient.setAfterOnMatchPresence(()->{
-            runOnUiThread(()->{
-                refreshRoomPlayerList();
-            });
+            runOnUiThread(this::refreshRoomPlayerList);
         });
         //
         initToolbar();

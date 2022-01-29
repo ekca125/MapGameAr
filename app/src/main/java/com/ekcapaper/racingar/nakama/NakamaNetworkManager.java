@@ -32,7 +32,7 @@ import java.util.concurrent.ExecutionException;
 
 public class NakamaNetworkManager {
     private final Client client;
-    private final SocketClient socketClient;
+    private SocketClient socketClient;
     Session session;
 
     private final Gson gson;
@@ -44,11 +44,7 @@ public class NakamaNetworkManager {
                 KeyStorageNakama.getGrpcPort(),
                 KeyStorageNakama.getGrpcSSL()
         );
-        socketClient = client.createSocket(
-                KeyStorageNakama.getWebSocketAddress(),
-                KeyStorageNakama.getWebSocketPort(),
-                KeyStorageNakama.getWebSocketSSL()
-        );
+        socketClient = null;
         session = null;
         //
         gson = new Gson();
@@ -197,6 +193,15 @@ public class NakamaNetworkManager {
 
     public Match joinMatchSync(SocketListener socketListener, String matchId) {
         try {
+            if(socketClient != null){
+                throw new IllegalStateException();
+            }
+
+            socketClient = client.createSocket(
+                    KeyStorageNakama.getWebSocketAddress(),
+                    KeyStorageNakama.getWebSocketPort(),
+                    KeyStorageNakama.getWebSocketSSL()
+            );
             socketClient.connect(session, socketListener);
             return socketClient.joinMatch(matchId).get();
         } catch (ExecutionException | InterruptedException e) {
@@ -215,6 +220,8 @@ public class NakamaNetworkManager {
     public void leaveMatchSync(String matchId) {
         try {
             socketClient.leaveMatch(matchId).get();
+            socketClient.disconnect();
+            socketClient = null;
         } catch (ExecutionException | InterruptedException ignored) {
         }
     }
