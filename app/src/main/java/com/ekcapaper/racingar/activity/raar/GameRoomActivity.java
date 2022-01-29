@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class GameRoomActivity extends AppCompatActivity {
+    private final int ACTIVITY_REQUEST_CODE = 0;
     // field
     private ThisApplication thisApplication;
     private GameRoomClient gameRoomClient;
@@ -38,6 +40,16 @@ public class GameRoomActivity extends AppCompatActivity {
     private List<GameRoomInfo> mGameRoomItems;
     private AdapterGameRoom mGameRoomAdapter;
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != ACTIVITY_REQUEST_CODE) {
+            // 잘못 코딩한 경우에 발생하는 예외
+            throw new IllegalStateException();
+        }
+        thisApplication.leaveGameRoom();
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +89,7 @@ public class GameRoomActivity extends AppCompatActivity {
         });
         gameRoomClient.setAfterGameStartMessage(() -> {
             Intent intent = new Intent(getApplicationContext(), GameMapActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent,ACTIVITY_REQUEST_CODE);
         });
 
         // adapter
