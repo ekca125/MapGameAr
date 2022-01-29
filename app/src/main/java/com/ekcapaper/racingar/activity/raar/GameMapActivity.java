@@ -221,11 +221,13 @@ public class GameMapActivity extends AppCompatActivity {
 
         private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
             Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+
             vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
             Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
             vectorDrawable.draw(canvas);
-            return BitmapDescriptorFactory.fromBitmap(bitmap);
+            Bitmap resizeBitmap = Bitmap.createScaledBitmap(bitmap, 50, 50, true);
+            return BitmapDescriptorFactory.fromBitmap(resizeBitmap);
         }
 
         public MarkerOptions createMarkerOption(String type, Location location) {
@@ -235,7 +237,7 @@ public class GameMapActivity extends AppCompatActivity {
         public MarkerOptions createMarkerOption(String type, LatLng latLng) {
             if (type.equals("flag")) {
                 //return new MarkerOptions().position(latLng);
-                BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_cake_outline);
+                BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_copper_card);
                 return new MarkerOptions().position(latLng).icon(icon);
             } else if (type.equals("player")) {
                 return new MarkerOptions().position(latLng);
