@@ -17,6 +17,7 @@ import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
+import com.ekcapaper.racingar.modelgame.play.GameStatus;
 import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.operator.FlagGameRoomClient;
 import com.ekcapaper.racingar.operator.GameRoomClient;
@@ -89,7 +90,8 @@ public class GameMapActivity extends AppCompatActivity {
         map_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Map Clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Map Clicked", Toast.LENGTH_SHORT).show();
+                moveCameraMapCenter();
             }
         });
         add_button.setOnClickListener(new View.OnClickListener() {
@@ -133,9 +135,9 @@ public class GameMapActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(getApplicationContext(), "패배했습니다..", Toast.LENGTH_SHORT).show();
                                 }
-                                finish();
                             });
                 }
+                finish();
             });
         });
 
@@ -165,11 +167,15 @@ public class GameMapActivity extends AppCompatActivity {
                 mMap.setPadding(0, 0, 0, 100);
                 mapReady = true;
                 //
-                Location mapCenter = gameRoomClient.getGameRoomLabel().getMapCenter();
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapCenter.getLatitude(), mapCenter.getLongitude()), 13));
+                moveCameraMapCenter();
                 syncGameMap();
             }
         });
+    }
+
+    private void moveCameraMapCenter(){
+        Location mapCenter = gameRoomClient.getGameRoomLabel().getMapCenter();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapCenter.getLatitude(), mapCenter.getLongitude()), 13));
     }
 
     private void syncGameMap() {
@@ -199,7 +205,9 @@ public class GameMapActivity extends AppCompatActivity {
         if (gameRoomClient instanceof FlagGameRoomClient) {
             FlagGameRoomClient flagGameRoomClient = (FlagGameRoomClient) gameRoomClient;
             if (flagGameRoomClient.getUnownedFlagList().size() == 0) {
-                gameRoomClient.declareGameEnd();
+                if (flagGameRoomClient.getCurrentGameStatus().equals(GameStatus.GAME_RUNNING)) {
+                    gameRoomClient.declareGameEnd();
+                }
             }
         }
     }
