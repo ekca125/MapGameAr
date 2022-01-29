@@ -18,12 +18,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adaptergame.AdapterLobby;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
+import com.ekcapaper.racingar.modelgame.GameRoomLabel;
 import com.ekcapaper.racingar.modelgame.item.GameRoomInfo;
 import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
+import com.ekcapaper.racingar.operator.FlagGameRoomClient;
 import com.ekcapaper.racingar.utils.Tools;
+import com.google.gson.Gson;
 import com.heroiclabs.nakama.api.GroupList;
 import com.heroiclabs.nakama.api.MatchList;
 
@@ -46,6 +49,11 @@ public class LobbyActivity extends AppCompatActivity {
     // adapter
     private AdapterLobby mLobbyAdapter;
     private List<GameLobbyRoomItem> mLobbyItems;
+    // location
+    private LocationRequestSpace locationRequestSpace;
+    private Location currentLocation;
+    // util
+    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,28 +88,58 @@ public class LobbyActivity extends AppCompatActivity {
         mLobbyAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
             @Override
             public void onItemClick(View view, GameLobbyRoomItem obj, int position) {
-
-
+                // 입장 처리
+                //Toast.makeText(LobbyActivity.this,obj.matchId + "clicked",Toast.LENGTH_SHORT).show();
+                boolean result = thisApplication.joinGameRoom(FlagGameRoomClient.class.getName(), obj.matchId);
+                if (result) {
+                    Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(LobbyActivity.this, "방 입장에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         //
         initToolbar();
+        // location
+        currentLocation = null;
+        locationRequestSpace = new LocationRequestSpace(this, new Consumer<Location>() {
+            @Override
+            public void accept(Location location) {
+                locationRequestSpace.stop();
+                LobbyActivity.this.currentLocation = location;
+                refreshLobbyData();
+            }
+        });
+        locationRequestSpace.start();
         //
-        refreshLobbyData();
+
+        //util
+        gson = new Gson();
     }
 
     private void refreshLobbyData() {
-        MatchList matchList = nakamaNetworkManager.getAllMatchListSync();
+        if(currentLocation == null){
+            throw new IllegalStateException();
+        }
+
+        // 필터링 및 변환 작업
+        MatchList matchList = nakamaNetworkManager.getMinPlayerAllMatchListSync();
         if(matchList != null){
             List<GameLobbyRoomItem> items = matchList.getMatchesList().stream()
                     .map(match -> {
-                        GameLobbyRoomItem gameLobbyRoomItem = new GameLobbyRoomItem(
-                                match.getMatchId(),
-                                match.getMatchId(),
-                                match.getMatchId()
-                        );
-                        return gameLobbyRoomItem;
+                        String label = match.getLabel().getValue();
+                        GameRoomLabel gameRoomLabel = gson.fromJson(label,GameRoomLabel.class);
+                        double distanceMeter = gameRoomLabel.getMapCenter().distanceTo(currentLocation);
+
+                        return GameLobbyRoomItem.builder()
+                                .roomName(gameRoomLabel.getRoomName())
+                                .roomDesc(gameRoomLabel.getRoomDesc())
+                                .distanceCenter(distanceMeter + "m")
+                                .matchId(match.getMatchId())
+                                .gameTypeDesc(gameRoomLabel.getGameType().name())
+                                .build();
                     }).collect(Collectors.toList());
             this.mLobbyItems.clear();
             this.mLobbyItems.addAll(items);
@@ -130,8 +168,13 @@ public class LobbyActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             finish();
         } else if (item.getItemId() == R.id.action_refresh) {
-            Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
-            refreshLobbyData();
+            if(currentLocation == null){
+                Toast.makeText(getApplicationContext(), "위치 정보를 가져오는 중입니다.", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
+                refreshLobbyData();
+            }
         } else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }

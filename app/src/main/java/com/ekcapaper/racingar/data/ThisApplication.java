@@ -52,4 +52,13 @@ public class ThisApplication extends Application {
         gameRoomClient = GameRoomClientFactory.createGameRoomClientJoinMatch(clientTypeName,nakamaNetworkManager,matchId);
         return gameRoomClient != null;
     }
+
+    public void leaveGameRoom(){
+        if(gameRoomClient != null){
+            // leave room -> match
+            // leave room -> socket connect
+            nakamaNetworkManager.leaveMatchSync(gameRoomClient.getMatch().getMatchId());
+            gameRoomClient = null;
+        }
+    }
 }

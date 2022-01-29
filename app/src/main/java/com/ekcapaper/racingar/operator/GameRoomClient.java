@@ -287,14 +287,19 @@ public class GameRoomClient implements SocketListener {
         if (leaveList != null) {
             onMatchLeavePresence(leaveList);
         }
+        afterOnMatchPresence.run();
     }
 
     public void onMatchJoinPresence(List<UserPresence> joinList) {
-        matchUserPresenceList.addAll(joinList);
+        if(joinList != null) {
+            matchUserPresenceList.addAll(joinList);
+        }
     }
 
     public void onMatchLeavePresence(List<UserPresence> leaveList) {
-        matchUserPresenceList.removeAll(leaveList);
+        if(leaveList != null) {
+            matchUserPresenceList.removeAll(leaveList);
+        }
     }
 
     @Override

@@ -37,17 +37,21 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     public class OriginalViewHolder extends RecyclerView.ViewHolder {
-        public TextView group_id;
+        public TextView room_name;
+        public TextView room_desc;
+        public TextView distance_center;
         public TextView match_id;
-        public TextView name;
+        public TextView game_type_desc;
         public View lyt_parent;
 
         public OriginalViewHolder(View v) {
             super(v);
             lyt_parent = (View) v.findViewById(R.id.lyt_parent);
-            group_id = (TextView) v.findViewById(R.id.group_id);
+            room_name = (TextView) v.findViewById(R.id.room_name);
+            room_desc = (TextView) v.findViewById(R.id.room_desc);
+            distance_center = (TextView) v.findViewById(R.id.distance_center);
             match_id = (TextView) v.findViewById(R.id.match_id);
-            name = (TextView) v.findViewById(R.id.name);
+            game_type_desc = (TextView) v.findViewById(R.id.game_type_desc);
         }
     }
 
@@ -66,9 +70,11 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             AdapterLobby.OriginalViewHolder view = (AdapterLobby.OriginalViewHolder) holder;
 
             GameLobbyRoomItem gri = items.get(holder.getAdapterPosition());
-            view.name.setText(items.get(holder.getAdapterPosition()).name);
-            view.group_id.setText(items.get(holder.getAdapterPosition()).groupId);
+            view.room_name.setText(items.get(holder.getAdapterPosition()).roomName);
+            view.room_desc.setText(items.get(holder.getAdapterPosition()).roomDesc);
+            view.distance_center.setText(items.get(holder.getAdapterPosition()).distanceCenter);
             view.match_id.setText(items.get(holder.getAdapterPosition()).matchId);
+            view.game_type_desc.setText(items.get(holder.getAdapterPosition()).gameTypeDesc);
             view.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

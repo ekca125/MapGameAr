@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -23,6 +24,8 @@ import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.GameRoomLabel;
 import com.ekcapaper.racingar.modelgame.address.MapRange;
 import com.ekcapaper.racingar.modelgame.play.GameType;
+import com.ekcapaper.racingar.modelgame.play.GameTypeTextConverter;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.operator.FlagGameRoomClient;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.textfield.TextInputEditText;
@@ -40,12 +43,16 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     LocationRequestSpace locationRequestSpace;
     // field
     private ThisApplication thisApplication;
+    private NakamaNetworkManager nakamaNetworkManager;
     // activity
     private TextInputEditText text_input_name;
     private TextInputEditText text_input_latitude;
     private TextInputEditText text_input_longitude;
-    private AutoCompleteTextView dropdown_state;
+    private Spinner game_type_spinner;
     private Button button_generate_room;
+    // GameType
+    GameType[] gameTypes;
+    GameType currentGameType;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -54,6 +61,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
             // 잘못 코딩한 경우에 발생하는 예외
             throw new IllegalStateException();
         }
+        thisApplication.leaveGameRoom();
         finish();
     }
 
@@ -64,27 +72,39 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
 
         // field
         thisApplication = (ThisApplication) getApplicationContext();
+        nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
 
         // activity
         button_generate_room = findViewById(R.id.button_generate_room);
         text_input_name = findViewById(R.id.text_input_name);
         text_input_latitude = findViewById(R.id.text_input_latitude);
         text_input_longitude = findViewById(R.id.text_input_longitude);
-        dropdown_state = findViewById(R.id.dropdown_state);
+        game_type_spinner = findViewById(R.id.game_type_spinner);
+
+        // game type
+        gameTypes = GameType.values();
+        currentGameType = GameType.GAME_TYPE_FLAG;
 
         // activity setting
-        dropdown_state.setAdapter(new ArrayAdapter(
+        game_type_spinner.setAdapter(new ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
-                Arrays.stream(GameType.values()).map(Enum::toString).collect(Collectors.toList())
+                Arrays.stream(gameTypes)
+                        .map(GameTypeTextConverter::convertGameTypeToText)
+                        .collect(Collectors.toList())
         ));
-        dropdown_state.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        game_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // 현재에는 게임타입의 값을 그대로 사용하고 있기 때문에 비어있는 상태이며
-                // 게임타입의 값 대신에 다른 문자열을 사용할때 클릭하면 현재의 게임타입을 변화시키도록 만들면 된다.
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                currentGameType = gameTypes[i];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
+
         button_generate_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,20 +125,22 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 location.setLongitude(longitude);
 
                 // 게임 선택
-                String selectGameType = dropdown_state.getText().toString();
+                GameType gameType = currentGameType;
 
                 // label 정보 준비
                 Gson gson = new Gson();
                 GameRoomLabel gameRoomLabel = new GameRoomLabel(
                         roomName,
                         roomDesc,
-                        MapRange.calculateMapRange(location, 1)
+                        MapRange.calculateMapRange(location, 1),
+                        nakamaNetworkManager.getCurrentSessionUserId(),
+                        gameType
                 );
                 String label = gson.toJson(gameRoomLabel);
 
                 // 진행
                 button_generate_room.setEnabled(false);
-                if (selectGameType.equals(GameType.GAME_TYPE_FLAG.toString())) {
+                if (gameType.equals(GameType.GAME_TYPE_FLAG)) {
                     boolean result = thisApplication.createGameRoom(FlagGameRoomClient.class.getName(), label);
                     if (result) {
                         locationRequestSpace.stop();
@@ -146,6 +168,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         button_generate_room.setEnabled(false);
         locationRequestSpace.start();
         //
+        currentGameType = GameType.GAME_TYPE_FLAG;
+        //
         initToolbar();
         // stub
         String roomName = RandomStringUtils.randomAlphabetic(10);
@@ -153,7 +177,6 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         // stub 2
         button_generate_room.setEnabled(false);
         button_generate_room.setText(R.string.loading_location);
-        dropdown_state.setText(GameType.GAME_TYPE_FLAG.toString());
     }
 
     @Override
