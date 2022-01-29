@@ -44,7 +44,11 @@ public class NakamaNetworkManager {
                 KeyStorageNakama.getGrpcPort(),
                 KeyStorageNakama.getGrpcSSL()
         );
-        socketClient = null;
+        socketClient = client.createSocket(
+                KeyStorageNakama.getWebSocketAddress(),
+                KeyStorageNakama.getWebSocketPort(),
+                KeyStorageNakama.getWebSocketSSL()
+        );
         session = null;
         //
         gson = new Gson();
@@ -196,12 +200,6 @@ public class NakamaNetworkManager {
             if(socketClient != null){
                 throw new IllegalStateException();
             }
-
-            socketClient = client.createSocket(
-                    KeyStorageNakama.getWebSocketAddress(),
-                    KeyStorageNakama.getWebSocketPort(),
-                    KeyStorageNakama.getWebSocketSSL()
-            );
             socketClient.connect(session, socketListener);
             return socketClient.joinMatch(matchId).get();
         } catch (ExecutionException | InterruptedException e) {
@@ -219,9 +217,16 @@ public class NakamaNetworkManager {
 
     public void leaveMatchSync(String matchId) {
         try {
+            // 떠나기
             socketClient.leaveMatch(matchId).get();
             socketClient.disconnect();
             socketClient = null;
+            // 새로운 소켓 클라이언트로 초기화
+            socketClient = client.createSocket(
+                    KeyStorageNakama.getWebSocketAddress(),
+                    KeyStorageNakama.getWebSocketPort(),
+                    KeyStorageNakama.getWebSocketSSL()
+            );
         } catch (ExecutionException | InterruptedException ignored) {
         }
     }
