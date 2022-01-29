@@ -197,9 +197,6 @@ public class NakamaNetworkManager {
 
     public Match joinMatchSync(SocketListener socketListener, String matchId) {
         try {
-            if(socketClient != null){
-                throw new IllegalStateException();
-            }
             socketClient.connect(session, socketListener);
             return socketClient.joinMatch(matchId).get();
         } catch (ExecutionException | InterruptedException e) {
