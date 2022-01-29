@@ -87,7 +87,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         dropdown_state.setAdapter(new ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
-                Arrays.stream(GameType.values())
+                Arrays.stream(gameTypes)
                         .map(GameTypeTextConverter::convertGameTypeToText)
                         .collect(Collectors.toList())
         ));
@@ -160,6 +160,9 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         button_generate_room.setEnabled(false);
         locationRequestSpace.start();
         //
+        currentGameType = GameType.GAME_TYPE_FLAG;
+        dropdown_state.setText(GameTypeTextConverter.GAME_TYPE_FLAG_TEXT);
+        //
         initToolbar();
         // stub
         String roomName = RandomStringUtils.randomAlphabetic(10);
@@ -167,7 +170,6 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         // stub 2
         button_generate_room.setEnabled(false);
         button_generate_room.setText(R.string.loading_location);
-        dropdown_state.setText(GameType.GAME_TYPE_FLAG.toString());
     }
 
     @Override
