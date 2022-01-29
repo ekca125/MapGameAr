@@ -136,7 +136,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                         roomDesc,
                         MapRange.calculateMapRange(location, 1),
                         nakamaNetworkManager.getCurrentSessionUserId(),
-                        gameType
+                        gameType,
+                        true
                 );
                 String label = gson.toJson(gameRoomLabel);
 

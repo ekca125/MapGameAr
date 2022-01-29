@@ -3,7 +3,6 @@ package com.ekcapaper.racingar.activity.raar;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,27 +17,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.adaptergame.AdapterLobby;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
-import com.ekcapaper.racingar.modelgame.GameRoomLabel;
-import com.ekcapaper.racingar.modelgame.item.GameRoomInfo;
-import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
+import com.ekcapaper.racingar.modelgame.GameRoomLabel;
 import com.ekcapaper.racingar.modelgame.item.GameLobbyRoomItem;
-import com.ekcapaper.racingar.modelgame.play.GameFlag;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.operator.FlagGameRoomClient;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.gson.Gson;
-import com.heroiclabs.nakama.api.GroupList;
 import com.heroiclabs.nakama.api.MatchList;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class LobbyActivity extends AppCompatActivity {
+    // util
+    Gson gson;
     // field
     private ThisApplication thisApplication;
     private NakamaNetworkManager nakamaNetworkManager;
@@ -52,8 +47,6 @@ public class LobbyActivity extends AppCompatActivity {
     // location
     private LocationRequestSpace locationRequestSpace;
     private Location currentLocation;
-    // util
-    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +76,16 @@ public class LobbyActivity extends AppCompatActivity {
 
         // adapter
         mLobbyItems = new ArrayList<>();
-        mLobbyAdapter = new AdapterLobby(this,mLobbyItems);
+        mLobbyAdapter = new AdapterLobby(this, mLobbyItems);
         recyclerView.setAdapter(mLobbyAdapter);
         mLobbyAdapter.setOnItemClickListener(new AdapterLobby.OnItemClickListener() {
             @Override
             public void onItemClick(View view, GameLobbyRoomItem obj, int position) {
                 // 입장 처리
-                //Toast.makeText(LobbyActivity.this,obj.matchId + "clicked",Toast.LENGTH_SHORT).show();
+                // 존재하며 아직 시작되지 않은 방인지 확인
+                
+
+                //
                 boolean result = thisApplication.joinGameRoom(FlagGameRoomClient.class.getName(), obj.matchId);
                 if (result) {
                     Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
@@ -120,17 +116,23 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     private void refreshLobbyData() {
-        if(currentLocation == null){
+        if (currentLocation == null) {
             throw new IllegalStateException();
         }
 
         // 필터링 및 변환 작업
         MatchList matchList = nakamaNetworkManager.getMinPlayerAllMatchListSync();
-        if(matchList != null){
+        if (matchList != null) {
             List<GameLobbyRoomItem> items = matchList.getMatchesList().stream()
+                    .filter(match -> {
+                                String label = match.getLabel().getValue();
+                                GameRoomLabel gameRoomLabel = gson.fromJson(label, GameRoomLabel.class);
+                                return gameRoomLabel.isOpened();
+                            }
+                    )
                     .map(match -> {
                         String label = match.getLabel().getValue();
-                        GameRoomLabel gameRoomLabel = gson.fromJson(label,GameRoomLabel.class);
+                        GameRoomLabel gameRoomLabel = gson.fromJson(label, GameRoomLabel.class);
                         double distanceMeter = gameRoomLabel.getMapCenter().distanceTo(currentLocation);
                         return GameLobbyRoomItem.builder()
                                 .roomName(gameRoomLabel.getRoomName())
@@ -139,7 +141,8 @@ public class LobbyActivity extends AppCompatActivity {
                                 .matchId(match.getMatchId())
                                 .gameTypeDesc(gameRoomLabel.getGameType().name())
                                 .build();
-                    }).collect(Collectors.toList());
+                    })
+                    .collect(Collectors.toList());
             this.mLobbyItems.clear();
             this.mLobbyItems.addAll(items);
             mLobbyAdapter.notifyDataSetChanged();
@@ -167,10 +170,9 @@ public class LobbyActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             finish();
         } else if (item.getItemId() == R.id.action_refresh) {
-            if(currentLocation == null){
+            if (currentLocation == null) {
                 Toast.makeText(getApplicationContext(), "위치 정보를 가져오는 중입니다.", Toast.LENGTH_SHORT).show();
-            }
-            else{
+            } else {
                 Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
                 refreshLobbyData();
             }
