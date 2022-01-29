@@ -6,30 +6,26 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.ekcapaper.racingar.R;
 import com.ekcapaper.racingar.data.LocationRequestSpace;
-import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.play.GameFlag;
+import com.ekcapaper.racingar.modelgame.play.GameStatus;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.operator.FlagGameRoomClient;
 import com.ekcapaper.racingar.operator.GameRoomClient;
 import com.ekcapaper.racingar.utils.Tools;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -38,11 +34,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class GameMapActivity extends AppCompatActivity {
+    // map marker
+    List<Marker> playerMarkers;
+    List<Marker> flagMarkers;
+    // location checker
+    LocationRequestSpace locationRequestSpace;
     // field
     private ThisApplication thisApplication;
     private NakamaNetworkManager nakamaNetworkManager;
@@ -51,17 +50,9 @@ public class GameMapActivity extends AppCompatActivity {
     private ImageButton list_button;
     private ImageButton map_button;
     private ImageButton add_button;
-
     // map
     private GoogleMap mMap;
     private boolean mapReady;
-    // map marker
-    List<Marker> playerMarkers;
-    List<Marker> flagMarkers;
-
-    // location checker
-    LocationRequestSpace locationRequestSpace;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +61,9 @@ public class GameMapActivity extends AppCompatActivity {
 
         // field
         thisApplication = (ThisApplication) getApplicationContext();
-        nakamaNetworkManager= thisApplication.getNakamaNetworkManager();
+        nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
         gameRoomClient = thisApplication.getGameRoomClient();
-        if(gameRoomClient == null){
+        if (gameRoomClient == null) {
             throw new IllegalStateException();
         }
 
@@ -99,7 +90,8 @@ public class GameMapActivity extends AppCompatActivity {
         map_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Map Clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Map Clicked", Toast.LENGTH_SHORT).show();
+                moveCameraMapCenter();
             }
         });
         add_button.setOnClickListener(new View.OnClickListener() {
@@ -117,10 +109,38 @@ public class GameMapActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                             gameRoomClient.declareCurrentPlayerMove(location);
                             syncGameMap();
+                            endCheckSequence();
                         }
                 );
             }
         });
+        //
+        gameRoomClient.setAfterGameEndMessage(() -> {
+            runOnUiThread(() -> {
+                if (gameRoomClient instanceof FlagGameRoomClient) {
+                    FlagGameRoomClient flagGameRoomClient = (FlagGameRoomClient) gameRoomClient;
+                    flagGameRoomClient.getGamePlayerList().stream()
+                            .reduce((playerA, playerB) -> {
+                                int playerAPoint = flagGameRoomClient.getPoint(playerA.getUserId());
+                                int playerBPoint = flagGameRoomClient.getPoint(playerB.getUserId());
+                                if (playerAPoint < playerBPoint) {
+                                    return playerB;
+                                } else {
+                                    return playerA;
+                                }
+                            })
+                            .ifPresent(player -> {
+                                if (player.getUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())) {
+                                    Toast.makeText(getApplicationContext(), "승리했습니다.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "패배했습니다..", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+                finish();
+            });
+        });
+
         //
         Tools.setSystemBarColor(this, R.color.colorPrimary);
     }
@@ -144,14 +164,18 @@ public class GameMapActivity extends AppCompatActivity {
             public void onMapReady(GoogleMap googleMap) {
                 mMap = Tools.configActivityMaps(googleMap);
                 mMap.getUiSettings().setZoomControlsEnabled(true);
-                mMap.setPadding(0,0,0,100);
+                mMap.setPadding(0, 0, 0, 100);
                 mapReady = true;
                 //
-                Location mapCenter = gameRoomClient.getGameRoomLabel().getMapCenter();
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapCenter.getLatitude(), mapCenter.getLongitude()), 13));
+                moveCameraMapCenter();
                 syncGameMap();
             }
         });
+    }
+
+    private void moveCameraMapCenter(){
+        Location mapCenter = gameRoomClient.getGameRoomLabel().getMapCenter();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapCenter.getLatitude(), mapCenter.getLongitude()), 13));
     }
 
     private void syncGameMap() {
@@ -164,16 +188,27 @@ public class GameMapActivity extends AppCompatActivity {
         playerMarkers.clear();
         gameRoomClient.getGamePlayerList().stream()
                 .forEach(player -> {
-                    player.getLocation().ifPresent(location ->{
-                        playerMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("player",location)));
+                    player.getLocation().ifPresent(location -> {
+                        playerMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("player", location)));
                     });
                 });
-        if(gameRoomClient instanceof FlagGameRoomClient){
+        if (gameRoomClient instanceof FlagGameRoomClient) {
             flagMarkers.forEach(Marker::remove);
             List<GameFlag> gameFlagList = ((FlagGameRoomClient) gameRoomClient).getUnownedFlagList();
             gameFlagList.forEach((gameFlag -> {
                 flagMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("flag", gameFlag.getLocation())));
             }));
+        }
+    }
+
+    private void endCheckSequence() {
+        if (gameRoomClient instanceof FlagGameRoomClient) {
+            FlagGameRoomClient flagGameRoomClient = (FlagGameRoomClient) gameRoomClient;
+            if (flagGameRoomClient.getUnownedFlagList().size() == 0) {
+                if (flagGameRoomClient.getCurrentGameStatus().equals(GameStatus.GAME_RUNNING)) {
+                    gameRoomClient.declareGameEnd();
+                }
+            }
         }
     }
 
@@ -186,11 +221,13 @@ public class GameMapActivity extends AppCompatActivity {
 
         private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
             Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+
             vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
             Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
             vectorDrawable.draw(canvas);
-            return BitmapDescriptorFactory.fromBitmap(bitmap);
+            Bitmap resizeBitmap = Bitmap.createScaledBitmap(bitmap, 50, 50, true);
+            return BitmapDescriptorFactory.fromBitmap(resizeBitmap);
         }
 
         public MarkerOptions createMarkerOption(String type, Location location) {
@@ -200,7 +237,7 @@ public class GameMapActivity extends AppCompatActivity {
         public MarkerOptions createMarkerOption(String type, LatLng latLng) {
             if (type.equals("flag")) {
                 //return new MarkerOptions().position(latLng);
-                BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_cake);
+                BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_copper_card);
                 return new MarkerOptions().position(latLng).icon(icon);
             } else if (type.equals("player")) {
                 return new MarkerOptions().position(latLng);

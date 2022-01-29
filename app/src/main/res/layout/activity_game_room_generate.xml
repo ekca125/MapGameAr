@@ -44,12 +44,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/room_name"
-                app:endIconDrawable="@drawable/ic_location_outline"
                 app:endIconMode="custom"
                 app:endIconTint="@color/colorPrimaryLight">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/text_input_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/room_desc"
+                app:endIconMode="custom"
+                app:endIconTint="@color/colorPrimaryLight">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_input_room_desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

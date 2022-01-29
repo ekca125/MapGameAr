@@ -22,6 +22,7 @@ import com.ekcapaper.racingar.data.ThisApplication;
 import com.ekcapaper.racingar.modelgame.GameRoomLabel;
 import com.ekcapaper.racingar.modelgame.item.GameRoomInfo;
 import com.ekcapaper.racingar.modelgame.play.GameTypeTextConverter;
+import com.ekcapaper.racingar.nakama.NakamaNetworkManager;
 import com.ekcapaper.racingar.operator.GameRoomClient;
 import com.ekcapaper.racingar.utils.Tools;
 import com.google.android.material.snackbar.Snackbar;
@@ -35,6 +36,7 @@ public class GameRoomActivity extends AppCompatActivity {
     private final int ACTIVITY_REQUEST_CODE = 0;
     // field
     private ThisApplication thisApplication;
+    private NakamaNetworkManager nakamaNetworkManager;
     private GameRoomClient gameRoomClient;
     // activity
     private View parent_view;
@@ -67,6 +69,7 @@ public class GameRoomActivity extends AppCompatActivity {
 
         // field
         thisApplication = (ThisApplication) getApplicationContext();
+        nakamaNetworkManager = thisApplication.getNakamaNetworkManager();
         gameRoomClient = thisApplication.getGameRoomClient();
         if (gameRoomClient == null) {
             throw new IllegalStateException();
@@ -100,7 +103,12 @@ public class GameRoomActivity extends AppCompatActivity {
         button_game_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!gameRoomLabel.getMasterUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())){
+                    Snackbar.make(parent_view, "방을 만든 사용자만이 방을 시작할 수 있습니다.", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
                 button_game_start.setEnabled(false);
+                Toast.makeText(GameRoomActivity.this, "게임을 시작합니다.", Toast.LENGTH_SHORT).show();
                 CompletableFuture.runAsync(() -> {
                             gameRoomClient.declareGameStart();
                         }
