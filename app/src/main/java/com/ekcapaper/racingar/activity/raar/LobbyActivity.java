@@ -83,7 +83,15 @@ public class LobbyActivity extends AppCompatActivity {
             public void onItemClick(View view, GameLobbyRoomItem obj, int position) {
                 // 입장 처리
                 // 존재하며 아직 시작되지 않은 방인지 확인
-                
+                GameRoomLabel gameRoomLabel = nakamaNetworkManager.getGameRoomLabel(obj.matchId);
+                if(gameRoomLabel == null){
+                    Toast.makeText(LobbyActivity.this, "존재하지 않는 방입니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if(!gameRoomLabel.isOpened()){
+                    Toast.makeText(LobbyActivity.this, "이미 시작된 방입니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 //
                 boolean result = thisApplication.joinGameRoom(FlagGameRoomClient.class.getName(), obj.matchId);
@@ -92,6 +100,7 @@ public class LobbyActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else {
                     Toast.makeText(LobbyActivity.this, "방 입장에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
         });

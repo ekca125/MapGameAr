@@ -3,6 +3,7 @@ package com.ekcapaper.racingar.nakama;
 import androidx.annotation.NonNull;
 
 import com.ekcapaper.racingar.keystorage.KeyStorageNakama;
+import com.ekcapaper.racingar.modelgame.GameRoomLabel;
 import com.ekcapaper.racingar.network.GameMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -181,6 +182,20 @@ public class NakamaNetworkManager {
     //
 
     // match
+    public GameRoomLabel getGameRoomLabel(String matchId){
+        Map<String,String> payloadMap = new HashMap<>();
+        payloadMap.put("matchid",matchId);
+
+        String payload = gson.toJson(payloadMap);
+        try {
+            JsonObject result = clientRpcSync("get_match_data",payload);
+            return gson.fromJson(result.get("label"),GameRoomLabel.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
     public Match createMatchSync(SocketListener socketListener, String label) {
         try {
             String rpcFunctionName = "create_match_racingar";
