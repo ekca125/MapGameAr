@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -47,7 +48,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     private TextInputEditText text_input_name;
     private TextInputEditText text_input_latitude;
     private TextInputEditText text_input_longitude;
-    private AutoCompleteTextView dropdown_state;
+    private Spinner game_type_spinner;
     private Button button_generate_room;
     // GameType
     GameType[] gameTypes;
@@ -78,26 +79,32 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         text_input_name = findViewById(R.id.text_input_name);
         text_input_latitude = findViewById(R.id.text_input_latitude);
         text_input_longitude = findViewById(R.id.text_input_longitude);
-        dropdown_state = findViewById(R.id.dropdown_state);
+        game_type_spinner = findViewById(R.id.game_type_spinner);
 
         // game type
         gameTypes = GameType.values();
         currentGameType = GameType.GAME_TYPE_FLAG;
 
         // activity setting
-        dropdown_state.setAdapter(new ArrayAdapter(
+        game_type_spinner.setAdapter(new ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
                 Arrays.stream(gameTypes)
                         .map(GameTypeTextConverter::convertGameTypeToText)
                         .collect(Collectors.toList())
         ));
-        dropdown_state.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        game_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 currentGameType = gameTypes[i];
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
         });
+
         button_generate_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,7 +169,6 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         locationRequestSpace.start();
         //
         currentGameType = GameType.GAME_TYPE_FLAG;
-        dropdown_state.setText(GameTypeTextConverter.GAME_TYPE_FLAG_TEXT);
         //
         initToolbar();
         // stub

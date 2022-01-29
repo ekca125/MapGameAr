@@ -91,27 +91,17 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/spacing_smlarge" />
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:text="게임 종류" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/game_type">
+            <Spinner
+                    android:id="@+id/game_type_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
-                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                        android:id="@+id/dropdown_state"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
 
             <Button
                 android:id="@+id/button_generate_room"
