@@ -11,13 +11,16 @@
 
         <include layout="@layout/toolbar" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+        <Button
+            android:id="@+id/button_new_room"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/new_room"
+            android:theme="@style/Button.Primary" />
 
-    <Button
-        android:id="@+id/button_new_room"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/new_room" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
