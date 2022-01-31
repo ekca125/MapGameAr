@@ -147,7 +147,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/grey_40" />
 
-        <com.ekcapaper.racingar.widget.RangeSeekBar
+        <com.ekcapaper.mapgamear.widget.RangeSeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/spacing_large"
@@ -290,7 +290,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/grey_40" />
 
-        <com.ekcapaper.racingar.widget.RangeSeekBar
+        <com.ekcapaper.mapgamear.widget.RangeSeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/spacing_large"
