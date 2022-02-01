@@ -189,8 +189,10 @@ public class LobbyActivity extends AppCompatActivity {
             }
         } else if(item.getItemId() == R.id.action_logout){
             thisApplication.logout();
+            finish();
         } else if(item.getItemId() == R.id.action_delete_account){
             thisApplication.deleteAccount();
+            finish();
         }
         else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
