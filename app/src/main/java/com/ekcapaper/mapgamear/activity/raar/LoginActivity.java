@@ -11,11 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ekcapaper.mapgamear.R;
 import com.ekcapaper.mapgamear.data.ThisApplication;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
-import com.ekcapaper.mapgamear.stub.AccountStub;
 import com.ekcapaper.mapgamear.utils.Tools;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class LoginActivity extends AppCompatActivity {
     // manager
@@ -48,14 +48,21 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = Objects.requireNonNull(text_input_text_email.getText()).toString();
                 String password = Objects.requireNonNull(text_input_text_password.getText()).toString();
+                button_login.setEnabled(false);
+                CompletableFuture
+                        .supplyAsync(() -> nakamaNetworkManager.loginEmailSync(email, password), thisApplication.getExecutorService())
+                        .thenAccept((result) -> {
+                            runOnUiThread(() -> {
+                                button_login.setEnabled(true);
+                                if (result) {
+                                    Intent intent = new Intent(LoginActivity.this, LobbyActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                                }
 
-                boolean result = nakamaNetworkManager.loginEmailSync(email, password);
-                if (result) {
-                    Intent intent = new Intent(LoginActivity.this, LobbyActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                }
+                            });
+                        });
             }
         });
         Tools.setSystemBarColor(this);

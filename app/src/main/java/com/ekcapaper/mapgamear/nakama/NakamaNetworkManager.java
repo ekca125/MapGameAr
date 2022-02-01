@@ -33,11 +33,21 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class NakamaNetworkManager {
+    private enum LoginType{
+        EMAIL
+    }
+    //
     private final Client client;
     private SocketClient socketClient;
     Session session;
-
+    // util
     private final Gson gson;
+    // login type
+    LoginType loginType;
+    // email
+    String email;
+    String password;
+
 
     public NakamaNetworkManager() {
         client = new DefaultClient(
@@ -54,6 +64,10 @@ public class NakamaNetworkManager {
         session = null;
         //
         gson = new Gson();
+        //
+        loginType = null;
+        email = null;
+        password = null;
     }
 
     // session
@@ -64,6 +78,9 @@ public class NakamaNetworkManager {
     public boolean loginEmailSync(String email, String password) {
         try {
             session = client.authenticateEmail(email, password).get();
+            loginType = LoginType.EMAIL;
+            this.email = email;
+            this.password = password;
             return true;
         } catch (ExecutionException | InterruptedException e) {
             session = null;
@@ -72,8 +89,26 @@ public class NakamaNetworkManager {
     }
 
     public void logout() {
-        if (session != null) {
-            session = null;
+        if(isLogin()) {
+            socketClient.disconnect();
+            socketClient = null;
+            if (session != null) {
+                session = null;
+            }
+            if(LoginType.EMAIL.equals(loginType)){
+                email = null;
+                password = null;
+                loginType = null;
+            }
+        }
+    }
+
+    public void deleteAccount(){
+        if(isLogin()){
+            if(LoginType.EMAIL.equals(loginType)){
+                client.unlinkEmail(session,email,password);
+                logout();
+            }
         }
     }
 

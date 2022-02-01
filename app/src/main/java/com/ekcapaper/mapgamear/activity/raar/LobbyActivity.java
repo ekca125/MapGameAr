@@ -172,7 +172,7 @@ public class LobbyActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_refresh_setting, menu);
+        getMenuInflater().inflate(R.menu.menu_robby, menu);
         return true;
     }
 
@@ -187,7 +187,12 @@ public class LobbyActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
                 refreshLobbyData();
             }
-        } else {
+        } else if(item.getItemId() == R.id.action_logout){
+            thisApplication.logout();
+        } else if(item.getItemId() == R.id.action_delete_account){
+            thisApplication.deleteAccount();
+        }
+        else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
