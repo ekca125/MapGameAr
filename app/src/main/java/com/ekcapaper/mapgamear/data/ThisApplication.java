@@ -61,4 +61,9 @@ public class ThisApplication extends Application {
             gameRoomClient = null;
         }
     }
+
+    public void logout(){
+        nakamaNetworkManager.logout();
+    }
+
 }

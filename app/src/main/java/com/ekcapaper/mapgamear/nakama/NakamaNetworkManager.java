@@ -1,5 +1,7 @@
 package com.ekcapaper.mapgamear.nakama;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.ekcapaper.mapgamear.keystorage.KeyStorageNakama;
@@ -33,27 +35,38 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class NakamaNetworkManager {
+    private enum LoginType{
+        EMAIL
+    }
+    // util
+    private final Gson gson;
+    // client
     private final Client client;
     private SocketClient socketClient;
     Session session;
+    // login type
+    LoginType loginType;
+    // email
+    String email;
+    String password;
 
-    private final Gson gson;
 
     public NakamaNetworkManager() {
+        //
+        gson = new Gson();
+        //
         client = new DefaultClient(
                 KeyStorageNakama.getServerKey(),
                 KeyStorageNakama.getGrpcAddress(),
                 KeyStorageNakama.getGrpcPort(),
                 KeyStorageNakama.getGrpcSSL()
         );
-        socketClient = client.createSocket(
-                KeyStorageNakama.getWebSocketAddress(),
-                KeyStorageNakama.getWebSocketPort(),
-                KeyStorageNakama.getWebSocketSSL()
-        );
+        socketClient = null;
         session = null;
         //
-        gson = new Gson();
+        loginType = null;
+        email = null;
+        password = null;
     }
 
     // session
@@ -64,6 +77,9 @@ public class NakamaNetworkManager {
     public boolean loginEmailSync(String email, String password) {
         try {
             session = client.authenticateEmail(email, password).get();
+            loginType = LoginType.EMAIL;
+            this.email = email;
+            this.password = password;
             return true;
         } catch (ExecutionException | InterruptedException e) {
             session = null;
@@ -72,8 +88,19 @@ public class NakamaNetworkManager {
     }
 
     public void logout() {
-        if (session != null) {
-            session = null;
+        if(isLogin()) {
+            if(socketClient != null){
+                socketClient.disconnect();
+                socketClient = null;
+            }
+            if(session != null){
+                session = null;
+            }
+            if(LoginType.EMAIL.equals(loginType)){
+                email = null;
+                password = null;
+                loginType = null;
+            }
         }
     }
 
@@ -221,7 +248,15 @@ public class NakamaNetworkManager {
     }
 
     public Match joinMatchSync(SocketListener socketListener, String matchId) {
+        if(socketClient != null){
+            throw new IllegalStateException("SocketClient is already connected");
+        }
         try {
+            socketClient = client.createSocket(
+                    KeyStorageNakama.getWebSocketAddress(),
+                    KeyStorageNakama.getWebSocketPort(),
+                    KeyStorageNakama.getWebSocketSSL()
+            );
             socketClient.connect(session, socketListener);
             return socketClient.joinMatch(matchId).get();
         } catch (ExecutionException | InterruptedException e) {
@@ -230,6 +265,9 @@ public class NakamaNetworkManager {
     }
 
     public void sendMatchData(String matchId, GameMessage gameMessage) {
+        if(socketClient == null){
+            throw new IllegalStateException("SocketClient is not connected");
+        }
         socketClient.sendMatchData(
                 matchId,
                 gameMessage.getOpCode().ordinal(),
