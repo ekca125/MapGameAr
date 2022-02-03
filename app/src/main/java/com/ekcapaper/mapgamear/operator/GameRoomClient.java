@@ -189,12 +189,14 @@ public class GameRoomClient implements SocketListener {
                 onMovePlayer(gameMessageMovePlayer);
                 break;
             case GAME_START:
-                GameMessageStart gameMessageStart = gson.fromJson(data, GameMessageStart.class);
-                onGameStart(gameMessageStart);
-                break;
-            case FLAG_GAME_START:
-                GameMessageFlagGameStart gameMessageFlagGameStart = gson.fromJson(data, GameMessageFlagGameStart.class);
-                onGameStart(gameMessageFlagGameStart);
+                if(this instanceof FlagGameRoomClient){
+                    GameMessageFlagGameStart gameMessageFlagGameStart = gson.fromJson(data, GameMessageFlagGameStart.class);
+                    onGameStart(gameMessageFlagGameStart);
+                }
+                else {
+                    GameMessageStart gameMessageStart = gson.fromJson(data, GameMessageStart.class);
+                    onGameStart(gameMessageStart);
+                }
                 break;
             case GAME_END:
                 GameMessageEnd gameMessageEnd = gson.fromJson(data, GameMessageEnd.class);

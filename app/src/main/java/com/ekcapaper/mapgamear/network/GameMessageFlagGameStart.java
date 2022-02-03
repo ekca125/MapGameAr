@@ -13,7 +13,7 @@ public class GameMessageFlagGameStart extends GameMessageStart{
     private final List<GameFlag> gameFlagList;
 
     public GameMessageFlagGameStart(List<GameFlag> gameFlagList) {
-        super(FLAG_GAME_START);
+        super();
         this.gameFlagList = gameFlagList;
     }
 }
