@@ -67,6 +67,6 @@ public class ThisApplication extends Application {
     }
 
     public void deleteAccount(){
-        nakamaNetworkManager.deleteAccount();
+        nakamaNetworkManager.deleteAccountSync();
     }
 }

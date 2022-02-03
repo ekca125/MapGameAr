@@ -104,10 +104,13 @@ public class NakamaNetworkManager {
         }
     }
 
-    public void deleteAccount(){
+    public void deleteAccountSync(){
         if(isLogin()){
             if(LoginType.EMAIL.equals(loginType)){
-                client.unlinkEmail(session,email,password);
+                try {
+                    client.unlinkEmail(session,email,password).get();
+                } catch (ExecutionException | InterruptedException ignored) {
+                }
                 logout();
             }
         }
