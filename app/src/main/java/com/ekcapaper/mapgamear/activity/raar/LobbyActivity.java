@@ -126,6 +126,12 @@ public class LobbyActivity extends AppCompatActivity {
         gson = new Gson();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        thisApplication.logout();
+    }
+
     private void refreshLobbyData() {
         if (currentLocation == null) {
             throw new IllegalStateException();

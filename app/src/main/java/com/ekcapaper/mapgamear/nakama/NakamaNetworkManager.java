@@ -38,12 +38,12 @@ public class NakamaNetworkManager {
     private enum LoginType{
         EMAIL
     }
-    //
+    // util
+    private final Gson gson;
+    // client
     private final Client client;
     private SocketClient socketClient;
     Session session;
-    // util
-    private final Gson gson;
     // login type
     LoginType loginType;
     // email
@@ -52,6 +52,9 @@ public class NakamaNetworkManager {
 
 
     public NakamaNetworkManager() {
+        //
+        gson = new Gson();
+        //
         client = new DefaultClient(
                 KeyStorageNakama.getServerKey(),
                 KeyStorageNakama.getGrpcAddress(),
@@ -60,8 +63,6 @@ public class NakamaNetworkManager {
         );
         socketClient = null;
         session = null;
-        //
-        gson = new Gson();
         //
         loginType = null;
         email = null;
