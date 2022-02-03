@@ -58,7 +58,6 @@ public class GameRoomActivity extends AppCompatActivity {
             // 잘못 코딩한 경우에 발생하는 예외
             throw new IllegalStateException();
         }
-        thisApplication.leaveGameRoom();
         finish();
     }
 
@@ -143,6 +142,12 @@ public class GameRoomActivity extends AppCompatActivity {
         });
         //
         initToolbar();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        thisApplication.leaveGameRoom();
     }
 
     private void initToolbar() {

@@ -157,6 +157,12 @@ public class GameMapActivity extends AppCompatActivity {
         locationRequestSpace.stop();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        thisApplication.leaveGameRoom();
+    }
+
     private void initMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {

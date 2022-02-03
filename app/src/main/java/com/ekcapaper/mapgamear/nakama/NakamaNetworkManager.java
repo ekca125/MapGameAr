@@ -281,12 +281,6 @@ public class NakamaNetworkManager {
             socketClient.leaveMatch(matchId).get();
             socketClient.disconnect();
             socketClient = null;
-            // 새로운 소켓 클라이언트로 초기화
-            socketClient = client.createSocket(
-                    KeyStorageNakama.getWebSocketAddress(),
-                    KeyStorageNakama.getWebSocketPort(),
-                    KeyStorageNakama.getWebSocketSSL()
-            );
         } catch (ExecutionException | InterruptedException ignored) {
         }
     }
