@@ -185,6 +185,7 @@ public class LobbyActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            thisApplication.logout();
             finish();
         } else if (item.getItemId() == R.id.action_refresh) {
             if (currentLocation == null) {
