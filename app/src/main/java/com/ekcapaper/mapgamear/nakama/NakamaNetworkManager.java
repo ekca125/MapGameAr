@@ -104,18 +104,6 @@ public class NakamaNetworkManager {
         }
     }
 
-    public void deleteAccountSync(){
-        if(isLogin()){
-            if(LoginType.EMAIL.equals(loginType)){
-                try {
-                    client.unlinkEmail(session,email,password).get();
-                } catch (ExecutionException | InterruptedException ignored) {
-                }
-                logout();
-            }
-        }
-    }
-
     // session info
     public String getCurrentSessionUserId() {
         return session.getUserId();

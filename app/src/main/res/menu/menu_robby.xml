@@ -14,9 +14,4 @@
         android:title="로그아웃"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_delete_account"
-        android:orderInCategory="100"
-        android:title="계정삭제"
-        app:showAsAction="never" />
 </menu>
