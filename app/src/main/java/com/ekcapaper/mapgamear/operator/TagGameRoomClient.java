@@ -23,16 +23,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TagGameRoomClient extends GameRoomClient{
-    class Tagger{
+    static class Tagger{
         String taggerUserId;
         //
-        double tagDistance;
+        double tagDistanceMeter;
         LocalDateTime tagTime;
         LocalDateTime tagFreeTime;
         // 100m 안으로 들어오면 술래가 되며 이때 잡힌 시점으로부터 1분이 지나야 술래가 변경된다.
 
         public Tagger(String taggerUserId) {
+            // tagger
             this.taggerUserId = taggerUserId;
+            // setting
+            tagDistanceMeter = 100;
+            tagTime = LocalDateTime.now();
         }
 
         public void updateTagger(){
