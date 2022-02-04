@@ -1,6 +1,7 @@
 package com.ekcapaper.mapgamear.operator;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.ekcapaper.mapgamear.modelgame.GameRoomLabel;
 import com.ekcapaper.mapgamear.modelgame.address.MapRange;
@@ -88,6 +89,10 @@ public class TagGameRoomClient extends GameRoomClient{
             GameMessageTagGameStart gameMessageTagGameStart = (GameMessageTagGameStart) gameMessageStart;
             if (currentGameStatus == GameStatus.GAME_READY) {
                 // ready 상태에서만 메시지를 처리한다.
+                List<Player> matchPlayers = matchUserPresenceList.stream()
+                        .map(userPresence -> new Player(userPresence.getUserId()))
+                        .collect(Collectors.toList());
+                gamePlayerList.addAll(matchPlayers);
                 tagger = new Tagger(gameMessageTagGameStart.getTaggerUserId());
                 goGameStatus(GameStatus.GAME_RUNNING);
                 afterGameStartMessage.run();
