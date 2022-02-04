@@ -211,6 +211,7 @@ public class GameMapActivity extends AppCompatActivity {
             }));
         }
         if(gameRoomClient instanceof TagGameRoomClient){
+            // 술래
             taggerMarkers.forEach(Marker::remove);
             taggerMarkers.clear();
             Player taggerPlayer = ((TagGameRoomClient) gameRoomClient).getCurrentTaggerPlayer();
@@ -260,7 +261,7 @@ public class GameMapActivity extends AppCompatActivity {
                 return new MarkerOptions().position(latLng).icon(icon);
             }
             else if(type.equals("tagger")){
-                BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_accessibility);
+                BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_copper_card);
                 return new MarkerOptions().position(latLng).icon(icon);
             }
             else if (type.equals("player")) {
