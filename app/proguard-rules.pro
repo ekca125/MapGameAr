@@ -57,9 +57,13 @@
 
 ##---------------End: proguard configuration for Gson  ----------
 
+# protobuf
+-keep class * extends com.google.protobuf.GeneratedMessageLite { *; }
+
+# lombok
+-dontwarn lombok.**
+
+## user code
 -keep class com.ekcapaper.mapgamear.network.** {*;}
 -keep class com.ekcapaper.mapgamear.retrofit.** {*;}
 -keep class com.ekcapaper.mapgamear.modelgame.** {*;}
-
-
--keep class * extends com.google.protobuf.GeneratedMessageLite { *; }
