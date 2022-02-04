@@ -26,6 +26,7 @@ import com.ekcapaper.mapgamear.modelgame.play.GameType;
 import com.ekcapaper.mapgamear.modelgame.play.GameTypeTextConverter;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.operator.FlagGameRoomClient;
+import com.ekcapaper.mapgamear.operator.TagGameRoomClient;
 import com.ekcapaper.mapgamear.utils.Tools;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
@@ -142,15 +143,23 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
 
                 // 진행
                 button_generate_room.setEnabled(false);
-                if (gameType.equals(GameType.GAME_TYPE_FLAG)) {
-                    boolean result = thisApplication.createGameRoom(FlagGameRoomClient.class.getName(), label);
-                    if (result) {
-                        locationRequestSpace.stop();
-                        Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
-                        startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
-                    } else {
-                        Toast.makeText(GameRoomGenerateActivity.this, "방 생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                    }
+                boolean result = false;
+                if(gameType.equals(GameType.GAME_TYPE_FLAG)){
+                    result = thisApplication.createGameRoom(FlagGameRoomClient.class.getName(), label);
+                }
+                else if(gameType.equals(GameType.GAME_TYPE_TAG)){
+                    result = thisApplication.createGameRoom(TagGameRoomClient.class.getName(),label);
+                }
+                else{
+                    throw new IllegalArgumentException();
+                }
+                // 결과 확인
+                if (result) {
+                    locationRequestSpace.stop();
+                    Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
+                    startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
+                } else {
+                    Toast.makeText(GameRoomGenerateActivity.this, "방 생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
                 }
                 button_generate_room.setEnabled(true);
             }

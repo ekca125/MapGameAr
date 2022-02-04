@@ -12,6 +12,7 @@ import com.ekcapaper.mapgamear.network.GameMessageFlagGameStart;
 import com.ekcapaper.mapgamear.network.GameMessageMovePlayer;
 import com.ekcapaper.mapgamear.network.GameMessageOpCode;
 import com.ekcapaper.mapgamear.network.GameMessageStart;
+import com.ekcapaper.mapgamear.network.GameMessageTagGameStart;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Error;
@@ -193,6 +194,10 @@ public class GameRoomClient implements SocketListener {
                     GameMessageFlagGameStart gameMessageFlagGameStart = gson.fromJson(data, GameMessageFlagGameStart.class);
                     onGameStart(gameMessageFlagGameStart);
                 }
+                if(this instanceof TagGameRoomClient){
+                    GameMessageTagGameStart gameMessageTagGameStart = gson.fromJson(data, GameMessageTagGameStart.class);
+                    onGameStart(gameMessageTagGameStart);
+                }
                 else {
                     GameMessageStart gameMessageStart = gson.fromJson(data, GameMessageStart.class);
                     onGameStart(gameMessageStart);
@@ -225,7 +230,6 @@ public class GameRoomClient implements SocketListener {
                     .collect(Collectors.toList());
             gamePlayerList.addAll(matchPlayers);
             goGameStatus(GameStatus.GAME_RUNNING);
-            afterGameStartMessage.run();
         }
     }
 

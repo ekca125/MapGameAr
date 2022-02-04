@@ -20,9 +20,11 @@ import com.ekcapaper.mapgamear.data.LocationRequestSpace;
 import com.ekcapaper.mapgamear.data.ThisApplication;
 import com.ekcapaper.mapgamear.modelgame.GameRoomLabel;
 import com.ekcapaper.mapgamear.modelgame.item.GameLobbyRoomItem;
+import com.ekcapaper.mapgamear.modelgame.play.GameType;
 import com.ekcapaper.mapgamear.modelgame.play.GameTypeTextConverter;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.operator.FlagGameRoomClient;
+import com.ekcapaper.mapgamear.operator.TagGameRoomClient;
 import com.ekcapaper.mapgamear.utils.Tools;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.api.MatchList;
@@ -94,14 +96,25 @@ public class LobbyActivity extends AppCompatActivity {
                     return;
                 }
 
-                //
-                boolean result = thisApplication.joinGameRoom(FlagGameRoomClient.class.getName(), obj.matchId);
+                // 입장 처리
+                boolean result;
+                GameType gameType = GameTypeTextConverter.convertTextToGameType(obj.gameTypeDesc);
+                if(gameType.equals(GameType.GAME_TYPE_FLAG)){
+                    result = thisApplication.joinGameRoom(FlagGameRoomClient.class.getName(), obj.matchId);
+                }
+                else if(gameType.equals(GameType.GAME_TYPE_TAG)){
+                    result = thisApplication.joinGameRoom(TagGameRoomClient.class.getName(), obj.matchId);
+                }
+                else{
+                    throw new IllegalArgumentException();
+                }
+
+                // 입장 후의 처리
                 if (result) {
                     Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(LobbyActivity.this, "방 입장에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                    return;
                 }
             }
         });

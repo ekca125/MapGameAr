@@ -18,9 +18,11 @@ import com.ekcapaper.mapgamear.data.LocationRequestSpace;
 import com.ekcapaper.mapgamear.data.ThisApplication;
 import com.ekcapaper.mapgamear.modelgame.play.GameFlag;
 import com.ekcapaper.mapgamear.modelgame.play.GameStatus;
+import com.ekcapaper.mapgamear.modelgame.play.Player;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.operator.FlagGameRoomClient;
 import com.ekcapaper.mapgamear.operator.GameRoomClient;
+import com.ekcapaper.mapgamear.operator.TagGameRoomClient;
 import com.ekcapaper.mapgamear.utils.Tools;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -40,6 +42,7 @@ public class GameMapActivity extends AppCompatActivity {
     // map marker
     List<Marker> playerMarkers;
     List<Marker> flagMarkers;
+    List<Marker> taggerMarkers;
     // location checker
     LocationRequestSpace locationRequestSpace;
     // field
@@ -76,6 +79,7 @@ public class GameMapActivity extends AppCompatActivity {
         mapReady = false;
         playerMarkers = new ArrayList<>();
         flagMarkers = new ArrayList<>();
+        taggerMarkers = new ArrayList<>();
 
         // activity
         initMapFragment();
@@ -200,10 +204,20 @@ public class GameMapActivity extends AppCompatActivity {
                 });
         if (gameRoomClient instanceof FlagGameRoomClient) {
             flagMarkers.forEach(Marker::remove);
+            flagMarkers.clear();
             List<GameFlag> gameFlagList = ((FlagGameRoomClient) gameRoomClient).getUnownedFlagList();
             gameFlagList.forEach((gameFlag -> {
                 flagMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("flag", gameFlag.getLocation())));
             }));
+        }
+        if(gameRoomClient instanceof TagGameRoomClient){
+            // 술래
+            taggerMarkers.forEach(Marker::remove);
+            taggerMarkers.clear();
+            Player taggerPlayer = ((TagGameRoomClient) gameRoomClient).getCurrentTaggerPlayer();
+            taggerPlayer.getLocation().ifPresent(location ->{
+                taggerMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("tagger",location)));
+            });
         }
     }
 
@@ -245,7 +259,12 @@ public class GameMapActivity extends AppCompatActivity {
                 //return new MarkerOptions().position(latLng);
                 BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_copper_card);
                 return new MarkerOptions().position(latLng).icon(icon);
-            } else if (type.equals("player")) {
+            }
+            else if(type.equals("tagger")){
+                BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_copper_card);
+                return new MarkerOptions().position(latLng).icon(icon);
+            }
+            else if (type.equals("player")) {
                 return new MarkerOptions().position(latLng);
             } else {
                 throw new IllegalArgumentException();

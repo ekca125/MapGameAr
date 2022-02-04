@@ -1,7 +1,5 @@
 package com.ekcapaper.mapgamear.network;
 
-import static com.ekcapaper.mapgamear.network.GameMessageOpCode.FLAG_GAME_START;
-
 import com.ekcapaper.mapgamear.modelgame.play.GameFlag;
 
 import java.util.List;
