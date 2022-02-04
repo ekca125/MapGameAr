@@ -58,6 +58,7 @@ public class GameRoomActivity extends AppCompatActivity {
             // 잘못 코딩한 경우에 발생하는 예외
             throw new IllegalStateException();
         }
+        thisApplication.leaveGameRoom();
         finish();
     }
 
