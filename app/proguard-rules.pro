@@ -25,3 +25,4 @@
 #-renamesourcefileattribute SourceFile
 
 -dontwarn com.beloo.widget.chipslayoutmanager.**
+
