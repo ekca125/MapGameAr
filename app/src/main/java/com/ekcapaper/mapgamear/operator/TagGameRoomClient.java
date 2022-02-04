@@ -85,18 +85,10 @@ public class TagGameRoomClient extends GameRoomClient{
 
     @Override
     public void onGameStart(GameMessageStart gameMessageStart) {
+        super.onGameStart(gameMessageStart);
         if(gameMessageStart instanceof GameMessageTagGameStart){
-            GameMessageTagGameStart gameMessageTagGameStart = (GameMessageTagGameStart) gameMessageStart;
-            if (currentGameStatus == GameStatus.GAME_READY) {
-                // ready 상태에서만 메시지를 처리한다.
-                List<Player> matchPlayers = matchUserPresenceList.stream()
-                        .map(userPresence -> new Player(userPresence.getUserId()))
-                        .collect(Collectors.toList());
-                gamePlayerList.addAll(matchPlayers);
-                tagger = new Tagger(gameMessageTagGameStart.getTaggerUserId());
-                goGameStatus(GameStatus.GAME_RUNNING);
-                afterGameStartMessage.run();
-            }
+            tagger = new Tagger(((GameMessageTagGameStart) gameMessageStart).getTaggerUserId());
+            afterGameStartMessage.run();
         }
     }
 

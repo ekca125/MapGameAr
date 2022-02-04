@@ -70,20 +70,10 @@ public class FlagGameRoomClient extends GameRoomClient {
 
     @Override
     public void onGameStart(GameMessageStart gameMessageStart) {
+        super.onGameStart(gameMessageStart);
         if(gameMessageStart instanceof GameMessageFlagGameStart){
-            GameMessageFlagGameStart gameMessageFlagGameStart = (GameMessageFlagGameStart) gameMessageStart;
-            if (currentGameStatus == GameStatus.GAME_READY) {
-                // ready 상태에서만 메시지를 처리한다.
-                // 깃발 설정
-                gameFlagList = gameMessageFlagGameStart.getGameFlagList();
-                // 플레이어 설정
-                List<Player> matchPlayers = matchUserPresenceList.stream()
-                        .map(userPresence -> new Player(userPresence.getUserId()))
-                        .collect(Collectors.toList());
-                gamePlayerList.addAll(matchPlayers);
-                goGameStatus(GameStatus.GAME_RUNNING);
-                afterGameStartMessage.run();
-            }
+            gameFlagList = ((GameMessageFlagGameStart) gameMessageStart).getGameFlagList();
+            afterGameStartMessage.run();
         }
     }
 

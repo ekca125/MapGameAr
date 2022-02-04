@@ -230,7 +230,6 @@ public class GameRoomClient implements SocketListener {
                     .collect(Collectors.toList());
             gamePlayerList.addAll(matchPlayers);
             goGameStatus(GameStatus.GAME_RUNNING);
-            afterGameStartMessage.run();
         }
     }
 
