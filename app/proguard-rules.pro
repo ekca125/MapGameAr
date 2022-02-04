@@ -26,7 +26,22 @@
 
 -dontwarn com.beloo.widget.chipslayoutmanager.**
 
+
+### ---------------- user add lines ---------------------
+
+## nakama
 -keep class com.heroiclabs.** {*;}
+
+## protobuf
+-keep class * extends com.google.protobuf.GeneratedMessageLite { *; }
+
+## lombok
+-dontwarn lombok.**
+
+## user code
+-keep class com.ekcapaper.mapgamear.network.** {*;}
+-keep class com.ekcapaper.mapgamear.retrofit.** {*;}
+-keep class com.ekcapaper.mapgamear.modelgame.** {*;}
 
 ##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
@@ -56,14 +71,3 @@
 }
 
 ##---------------End: proguard configuration for Gson  ----------
-
-# protobuf
--keep class * extends com.google.protobuf.GeneratedMessageLite { *; }
-
-# lombok
--dontwarn lombok.**
-
-## user code
--keep class com.ekcapaper.mapgamear.network.** {*;}
--keep class com.ekcapaper.mapgamear.retrofit.** {*;}
--keep class com.ekcapaper.mapgamear.modelgame.** {*;}
