@@ -26,3 +26,4 @@
 
 -dontwarn com.beloo.widget.chipslayoutmanager.**
 
+-keep class com.heroiclabs.*
