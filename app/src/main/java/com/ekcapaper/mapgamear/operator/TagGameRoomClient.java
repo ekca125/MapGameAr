@@ -17,6 +17,7 @@ import com.ekcapaper.mapgamear.retrofit.dto.AddressDto;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -25,8 +26,10 @@ import java.util.stream.Collectors;
 public class TagGameRoomClient extends GameRoomClient{
     static class Tagger{
         String taggerUserId;
-        //
+        // setting
         double tagDistanceMeter;
+        Duration tagFreeDuration;
+        // data
         LocalDateTime tagTime;
         LocalDateTime tagFreeTime;
         // 100m 안으로 들어오면 술래가 되며 이때 잡힌 시점으로부터 1분이 지나야 술래가 변경된다.
@@ -36,11 +39,15 @@ public class TagGameRoomClient extends GameRoomClient{
             this.taggerUserId = taggerUserId;
             // setting
             tagDistanceMeter = 100;
+            tagFreeDuration = Duration.ofMinutes(1);
+            // data
             tagTime = LocalDateTime.now();
+            tagFreeTime = tagTime.plusMinutes(tagFreeDuration.toMinutes());
         }
 
         public void updateTagger(){
-
+            // 확인하여 만들기
+            
         }
     }
     Tagger tagger;
