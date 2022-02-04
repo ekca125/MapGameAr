@@ -27,21 +27,19 @@ import java.util.stream.Collectors;
 public class TagGameRoomClient extends GameRoomClient{
     class Tagger{
         String taggerUserId;
+        LocalDateTime tagTime;
+        LocalDateTime tagFreeTime;
         // setting
         double tagDistanceMeter;
         Duration tagFreeDuration;
-        // data
-        LocalDateTime tagTime;
-        LocalDateTime tagFreeTime;
         // 100m 안으로 들어오면 술래가 되며 이때 잡힌 시점으로부터 1분이 지나야 술래가 변경된다.
 
         public Tagger(String taggerUserId) {
-            // tagger
-            this.taggerUserId = taggerUserId;
             // setting
             tagDistanceMeter = 100;
             tagFreeDuration = Duration.ofMinutes(1);
-            // data
+            // tagger
+            this.taggerUserId = taggerUserId;
             tagTime = LocalDateTime.now();
             tagFreeTime = tagTime.plusMinutes(tagFreeDuration.toMinutes());
         }
@@ -52,7 +50,11 @@ public class TagGameRoomClient extends GameRoomClient{
                 TagGameRoomClient.this.gamePlayerList.stream()
                         .filter(player -> !player.getUserId().equals(taggerUserId))
                         .limit(1)
-                        .forEach(player -> taggerUserId = player.getUserId());
+                        .forEach(player -> {
+                            taggerUserId = player.getUserId();
+                            tagTime = LocalDateTime.now();
+                            tagFreeTime = tagTime.plusMinutes(tagFreeDuration.toMinutes());
+                        });
             }
         }
     }
