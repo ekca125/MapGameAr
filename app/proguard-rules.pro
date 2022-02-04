@@ -60,3 +60,6 @@
 -keep class com.ekcapaper.mapgamear.network.** {*;}
 -keep class com.ekcapaper.mapgamear.retrofit.** {*;}
 -keep class com.ekcapaper.mapgamear.modelgame.** {*;}
+
+
+-keep class * extends com.google.protobuf.GeneratedMessageLite { *; }
