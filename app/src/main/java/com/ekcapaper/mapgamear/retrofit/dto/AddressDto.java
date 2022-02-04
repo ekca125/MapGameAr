@@ -1,5 +1,7 @@
 package com.ekcapaper.mapgamear.retrofit.dto;
 
+import androidx.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 import lombok.Builder;
