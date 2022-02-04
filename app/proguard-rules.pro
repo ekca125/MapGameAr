@@ -27,4 +27,6 @@
 -dontwarn com.beloo.widget.chipslayoutmanager.**
 
 -keep class com.heroiclabs.** {*;}
--keep class android.** {*;}
+-keep class org.** {*;}
+-keep class com.squareup.** {*;}
+-keep class io.** {*;}
