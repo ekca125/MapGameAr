@@ -17,6 +17,7 @@ import com.ekcapaper.mapgamear.retrofit.dto.AddressDto;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,9 +25,18 @@ import java.util.stream.Collectors;
 public class TagGameRoomClient extends GameRoomClient{
     class Tagger{
         String taggerUserId;
+        //
+        double tagDistance;
+        LocalDateTime tagTime;
+        LocalDateTime tagFreeTime;
+        // 100m 안으로 들어오면 술래가 되며 이때 잡힌 시점으로부터 1분이 지나야 술래가 변경된다.
 
         public Tagger(String taggerUserId) {
             this.taggerUserId = taggerUserId;
+        }
+
+        public void updateTagger(){
+
         }
     }
     Tagger tagger;
@@ -41,15 +51,19 @@ public class TagGameRoomClient extends GameRoomClient{
             // ready 상태에서만 시작을 선언할 수 있다.
             throw new IllegalStateException();
         }
-        // 술래 정하기
-        List<Player> matchPlayers = matchUserPresenceList.stream()
-                .map(userPresence -> new Player(userPresence.getUserId()))
-                .collect(Collectors.toList());
-        Collections.shuffle(matchPlayers);
-        Player tagPlayer = matchPlayers.get(0);
-        // 게임 시작
-        GameMessageTagGameStart gameMessageStart = new GameMessageTagGameStart(tagPlayer.getUserId());
-        sendMatchData(gameMessageStart);
+        // 술래 정하기 (시작하는 플레이어는 있으므로 1명의 플레이어는 무조건 존재한다.)
+        try {
+            List<Player> matchPlayers = matchUserPresenceList.stream()
+                    .map(userPresence -> new Player(userPresence.getUserId()))
+                    .collect(Collectors.toList());
+            Collections.shuffle(matchPlayers);
+            Player tagPlayer = matchPlayers.get(0);
+            // 게임 시작
+            GameMessageTagGameStart gameMessageStart = new GameMessageTagGameStart(tagPlayer.getUserId());
+            sendMatchData(gameMessageStart);
+        }
+        catch (IndexOutOfBoundsException ignored){
+        }
     }
 
     @Override
@@ -68,7 +82,14 @@ public class TagGameRoomClient extends GameRoomClient{
     @Override
     public void onMovePlayer(GameMessageMovePlayer gameMessageMovePlayer) {
         super.onMovePlayer(gameMessageMovePlayer);
-
+        tagger.updateTagger();
     }
 
+    // 중간에 나간 경우에는 오류 가능성이 있다.
+    public Player getCurrentTaggerPlayer(){
+        return getGamePlayerList().stream()
+                .filter(player -> tagger.taggerUserId.equals(player.getUserId()))
+                .collect(Collectors.toList())
+                .get(0);
+    }
 }
