@@ -11,6 +11,9 @@ public class GameRoomClientFactory {
         else if(clientTypeName.equals(FlagGameRoomClient.class.getName())){
             gameRoomClient = new FlagGameRoomClient(nakamaNetworkManager);
         }
+        else if(clientTypeName.equals(TagGameRoomClient.class.getName())){
+            gameRoomClient = new TagGameRoomClient(nakamaNetworkManager);
+        }
         return gameRoomClient;
     }
 
