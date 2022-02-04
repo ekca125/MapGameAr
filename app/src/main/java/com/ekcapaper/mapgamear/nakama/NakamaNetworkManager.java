@@ -2,6 +2,7 @@ package com.ekcapaper.mapgamear.nakama;
 
 import android.util.Log;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.ekcapaper.mapgamear.keystorage.KeyStorageNakama;
