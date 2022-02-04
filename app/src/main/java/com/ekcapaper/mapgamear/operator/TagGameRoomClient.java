@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TagGameRoomClient extends GameRoomClient{
-    static class Tagger{
+    class Tagger{
         String taggerUserId;
         // setting
         double tagDistanceMeter;
@@ -46,8 +46,13 @@ public class TagGameRoomClient extends GameRoomClient{
         }
 
         public void updateTagger(){
-            // 확인하여 만들기
-            
+            LocalDateTime localDateTime = LocalDateTime.now();
+            if(localDateTime.isAfter(tagFreeTime)){
+                TagGameRoomClient.this.gamePlayerList.stream()
+                        .filter(player -> !player.getUserId().equals(taggerUserId))
+                        .limit(1)
+                        .forEach(player -> taggerUserId = player.getUserId());
+            }
         }
     }
     Tagger tagger;
