@@ -181,7 +181,7 @@ public class LobbyActivity extends AppCompatActivity {
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_menu);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.lobby_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

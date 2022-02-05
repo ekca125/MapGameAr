@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Looper;
 
+import androidx.annotation.Keep;
 import androidx.core.app.ActivityCompat;
 
 import java.util.function.Consumer;
