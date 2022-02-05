@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         Tools.setSystemBarColor(this);
 
         // stub
-        //text_input_text_email.setText(AccountStub.ID);
-        //text_input_text_password.setText(AccountStub.PASSWORD);
+        text_input_text_email.setText(AccountStub.ID);
+        text_input_text_password.setText(AccountStub.PASSWORD);
     }
 }

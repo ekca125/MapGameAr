@@ -153,7 +153,7 @@ public class GameRoomActivity extends AppCompatActivity {
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_menu);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.game_room);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -162,7 +162,7 @@ public class GameRoomActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search_setting, menu);
+        getMenuInflater().inflate(R.menu.menu_game_room, menu);
         return true;
     }
 
