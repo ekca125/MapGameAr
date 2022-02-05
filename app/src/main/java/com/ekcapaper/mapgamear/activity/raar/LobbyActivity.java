@@ -151,7 +151,7 @@ public class LobbyActivity extends AppCompatActivity {
         }
 
         // 필터링 및 변환 작업
-        MatchList matchList = nakamaNetworkManager.getOpenMatchListSync();
+        MatchList matchList = nakamaNetworkManager.getMinPlayerAllMatchListSync();
         if (matchList != null) {
             List<GameLobbyRoomItem> items = matchList.getMatchesList().stream()
                     .filter(match -> {
@@ -160,6 +160,16 @@ public class LobbyActivity extends AppCompatActivity {
                                 return gameRoomLabel.isOpened();
                             }
                     )
+                    .sorted((matchA, matchB) ->{
+                        String labelA = matchA.getLabel().getValue();
+                        GameRoomLabel gameRoomLabelA = gson.fromJson(labelA, GameRoomLabel.class);
+                        double distanceMeterA = gameRoomLabelA.getMapCenter().distanceTo(currentLocation);
+
+                        String labelB = matchB.getLabel().getValue();
+                        GameRoomLabel gameRoomLabelB = gson.fromJson(labelB, GameRoomLabel.class);
+                        double distanceMeterB = gameRoomLabelB.getMapCenter().distanceTo(currentLocation);
+                        return Double.compare(distanceMeterA,distanceMeterB);
+                    })
                     .map(match -> {
                         String label = match.getLabel().getValue();
                         GameRoomLabel gameRoomLabel = gson.fromJson(label, GameRoomLabel.class);

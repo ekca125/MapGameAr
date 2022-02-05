@@ -301,14 +301,6 @@ public class NakamaNetworkManager {
             return null;
         }
     }
-
-    public MatchList getOpenMatchListSync() {
-        try {
-            return client.listMatches(session,1,99,99,"+label.opened:true").get();
-        } catch (ExecutionException | InterruptedException e) {
-            return null;
-        }
-    }
     //
 
 
