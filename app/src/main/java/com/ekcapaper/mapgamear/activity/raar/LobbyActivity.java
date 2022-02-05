@@ -151,7 +151,7 @@ public class LobbyActivity extends AppCompatActivity {
         }
 
         // 필터링 및 변환 작업
-        MatchList matchList = nakamaNetworkManager.getMinPlayerAllMatchListSync();
+        MatchList matchList = nakamaNetworkManager.getOpenMatchListSync();
         if (matchList != null) {
             List<GameLobbyRoomItem> items = matchList.getMatchesList().stream()
                     .filter(match -> {
