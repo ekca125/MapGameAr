@@ -30,9 +30,12 @@ import com.heroiclabs.nakama.api.NotificationList;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -69,6 +72,12 @@ public class GameRoomClient implements SocketListener {
     LocalDateTime gameStartTime;
     LocalDateTime gameEndTime;
     Timer timeLimitTimer;
+    String getLeftTime(){
+        int leftSecond = gameEndTime.getSecond() - gameStartTime.getSecond();
+        LocalTime localTime = LocalTime.ofSecondOfDay(leftSecond);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        return localTime.format(dateTimeFormatter);
+    }
 
     public GameRoomClient(NakamaNetworkManager nakamaNetworkManager) {
         // nakama 서버와의 연동을 진행하는 클래스
@@ -235,6 +244,18 @@ public class GameRoomClient implements SocketListener {
                     .map(userPresence -> new Player(userPresence.getUserId()))
                     .collect(Collectors.toList());
             gamePlayerList.addAll(matchPlayers);
+            // timer
+            gameStartTime = LocalDateTime.now();
+            gameEndTime = gameStartTime.plusSeconds(gameRoomLabel.getTimeLimitSecond());
+            timeLimitTimer = new Timer();
+            timeLimitTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (currentGameStatus == GameStatus.GAME_RUNNING) {
+                        declareGameEnd();
+                    }
+                }
+            },gameRoomLabel.getTimeLimitSecond()* 1000L);
             goGameStatus(GameStatus.GAME_RUNNING);
         }
     }
