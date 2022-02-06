@@ -63,6 +63,8 @@ public class GameRoomClient implements SocketListener {
     protected final List<UserPresence> channelUserPresenceList;
     @Getter
     protected final List<UserPresence> matchUserPresenceList;
+    // 시간 제한
+    
 
     public GameRoomClient(NakamaNetworkManager nakamaNetworkManager) {
         // nakama 서버와의 연동을 진행하는 클래스
