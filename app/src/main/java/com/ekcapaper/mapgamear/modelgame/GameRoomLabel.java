@@ -16,6 +16,8 @@ public class GameRoomLabel extends MapRange {
     final GameType gameType;
     @Getter
     boolean opened;
+    @Getter
+    final int timeLimitSecond;
 
     public GameRoomLabel(
             String roomName,
@@ -26,13 +28,15 @@ public class GameRoomLabel extends MapRange {
             double endLongitude,
             String masterUserId,
             GameType gameType,
-            boolean opened) {
+            boolean opened,
+            int timeLimitSecond) {
         super(startLatitude, startLongitude, endLatitude, endLongitude);
         this.roomName = roomName;
         this.roomDesc = roomDesc;
         this.masterUserId = masterUserId;
         this.gameType = gameType;
         this.opened = opened;
+        this.timeLimitSecond = timeLimitSecond;
     }
 
     public GameRoomLabel(
@@ -41,7 +45,8 @@ public class GameRoomLabel extends MapRange {
             MapRange mapRange,
             String masterUserId,
             GameType gameType,
-            boolean opened
+            boolean opened,
+            int timeLimitSecond
     ) {
         this(
                 roomName,
@@ -52,7 +57,8 @@ public class GameRoomLabel extends MapRange {
                 mapRange.getEndLongitude(),
                 masterUserId,
                 gameType,
-                opened
+                opened,
+                timeLimitSecond
         );
     }
 }

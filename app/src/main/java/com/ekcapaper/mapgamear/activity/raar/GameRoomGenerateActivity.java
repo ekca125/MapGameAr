@@ -49,6 +49,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     private TextInputEditText text_input_room_desc;
     private TextInputEditText text_input_latitude;
     private TextInputEditText text_input_longitude;
+    private TextInputEditText text_input_room_time_limit;
+
     private Spinner game_type_spinner;
     private Button button_generate_room;
     // GameType
@@ -81,6 +83,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         text_input_room_desc = findViewById(R.id.text_input_room_desc);
         text_input_latitude = findViewById(R.id.text_input_latitude);
         text_input_longitude = findViewById(R.id.text_input_longitude);
+        text_input_room_time_limit = findViewById(R.id.text_input_room_time_limit);
+
         game_type_spinner = findViewById(R.id.game_type_spinner);
 
         // game type
@@ -114,6 +118,9 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 // 방 이름
                 String roomName = Objects.requireNonNull(text_input_name.getText()).toString();
                 String roomDesc = Objects.requireNonNull(text_input_room_desc.getText()).toString();
+                String roomTimeLimit = Objects.requireNonNull(text_input_room_time_limit.getText()).toString();
+
+                int timeLimitSecond = Integer.parseInt(roomTimeLimit);
 
                 // 위치 정보 가져오기
                 String latitudeStr = Objects.requireNonNull(text_input_latitude.getText()).toString();
@@ -137,7 +144,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                         MapRange.calculateMapRange(location, 0.5),
                         nakamaNetworkManager.getCurrentSessionUserId(),
                         gameType,
-                        true
+                        true,
+                        timeLimitSecond
                 );
                 String label = gson.toJson(gameRoomLabel);
 
@@ -185,6 +193,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         // stub
         String roomName = RandomStringUtils.randomAlphabetic(10);
         text_input_name.setText(roomName);
+        // stub
+        text_input_name.setText("3600");
         // stub 2
         button_generate_room.setEnabled(false);
         button_generate_room.setText(R.string.loading_location);
