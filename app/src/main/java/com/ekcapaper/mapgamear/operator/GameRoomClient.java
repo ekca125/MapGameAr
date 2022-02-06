@@ -29,8 +29,10 @@ import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -64,7 +66,9 @@ public class GameRoomClient implements SocketListener {
     @Getter
     protected final List<UserPresence> matchUserPresenceList;
     // 시간 제한
-    
+    LocalDateTime gameStartTime;
+    LocalDateTime gameEndTime;
+    Timer timeLimitTimer;
 
     public GameRoomClient(NakamaNetworkManager nakamaNetworkManager) {
         // nakama 서버와의 연동을 진행하는 클래스
