@@ -38,6 +38,8 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.function.Consumer;
 
 public class GameMapActivity extends AppCompatActivity {
@@ -56,6 +58,7 @@ public class GameMapActivity extends AppCompatActivity {
     private ImageButton map_button;
     private ImageButton add_button;
     private TextView textview_left_time;
+    private Timer leftTimeTimer;
     // map
     private GoogleMap mMap;
     private boolean mapReady;
@@ -78,7 +81,15 @@ public class GameMapActivity extends AppCompatActivity {
         map_button = findViewById(R.id.map_button);
         add_button = findViewById(R.id.add_button);
         textview_left_time = findViewById(R.id.textview_left_time);
-        textview_left_time.setText(gameRoomClient.getLeftTime());
+        textview_left_time.setText(gameRoomClient.getLeftTimeStr());
+
+        leftTimeTimer = new Timer();
+        leftTimeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                textview_left_time.setText(gameRoomClient.getLeftTimeStr());
+            }
+        },0,1000);
 
         // field
         mapReady = false;
@@ -169,6 +180,7 @@ public class GameMapActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         thisApplication.leaveGameRoom();
+        leftTimeTimer.cancel();
     }
 
     private void initMapFragment() {

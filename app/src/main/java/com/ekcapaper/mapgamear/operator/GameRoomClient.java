@@ -74,10 +74,11 @@ public class GameRoomClient implements SocketListener {
     LocalDateTime gameStartTime;
     LocalDateTime gameEndTime;
     Timer timeLimitTimer;
-    public String getLeftTime(){
-        long leftSecond = gameEndTime.toEpochSecond(ZoneOffset.UTC) - gameStartTime.toEpochSecond(ZoneOffset.UTC);
+    public String getLeftTimeStr(){
+        long leftSecond = gameEndTime.toEpochSecond(ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
         LocalTime timeOfDay = LocalTime.ofSecondOfDay(leftSecond);
-        return timeOfDay.toString();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
+        return "남은 시간 : " + timeOfDay.format(dateTimeFormatter);
     }
 
     public GameRoomClient(NakamaNetworkManager nakamaNetworkManager) {
