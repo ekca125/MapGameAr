@@ -290,7 +290,19 @@ public class GameRoomClient implements SocketListener {
                         location.setLongitude(gameMessageMovePlayer.getLongitude());
                         player.updateLocation(location);
                     });
+            endCheckSequence();
             afterMovePlayerMessage.run();
+        }
+    }
+
+    private void endCheckSequence() {
+        if (this instanceof FlagGameRoomClient) {
+            FlagGameRoomClient flagGameRoomClient = (FlagGameRoomClient) this;
+            if (flagGameRoomClient.getUnownedFlagList().size() == 0) {
+                if (flagGameRoomClient.getCurrentGameStatus().equals(GameStatus.GAME_RUNNING)) {
+                    this.declareGameEnd();
+                }
+            }
         }
     }
 

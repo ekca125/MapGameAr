@@ -118,7 +118,6 @@ public class GameMapActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                             gameRoomClient.declareCurrentPlayerMove(location);
                             syncGameMap();
-                            endCheckSequence();
                         }
                 );
             }
@@ -223,17 +222,6 @@ public class GameMapActivity extends AppCompatActivity {
             taggerPlayer.getLocation().ifPresent(location ->{
                 taggerMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("tagger",location)));
             });
-        }
-    }
-
-    private void endCheckSequence() {
-        if (gameRoomClient instanceof FlagGameRoomClient) {
-            FlagGameRoomClient flagGameRoomClient = (FlagGameRoomClient) gameRoomClient;
-            if (flagGameRoomClient.getUnownedFlagList().size() == 0) {
-                if (flagGameRoomClient.getCurrentGameStatus().equals(GameStatus.GAME_RUNNING)) {
-                    gameRoomClient.declareGameEnd();
-                }
-            }
         }
     }
 
