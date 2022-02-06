@@ -194,7 +194,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         String roomName = RandomStringUtils.randomAlphabetic(10);
         text_input_name.setText(roomName);
         // stub
-        text_input_name.setText("3600");
+        text_input_room_time_limit.setText("3600");
         // stub 2
         button_generate_room.setEnabled(false);
         button_generate_room.setText(R.string.loading_location);
