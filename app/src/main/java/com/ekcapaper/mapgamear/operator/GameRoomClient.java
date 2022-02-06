@@ -1,6 +1,7 @@
 package com.ekcapaper.mapgamear.operator;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.ekcapaper.mapgamear.modelgame.GameRoomLabel;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
@@ -31,6 +32,7 @@ import com.heroiclabs.nakama.api.NotificationList;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,11 +74,10 @@ public class GameRoomClient implements SocketListener {
     LocalDateTime gameStartTime;
     LocalDateTime gameEndTime;
     Timer timeLimitTimer;
-    String getLeftTime(){
-        int leftSecond = gameEndTime.getSecond() - gameStartTime.getSecond();
-        LocalTime localTime = LocalTime.ofSecondOfDay(leftSecond);
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        return localTime.format(dateTimeFormatter);
+    public String getLeftTime(){
+        long leftSecond = gameEndTime.toEpochSecond(ZoneOffset.UTC) - gameStartTime.toEpochSecond(ZoneOffset.UTC);
+        LocalTime timeOfDay = LocalTime.ofSecondOfDay(leftSecond);
+        return timeOfDay.toString();
     }
 
     public GameRoomClient(NakamaNetworkManager nakamaNetworkManager) {
@@ -89,6 +90,11 @@ public class GameRoomClient implements SocketListener {
         // 게임 정보
         currentGameStatus = GameStatus.GAME_NOT_INIT;
         gamePlayerList = new ArrayList<>();
+        // 시간 제한
+        gameStartTime = null;
+        gameEndTime = null;
+        timeLimitTimer = null;
+
         // after callback
         afterGameStartMessage = () -> {
         };
@@ -244,7 +250,7 @@ public class GameRoomClient implements SocketListener {
                     .map(userPresence -> new Player(userPresence.getUserId()))
                     .collect(Collectors.toList());
             gamePlayerList.addAll(matchPlayers);
-            // timer
+            // end timer
             gameStartTime = LocalDateTime.now();
             gameEndTime = gameStartTime.plusSeconds(gameRoomLabel.getTimeLimitSecond());
             timeLimitTimer = new Timer();

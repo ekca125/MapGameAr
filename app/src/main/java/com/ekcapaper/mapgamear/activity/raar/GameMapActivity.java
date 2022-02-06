@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +34,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,7 @@ public class GameMapActivity extends AppCompatActivity {
     private ImageButton list_button;
     private ImageButton map_button;
     private ImageButton add_button;
+    private TextView textview_left_time;
     // map
     private GoogleMap mMap;
     private boolean mapReady;
@@ -74,6 +77,8 @@ public class GameMapActivity extends AppCompatActivity {
         list_button = findViewById(R.id.list_button);
         map_button = findViewById(R.id.map_button);
         add_button = findViewById(R.id.add_button);
+        textview_left_time = findViewById(R.id.textview_left_time);
+        textview_left_time.setText(gameRoomClient.getLeftTime());
 
         // field
         mapReady = false;
