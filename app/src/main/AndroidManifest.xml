@@ -20,7 +20,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name="com.ekcapaper.mapgamear.activity.raar.SetupAppActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,13 +33,13 @@
             android:exported="false" />
         <activity
             android:name="com.ekcapaper.mapgamear.activity.raar.GameRoomActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name="com.ekcapaper.mapgamear.activity.raar.GameRoomGenerateActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name="com.ekcapaper.mapgamear.activity.raar.LobbyActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name="com.ekcapaper.mapgamear.activity.raar.LoginActivity"
             android:exported="false">
