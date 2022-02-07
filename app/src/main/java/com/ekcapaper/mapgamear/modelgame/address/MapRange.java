@@ -21,6 +21,26 @@ public class MapRange {
         this.endLongitude = endLongitude;
     }
 
+    static public MapRange calculateMapRange(Location mapCenter, double mapLengthKilometer) {
+        double currentLatitude = mapCenter.getLatitude();
+        double currentLongitude = mapCenter.getLongitude();
+
+        MeterToLatitudeConverter meterToLatitudeConverter = new MeterToLatitudeConverter();
+        MeterToLongitudeConverter meterToLongitudeConverter = new MeterToLongitudeConverter(currentLatitude);
+
+        double distanceKilometer = mapLengthKilometer / 2;
+
+        double halfHeightLatitude = meterToLatitudeConverter.convertKiloMeterToLatitude(distanceKilometer);
+        double halfWidthLongitude = meterToLongitudeConverter.convertKilometerToLongitude(distanceKilometer);
+
+        double startLatitude = currentLatitude - halfHeightLatitude;
+        double startLongitude = currentLongitude - halfWidthLongitude;
+        double endLatitude = currentLatitude + halfHeightLatitude;
+        double endLongitude = currentLongitude + halfWidthLongitude;
+
+        return new MapRange(startLatitude, startLongitude, endLatitude, endLongitude);
+    }
+
     public double getStartLatitude() {
         return startLatitude;
     }
@@ -47,27 +67,7 @@ public class MapRange {
                 '}';
     }
 
-    static public MapRange calculateMapRange(Location mapCenter, double mapLengthKilometer){
-        double currentLatitude = mapCenter.getLatitude();
-        double currentLongitude = mapCenter.getLongitude();
-
-        MeterToLatitudeConverter meterToLatitudeConverter = new MeterToLatitudeConverter();
-        MeterToLongitudeConverter meterToLongitudeConverter = new MeterToLongitudeConverter(currentLatitude);
-
-        double distanceKilometer = mapLengthKilometer / 2;
-
-        double halfHeightLatitude = meterToLatitudeConverter.convertKiloMeterToLatitude(distanceKilometer);
-        double halfWidthLongitude = meterToLongitudeConverter.convertKilometerToLongitude(distanceKilometer);
-
-        double startLatitude = currentLatitude - halfHeightLatitude;
-        double startLongitude = currentLongitude - halfWidthLongitude;
-        double endLatitude = currentLatitude + halfHeightLatitude;
-        double endLongitude = currentLongitude + halfWidthLongitude;
-
-        return new MapRange(startLatitude, startLongitude, endLatitude, endLongitude);
-    }
-
-    public Location getMapCenter(){
+    public Location getMapCenter() {
         Location location = new Location("");
         double latitude = (Math.abs(startLatitude) + Math.abs(endLatitude)) / 2;
         double longitude = (Math.abs(startLongitude) + Math.abs(endLongitude)) / 2;

@@ -3,6 +3,8 @@ package com.ekcapaper.mapgamear.modelgame.play;
 import android.location.Location;
 
 public class GameFlag {
+    // 소유권을 주장하는 플레이어 위치와의 거리 (50m)
+    private final double ownMeter = 50;
     // 소유권
     boolean owned;
     String userId;
@@ -10,9 +12,6 @@ public class GameFlag {
     double latitude;
     double longitude;
 
-    // 소유권을 주장하는 플레이어 위치와의 거리 (50m)
-    private final double ownMeter = 50;
-    
     public GameFlag(Location location) {
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
@@ -29,10 +28,10 @@ public class GameFlag {
         return userId;
     }
 
-    public void reflectPlayerLocation(Location playerLocation, String userId){
-        if(!owned){
+    public void reflectPlayerLocation(Location playerLocation, String userId) {
+        if (!owned) {
             double distance = playerLocation.distanceTo(getLocation());
-            if(distance <= ownMeter){
+            if (distance <= ownMeter) {
                 this.owned = true;
                 this.userId = userId;
             }

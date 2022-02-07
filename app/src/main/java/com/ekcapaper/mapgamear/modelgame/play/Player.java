@@ -18,7 +18,7 @@ public class Player {
         this.location = Optional.empty();
     }
 
-    public void updateLocation(Location location){
+    public void updateLocation(Location location) {
         this.location = Optional.ofNullable(location);
     }
 
