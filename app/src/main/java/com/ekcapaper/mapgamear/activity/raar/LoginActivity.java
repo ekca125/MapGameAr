@@ -63,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
                                 }
-
                             });
                         });
             }
@@ -72,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 CompletableFuture
-                        .supplyAsync(()->nakamaNetworkManager.loginGuestSync())
+                        .supplyAsync(() -> nakamaNetworkManager.loginGuestSync())
                         .thenAccept((result) -> {
                             runOnUiThread(() -> {
                                 button_login.setEnabled(true);
@@ -82,7 +81,6 @@ public class LoginActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
                                 }
-
                             });
                         });
             }
