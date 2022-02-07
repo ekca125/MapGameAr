@@ -14,4 +14,10 @@
         android:title="로그아웃"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_oss"
+        android:orderInCategory="100"
+        android:title="사용된 오픈소스 목록"
+        app:showAsAction="never" />
+
 </menu>
