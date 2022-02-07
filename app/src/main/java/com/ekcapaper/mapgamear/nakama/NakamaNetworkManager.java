@@ -38,13 +38,14 @@ public class NakamaNetworkManager {
     private final Gson gson;
     // client
     private final Client client;
+    private SocketClient socketClient;
     Session session;
     // login type
     LoginType loginType;
     // email
     String email;
     String password;
-    private SocketClient socketClient;
+   
     public NakamaNetworkManager() {
         //
         gson = new Gson();
