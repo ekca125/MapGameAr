@@ -21,18 +21,18 @@ import java.util.stream.Collectors;
 public class MessageParseTest {
 
     @Test
-    public void testParse(){
+    public void testParse() {
         Gson gson = new Gson();
         GameMessageStart gameMessageStart = new GameMessageStart();
         String gameMessageStartJson = gson.toJson(gameMessageStart);
-        GameMessageStart gameMessageStartResult = gson.fromJson(gameMessageStartJson,GameMessageStart.class);
+        GameMessageStart gameMessageStartResult = gson.fromJson(gameMessageStartJson, GameMessageStart.class);
     }
 
     @Test
-    public void testFlagGameStart(){
+    public void testFlagGameStart() {
         Gson gson = new Gson();
         try {
-            MapRange mapRange = MapRange.calculateMapRange(LocationStub.location,1);
+            MapRange mapRange = MapRange.calculateMapRange(LocationStub.location, 1);
 
             List<AddressDto> addressDtoList = AddressMapClient.getMapAddressService()
                     .drawMapRangeRandom10(mapRange).execute().body();
@@ -45,8 +45,8 @@ public class MessageParseTest {
             // 메시지 전송
             GameMessageFlagGameStart gameMessageStart = new GameMessageFlagGameStart(gameFlagList);
             String gameMessageStartJson = gson.toJson(gameMessageStart);
-            GameMessageStart gameMessageStartResult = gson.fromJson(gameMessageStartJson,GameMessageFlagGameStart.class);
-            Log.d("gamestart",gameMessageStartJson);
+            GameMessageStart gameMessageStartResult = gson.fromJson(gameMessageStartJson, GameMessageFlagGameStart.class);
+            Log.d("gamestart", gameMessageStartJson);
 
         } catch (IOException e) {
             e.printStackTrace();

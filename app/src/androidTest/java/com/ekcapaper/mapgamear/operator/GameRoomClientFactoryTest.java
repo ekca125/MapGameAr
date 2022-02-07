@@ -1,6 +1,8 @@
 package com.ekcapaper.mapgamear.operator;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.stub.AccountStub;
@@ -21,17 +23,17 @@ public class GameRoomClientFactoryTest {
     }
 
     @Before
-    public void login(){
+    public void login() {
         assertFalse(nakamaNetworkManager1.isLogin());
         assertFalse(nakamaNetworkManager2.isLogin());
-        nakamaNetworkManager1.loginEmailSync(AccountStub.ID,AccountStub.PASSWORD);
-        nakamaNetworkManager2.loginEmailSync(AccountStub.ID2,AccountStub.PASSWORD2);
+        nakamaNetworkManager1.loginEmailSync(AccountStub.ID, AccountStub.PASSWORD);
+        nakamaNetworkManager2.loginEmailSync(AccountStub.ID2, AccountStub.PASSWORD2);
         assertTrue(nakamaNetworkManager1.isLogin());
         assertTrue(nakamaNetworkManager2.isLogin());
     }
 
     @After
-    public void logout(){
+    public void logout() {
         nakamaNetworkManager1.logout();
         nakamaNetworkManager2.logout();
         assertFalse(nakamaNetworkManager1.isLogin());
