@@ -3,6 +3,9 @@ package com.ekcapaper.mapgamear.modelgame;
 import com.ekcapaper.mapgamear.modelgame.address.MapRange;
 import com.ekcapaper.mapgamear.modelgame.play.GameType;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 import lombok.Getter;
 
 public class GameRoomLabel extends MapRange {
@@ -61,4 +64,11 @@ public class GameRoomLabel extends MapRange {
                 timeLimitSecond
         );
     }
+
+    public String getTimeLimit_ISO_LOCAL_TIME(){
+        LocalTime timeOfDay = LocalTime.ofSecondOfDay(this.getTimeLimitSecond());
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
+        return timeOfDay.format(dateTimeFormatter);
+    }
+
 }

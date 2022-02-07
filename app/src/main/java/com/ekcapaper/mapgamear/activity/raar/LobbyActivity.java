@@ -177,11 +177,8 @@ public class LobbyActivity extends AppCompatActivity {
                         GameRoomLabel gameRoomLabel = gson.fromJson(label, GameRoomLabel.class);
                         //
                         double distanceMeter = gameRoomLabel.getMapCenter().distanceTo(currentLocation);
-                        LocalTime timeOfDay = LocalTime.ofSecondOfDay(gameRoomLabel.getTimeLimitSecond());
-                        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
-                        String timeLimitStr = timeOfDay.format(dateTimeFormatter);
-                        String timeLimitDesc = "제한 시간 : " + timeLimitStr;
 
+                        String timeLimitDesc = "제한 시간 : " + gameRoomLabel.getTimeLimit_ISO_LOCAL_TIME();
                         return GameLobbyRoomItem.builder()
                                 .roomName(gameRoomLabel.getRoomName())
                                 .roomDesc(gameRoomLabel.getRoomDesc())

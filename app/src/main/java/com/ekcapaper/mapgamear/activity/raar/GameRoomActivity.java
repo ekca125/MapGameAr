@@ -46,6 +46,7 @@ public class GameRoomActivity extends AppCompatActivity {
     private TextView room_match_id;
     private TextView room_master_user_id;
     private TextView room_game_type;
+    private TextView room_time_limit;
     private Button button_game_start;
     // adapter
     private List<GameRoomInfo> mGameRoomItems;
@@ -75,9 +76,6 @@ public class GameRoomActivity extends AppCompatActivity {
             throw new IllegalStateException();
         }
 
-        Log.d("gameLabel",gameRoomClient.getGameRoomLabel().getRoomName());
-        Log.d("gameLabel", String.valueOf(gameRoomClient.getMatchUserPresenceList().size()));
-
         // activity
         parent_view = findViewById(android.R.id.content);
         button_game_start = findViewById(R.id.button_game_start);
@@ -86,6 +84,7 @@ public class GameRoomActivity extends AppCompatActivity {
         room_match_id = findViewById(R.id.room_match_id);
         room_master_user_id = findViewById(R.id.room_master_user_id);
         room_game_type = findViewById(R.id.room_game_type);
+        room_time_limit = findViewById(R.id.room_time_limit);
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -98,6 +97,7 @@ public class GameRoomActivity extends AppCompatActivity {
         room_match_id.setText("매치 ID :" + gameRoomClient.getMatch().getMatchId());
         room_master_user_id.setText("방장 ID : " + gameRoomLabel.getMasterUserId());
         room_game_type.setText("게임 타입 : " + GameTypeTextConverter.convertGameTypeToText(gameRoomLabel.getGameType()));
+        room_time_limit.setText("제한 시간 : " + gameRoomLabel.getTimeLimit_ISO_LOCAL_TIME());
 
         // activity setting
         button_game_start.setOnClickListener(new View.OnClickListener() {
