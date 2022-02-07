@@ -29,6 +29,8 @@ import com.ekcapaper.mapgamear.utils.Tools;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.api.MatchList;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -173,13 +175,20 @@ public class LobbyActivity extends AppCompatActivity {
                     .map(match -> {
                         String label = match.getLabel().getValue();
                         GameRoomLabel gameRoomLabel = gson.fromJson(label, GameRoomLabel.class);
+                        //
                         double distanceMeter = gameRoomLabel.getMapCenter().distanceTo(currentLocation);
+                        LocalTime timeOfDay = LocalTime.ofSecondOfDay(gameRoomLabel.getTimeLimitSecond());
+                        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
+                        String timeLimitStr = timeOfDay.format(dateTimeFormatter);
+                        String timeLimitDesc = "제한 시간 : " + timeLimitStr;
+
                         return GameLobbyRoomItem.builder()
                                 .roomName(gameRoomLabel.getRoomName())
                                 .roomDesc(gameRoomLabel.getRoomDesc())
                                 .distanceCenter(distanceMeter + "m")
                                 .matchId(match.getMatchId())
                                 .gameTypeDesc(GameTypeTextConverter.convertGameTypeToText(gameRoomLabel.getGameType()))
+                                .timeLimitDesc(timeLimitDesc)
                                 .build();
                     })
                     .collect(Collectors.toList());
