@@ -30,6 +30,7 @@ import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
 
 import java.nio.charset.StandardCharsets;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
@@ -75,10 +76,17 @@ public class GameRoomClient implements SocketListener {
     LocalDateTime gameEndTime;
     Timer timeLimitTimer;
     public String getLeftTimeStr(){
-        long leftSecond = gameEndTime.toEpochSecond(ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-        LocalTime timeOfDay = LocalTime.ofSecondOfDay(leftSecond);
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
-        return "남은 시간 : " + timeOfDay.format(dateTimeFormatter);
+        String leftTimeStr;
+        try {
+            long leftSecond = gameEndTime.toEpochSecond(ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            LocalTime timeOfDay = LocalTime.ofSecondOfDay(leftSecond);
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
+            leftTimeStr = timeOfDay.format(dateTimeFormatter);
+        }
+        catch (DateTimeException dateTimeException){
+            leftTimeStr = "00:00:00";
+        }
+        return "남은 시간 : " + leftTimeStr;
     }
 
     public GameRoomClient(NakamaNetworkManager nakamaNetworkManager) {

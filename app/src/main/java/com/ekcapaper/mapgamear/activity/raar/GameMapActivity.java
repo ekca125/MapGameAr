@@ -156,6 +156,17 @@ public class GameMapActivity extends AppCompatActivity {
                                 }
                             });
                 }
+                else if(gameRoomClient instanceof TagGameRoomClient){
+                    TagGameRoomClient tagGameRoomClient = (TagGameRoomClient) gameRoomClient;
+                    Player taggerPlayer = tagGameRoomClient.getCurrentTaggerPlayer();
+                    if(taggerPlayer.getUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())){
+                        // 게임이 끝나는 시점에서 술래인 경우
+                        Toast.makeText(getApplicationContext(), "패배했습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "승리했습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 finish();
             });
         });
