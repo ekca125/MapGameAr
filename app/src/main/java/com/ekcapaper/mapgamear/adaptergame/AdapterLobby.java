@@ -15,44 +15,19 @@ import com.ekcapaper.mapgamear.modelgame.item.GameLobbyRoomItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<GameLobbyRoomItem> items = new ArrayList<>();
 
-    private Context ctx;
+    private final Context ctx;
     private AdapterLobby.OnItemClickListener mOnItemClickListener;
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, GameLobbyRoomItem obj, int position);
-    }
-
-    public void setOnItemClickListener(final AdapterLobby.OnItemClickListener mItemClickListener) {
-        this.mOnItemClickListener = mItemClickListener;
-    }
 
     public AdapterLobby(Context context, List<GameLobbyRoomItem> items) {
         this.items = items;
         ctx = context;
     }
 
-    public class OriginalViewHolder extends RecyclerView.ViewHolder {
-        public TextView room_name;
-        public TextView room_desc;
-        public TextView distance_center;
-        public TextView match_id;
-        public TextView game_type_desc;
-        public TextView time_limit_desc;
-        public View lyt_parent;
-
-        public OriginalViewHolder(View v) {
-            super(v);
-            lyt_parent = (View) v.findViewById(R.id.lyt_parent);
-            room_name = (TextView) v.findViewById(R.id.room_name);
-            room_desc = (TextView) v.findViewById(R.id.room_desc);
-            distance_center = (TextView) v.findViewById(R.id.distance_center);
-            match_id = (TextView) v.findViewById(R.id.match_id);
-            game_type_desc = (TextView) v.findViewById(R.id.game_type_desc);
-            time_limit_desc = v.findViewById(R.id.time_limit_desc);
-        }
+    public void setOnItemClickListener(final AdapterLobby.OnItemClickListener mItemClickListener) {
+        this.mOnItemClickListener = mItemClickListener;
     }
 
     @Override
@@ -90,6 +65,31 @@ public class AdapterLobby extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, GameLobbyRoomItem obj, int position);
+    }
+
+    public class OriginalViewHolder extends RecyclerView.ViewHolder {
+        public TextView room_name;
+        public TextView room_desc;
+        public TextView distance_center;
+        public TextView match_id;
+        public TextView game_type_desc;
+        public TextView time_limit_desc;
+        public View lyt_parent;
+
+        public OriginalViewHolder(View v) {
+            super(v);
+            lyt_parent = (View) v.findViewById(R.id.lyt_parent);
+            room_name = (TextView) v.findViewById(R.id.room_name);
+            room_desc = (TextView) v.findViewById(R.id.room_desc);
+            distance_center = (TextView) v.findViewById(R.id.distance_center);
+            match_id = (TextView) v.findViewById(R.id.match_id);
+            game_type_desc = (TextView) v.findViewById(R.id.game_type_desc);
+            time_limit_desc = v.findViewById(R.id.time_limit_desc);
+        }
     }
 
 }

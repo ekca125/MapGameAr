@@ -2,7 +2,7 @@ package com.ekcapaper.mapgamear.network;
 
 import lombok.Getter;
 
-public class GameMessageTagGameStart extends GameMessageStart{
+public class GameMessageTagGameStart extends GameMessageStart {
     @Getter
     private final String taggerUserId;
 

@@ -2,7 +2,6 @@ package com.ekcapaper.mapgamear.activity.raar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -103,7 +102,7 @@ public class GameRoomActivity extends AppCompatActivity {
         button_game_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!gameRoomLabel.getMasterUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())){
+                if (!gameRoomLabel.getMasterUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())) {
                     Snackbar.make(parent_view, "방을 만든 사용자만이 방을 시작할 수 있습니다.", Snackbar.LENGTH_SHORT).show();
                     return;
                 }
@@ -122,7 +121,7 @@ public class GameRoomActivity extends AppCompatActivity {
         });
         gameRoomClient.setAfterGameStartMessage(() -> {
             Intent intent = new Intent(getApplicationContext(), GameMapActivity.class);
-            startActivityForResult(intent,ACTIVITY_REQUEST_CODE);
+            startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
         });
 
         // adapter
@@ -138,7 +137,7 @@ public class GameRoomActivity extends AppCompatActivity {
         // get player data
         refreshRoomPlayerList();
         //
-        gameRoomClient.setAfterOnMatchPresence(()->{
+        gameRoomClient.setAfterOnMatchPresence(() -> {
             runOnUiThread(this::refreshRoomPlayerList);
         });
         //

@@ -37,24 +37,24 @@ public class ThisApplication extends Application {
         gameRoomClient = null;
     }
 
-    public boolean createGameRoom(String clientTypeName, String label){
-        if(gameRoomClient != null){
+    public boolean createGameRoom(String clientTypeName, String label) {
+        if (gameRoomClient != null) {
             throw new IllegalStateException();
         }
-        gameRoomClient = GameRoomClientFactory.createGameRoomClientNewMatch(clientTypeName,nakamaNetworkManager,label);
+        gameRoomClient = GameRoomClientFactory.createGameRoomClientNewMatch(clientTypeName, nakamaNetworkManager, label);
         return gameRoomClient != null;
     }
 
-    public boolean joinGameRoom(String clientTypeName, String matchId){
-        if(gameRoomClient != null){
+    public boolean joinGameRoom(String clientTypeName, String matchId) {
+        if (gameRoomClient != null) {
             throw new IllegalStateException();
         }
-        gameRoomClient = GameRoomClientFactory.createGameRoomClientJoinMatch(clientTypeName,nakamaNetworkManager,matchId);
+        gameRoomClient = GameRoomClientFactory.createGameRoomClientJoinMatch(clientTypeName, nakamaNetworkManager, matchId);
         return gameRoomClient != null;
     }
 
-    public void leaveGameRoom(){
-        if(gameRoomClient != null){
+    public void leaveGameRoom() {
+        if (gameRoomClient != null) {
             // leave room -> match
             // leave room -> socket connect
             nakamaNetworkManager.leaveMatchSync(gameRoomClient.getMatch().getMatchId());
@@ -62,7 +62,7 @@ public class ThisApplication extends Application {
         }
     }
 
-    public void logout(){
+    public void logout() {
         nakamaNetworkManager.logout();
     }
 

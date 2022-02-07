@@ -18,9 +18,9 @@ public class GameRoomLabel extends MapRange {
     @Getter
     final GameType gameType;
     @Getter
-    boolean opened;
-    @Getter
     final int timeLimitSecond;
+    @Getter
+    boolean opened;
 
     public GameRoomLabel(
             String roomName,
@@ -65,7 +65,7 @@ public class GameRoomLabel extends MapRange {
         );
     }
 
-    public String getTimeLimit_ISO_LOCAL_TIME(){
+    public String getTimeLimit_ISO_LOCAL_TIME() {
         LocalTime timeOfDay = LocalTime.ofSecondOfDay(this.getTimeLimitSecond());
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
         return timeOfDay.format(dateTimeFormatter);

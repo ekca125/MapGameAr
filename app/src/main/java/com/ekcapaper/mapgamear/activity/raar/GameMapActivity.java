@@ -18,7 +18,6 @@ import com.ekcapaper.mapgamear.R;
 import com.ekcapaper.mapgamear.data.LocationRequestSpace;
 import com.ekcapaper.mapgamear.data.ThisApplication;
 import com.ekcapaper.mapgamear.modelgame.play.GameFlag;
-import com.ekcapaper.mapgamear.modelgame.play.GameStatus;
 import com.ekcapaper.mapgamear.modelgame.play.Player;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.operator.FlagGameRoomClient;
@@ -34,7 +33,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +87,7 @@ public class GameMapActivity extends AppCompatActivity {
             public void run() {
                 textview_left_time.setText(gameRoomClient.getLeftTimeStr());
             }
-        },0,1000);
+        }, 0, 1000);
 
         // field
         mapReady = false;
@@ -155,15 +153,13 @@ public class GameMapActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), "패배했습니다..", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                }
-                else if(gameRoomClient instanceof TagGameRoomClient){
+                } else if (gameRoomClient instanceof TagGameRoomClient) {
                     TagGameRoomClient tagGameRoomClient = (TagGameRoomClient) gameRoomClient;
                     Player taggerPlayer = tagGameRoomClient.getCurrentTaggerPlayer();
-                    if(taggerPlayer.getUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())){
+                    if (taggerPlayer.getUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())) {
                         // 게임이 끝나는 시점에서 술래인 경우
                         Toast.makeText(getApplicationContext(), "패배했습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
+                    } else {
                         Toast.makeText(getApplicationContext(), "승리했습니다.", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -210,7 +206,7 @@ public class GameMapActivity extends AppCompatActivity {
         });
     }
 
-    private void moveCameraMapCenter(){
+    private void moveCameraMapCenter() {
         Location mapCenter = gameRoomClient.getGameRoomLabel().getMapCenter();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapCenter.getLatitude(), mapCenter.getLongitude()), 13));
     }
@@ -237,13 +233,13 @@ public class GameMapActivity extends AppCompatActivity {
                 flagMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("flag", gameFlag.getLocation())));
             }));
         }
-        if(gameRoomClient instanceof TagGameRoomClient){
+        if (gameRoomClient instanceof TagGameRoomClient) {
             // 술래
             taggerMarkers.forEach(Marker::remove);
             taggerMarkers.clear();
             Player taggerPlayer = ((TagGameRoomClient) gameRoomClient).getCurrentTaggerPlayer();
-            taggerPlayer.getLocation().ifPresent(location ->{
-                taggerMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("tagger",location)));
+            taggerPlayer.getLocation().ifPresent(location -> {
+                taggerMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("tagger", location)));
             });
         }
     }
@@ -275,12 +271,10 @@ public class GameMapActivity extends AppCompatActivity {
                 //return new MarkerOptions().position(latLng);
                 BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_copper_card);
                 return new MarkerOptions().position(latLng).icon(icon);
-            }
-            else if(type.equals("tagger")){
+            } else if (type.equals("tagger")) {
                 BitmapDescriptor icon = bitmapDescriptorFromVector(context, R.drawable.ic_copper_card);
                 return new MarkerOptions().position(latLng).icon(icon);
-            }
-            else if (type.equals("player")) {
+            } else if (type.equals("player")) {
                 return new MarkerOptions().position(latLng);
             } else {
                 throw new IllegalArgumentException();

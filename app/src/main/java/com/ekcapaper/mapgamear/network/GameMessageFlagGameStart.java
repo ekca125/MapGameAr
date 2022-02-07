@@ -6,7 +6,7 @@ import java.util.List;
 
 import lombok.Getter;
 
-public class GameMessageFlagGameStart extends GameMessageStart{
+public class GameMessageFlagGameStart extends GameMessageStart {
     @Getter
     private final List<GameFlag> gameFlagList;
 

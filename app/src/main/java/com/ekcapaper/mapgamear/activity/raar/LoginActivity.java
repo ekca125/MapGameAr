@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ekcapaper.mapgamear.R;
 import com.ekcapaper.mapgamear.data.ThisApplication;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
-import com.ekcapaper.mapgamear.stub.AccountStub;
 import com.ekcapaper.mapgamear.utils.Tools;
 import com.google.android.material.textfield.TextInputEditText;
 

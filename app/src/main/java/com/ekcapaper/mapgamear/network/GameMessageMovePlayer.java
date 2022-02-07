@@ -19,7 +19,7 @@ public class GameMessageMovePlayer extends GameMessage {
         this.longitude = longitude;
     }
 
-    public Location getLocation(){
+    public Location getLocation() {
         Location location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);

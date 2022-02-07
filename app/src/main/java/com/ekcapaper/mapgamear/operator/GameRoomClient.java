@@ -1,12 +1,11 @@
 package com.ekcapaper.mapgamear.operator;
 
 import android.location.Location;
-import android.util.Log;
 
 import com.ekcapaper.mapgamear.modelgame.GameRoomLabel;
-import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.modelgame.play.GameStatus;
 import com.ekcapaper.mapgamear.modelgame.play.Player;
+import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.network.GameMessage;
 import com.ekcapaper.mapgamear.network.GameMessageEnd;
 import com.ekcapaper.mapgamear.network.GameMessageFlagGameStart;
@@ -45,6 +44,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class GameRoomClient implements SocketListener {
+    @Getter
+    protected final List<UserPresence> channelUserPresenceList;
+    @Getter
+    protected final List<UserPresence> matchUserPresenceList;
     // nakama 서버와의 연동을 진행하는 클래스
     NakamaNetworkManager nakamaNetworkManager;
     // 게임 상태
@@ -62,32 +65,15 @@ public class GameRoomClient implements SocketListener {
     Runnable afterGameEndMessage;
     @Setter
     Runnable afterOnMatchPresence;
+    // 시간 제한
+    LocalDateTime gameStartTime;
+    LocalDateTime gameEndTime;
+    Timer timeLimitTimer;
     // nakama 서버와 연동된 정보
     @Getter
     private Match match;
     @Getter
     private GameRoomLabel gameRoomLabel;
-    @Getter
-    protected final List<UserPresence> channelUserPresenceList;
-    @Getter
-    protected final List<UserPresence> matchUserPresenceList;
-    // 시간 제한
-    LocalDateTime gameStartTime;
-    LocalDateTime gameEndTime;
-    Timer timeLimitTimer;
-    public String getLeftTimeStr(){
-        String leftTimeStr;
-        try {
-            long leftSecond = gameEndTime.toEpochSecond(ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-            LocalTime timeOfDay = LocalTime.ofSecondOfDay(leftSecond);
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
-            leftTimeStr = timeOfDay.format(dateTimeFormatter);
-        }
-        catch (DateTimeException dateTimeException){
-            leftTimeStr = "00:00:00";
-        }
-        return "남은 시간 : " + leftTimeStr;
-    }
 
     public GameRoomClient(NakamaNetworkManager nakamaNetworkManager) {
         // nakama 서버와의 연동을 진행하는 클래스
@@ -111,8 +97,21 @@ public class GameRoomClient implements SocketListener {
         };
         afterGameEndMessage = () -> {
         };
-        afterOnMatchPresence = () ->{
+        afterOnMatchPresence = () -> {
         };
+    }
+
+    public String getLeftTimeStr() {
+        String leftTimeStr;
+        try {
+            long leftSecond = gameEndTime.toEpochSecond(ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            LocalTime timeOfDay = LocalTime.ofSecondOfDay(leftSecond);
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
+            leftTimeStr = timeOfDay.format(dateTimeFormatter);
+        } catch (DateTimeException dateTimeException) {
+            leftTimeStr = "00:00:00";
+        }
+        return "남은 시간 : " + leftTimeStr;
     }
 
     public boolean createMatch(String label) {
@@ -120,7 +119,7 @@ public class GameRoomClient implements SocketListener {
         if (match == null) {
             return false;
         } else {
-            gameRoomLabel = new Gson().fromJson(label,GameRoomLabel.class);
+            gameRoomLabel = new Gson().fromJson(label, GameRoomLabel.class);
             goGameStatus(GameStatus.GAME_READY);
             return true;
         }
@@ -132,7 +131,7 @@ public class GameRoomClient implements SocketListener {
         if (match == null) {
             return false;
         } else {
-            gameRoomLabel = new Gson().fromJson(match.getLabel(),GameRoomLabel.class);
+            gameRoomLabel = new Gson().fromJson(match.getLabel(), GameRoomLabel.class);
             goGameStatus(GameStatus.GAME_READY);
             return true;
         }
@@ -220,15 +219,14 @@ public class GameRoomClient implements SocketListener {
                 onMovePlayer(gameMessageMovePlayer);
                 break;
             case GAME_START:
-                if(this instanceof FlagGameRoomClient){
+                if (this instanceof FlagGameRoomClient) {
                     GameMessageFlagGameStart gameMessageFlagGameStart = gson.fromJson(data, GameMessageFlagGameStart.class);
                     onGameStart(gameMessageFlagGameStart);
                 }
-                if(this instanceof TagGameRoomClient){
+                if (this instanceof TagGameRoomClient) {
                     GameMessageTagGameStart gameMessageTagGameStart = gson.fromJson(data, GameMessageTagGameStart.class);
                     onGameStart(gameMessageTagGameStart);
-                }
-                else {
+                } else {
                     GameMessageStart gameMessageStart = gson.fromJson(data, GameMessageStart.class);
                     onGameStart(gameMessageStart);
                 }
@@ -270,7 +268,7 @@ public class GameRoomClient implements SocketListener {
                         declareGameEnd();
                     }
                 }
-            },gameRoomLabel.getTimeLimitSecond()* 1000L);
+            }, gameRoomLabel.getTimeLimitSecond() * 1000L);
             goGameStatus(GameStatus.GAME_RUNNING);
         }
     }
@@ -350,13 +348,13 @@ public class GameRoomClient implements SocketListener {
     }
 
     public void onMatchJoinPresence(List<UserPresence> joinList) {
-        if(joinList != null) {
+        if (joinList != null) {
             matchUserPresenceList.addAll(joinList);
         }
     }
 
     public void onMatchLeavePresence(List<UserPresence> leaveList) {
-        if(leaveList != null) {
+        if (leaveList != null) {
             matchUserPresenceList.removeAll(leaveList);
         }
     }

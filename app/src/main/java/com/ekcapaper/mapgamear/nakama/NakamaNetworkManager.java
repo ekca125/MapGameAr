@@ -1,8 +1,5 @@
 package com.ekcapaper.mapgamear.nakama;
 
-import android.util.Log;
-
-import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.ekcapaper.mapgamear.keystorage.KeyStorageNakama;
@@ -37,11 +34,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class NakamaNetworkManager {
-    private enum LoginType{
-        NONE,
-        EMAIL,
-        GUEST
-    }
     // util
     private final Gson gson;
     // client
@@ -53,7 +45,6 @@ public class NakamaNetworkManager {
     // email
     String email;
     String password;
-
 
     public NakamaNetworkManager() {
         //
@@ -91,7 +82,7 @@ public class NakamaNetworkManager {
         }
     }
 
-    public boolean loginGuestSync(){
+    public boolean loginGuestSync() {
         try {
             String id = UUID.randomUUID().toString();
             session = client.authenticateDevice(id).get();
@@ -104,15 +95,15 @@ public class NakamaNetworkManager {
     }
 
     public void logout() {
-        if(isLogin()) {
-            if(socketClient != null){
+        if (isLogin()) {
+            if (socketClient != null) {
                 socketClient.disconnect();
                 socketClient = null;
             }
-            if(session != null){
+            if (session != null) {
                 session = null;
             }
-            if(LoginType.EMAIL.equals(loginType)){
+            if (LoginType.EMAIL.equals(loginType)) {
                 email = null;
                 password = null;
             }
@@ -124,7 +115,6 @@ public class NakamaNetworkManager {
     public String getCurrentSessionUserId() {
         return session.getUserId();
     }
-    //
 
     // group
     public GroupList getAllGroupList() {
@@ -134,6 +124,7 @@ public class NakamaNetworkManager {
             return null;
         }
     }
+    //
 
     public GroupList getGroupList(String groupFilter) {
         try {
@@ -216,7 +207,6 @@ public class NakamaNetworkManager {
         } catch (ExecutionException | InterruptedException | IndexOutOfBoundsException ignored) {
         }
     }
-    //
 
     // rpc (client)
     public JsonObject clientRpcSync(String rpcFunctionName, String rpcFunctionPayload) throws ExecutionException, InterruptedException {
@@ -226,9 +216,9 @@ public class NakamaNetworkManager {
     //
 
     // match
-    public GameRoomLabel getGameRoomLabel(String matchId){
+    public GameRoomLabel getGameRoomLabel(String matchId) {
         MatchList matchList = getMinPlayerAllMatchListSync();
-        if(matchList == null){
+        if (matchList == null) {
             return null;
         }
         try {
@@ -242,12 +232,11 @@ public class NakamaNetworkManager {
                     })
                     .collect(Collectors.toList())
                     .get(0);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
-
+    //
 
     public Match createMatchSync(SocketListener socketListener, String label) {
         try {
@@ -264,7 +253,7 @@ public class NakamaNetworkManager {
     }
 
     public Match joinMatchSync(SocketListener socketListener, String matchId) {
-        if(socketClient != null){
+        if (socketClient != null) {
             throw new IllegalStateException("SocketClient is already connected");
         }
         try {
@@ -281,7 +270,7 @@ public class NakamaNetworkManager {
     }
 
     public void sendMatchData(String matchId, GameMessage gameMessage) {
-        if(socketClient == null){
+        if (socketClient == null) {
             throw new IllegalStateException("SocketClient is not connected");
         }
         socketClient.sendMatchData(
@@ -311,13 +300,11 @@ public class NakamaNetworkManager {
 
     public MatchList getMinPlayerAllMatchListSync() {
         try {
-            return client.listMatches(session,1).get();
+            return client.listMatches(session, 1).get();
         } catch (ExecutionException | InterruptedException e) {
             return null;
         }
     }
-    //
-
 
     // collection - key - userId로 저장된다.
     public boolean writePublicServerStorageSync(String collectionName, String keyName, Map<String, Object> data) {
@@ -336,6 +323,7 @@ public class NakamaNetworkManager {
             return false;
         }
     }
+    //
 
     public Map<String, Object> readServerStorageSync(String collectionName, String keyName, String storageOwnUserId) {
         Gson gson = new Gson();
@@ -349,6 +337,12 @@ public class NakamaNetworkManager {
         } catch (ExecutionException | InterruptedException | IndexOutOfBoundsException e) {
             return null;
         }
+    }
+
+    private enum LoginType {
+        NONE,
+        EMAIL,
+        GUEST
     }
 
 
