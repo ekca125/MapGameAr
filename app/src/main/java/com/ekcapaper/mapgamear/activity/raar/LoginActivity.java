@@ -71,7 +71,20 @@ public class LoginActivity extends AppCompatActivity {
         button_guest_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CompletableFuture
+                        .supplyAsync(()->nakamaNetworkManager.loginGuestSync())
+                        .thenAccept((result) -> {
+                            runOnUiThread(() -> {
+                                button_login.setEnabled(true);
+                                if (result) {
+                                    Intent intent = new Intent(LoginActivity.this, LobbyActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                                }
 
+                            });
+                        });
             }
         });
 
