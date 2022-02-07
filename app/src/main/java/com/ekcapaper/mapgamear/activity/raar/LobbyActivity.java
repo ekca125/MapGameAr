@@ -30,8 +30,6 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.api.MatchList;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -90,11 +88,10 @@ public class LobbyActivity extends AppCompatActivity {
                 // 입장 처리
                 // 존재하며 아직 시작되지 않은 방인지 확인
                 GameRoomLabel gameRoomLabel = nakamaNetworkManager.getGameRoomLabel(obj.matchId);
-                if(gameRoomLabel == null){
+                if (gameRoomLabel == null) {
                     Toast.makeText(LobbyActivity.this, "존재하지 않는 방입니다.", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if(!gameRoomLabel.isOpened()){
+                } else if (!gameRoomLabel.isOpened()) {
                     Toast.makeText(LobbyActivity.this, "이미 시작된 방입니다.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -102,13 +99,11 @@ public class LobbyActivity extends AppCompatActivity {
                 // 입장 처리
                 boolean result;
                 GameType gameType = GameTypeTextConverter.convertTextToGameType(obj.gameTypeDesc);
-                if(gameType.equals(GameType.GAME_TYPE_FLAG)){
+                if (gameType.equals(GameType.GAME_TYPE_FLAG)) {
                     result = thisApplication.joinGameRoom(FlagGameRoomClient.class.getName(), obj.matchId);
-                }
-                else if(gameType.equals(GameType.GAME_TYPE_TAG)){
+                } else if (gameType.equals(GameType.GAME_TYPE_TAG)) {
                     result = thisApplication.joinGameRoom(TagGameRoomClient.class.getName(), obj.matchId);
-                }
-                else{
+                } else {
                     throw new IllegalArgumentException();
                 }
 
@@ -163,7 +158,7 @@ public class LobbyActivity extends AppCompatActivity {
                                 return gameRoomLabel.isOpened();
                             }
                     )
-                    .sorted((matchA, matchB) ->{
+                    .sorted((matchA, matchB) -> {
                         String labelA = matchA.getLabel().getValue();
                         GameRoomLabel gameRoomLabelA = gson.fromJson(labelA, GameRoomLabel.class);
                         double distanceMeterA = gameRoomLabelA.getMapCenter().distanceTo(currentLocation);
@@ -171,7 +166,7 @@ public class LobbyActivity extends AppCompatActivity {
                         String labelB = matchB.getLabel().getValue();
                         GameRoomLabel gameRoomLabelB = gson.fromJson(labelB, GameRoomLabel.class);
                         double distanceMeterB = gameRoomLabelB.getMapCenter().distanceTo(currentLocation);
-                        return Double.compare(distanceMeterA,distanceMeterB);
+                        return Double.compare(distanceMeterA, distanceMeterB);
                     })
                     .map(match -> {
                         String label = match.getLabel().getValue();
@@ -224,14 +219,13 @@ public class LobbyActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
                 refreshLobbyData();
             }
-        } else if(item.getItemId() == R.id.action_logout){
+        } else if (item.getItemId() == R.id.action_logout) {
             thisApplication.logout();
             finish();
-        } else if(item.getItemId() == R.id.action_oss){
+        } else if (item.getItemId() == R.id.action_oss) {
             OssLicensesMenuActivity.setActivityTitle("오픈소스 라이선스");
             startActivity(new Intent(this, OssLicensesMenuActivity.class));
-        }
-        else {
+        } else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);

@@ -41,6 +41,9 @@ import java.util.stream.Collectors;
 public class GameRoomGenerateActivity extends AppCompatActivity {
     private final int ACTIVITY_REQUEST_CODE = 0;
     LocationRequestSpace locationRequestSpace;
+    // GameType
+    GameType[] gameTypes;
+    GameType currentGameType;
     // field
     private ThisApplication thisApplication;
     private NakamaNetworkManager nakamaNetworkManager;
@@ -50,12 +53,8 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     private TextInputEditText text_input_latitude;
     private TextInputEditText text_input_longitude;
     private TextInputEditText text_input_room_time_limit;
-
     private Spinner game_type_spinner;
     private Button button_generate_room;
-    // GameType
-    GameType[] gameTypes;
-    GameType currentGameType;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -152,13 +151,11 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 // 진행
                 button_generate_room.setEnabled(false);
                 boolean result = false;
-                if(gameType.equals(GameType.GAME_TYPE_FLAG)){
+                if (gameType.equals(GameType.GAME_TYPE_FLAG)) {
                     result = thisApplication.createGameRoom(FlagGameRoomClient.class.getName(), label);
-                }
-                else if(gameType.equals(GameType.GAME_TYPE_TAG)){
-                    result = thisApplication.createGameRoom(TagGameRoomClient.class.getName(),label);
-                }
-                else{
+                } else if (gameType.equals(GameType.GAME_TYPE_TAG)) {
+                    result = thisApplication.createGameRoom(TagGameRoomClient.class.getName(), label);
+                } else {
                     throw new IllegalArgumentException();
                 }
                 // 결과 확인
