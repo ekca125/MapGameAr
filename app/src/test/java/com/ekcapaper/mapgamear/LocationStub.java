@@ -10,7 +10,8 @@ public class LocationStub {
     public static double latitude = 35.0979529784;
     public static double longitude = 129.0219886069;
     public static Location location;
-    static{
+
+    static {
         location = new Location("");
         location.setLatitude(latitude);
         location.setLongitude(longitude);

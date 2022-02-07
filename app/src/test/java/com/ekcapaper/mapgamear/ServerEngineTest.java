@@ -30,7 +30,7 @@ public class ServerEngineTest {
         Client client;
         Session session;
         SocketClient socketClient;
-        
+
         // client
         client = new DefaultClient(
                 KeyStorageNakama.getServerKey(),
@@ -38,7 +38,7 @@ public class ServerEngineTest {
                 KeyStorageNakama.getGrpcPort(),
                 KeyStorageNakama.getGrpcSSL()
         );
-        session = client.authenticateEmail(AccountStub.ID,AccountStub.PASSWORD).get();
+        session = client.authenticateEmail(AccountStub.ID, AccountStub.PASSWORD).get();
         assertNotNull(session);
 
         // 소켓

@@ -1,9 +1,9 @@
 package com.ekcapaper.mapgamear.retrofit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import com.ekcapaper.mapgamear.retrofit.dto.AddressDto;
 import com.ekcapaper.mapgamear.modelgame.address.MapRange;
+import com.ekcapaper.mapgamear.retrofit.dto.AddressDto;
 
 import org.junit.Test;
 

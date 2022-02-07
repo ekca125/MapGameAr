@@ -1,6 +1,6 @@
 package com.ekcapaper.mapgamear.utils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
