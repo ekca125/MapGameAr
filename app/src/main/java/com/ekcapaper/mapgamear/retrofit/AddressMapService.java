@@ -1,7 +1,7 @@
 package com.ekcapaper.mapgamear.retrofit;
 
-import com.ekcapaper.mapgamear.retrofit.dto.AddressDto;
 import com.ekcapaper.mapgamear.modelgame.address.MapRange;
+import com.ekcapaper.mapgamear.retrofit.dto.AddressDto;
 
 import java.util.List;
 
