@@ -45,7 +45,7 @@ public class NakamaNetworkManager {
     // email
     String email;
     String password;
-   
+
     public NakamaNetworkManager() {
         //
         gson = new Gson();
