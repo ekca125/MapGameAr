@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText text_input_text_email;
     private TextInputEditText text_input_text_password;
     private Button button_login;
+    private Button button_guest_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         this.text_input_text_email = findViewById(R.id.text_input_text_email);
         this.text_input_text_password = findViewById(R.id.text_input_text_password);
         this.button_login = findViewById(R.id.button_login);
+        this.button_guest_login = findViewById(R.id.button_guest_login);
 
         // activity setting
         button_login.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +68,13 @@ public class LoginActivity extends AppCompatActivity {
                         });
             }
         });
+        button_guest_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         Tools.setSystemBarColor(this);
 
         // stub
