@@ -40,4 +40,5 @@
     <string name="game_start">게임 시작</string>
     <string name="game_room">게임 방</string>
     <string name="room_desc">방 설명</string>
+    <string name="guest_login">게스트로 로그인</string>
 </resources>

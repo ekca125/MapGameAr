@@ -32,12 +32,15 @@ import com.heroiclabs.nakama.api.StorageObjects;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class NakamaNetworkManager {
     private enum LoginType{
-        EMAIL
+        NONE,
+        EMAIL,
+        GUEST
     }
     // util
     private final Gson gson;
@@ -65,7 +68,7 @@ public class NakamaNetworkManager {
         socketClient = null;
         session = null;
         //
-        loginType = null;
+        loginType = LoginType.NONE;
         email = null;
         password = null;
     }
@@ -88,6 +91,18 @@ public class NakamaNetworkManager {
         }
     }
 
+    public boolean loginGuestSync(){
+        try {
+            String id = UUID.randomUUID().toString();
+            session = client.authenticateDevice(id).get();
+            loginType = LoginType.GUEST;
+            return true;
+        } catch (ExecutionException | InterruptedException e) {
+            session = null;
+            return false;
+        }
+    }
+
     public void logout() {
         if(isLogin()) {
             if(socketClient != null){
@@ -100,8 +115,8 @@ public class NakamaNetworkManager {
             if(LoginType.EMAIL.equals(loginType)){
                 email = null;
                 password = null;
-                loginType = null;
             }
+            loginType = LoginType.NONE;
         }
     }
 

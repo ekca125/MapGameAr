@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText text_input_text_email;
     private TextInputEditText text_input_text_password;
     private Button button_login;
+    private Button button_guest_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         this.text_input_text_email = findViewById(R.id.text_input_text_email);
         this.text_input_text_password = findViewById(R.id.text_input_text_password);
         this.button_login = findViewById(R.id.button_login);
+        this.button_guest_login = findViewById(R.id.button_guest_login);
 
         // activity setting
         button_login.setOnClickListener(new View.OnClickListener() {
@@ -61,15 +63,33 @@ public class LoginActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
                                 }
-
                             });
                         });
             }
         });
+        button_guest_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CompletableFuture
+                        .supplyAsync(() -> nakamaNetworkManager.loginGuestSync())
+                        .thenAccept((result) -> {
+                            runOnUiThread(() -> {
+                                button_login.setEnabled(true);
+                                if (result) {
+                                    Intent intent = new Intent(LoginActivity.this, LobbyActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        });
+            }
+        });
+
         Tools.setSystemBarColor(this);
 
         // stub
-        text_input_text_email.setText(AccountStub.ID);
-        text_input_text_password.setText(AccountStub.PASSWORD);
+        //text_input_text_email.setText(AccountStub.ID);
+        //text_input_text_password.setText(AccountStub.PASSWORD);
     }
 }
