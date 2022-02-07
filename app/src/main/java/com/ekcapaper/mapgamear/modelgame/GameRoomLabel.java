@@ -3,6 +3,9 @@ package com.ekcapaper.mapgamear.modelgame;
 import com.ekcapaper.mapgamear.modelgame.address.MapRange;
 import com.ekcapaper.mapgamear.modelgame.play.GameType;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 import lombok.Getter;
 
 public class GameRoomLabel extends MapRange {
@@ -16,6 +19,8 @@ public class GameRoomLabel extends MapRange {
     final GameType gameType;
     @Getter
     boolean opened;
+    @Getter
+    final int timeLimitSecond;
 
     public GameRoomLabel(
             String roomName,
@@ -26,13 +31,15 @@ public class GameRoomLabel extends MapRange {
             double endLongitude,
             String masterUserId,
             GameType gameType,
-            boolean opened) {
+            boolean opened,
+            int timeLimitSecond) {
         super(startLatitude, startLongitude, endLatitude, endLongitude);
         this.roomName = roomName;
         this.roomDesc = roomDesc;
         this.masterUserId = masterUserId;
         this.gameType = gameType;
         this.opened = opened;
+        this.timeLimitSecond = timeLimitSecond;
     }
 
     public GameRoomLabel(
@@ -41,7 +48,8 @@ public class GameRoomLabel extends MapRange {
             MapRange mapRange,
             String masterUserId,
             GameType gameType,
-            boolean opened
+            boolean opened,
+            int timeLimitSecond
     ) {
         this(
                 roomName,
@@ -52,7 +60,15 @@ public class GameRoomLabel extends MapRange {
                 mapRange.getEndLongitude(),
                 masterUserId,
                 gameType,
-                opened
+                opened,
+                timeLimitSecond
         );
     }
+
+    public String getTimeLimit_ISO_LOCAL_TIME(){
+        LocalTime timeOfDay = LocalTime.ofSecondOfDay(this.getTimeLimitSecond());
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
+        return timeOfDay.format(dateTimeFormatter);
+    }
+
 }

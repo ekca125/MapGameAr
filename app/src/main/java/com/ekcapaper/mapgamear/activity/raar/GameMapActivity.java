@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,9 +34,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.function.Consumer;
 
 public class GameMapActivity extends AppCompatActivity {
@@ -53,6 +57,8 @@ public class GameMapActivity extends AppCompatActivity {
     private ImageButton list_button;
     private ImageButton map_button;
     private ImageButton add_button;
+    private TextView textview_left_time;
+    private Timer leftTimeTimer;
     // map
     private GoogleMap mMap;
     private boolean mapReady;
@@ -74,6 +80,16 @@ public class GameMapActivity extends AppCompatActivity {
         list_button = findViewById(R.id.list_button);
         map_button = findViewById(R.id.map_button);
         add_button = findViewById(R.id.add_button);
+        textview_left_time = findViewById(R.id.textview_left_time);
+        textview_left_time.setText(gameRoomClient.getLeftTimeStr());
+
+        leftTimeTimer = new Timer();
+        leftTimeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                textview_left_time.setText(gameRoomClient.getLeftTimeStr());
+            }
+        },0,1000);
 
         // field
         mapReady = false;
@@ -113,7 +129,6 @@ public class GameMapActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                             gameRoomClient.declareCurrentPlayerMove(location);
                             syncGameMap();
-                            endCheckSequence();
                         }
                 );
             }
@@ -165,6 +180,7 @@ public class GameMapActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         thisApplication.leaveGameRoom();
+        leftTimeTimer.cancel();
     }
 
     private void initMapFragment() {
@@ -218,17 +234,6 @@ public class GameMapActivity extends AppCompatActivity {
             taggerPlayer.getLocation().ifPresent(location ->{
                 taggerMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("tagger",location)));
             });
-        }
-    }
-
-    private void endCheckSequence() {
-        if (gameRoomClient instanceof FlagGameRoomClient) {
-            FlagGameRoomClient flagGameRoomClient = (FlagGameRoomClient) gameRoomClient;
-            if (flagGameRoomClient.getUnownedFlagList().size() == 0) {
-                if (flagGameRoomClient.getCurrentGameStatus().equals(GameStatus.GAME_RUNNING)) {
-                    gameRoomClient.declareGameEnd();
-                }
-            }
         }
     }
 

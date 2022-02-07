@@ -1,6 +1,7 @@
 package com.ekcapaper.mapgamear.operator;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.ekcapaper.mapgamear.modelgame.GameRoomLabel;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
@@ -29,8 +30,14 @@ import com.heroiclabs.nakama.api.ChannelMessage;
 import com.heroiclabs.nakama.api.NotificationList;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -63,6 +70,16 @@ public class GameRoomClient implements SocketListener {
     protected final List<UserPresence> channelUserPresenceList;
     @Getter
     protected final List<UserPresence> matchUserPresenceList;
+    // 시간 제한
+    LocalDateTime gameStartTime;
+    LocalDateTime gameEndTime;
+    Timer timeLimitTimer;
+    public String getLeftTimeStr(){
+        long leftSecond = gameEndTime.toEpochSecond(ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        LocalTime timeOfDay = LocalTime.ofSecondOfDay(leftSecond);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
+        return "남은 시간 : " + timeOfDay.format(dateTimeFormatter);
+    }
 
     public GameRoomClient(NakamaNetworkManager nakamaNetworkManager) {
         // nakama 서버와의 연동을 진행하는 클래스
@@ -74,6 +91,11 @@ public class GameRoomClient implements SocketListener {
         // 게임 정보
         currentGameStatus = GameStatus.GAME_NOT_INIT;
         gamePlayerList = new ArrayList<>();
+        // 시간 제한
+        gameStartTime = null;
+        gameEndTime = null;
+        timeLimitTimer = null;
+
         // after callback
         afterGameStartMessage = () -> {
         };
@@ -229,6 +251,18 @@ public class GameRoomClient implements SocketListener {
                     .map(userPresence -> new Player(userPresence.getUserId()))
                     .collect(Collectors.toList());
             gamePlayerList.addAll(matchPlayers);
+            // end timer
+            gameStartTime = LocalDateTime.now();
+            gameEndTime = gameStartTime.plusSeconds(gameRoomLabel.getTimeLimitSecond());
+            timeLimitTimer = new Timer();
+            timeLimitTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (currentGameStatus == GameStatus.GAME_RUNNING) {
+                        declareGameEnd();
+                    }
+                }
+            },gameRoomLabel.getTimeLimitSecond()* 1000L);
             goGameStatus(GameStatus.GAME_RUNNING);
         }
     }
@@ -257,7 +291,19 @@ public class GameRoomClient implements SocketListener {
                         location.setLongitude(gameMessageMovePlayer.getLongitude());
                         player.updateLocation(location);
                     });
+            endCheckSequence();
             afterMovePlayerMessage.run();
+        }
+    }
+
+    private void endCheckSequence() {
+        if (this instanceof FlagGameRoomClient) {
+            FlagGameRoomClient flagGameRoomClient = (FlagGameRoomClient) this;
+            if (flagGameRoomClient.getUnownedFlagList().size() == 0) {
+                if (flagGameRoomClient.getCurrentGameStatus().equals(GameStatus.GAME_RUNNING)) {
+                    this.declareGameEnd();
+                }
+            }
         }
     }
 
