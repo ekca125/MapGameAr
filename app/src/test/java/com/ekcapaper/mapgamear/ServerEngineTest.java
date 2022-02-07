@@ -3,6 +3,7 @@ package com.ekcapaper.mapgamear;
 import static org.junit.Assert.assertNotNull;
 
 import com.ekcapaper.mapgamear.keystorage.KeyStorageNakama;
+import com.ekcapaper.mapgamear.stub.AccountStub;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.ChannelPresenceEvent;
 import com.heroiclabs.nakama.Client;
