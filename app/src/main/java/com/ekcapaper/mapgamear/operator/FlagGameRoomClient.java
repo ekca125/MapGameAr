@@ -4,10 +4,9 @@ import android.location.Location;
 
 import com.ekcapaper.mapgamear.modelgame.GameRoomLabel;
 import com.ekcapaper.mapgamear.modelgame.address.MapRange;
-import com.ekcapaper.mapgamear.modelgame.play.GameStatus;
-import com.ekcapaper.mapgamear.modelgame.play.Player;
-import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.modelgame.play.GameFlag;
+import com.ekcapaper.mapgamear.modelgame.play.GameStatus;
+import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.network.GameMessageFlagGameStart;
 import com.ekcapaper.mapgamear.network.GameMessageMovePlayer;
 import com.ekcapaper.mapgamear.network.GameMessageStart;
@@ -49,7 +48,7 @@ public class FlagGameRoomClient extends GameRoomClient {
         //
         Gson gson = new Gson();
         String label = getMatch().getLabel();
-        GameRoomLabel gameRoomLabel = gson.fromJson(label,GameRoomLabel.class);
+        GameRoomLabel gameRoomLabel = gson.fromJson(label, GameRoomLabel.class);
         // 깃발 가져오기
         try {
             List<AddressDto> addressDtoList = AddressMapClient.getMapAddressService()
@@ -71,7 +70,7 @@ public class FlagGameRoomClient extends GameRoomClient {
     @Override
     public void onGameStart(GameMessageStart gameMessageStart) {
         super.onGameStart(gameMessageStart);
-        if(gameMessageStart instanceof GameMessageFlagGameStart){
+        if (gameMessageStart instanceof GameMessageFlagGameStart) {
             gameFlagList = ((GameMessageFlagGameStart) gameMessageStart).getGameFlagList();
             afterGameStartMessage.run();
         }
