@@ -26,6 +26,7 @@ import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.operator.FlagGameRoomClient;
 import com.ekcapaper.mapgamear.operator.TagGameRoomClient;
 import com.ekcapaper.mapgamear.utils.Tools;
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.google.gson.Gson;
 import com.heroiclabs.nakama.api.MatchList;
 
@@ -226,6 +227,9 @@ public class LobbyActivity extends AppCompatActivity {
         } else if(item.getItemId() == R.id.action_logout){
             thisApplication.logout();
             finish();
+        } else if(item.getItemId() == R.id.action_oss){
+            OssLicensesMenuActivity.setActivityTitle("오픈소스 라이선스");
+            startActivity(new Intent(this, OssLicensesMenuActivity.class));
         }
         else {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
