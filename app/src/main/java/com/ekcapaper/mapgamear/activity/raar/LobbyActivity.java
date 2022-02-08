@@ -230,7 +230,12 @@ public class LobbyActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "위치 정보를 가져오는 중입니다.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
-                refreshLobbyData();
+                if(currentLocation != null) {
+                    refreshLobbyData();
+                }
+                else{
+                    locationRequestSpace.start();
+                }
             }
         } else if (item.getItemId() == R.id.action_logout) {
             thisApplication.logout();
