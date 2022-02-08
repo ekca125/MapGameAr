@@ -66,8 +66,6 @@ public class GameRoomClient implements SocketListener {
     Runnable afterGameEndMessage;
     @Setter
     Runnable afterOnMatchPresence;
-    @Setter
-    Runnable afterOnLeaveMatchPresence;
     // 시간 제한
     LocalDateTime gameStartTime;
     LocalDateTime gameEndTime;
@@ -101,8 +99,6 @@ public class GameRoomClient implements SocketListener {
         afterGameEndMessage = () -> {
         };
         afterOnMatchPresence = () -> {
-        };
-        afterOnLeaveMatchPresence = () -> {
         };
     }
 
@@ -369,8 +365,6 @@ public class GameRoomClient implements SocketListener {
                             .filter(player -> player.getUserId().equals(leavePlayerUserId))
                             .collect(Collectors.toList());
                 });
-                // sync
-                afterMovePlayerMessage.run();
             }
         }
     }
