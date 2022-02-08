@@ -58,11 +58,8 @@ public class TagGameRoomClient extends GameRoomClient {
         tagger.updateTagger();
     }
 
-    public Player getCurrentTaggerPlayer() {
-        return getGamePlayerList().stream()
-                .filter(player -> tagger.taggerUserId.equals(player.getUserId()))
-                .collect(Collectors.toList())
-                .get(0);
+    public String getCurrentTaggerPlayerUserId() {
+        return tagger.taggerUserId;
     }
 
     @Override

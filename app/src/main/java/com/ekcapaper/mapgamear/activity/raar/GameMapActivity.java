@@ -160,8 +160,8 @@ public class GameMapActivity extends AppCompatActivity {
                             });
                 } else if (gameRoomClient instanceof TagGameRoomClient) {
                     TagGameRoomClient tagGameRoomClient = (TagGameRoomClient) gameRoomClient;
-                    Player taggerPlayer = tagGameRoomClient.getCurrentTaggerPlayer();
-                    if (taggerPlayer.getUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())) {
+                    String taggerPlayerUserId = tagGameRoomClient.getCurrentTaggerPlayerUserId();
+                    if (taggerPlayerUserId.equals(nakamaNetworkManager.getCurrentSessionUserId())) {
                         // 게임이 끝나는 시점에서 술래인 경우
                         Toast.makeText(getApplicationContext(), "패배했습니다.", Toast.LENGTH_SHORT).show();
                     } else {
@@ -247,10 +247,15 @@ public class GameMapActivity extends AppCompatActivity {
             // 술래
             taggerMarkers.forEach(Marker::remove);
             taggerMarkers.clear();
-            Player taggerPlayer = ((TagGameRoomClient) gameRoomClient).getCurrentTaggerPlayer();
-            taggerPlayer.getLocation().ifPresent(location -> {
-                taggerMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("tagger", location)));
-            });
+
+            String taggerUserId = ((TagGameRoomClient) gameRoomClient).getCurrentTaggerPlayerUserId();
+            gameRoomClient.getGamePlayerList().stream()
+                    .filter(player -> taggerUserId.equals(player.getUserId()))
+                    .forEach(player -> {
+                        player.getLocation().ifPresent(location -> {
+                            taggerMarkers.add(mMap.addMarker(markerFactory.createMarkerOption("tagger", location)));
+                        });
+                    });
         }
     }
 
