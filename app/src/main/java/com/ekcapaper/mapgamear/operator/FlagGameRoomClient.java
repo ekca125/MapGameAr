@@ -98,9 +98,10 @@ public class FlagGameRoomClient extends GameRoomClient {
             matchUserPresenceList.removeAll(leaveList);
             if (getCurrentGameStatus() == GameStatus.GAME_RUNNING) {
                 // 게임이 진행되는 상황에서 플레이어가 나간 경우 그 플레이어가 가진 깃발을 제거한다.
+                List<GameFlag> gameFlagListClone = new ArrayList<>(gameFlagList);
                 leaveList.forEach(userPresence -> {
                     String leaveUserId = userPresence.getUserId();
-                    gameFlagList.stream()
+                    gameFlagListClone.stream()
                             .filter(gameFlag -> gameFlag.getUserId().equals(leaveUserId) && gameFlag.isOwned())
                             .forEach(gameFlag -> gameFlagList.remove(gameFlag));
                 });
