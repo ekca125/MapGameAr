@@ -6,6 +6,7 @@ import com.ekcapaper.mapgamear.modelgame.GameRoomLabel;
 import com.ekcapaper.mapgamear.modelgame.address.MapRange;
 import com.ekcapaper.mapgamear.modelgame.play.GameFlag;
 import com.ekcapaper.mapgamear.modelgame.play.GameStatus;
+import com.ekcapaper.mapgamear.modelgame.play.Player;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.network.GameMessageFlagGameStart;
 import com.ekcapaper.mapgamear.network.GameMessageMovePlayer;
@@ -13,8 +14,10 @@ import com.ekcapaper.mapgamear.network.GameMessageStart;
 import com.ekcapaper.mapgamear.retrofit.AddressMapClient;
 import com.ekcapaper.mapgamear.retrofit.dto.AddressDto;
 import com.google.gson.Gson;
+import com.heroiclabs.nakama.UserPresence;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,4 +91,20 @@ public class FlagGameRoomClient extends GameRoomClient {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void onMatchLeavePresence(List<UserPresence> leaveList) {
+        super.onMatchLeavePresence(leaveList);
+        if (leaveList != null) {
+            if (getCurrentGameStatus() == GameStatus.GAME_RUNNING) {
+                // 게임이 진행되는 상황에서 플레이어가 나간 경우 그 플레이어가 가진 깃발을 제거한다.
+                List<GameFlag> gameFlagListClone = new ArrayList<>(gameFlagList);
+                leaveList.forEach(userPresence -> {
+                    String leaveUserId = userPresence.getUserId();
+                    gameFlagListClone.stream()
+                            .filter(gameFlag -> gameFlag.getUserId().equals(leaveUserId) && gameFlag.isOwned())
+                            .forEach(gameFlag -> gameFlagList.remove(gameFlag));
+                });
+            }
+        }
+    }
 }

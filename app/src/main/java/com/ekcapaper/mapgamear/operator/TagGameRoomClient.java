@@ -1,14 +1,17 @@
 package com.ekcapaper.mapgamear.operator;
 
+import com.ekcapaper.mapgamear.modelgame.play.GameFlag;
 import com.ekcapaper.mapgamear.modelgame.play.GameStatus;
 import com.ekcapaper.mapgamear.modelgame.play.Player;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.network.GameMessageMovePlayer;
 import com.ekcapaper.mapgamear.network.GameMessageStart;
 import com.ekcapaper.mapgamear.network.GameMessageTagGameStart;
+import com.heroiclabs.nakama.UserPresence;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,12 +58,24 @@ public class TagGameRoomClient extends GameRoomClient {
         tagger.updateTagger();
     }
 
-    // 중간에 나간 경우에는 오류 가능성이 있다.
-    public Player getCurrentTaggerPlayer() {
-        return getGamePlayerList().stream()
-                .filter(player -> tagger.taggerUserId.equals(player.getUserId()))
-                .collect(Collectors.toList())
-                .get(0);
+    public String getCurrentTaggerPlayerUserId() {
+        return tagger.taggerUserId;
+    }
+
+    @Override
+    public void onMatchLeavePresence(List<UserPresence> leaveList) {
+        super.onMatchLeavePresence(leaveList);
+        if (leaveList != null) {
+            if (getCurrentGameStatus() == GameStatus.GAME_RUNNING) {
+                leaveList.forEach(userPresence -> {
+                    String leaveUserId = userPresence.getUserId();
+                    if(leaveUserId.equals(tagger.taggerUserId)){
+                        // 술래가 나간 경우에는 게임 종료를 선언한다.
+                        declareGameEnd();
+                    }
+                });
+            }
+        }
     }
 
     class Tagger {
