@@ -126,12 +126,17 @@ public class GameMapActivity extends AppCompatActivity {
             public void accept(Location location) {
                 runOnUiThread(() -> {
                             gameRoomClient.declareCurrentPlayerMove(location);
-                            syncGameMap();
                         }
                 );
             }
         });
         //
+        gameRoomClient.setAfterMovePlayerMessage(()->{
+            runOnUiThread(this::syncGameMap);
+        });
+        gameRoomClient.setAfterOnLeaveMatchPresence(()->{
+            runOnUiThread(this::syncGameMap);
+        });
         gameRoomClient.setAfterGameEndMessage(() -> {
             runOnUiThread(() -> {
                 if (gameRoomClient instanceof FlagGameRoomClient) {
@@ -186,6 +191,11 @@ public class GameMapActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // remove callback
+        gameRoomClient.setAfterGameStartMessage(()->{});
+        gameRoomClient.setAfterMovePlayerMessage(()->{});
+        gameRoomClient.setAfterGameEndMessage(()->{});
+        // leave
         thisApplication.leaveGameRoom();
         leftTimeTimer.cancel();
     }

@@ -3,6 +3,7 @@ package com.ekcapaper.mapgamear.operator;
 import android.location.Location;
 
 import com.ekcapaper.mapgamear.modelgame.GameRoomLabel;
+import com.ekcapaper.mapgamear.modelgame.play.GameFlag;
 import com.ekcapaper.mapgamear.modelgame.play.GameStatus;
 import com.ekcapaper.mapgamear.modelgame.play.Player;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
@@ -65,6 +66,8 @@ public class GameRoomClient implements SocketListener {
     Runnable afterGameEndMessage;
     @Setter
     Runnable afterOnMatchPresence;
+    @Setter
+    Runnable afterOnLeaveMatchPresence;
     // 시간 제한
     LocalDateTime gameStartTime;
     LocalDateTime gameEndTime;
@@ -98,6 +101,8 @@ public class GameRoomClient implements SocketListener {
         afterGameEndMessage = () -> {
         };
         afterOnMatchPresence = () -> {
+        };
+        afterOnLeaveMatchPresence = () -> {
         };
     }
 
@@ -356,6 +361,17 @@ public class GameRoomClient implements SocketListener {
     public void onMatchLeavePresence(List<UserPresence> leaveList) {
         if (leaveList != null) {
             matchUserPresenceList.removeAll(leaveList);
+            if (getCurrentGameStatus() == GameStatus.GAME_RUNNING) {
+                // 게임이 진행되는 상황에서 플레이어가 나간 경우 플레이어를 삭제한다.
+                leaveList.stream().forEach(userPresence -> {
+                    String leavePlayerUserId = userPresence.getUserId();
+                    List<Player> leavePlayers = gamePlayerList.stream()
+                            .filter(player -> player.getUserId().equals(leavePlayerUserId))
+                            .collect(Collectors.toList());
+                });
+                // sync
+                afterMovePlayerMessage.run();
+            }
         }
     }
 

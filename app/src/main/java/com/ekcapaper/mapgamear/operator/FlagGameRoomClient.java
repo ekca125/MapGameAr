@@ -90,29 +90,4 @@ public class FlagGameRoomClient extends GameRoomClient {
                 .filter(gameFlag -> !gameFlag.isOwned())
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public void onMatchLeavePresence(List<UserPresence> leaveList) {
-        super.onMatchLeavePresence(leaveList);
-        if (getCurrentGameStatus() == GameStatus.GAME_RUNNING) {
-            // 게임이 진행되는 상황에서 플레이어가 나간 경우
-            // 그 플레이어가 가지고 있는 깃발을 제거하고 플레이어를 삭제한다.
-            List<GameFlag> deleteGameFlags = new ArrayList<>();
-            List<Player> deletePlayers = new ArrayList<>();
-
-            leaveList.stream().forEach(userPresence -> {
-                String leavePlayerUserId = userPresence.getUserId();
-                List<GameFlag> leavePlayerOwnFlags = gameFlagList.stream()
-                        .filter(gameFlag -> gameFlag.getUserId().equals(leavePlayerUserId))
-                        .collect(Collectors.toList());
-                deleteGameFlags.addAll(leavePlayerOwnFlags);
-                List<Player> leavePlayers = gamePlayerList.stream()
-                        .filter(player -> player.getUserId().equals(leavePlayerUserId))
-                        .collect(Collectors.toList());
-                deletePlayers.addAll(leavePlayers);
-            });
-            deleteGameFlags.removeAll(deleteGameFlags);
-            deletePlayers.removeAll(deletePlayers);
-        }
-    }
 }
