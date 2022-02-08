@@ -95,7 +95,6 @@ public class FlagGameRoomClient extends GameRoomClient {
     public void onMatchLeavePresence(List<UserPresence> leaveList) {
         super.onMatchLeavePresence(leaveList);
         if (leaveList != null) {
-            matchUserPresenceList.removeAll(leaveList);
             if (getCurrentGameStatus() == GameStatus.GAME_RUNNING) {
                 // 게임이 진행되는 상황에서 플레이어가 나간 경우 그 플레이어가 가진 깃발을 제거한다.
                 List<GameFlag> gameFlagListClone = new ArrayList<>(gameFlagList);
