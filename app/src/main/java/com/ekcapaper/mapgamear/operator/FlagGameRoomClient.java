@@ -90,4 +90,21 @@ public class FlagGameRoomClient extends GameRoomClient {
                 .filter(gameFlag -> !gameFlag.isOwned())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void onMatchLeavePresence(List<UserPresence> leaveList) {
+        super.onMatchLeavePresence(leaveList);
+        if (leaveList != null) {
+            matchUserPresenceList.removeAll(leaveList);
+            if (getCurrentGameStatus() == GameStatus.GAME_RUNNING) {
+                // 게임이 진행되는 상황에서 플레이어가 나간 경우 그 플레이어가 가진 깃발을 제거한다.
+                leaveList.forEach(userPresence -> {
+                    String leaveUserId = userPresence.getUserId();
+                    gameFlagList.stream()
+                            .filter(gameFlag -> gameFlag.getUserId().equals(leaveUserId) && gameFlag.isOwned())
+                            .forEach(gameFlag -> gameFlagList.remove(gameFlag));
+                });
+            }
+        }
+    }
 }

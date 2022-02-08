@@ -134,7 +134,7 @@ public class GameMapActivity extends AppCompatActivity {
         gameRoomClient.setAfterMovePlayerMessage(()->{
             runOnUiThread(this::syncGameMap);
         });
-        gameRoomClient.setAfterOnLeaveMatchPresence(()->{
+        gameRoomClient.setAfterOnMatchPresence(()->{
             runOnUiThread(this::syncGameMap);
         });
         gameRoomClient.setAfterGameEndMessage(() -> {

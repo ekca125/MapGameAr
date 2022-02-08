@@ -359,11 +359,11 @@ public class GameRoomClient implements SocketListener {
             matchUserPresenceList.removeAll(leaveList);
             if (getCurrentGameStatus() == GameStatus.GAME_RUNNING) {
                 // 게임이 진행되는 상황에서 플레이어가 나간 경우 플레이어를 삭제한다.
-                leaveList.stream().forEach(userPresence -> {
-                    String leavePlayerUserId = userPresence.getUserId();
-                    List<Player> leavePlayers = gamePlayerList.stream()
-                            .filter(player -> player.getUserId().equals(leavePlayerUserId))
-                            .collect(Collectors.toList());
+                leaveList.forEach(userPresence -> {
+                    String leaveUserId = userPresence.getUserId();
+                    gamePlayerList.stream()
+                            .filter(player -> player.getUserId().equals(leaveUserId))
+                            .forEach(player -> gamePlayerList.remove(player));
                 });
             }
         }
