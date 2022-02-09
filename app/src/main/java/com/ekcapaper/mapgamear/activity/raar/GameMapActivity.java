@@ -265,7 +265,6 @@ public class GameMapActivity extends AppCompatActivity {
         dialog.findViewById(R.id.bt_action).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "Play Now Clicked", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 GameMapActivity.this.finish();
             }
@@ -282,7 +281,6 @@ public class GameMapActivity extends AppCompatActivity {
         dialog.findViewById(R.id.bt_action).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "Pick Now Clicked", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 GameMapActivity.this.finish();
             }
