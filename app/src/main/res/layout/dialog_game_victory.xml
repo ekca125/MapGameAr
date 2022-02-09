@@ -23,19 +23,19 @@
             android:orientation="vertical"
             android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="승리했습니다."
-                android:layout_marginTop="@dimen/spacing_middle"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textColor="@color/orange_500" />
-
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="@dimen/spacing_xxlarge"
                 app:srcCompat="@drawable/badge_crown" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_middle"
+                android:text="승리했습니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/orange_500" />
 
             <TextView
                 android:visibility="invisible"
