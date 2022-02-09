@@ -116,15 +116,15 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
             }
         });
 
-        mapSizes = new double[]{0.5,1,1.5,2,3.0};
+        mapSizes = new double[]{0.5, 1, 1.5, 2, 3.0};
         currentMapSize = mapSizes[0];
 
         game_map_size_spinner.setAdapter(new ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
                 Arrays.stream(mapSizes)
-                .mapToObj(doubleData -> doubleData + "km")
-                .collect(Collectors.toList())
+                        .mapToObj(doubleData -> doubleData + "km")
+                        .collect(Collectors.toList())
         ));
         game_map_size_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

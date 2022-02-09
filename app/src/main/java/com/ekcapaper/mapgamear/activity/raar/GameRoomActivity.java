@@ -130,7 +130,7 @@ public class GameRoomActivity extends AppCompatActivity {
         mGameRoomAdapter.setOnItemClickListener(new AdapterGameRoom.OnItemClickListener() {
             @Override
             public void onItemClick(View view, GameRoomInfo obj, int position) {
-                Snackbar.make(parent_view, "Item " + obj.userName + " clicked", Snackbar.LENGTH_SHORT).show();
+                //Snackbar.make(parent_view, "Item " + obj.userName + " clicked", Snackbar.LENGTH_SHORT).show();
             }
         });
         recyclerView.setAdapter(mGameRoomAdapter);

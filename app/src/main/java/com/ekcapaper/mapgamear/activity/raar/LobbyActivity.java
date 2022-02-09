@@ -87,7 +87,7 @@ public class LobbyActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), GameRoomGenerateActivity.class);
-                startActivityForResult(intent,ACTIVITY_REQUEST_CODE);
+                startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
             }
         });
 
@@ -123,7 +123,7 @@ public class LobbyActivity extends AppCompatActivity {
                 // 입장 후의 처리
                 if (result) {
                     Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
-                    startActivityForResult(intent,ACTIVITY_REQUEST_CODE);
+                    startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
                 } else {
                     Toast.makeText(LobbyActivity.this, "방 입장에 실패했습니다.", Toast.LENGTH_SHORT).show();
                 }
@@ -230,10 +230,9 @@ public class LobbyActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "위치 정보를 가져오는 중입니다.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getApplicationContext(), "방의 정보를 다시 가져오고 있습니다.", Toast.LENGTH_SHORT).show();
-                if(currentLocation != null) {
+                if (currentLocation != null) {
                     refreshLobbyData();
-                }
-                else{
+                } else {
                     locationRequestSpace.start();
                 }
             }
