@@ -104,40 +104,37 @@ public class GameMapActivity extends AppCompatActivity {
         list_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 정보 가져오기
-                Optional<String> infoMessageOptional = Optional.empty();
+                String infoMessage = "error";
                 if (gameRoomClient instanceof FlagGameRoomClient) {
                     FlagGameRoomClient flagGameRoomClient = (FlagGameRoomClient) gameRoomClient;
-                    infoMessageOptional = flagGameRoomClient.getGamePlayerList().stream()
-                            .map(player -> {
-                                String userId = player.getUserId();
-                                int point = flagGameRoomClient.getPoint(player.getUserId());
-                                return userId + " : " + point;
-                            })
-                            .reduce((result, message) -> {
-                                return result + "\n" + message;
-                            });
+                    // point
+                    int currentPlayerPoint = flagGameRoomClient.getPoint(nakamaNetworkManager.getCurrentSessionUserId());
+                    // max point
+                    AtomicReference<Integer> playerPointMaxAtomicReference = new AtomicReference<Integer>(-1);
+                    flagGameRoomClient.getGamePlayerList().stream()
+                            .map(player -> flagGameRoomClient.getPoint(player.getUserId()))
+                            .max(Integer::compareTo)
+                            .ifPresent(maxPoint -> playerPointMaxAtomicReference.set(maxPoint));
+                    int playerPointMax = playerPointMaxAtomicReference.get();
+                    // flag
+                    int unownedFlagSize = flagGameRoomClient.getUnownedFlagList().size();
+                    // text 1
+                    String text1 = "현재 점수 : " + currentPlayerPoint + "\n";
+                    String text2 = "최고 점수 : " + playerPointMax + "\n";
+                    String text3 = "남은 깃발 개수 : " + unownedFlagSize + "\n";
+                    infoMessage = text1 + text2 + text3;
                 } else if (gameRoomClient instanceof TagGameRoomClient) {
                     TagGameRoomClient tagGameRoomClient = (TagGameRoomClient) gameRoomClient;
-                    infoMessageOptional = tagGameRoomClient.getGamePlayerList().stream()
-                            .map(player -> {
-                                String userId = player.getUserId();
-                                if (userId.equals(tagGameRoomClient.getCurrentTaggerPlayerUserId())) {
-                                    return userId + " : " + "술래";
-                                } else {
-                                    return userId;
-                                }
-                            })
-                            .reduce((result, message) -> {
-                                return result + "\n" + message;
-                            });
+                    if(tagGameRoomClient.getCurrentTaggerPlayerUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())){
+                        infoMessage = "술래입니다.";
+                    }
+                    else{
+                        infoMessage = "술래가 아닙니다.";
+                    }
                 }
-                // 정보 입력
-                AtomicReference<String> infoMessageAtomicReference = new AtomicReference<>("error");
-                infoMessageOptional.ifPresent(infoMessageAtomicReference::set);
                 // 대화상자 띄우기
                 AlertDialog.Builder builder = new AlertDialog.Builder(GameMapActivity.this);
-                builder.setMessage(infoMessageAtomicReference.get());
+                builder.setMessage(infoMessage);
                 builder.setPositiveButton("확인", null);
                 builder.show();
             }
