@@ -34,6 +34,7 @@ import com.google.gson.Gson;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -44,6 +45,9 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     // GameType
     GameType[] gameTypes;
     GameType currentGameType;
+    // MapSize
+    double[] mapSizes;
+    double currentMapSize;
     // field
     private ThisApplication thisApplication;
     private NakamaNetworkManager nakamaNetworkManager;
@@ -54,6 +58,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     private TextInputEditText text_input_longitude;
     private TextInputEditText text_input_room_time_limit;
     private Spinner game_type_spinner;
+    private Spinner game_map_size_spinner;
     private Button button_generate_room;
 
     @Override
@@ -85,6 +90,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         text_input_room_time_limit = findViewById(R.id.text_input_room_time_limit);
 
         game_type_spinner = findViewById(R.id.game_type_spinner);
+        game_map_size_spinner = findViewById(R.id.game_map_size_spinner);
 
         // game type
         gameTypes = GameType.values();
@@ -106,9 +112,32 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                currentGameType = GameType.GAME_TYPE_FLAG;
+
             }
         });
+
+        mapSizes = new double[]{0.5,1,1.5,2,3.0};
+        currentMapSize = mapSizes[0];
+
+        game_map_size_spinner.setAdapter(new ArrayAdapter(
+                this,
+                android.R.layout.simple_list_item_1,
+                Arrays.stream(mapSizes)
+                .mapToObj(doubleData -> doubleData + "km")
+                .collect(Collectors.toList())
+        ));
+        game_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                currentMapSize = mapSizes[i];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         button_generate_room.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,12 +164,15 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 // 게임 선택
                 GameType gameType = currentGameType;
 
+                // 맵 크기 선택
+                double mapSize = currentMapSize;
+
                 // label 정보 준비
                 Gson gson = new Gson();
                 GameRoomLabel gameRoomLabel = new GameRoomLabel(
                         roomName,
                         roomDesc,
-                        MapRange.calculateMapRange(location, 0.5),
+                        MapRange.calculateMapRange(location, mapSize),
                         nakamaNetworkManager.getCurrentSessionUserId(),
                         gameType,
                         true,
