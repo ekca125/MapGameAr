@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -18,7 +19,6 @@ import com.ekcapaper.mapgamear.R;
 import com.ekcapaper.mapgamear.data.LocationRequestSpace;
 import com.ekcapaper.mapgamear.data.ThisApplication;
 import com.ekcapaper.mapgamear.modelgame.play.GameFlag;
-import com.ekcapaper.mapgamear.modelgame.play.Player;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.operator.FlagGameRoomClient;
 import com.ekcapaper.mapgamear.operator.GameRoomClient;
@@ -36,8 +36,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class GameMapActivity extends AppCompatActivity {
@@ -102,7 +104,42 @@ public class GameMapActivity extends AppCompatActivity {
         list_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "List Clicked", Toast.LENGTH_SHORT).show();
+                // 정보 가져오기
+                Optional<String> infoMessageOptional = Optional.empty();
+                if (gameRoomClient instanceof FlagGameRoomClient) {
+                    FlagGameRoomClient flagGameRoomClient = (FlagGameRoomClient) gameRoomClient;
+                    infoMessageOptional = flagGameRoomClient.getGamePlayerList().stream()
+                            .map(player -> {
+                                String userId = player.getUserId();
+                                int point = flagGameRoomClient.getPoint(player.getUserId());
+                                return userId + " : " + point;
+                            })
+                            .reduce((result, message) -> {
+                                return result + "\n" + message;
+                            });
+                } else if (gameRoomClient instanceof TagGameRoomClient) {
+                    TagGameRoomClient tagGameRoomClient = (TagGameRoomClient) gameRoomClient;
+                    infoMessageOptional = tagGameRoomClient.getGamePlayerList().stream()
+                            .map(player -> {
+                                String userId = player.getUserId();
+                                if (userId.equals(tagGameRoomClient.getCurrentTaggerPlayerUserId())) {
+                                    return userId + " : " + "술래";
+                                } else {
+                                    return userId;
+                                }
+                            })
+                            .reduce((result, message) -> {
+                                return result + "\n" + message;
+                            });
+                }
+                // 정보 입력
+                AtomicReference<String> infoMessageAtomicReference = new AtomicReference<>("error");
+                infoMessageOptional.ifPresent(infoMessageAtomicReference::set);
+                // 대화상자 띄우기
+                AlertDialog.Builder builder = new AlertDialog.Builder(GameMapActivity.this);
+                builder.setMessage(infoMessageAtomicReference.get());
+                builder.setPositiveButton("확인", null);
+                builder.show();
             }
         });
         map_button.setOnClickListener(new View.OnClickListener() {
@@ -131,10 +168,10 @@ public class GameMapActivity extends AppCompatActivity {
             }
         });
         //
-        gameRoomClient.setAfterMovePlayerMessage(()->{
+        gameRoomClient.setAfterMovePlayerMessage(() -> {
             runOnUiThread(this::syncGameMap);
         });
-        gameRoomClient.setAfterOnMatchPresence(()->{
+        gameRoomClient.setAfterOnMatchPresence(() -> {
             runOnUiThread(this::syncGameMap);
         });
         gameRoomClient.setAfterGameEndMessage(() -> {
@@ -192,9 +229,12 @@ public class GameMapActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         // remove callback
-        gameRoomClient.setAfterGameStartMessage(()->{});
-        gameRoomClient.setAfterMovePlayerMessage(()->{});
-        gameRoomClient.setAfterGameEndMessage(()->{});
+        gameRoomClient.setAfterGameStartMessage(() -> {
+        });
+        gameRoomClient.setAfterMovePlayerMessage(() -> {
+        });
+        gameRoomClient.setAfterGameEndMessage(() -> {
+        });
         // leave
         thisApplication.leaveGameRoom();
         leftTimeTimer.cancel();
