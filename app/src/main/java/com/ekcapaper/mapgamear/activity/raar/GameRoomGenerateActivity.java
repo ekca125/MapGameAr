@@ -107,7 +107,9 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         game_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                currentGameType = gameTypes[i];
+                if(adapterView.getId() == R.id.game_type_spinner) {
+                    currentGameType = gameTypes[i];
+                }
             }
 
             @Override
@@ -129,7 +131,9 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         game_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                currentMapSize = mapSizes[i];
+                if(adapterView.getId() == R.id.game_map_size_spinner) {
+                    currentMapSize = mapSizes[i];
+                }
             }
 
             @Override
