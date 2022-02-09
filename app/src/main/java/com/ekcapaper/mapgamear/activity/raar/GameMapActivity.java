@@ -1,12 +1,15 @@
 package com.ekcapaper.mapgamear.activity.raar;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +22,7 @@ import com.ekcapaper.mapgamear.R;
 import com.ekcapaper.mapgamear.data.LocationRequestSpace;
 import com.ekcapaper.mapgamear.data.ThisApplication;
 import com.ekcapaper.mapgamear.modelgame.play.GameFlag;
+import com.ekcapaper.mapgamear.modelgame.play.GameStatus;
 import com.ekcapaper.mapgamear.nakama.NakamaNetworkManager;
 import com.ekcapaper.mapgamear.operator.FlagGameRoomClient;
 import com.ekcapaper.mapgamear.operator.GameRoomClient;
@@ -36,7 +40,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
@@ -125,10 +128,9 @@ public class GameMapActivity extends AppCompatActivity {
                     infoMessage = text1 + text2 + text3;
                 } else if (gameRoomClient instanceof TagGameRoomClient) {
                     TagGameRoomClient tagGameRoomClient = (TagGameRoomClient) gameRoomClient;
-                    if(tagGameRoomClient.getCurrentTaggerPlayerUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())){
+                    if (tagGameRoomClient.getCurrentTaggerPlayerUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())) {
                         infoMessage = "술래입니다.";
-                    }
-                    else{
+                    } else {
                         infoMessage = "술래가 아닙니다.";
                     }
                 }
@@ -159,7 +161,9 @@ public class GameMapActivity extends AppCompatActivity {
             @Override
             public void accept(Location location) {
                 runOnUiThread(() -> {
-                            gameRoomClient.declareCurrentPlayerMove(location);
+                            if (gameRoomClient.getCurrentGameStatus().equals(GameStatus.GAME_RUNNING)) {
+                                gameRoomClient.declareCurrentPlayerMove(location);
+                            }
                         }
                 );
             }
@@ -187,9 +191,9 @@ public class GameMapActivity extends AppCompatActivity {
                             })
                             .ifPresent(player -> {
                                 if (player.getUserId().equals(nakamaNetworkManager.getCurrentSessionUserId())) {
-                                    Toast.makeText(getApplicationContext(), "승리했습니다.", Toast.LENGTH_SHORT).show();
+                                    showDialogVictory();
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "패배했습니다..", Toast.LENGTH_SHORT).show();
+                                    showDialogDefeat();
                                 }
                             });
                 } else if (gameRoomClient instanceof TagGameRoomClient) {
@@ -197,12 +201,11 @@ public class GameMapActivity extends AppCompatActivity {
                     String taggerPlayerUserId = tagGameRoomClient.getCurrentTaggerPlayerUserId();
                     if (taggerPlayerUserId.equals(nakamaNetworkManager.getCurrentSessionUserId())) {
                         // 게임이 끝나는 시점에서 술래인 경우
-                        Toast.makeText(getApplicationContext(), "패배했습니다.", Toast.LENGTH_SHORT).show();
+                        showDialogDefeat();
                     } else {
-                        Toast.makeText(getApplicationContext(), "승리했습니다.", Toast.LENGTH_SHORT).show();
+                        showDialogVictory();
                     }
                 }
-                finish();
             });
         });
 
@@ -251,6 +254,38 @@ public class GameMapActivity extends AppCompatActivity {
                 syncGameMap();
             }
         });
+    }
+
+    private void showDialogVictory() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_game_victory);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCancelable(true);
+        dialog.findViewById(R.id.bt_action).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                GameMapActivity.this.finish();
+            }
+        });
+        dialog.show();
+    }
+
+    private void showDialogDefeat() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+        dialog.setContentView(R.layout.dialog_game_defeat);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCancelable(true);
+        dialog.findViewById(R.id.bt_action).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                GameMapActivity.this.finish();
+            }
+        });
+        dialog.show();
     }
 
     private void moveCameraMapCenter() {
