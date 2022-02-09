@@ -106,7 +106,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                currentGameType = GameType.GAME_TYPE_FLAG;
             }
         });
 
