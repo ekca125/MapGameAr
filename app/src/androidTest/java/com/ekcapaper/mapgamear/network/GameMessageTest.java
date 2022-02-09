@@ -18,6 +18,27 @@ public class GameMessageTest {
     }
 
     @Test
+    public void testGameMessageFlagGamePayload() {
+        String userId = "stub";
+        double latitude = 0;
+        double longitude = 1;
+
+        GameMessageMovePlayer message = GameMessageMovePlayer
+                .builder()
+                .userId(userId)
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
+
+        String payload = message.getPayload();
+
+        assertFalse(payload.isEmpty());
+        assertTrue(payload.contains("userId"));
+        assertTrue(payload.contains("latitude"));
+        assertTrue(payload.contains("longitude"));
+    }
+
+    @Test
     public void testGameMessageTagGameStart(){
         GameMessageStart gameMessageStart = new GameMessageTagGameStart("stub");
         assertEquals(gameMessageStart.getOpCode(),GameMessageOpCode.GAME_START);

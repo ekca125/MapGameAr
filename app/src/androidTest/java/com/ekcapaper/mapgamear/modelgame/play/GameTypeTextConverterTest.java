@@ -22,7 +22,7 @@ public class GameTypeTextConverterTest {
     }
 
     @Test
-    private void convertGameTypeToText(){
+    public void convertGameTypeToText(){
         GameType gameType;
         String gameTypeToText;
 
