@@ -276,7 +276,7 @@ public class GameMapActivity extends AppCompatActivity {
     private void showDialogDefeat() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
-        dialog.setContentView(R.layout.dialog_achievement_champion);
+        dialog.setContentView(R.layout.dialog_game_defeat);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCancelable(true);
         dialog.findViewById(R.id.bt_action).setOnClickListener(new View.OnClickListener() {
