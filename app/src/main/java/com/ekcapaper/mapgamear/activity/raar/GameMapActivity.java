@@ -267,6 +267,7 @@ public class GameMapActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), "Play Now Clicked", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
                 GameMapActivity.this.finish();
             }
         });
@@ -283,6 +284,7 @@ public class GameMapActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), "Pick Now Clicked", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
                 GameMapActivity.this.finish();
             }
         });
