@@ -107,9 +107,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
         game_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(adapterView.getId() == R.id.game_type_spinner) {
-                    currentGameType = gameTypes[i];
-                }
+                currentGameType = gameTypes[i];
             }
 
             @Override
@@ -128,12 +126,10 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 .mapToObj(doubleData -> doubleData + "km")
                 .collect(Collectors.toList())
         ));
-        game_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        game_map_size_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(adapterView.getId() == R.id.game_map_size_spinner) {
-                    currentMapSize = mapSizes[i];
-                }
+                currentMapSize = mapSizes[i];
             }
 
             @Override
