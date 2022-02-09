@@ -129,7 +129,15 @@
                     android:id="@+id/game_type_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="맵의 크기" />
 
+            <Spinner
+                android:id="@+id/game_map_size_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
 
             <Button

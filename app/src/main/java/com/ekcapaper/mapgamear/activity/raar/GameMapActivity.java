@@ -122,8 +122,8 @@ public class GameMapActivity extends AppCompatActivity {
                     // flag
                     int unownedFlagSize = flagGameRoomClient.getUnownedFlagList().size();
                     // text 1
-                    String text1 = "현재 점수 : " + currentPlayerPoint + "\n";
-                    String text2 = "최고 점수 : " + playerPointMax + "\n";
+                    String text1 = "현재 플레이어의 점수 : " + currentPlayerPoint + "\n";
+                    String text2 = "최고 플레이어의 점수 : " + playerPointMax + "\n";
                     String text3 = "남은 깃발 개수 : " + unownedFlagSize + "\n";
                     infoMessage = text1 + text2 + text3;
                 } else if (gameRoomClient instanceof TagGameRoomClient) {
