@@ -206,7 +206,6 @@ public class GameMapActivity extends AppCompatActivity {
                         showDialogVictory();
                     }
                 }
-                finish();
             });
         });
 
