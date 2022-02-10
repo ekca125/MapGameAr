@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/spacing_large"
-            android:text="서버와 연결하는 중" />
+            android:text="@string/server_connecting" />
 
         <ProgressBar
             android:id="@+id/progress_indeterminate_circular"

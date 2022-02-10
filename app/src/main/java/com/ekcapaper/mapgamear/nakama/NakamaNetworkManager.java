@@ -1,5 +1,8 @@
 package com.ekcapaper.mapgamear.nakama;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+
 import androidx.annotation.NonNull;
 
 import com.ekcapaper.mapgamear.keystorage.KeyStorageNakama;
@@ -45,6 +48,8 @@ public class NakamaNetworkManager {
     // email
     String email;
     String password;
+    //
+    String guestId;
 
     public NakamaNetworkManager() {
         //
@@ -60,8 +65,11 @@ public class NakamaNetworkManager {
         session = null;
         //
         loginType = LoginType.NONE;
+        // email
         email = null;
         password = null;
+        // guest
+        guestId = null;
     }
 
     // session
@@ -81,20 +89,12 @@ public class NakamaNetworkManager {
             return false;
         }
     }
-    public boolean loginGuestSync() {
-        try {
-            session = client.authenticateDevice(UUID.randomUUID().toString()).get();
-            loginType = LoginType.GUEST;
-            return true;
-        } catch (ExecutionException | InterruptedException e) {
-            session = null;
-            return false;
-        }
-    }
+
     public boolean loginGuestSync(String id) {
         try {
             session = client.authenticateDevice(id).get();
             loginType = LoginType.GUEST;
+            guestId = id;
             return true;
         } catch (ExecutionException | InterruptedException e) {
             session = null;

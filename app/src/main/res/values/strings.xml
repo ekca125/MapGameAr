@@ -24,6 +24,7 @@
     <string name="sign_in">가입 및 로그인</string>
     <string name="username">이메일</string>
     <string name="password">패스워드</string>
+    <string name="guest_login">게스트로 로그인</string>
 
     <!-- lobby -->
     <string name="lobby_title">게임로비</string>
@@ -36,9 +37,16 @@
     <string name="game_type">게임 타입</string>
     <string name="generate_room">방 만들기</string>
     <string name="loading_location">위치를 가져오는 중..</string>
+
+    <!-- room -->
     <string name="new_room">새로운 방</string>
     <string name="game_start">게임 시작</string>
     <string name="game_room">게임 방</string>
     <string name="room_desc">방 설명</string>
-    <string name="guest_login">게스트로 로그인</string>
+
+    <!-- server connect -->
+    <string name="server_connecting">서버에 접속하는 중</string>
+
+    <!-- preference key -->
+    <string name="preference_key_guest_id">guest_id</string>
 </resources>

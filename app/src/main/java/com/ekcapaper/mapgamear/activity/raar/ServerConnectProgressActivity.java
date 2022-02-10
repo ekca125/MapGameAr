@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.Preference;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
@@ -68,21 +67,29 @@ public class ServerConnectProgressActivity extends AppCompatActivity {
     private void runConnectServer() {
         CompletableFuture
                 .supplyAsync(() -> {
-                    String id;
+                    // 접속 ID
+                    String guestId;
+                    // 이전에 접속한 ID의 존재여부의 확인 및 저장, 불러오기
                     SharedPreferences sharedPreferences = getPreferences(Activity.MODE_PRIVATE);
-                    if(sharedPreferences.contains("id")){
-                        id = sharedPreferences.getString("id","");
+                    String guestIdKey = getString(R.string.preference_key_guest_id);
+                    if (sharedPreferences.contains(guestIdKey)) {
+                        // 이전에 접속한 ID가 있는 경우
+                        guestId = sharedPreferences.getString(guestIdKey, "");
+                    } else {
+                        // 이전에 접속한 ID가 없는 경우
+                        guestId = UUID.randomUUID().toString();
+                        // 접속에 사용될 ID를 저장
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(guestIdKey, guestId);
+                        editor.commit();
                     }
-                    else{
-                        id = UUID.randomUUID().toString();
-                    }
-                    return nakamaNetworkManager.loginGuestSync(id);
+                    return nakamaNetworkManager.loginGuestSync(guestId);
                 })
                 .thenAccept((result) -> {
                     runOnUiThread(() -> {
                         if (result) {
                             Intent intent = new Intent(ServerConnectProgressActivity.this, LobbyActivity.class);
-                            startActivityForResult(intent,ACTIVITY_REQUEST_CODE);
+                            startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
                         } else {
                             Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
                             finish();
