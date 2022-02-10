@@ -81,10 +81,18 @@ public class NakamaNetworkManager {
             return false;
         }
     }
-
     public boolean loginGuestSync() {
         try {
-            String id = UUID.randomUUID().toString();
+            session = client.authenticateDevice(UUID.randomUUID().toString()).get();
+            loginType = LoginType.GUEST;
+            return true;
+        } catch (ExecutionException | InterruptedException e) {
+            session = null;
+            return false;
+        }
+    }
+    public boolean loginGuestSync(String id) {
+        try {
             session = client.authenticateDevice(id).get();
             loginType = LoginType.GUEST;
             return true;
