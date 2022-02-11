@@ -63,7 +63,7 @@ public class SetupAppActivity extends AppCompatActivity {
     }
 
     private void startAppStartActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, ServerConnectProgressActivity.class);
         startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
     }
 

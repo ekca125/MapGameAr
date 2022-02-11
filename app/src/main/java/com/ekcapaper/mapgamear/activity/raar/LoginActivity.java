@@ -66,6 +66,8 @@ public class LoginActivity extends AppCompatActivity {
                         });
             }
         });
+
+        /*
         button_guest_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                         });
             }
         });
+        */
 
         Tools.setSystemBarColor(this);
 
