@@ -19,6 +19,6 @@
         android:id="@+id/textView_setup_app"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="앱에 위치 서비스 권한이 필요합니다." />
+        android:text="@string/request_location_permission" />
 
 </LinearLayout>

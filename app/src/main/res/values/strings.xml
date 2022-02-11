@@ -20,6 +20,9 @@
     <string name="default_notification_channel_id">Default</string>
     <string name="webview_loading">Load Content... </string>
 
+    <!-- setup -->
+    <string name="request_location_permission">앱에 위치 권한이 필요합니다.</string>
+
     <!-- login -->
     <string name="sign_in">가입 및 로그인</string>
     <string name="username">이메일</string>

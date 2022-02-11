@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,9 +26,6 @@ import com.ekcapaper.mapgamear.utils.Tools;
 */
 
 public class SetupAppActivity extends AppCompatActivity {
-    // request codes
-    private final int PERMISSION_REQUEST_CODE = 1;
-    private final int ACTIVITY_REQUEST_CODE = 2;
     // activity component
     TextView textView_setup_app;
 
@@ -43,7 +41,7 @@ public class SetupAppActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             startAppStartActivity();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ActivityRequestCode.PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -59,20 +57,26 @@ public class SetupAppActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        finish();
+        if(ActivityRequestCode.ACTIVITY_FINISH_REQUEST_CODE == requestCode) {
+            finish();
+        }
     }
 
     private void startAppStartActivity() {
         Intent intent = new Intent(this, ServerConnectProgressActivity.class);
-        startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
+        startActivityForResult(intent, ActivityRequestCode.ACTIVITY_FINISH_REQUEST_CODE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
+        if (requestCode == ActivityRequestCode.PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startAppStartActivity();
+            }
+            else{
+                Toast.makeText(this,getString(R.string.request_location_permission),Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
     }

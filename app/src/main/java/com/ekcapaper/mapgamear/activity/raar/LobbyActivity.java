@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class LobbyActivity extends AppCompatActivity {
-    private final int ACTIVITY_REQUEST_CODE = 0;
+    private final int ACTIVITY_LOBBY_REQUEST_CODE = 0;
     // util
     Gson gson;
     // field
@@ -57,7 +57,7 @@ public class LobbyActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != ACTIVITY_REQUEST_CODE) {
+        if (requestCode != ACTIVITY_LOBBY_REQUEST_CODE) {
             // 잘못 코딩한 경우에 발생하는 예외
             throw new IllegalStateException();
         }
@@ -87,7 +87,7 @@ public class LobbyActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), GameRoomGenerateActivity.class);
-                startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
+                startActivityForResult(intent, ACTIVITY_LOBBY_REQUEST_CODE);
             }
         });
 
@@ -123,7 +123,7 @@ public class LobbyActivity extends AppCompatActivity {
                 // 입장 후의 처리
                 if (result) {
                     Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
-                    startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
+                    startActivityForResult(intent, ACTIVITY_LOBBY_REQUEST_CODE);
                 } else {
                     Toast.makeText(LobbyActivity.this, "방 입장에 실패했습니다.", Toast.LENGTH_SHORT).show();
                 }
