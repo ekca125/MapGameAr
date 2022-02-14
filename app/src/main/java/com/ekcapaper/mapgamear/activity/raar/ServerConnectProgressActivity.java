@@ -23,7 +23,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class ServerConnectProgressActivity extends AppCompatActivity {
-    private final int ACTIVITY_REQUEST_CODE = 2;
     // manager
     private ThisApplication thisApplication;
     private NakamaNetworkManager nakamaNetworkManager;
@@ -47,7 +46,9 @@ public class ServerConnectProgressActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        finish();
+        if(ActivityRequestCode.ACTIVITY_FINISH_REQUEST_CODE == requestCode) {
+            finish();
+        }
     }
 
     private void initToolbar() {
@@ -89,7 +90,7 @@ public class ServerConnectProgressActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         if (result) {
                             Intent intent = new Intent(ServerConnectProgressActivity.this, LobbyActivity.class);
-                            startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
+                            startActivityForResult(intent, ActivityRequestCode.ACTIVITY_FINISH_REQUEST_CODE);
                         } else {
                             Toast.makeText(getApplicationContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show();
                             finish();

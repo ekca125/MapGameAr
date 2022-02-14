@@ -5,7 +5,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
-        AIzaSyAnYeYt1LxXrKBEn5qNmvHxif2L8TCKJI8
+        AIzaSyCjVhP9tcl3NnrxcqhjQ76Sps5sQklQWSw
     </string>
 
     <string name="privacy_policy_url">https://ekcapaper.net</string>
@@ -19,6 +19,9 @@
     <string name="app_version">Version</string>
     <string name="default_notification_channel_id">Default</string>
     <string name="webview_loading">Load Content... </string>
+
+    <!-- setup -->
+    <string name="request_location_permission">앱에 위치 권한이 필요합니다.</string>
 
     <!-- login -->
     <string name="sign_in">가입 및 로그인</string>

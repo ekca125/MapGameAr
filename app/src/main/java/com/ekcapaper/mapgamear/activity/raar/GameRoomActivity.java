@@ -32,7 +32,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class GameRoomActivity extends AppCompatActivity {
-    private final int ACTIVITY_REQUEST_CODE = 0;
     // field
     private ThisApplication thisApplication;
     private NakamaNetworkManager nakamaNetworkManager;
@@ -54,7 +53,7 @@ public class GameRoomActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != ACTIVITY_REQUEST_CODE) {
+        if (requestCode != ActivityRequestCode.ACTIVITY_FINISH_REQUEST_CODE) {
             // 잘못 코딩한 경우에 발생하는 예외
             throw new IllegalStateException();
         }
@@ -121,7 +120,7 @@ public class GameRoomActivity extends AppCompatActivity {
         });
         gameRoomClient.setAfterGameStartMessage(() -> {
             Intent intent = new Intent(getApplicationContext(), GameMapActivity.class);
-            startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
+            startActivityForResult(intent, ActivityRequestCode.ACTIVITY_FINISH_REQUEST_CODE);
         });
 
         // adapter

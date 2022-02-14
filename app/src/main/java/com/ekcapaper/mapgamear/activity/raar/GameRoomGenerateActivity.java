@@ -39,7 +39,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class GameRoomGenerateActivity extends AppCompatActivity {
-    private final int ACTIVITY_REQUEST_CODE = 0;
     LocationRequestSpace locationRequestSpace;
     // GameType
     GameType[] gameTypes;
@@ -63,7 +62,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != ACTIVITY_REQUEST_CODE) {
+        if (requestCode != ActivityRequestCode.ACTIVITY_FINISH_REQUEST_CODE) {
             // 잘못 코딩한 경우에 발생하는 예외
             throw new IllegalStateException();
         }
@@ -193,7 +192,7 @@ public class GameRoomGenerateActivity extends AppCompatActivity {
                 if (result) {
                     locationRequestSpace.stop();
                     Intent intent = new Intent(getApplicationContext(), GameRoomActivity.class);
-                    startActivityForResult(intent, ACTIVITY_REQUEST_CODE);
+                    startActivityForResult(intent, ActivityRequestCode.ACTIVITY_FINISH_REQUEST_CODE);
                 } else {
                     Toast.makeText(GameRoomGenerateActivity.this, "방 생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
                 }
