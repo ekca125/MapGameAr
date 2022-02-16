@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -162,7 +163,9 @@ public class GameMapActivity extends AppCompatActivity {
             public void accept(Location location) {
                 runOnUiThread(() -> {
                             if (gameRoomClient.getCurrentGameStatus().equals(GameStatus.GAME_RUNNING)) {
-                                gameRoomClient.declareCurrentPlayerMove(location);
+                                if(location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
+                                    gameRoomClient.declareCurrentPlayerMove(location);
+                                }
                             }
                         }
                 );
