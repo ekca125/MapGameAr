@@ -17,7 +17,7 @@ import lombok.Getter;
 
 public class LocationRequestSpace {
     // 정보
-    private Context context;
+    private final Context context;
     // 위치 서비스
     LocationManager locationManager;
     LocationListener locationListener;
@@ -43,12 +43,9 @@ public class LocationRequestSpace {
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener, Looper.getMainLooper());
-        }
-        else{
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.getMainLooper());
-        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener, Looper.getMainLooper());
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.getMainLooper());
+
         running = true;
     }
 
