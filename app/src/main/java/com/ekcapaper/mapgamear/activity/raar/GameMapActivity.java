@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -65,6 +66,11 @@ public class GameMapActivity extends AppCompatActivity {
     // map
     private GoogleMap mMap;
     private boolean mapReady;
+    // Timer
+    // 게임이 시작된 이후로 60초 이상 GPS 와 연결되지 않은 상태라면 종료한다.
+    private Boolean gpsConnected;
+    private Timer gpsCheckTimer;
+    private TimerTask gpsCheckTimerTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +168,10 @@ public class GameMapActivity extends AppCompatActivity {
             public void accept(Location location) {
                 runOnUiThread(() -> {
                             if (gameRoomClient.getCurrentGameStatus().equals(GameStatus.GAME_RUNNING)) {
-                                gameRoomClient.declareCurrentPlayerMove(location);
+                                if(location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
+                                    gpsConnected = true;
+                                    gameRoomClient.declareCurrentPlayerMove(location);
+                                }
                             }
                         }
                 );
@@ -208,7 +217,21 @@ public class GameMapActivity extends AppCompatActivity {
                 }
             });
         });
-
+        // gps check
+        gpsConnected = false;
+        gpsCheckTimer = new Timer();
+        gpsCheckTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if(!gpsConnected){
+                    runOnUiThread(()->{
+                        Toast.makeText(GameMapActivity.this,"기기가 GPS에 연결되지 않아 게임을 종료합니다.",Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+                }
+            }
+        };
+        gpsCheckTimer.schedule(gpsCheckTimerTask,60*1000);
         //
         Tools.setSystemBarColor(this, R.color.colorPrimary);
     }

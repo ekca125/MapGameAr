@@ -17,7 +17,7 @@ import lombok.Getter;
 
 public class LocationRequestSpace {
     // 정보
-    private Context context;
+    private final Context context;
     // 위치 서비스
     LocationManager locationManager;
     LocationListener locationListener;
@@ -44,6 +44,8 @@ public class LocationRequestSpace {
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener, Looper.getMainLooper());
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener, Looper.getMainLooper());
+
         running = true;
     }
 
