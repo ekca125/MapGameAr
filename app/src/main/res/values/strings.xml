@@ -1,55 +1,24 @@
 <resources>
-    <string name="app_name">MapGameAr</string>
+    <string name="app_name">MaterialX</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
-        AIzaSyCjVhP9tcl3NnrxcqhjQ76Sps5sQklQWSw
+        AIzaSyC3SrcUtXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     </string>
 
-    <string name="privacy_policy_url">https://ekcapaper.net</string>
+    <string name="privacy_policy_url">http://dream-space.web.id/doc_privacy/privacy_policy.php?name=MaterialX</string>
 
     <string name="step_of">Step %1$d of %2$d</string>
     <string name="section_format">Section : %1$d</string>
 
-    <string name="about_text">MapGame About</string>
+    <string name="about_text">The best android implementation of material UI components. This app implemented based on Google Design Guidelines.
+    </string>
 
     <string name="version_unknown">Unknown</string>
     <string name="app_version">Version</string>
     <string name="default_notification_channel_id">Default</string>
     <string name="webview_loading">Load Content... </string>
 
-    <!-- setup -->
-    <string name="request_location_permission">앱에 위치 권한이 필요합니다.</string>
-
-    <!-- login -->
-    <string name="sign_in">가입 및 로그인</string>
-    <string name="username">이메일</string>
-    <string name="password">패스워드</string>
-    <string name="guest_login">게스트로 로그인</string>
-
-    <!-- lobby -->
-    <string name="lobby_title">게임로비</string>
-
-    <!-- room generate -->
-    <string name="room_name">방 이름</string>
-    <string name="latitude">현재 위도</string>
-    <string name="longitude">현재 경도</string>
-    <string name="time_limit">시간 제한(초)</string>
-    <string name="game_type">게임 타입</string>
-    <string name="generate_room">방 만들기</string>
-    <string name="loading_location">위치를 가져오는 중..</string>
-
-    <!-- room -->
-    <string name="new_room">새로운 방</string>
-    <string name="game_start">게임 시작</string>
-    <string name="game_room">게임 방</string>
-    <string name="room_desc">방 설명</string>
-
-    <!-- server connect -->
-    <string name="server_connecting">서버에 접속하는 중</string>
-
-    <!-- preference key -->
-    <string name="preference_key_guest_id">guest_id</string>
 </resources>

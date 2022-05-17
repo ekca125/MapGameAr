@@ -67,7 +67,7 @@
                 android:layout_margin="@dimen/spacing_medium"
                 android:orientation="vertical">
 
-                <com.ekcapaper.mapgamear.widget.ViewLoadingDotsFade
+                <com.material.components.widget.ViewLoadingDotsFade
                     android:layout_width="50dp"
                     android:layout_height="40dp"
                     android:background="@color/teal_300" />
