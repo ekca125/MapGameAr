@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class AddressMapClient {
-    private static final String BASE_URL = "https://rawb.ekcapaper.net";
+    private static final String BASE_URL = "https://rawb.ekcapaper.com";
 
     private AddressMapClient() {
     }
